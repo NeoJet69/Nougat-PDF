@@ -7,6 +7,9 @@ import androidx.compose.runtime.setValue
 import app.nougat.pdf.engine.EditableDoc
 import app.nougat.pdf.engine.PasswordRequiredException
 import app.nougat.pdf.engine.PdfEngine
+import app.nougat.pdf.engine.TextBlock
+import app.nougat.pdf.engine.TextEditException
+import app.nougat.pdf.engine.TextEditResult
 import app.nougat.pdf.engine.burn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -124,6 +127,10 @@ class ViewerState(
         errorMessage = null
     }
 
+    fun showToast(message: String) {
+        toast = message
+    }
+
     fun dismissToast() {
         toast = null
     }
@@ -192,6 +199,9 @@ class ViewerState(
             true
         } catch (e: CancellationException) {
             throw e
+        } catch (e: TextEditException) {
+            errorMessage = e.message ?: "Ce texte ne peut pas être modifié."
+            false
         } catch (e: Throwable) {
             errorMessage = "La modification a échoué.\n${e.message ?: e::class.simpleName}"
             false
@@ -299,6 +309,27 @@ class ViewerState(
                 errorMessage = "L'extraction a échoué.\n${e.message}"
             } finally {
                 busyMessage = null
+            }
+        }
+    }
+
+    /**
+     * Remplace le texte d'une ligne du PDF par [newText], au meme endroit et dans le meme style.
+     */
+    fun replaceText(block: TextBlock, newText: String) {
+        val s = session ?: return
+        s.editingBlock = null
+        if (newText.trim() == block.text.trim()) return
+        scope.launch {
+            var result: TextEditResult? = null
+            val ok = editNow("Modification du texte…", s.password) { doc ->
+                result = doc.replaceText(block, newText)
+            }
+            if (ok) {
+                toast = when (result) {
+                    TextEditResult.SimilarFont -> "Texte modifié (police proche : l'originale ne contient pas ces caractères)"
+                    else -> "Texte modifié"
+                }
             }
         }
     }

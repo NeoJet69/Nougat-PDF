@@ -1,6 +1,39 @@
 package app.nougat.pdf.ui
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import app.nougat.pdf.engine.TextBlock
+import kotlin.math.roundToInt
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,8 +90,17 @@ fun EditOverlay(
     pageSize: PageSize,
     onTextRequest: (TextRequest) -> Unit,
     onSignatureNeeded: (NPoint) -> Unit,
+    onReplaceText: (TextBlock, String) -> Unit,
+    onMessage: (String) -> Unit,
 ) {
     val marks = session.marks.filter { it.page == page }
+    // Outil « Éditer » : les lignes de texte de la page, chargees a la demande.
+    val showBlocks = tools.editing && tools.tool == Tool.EditText
+    val blocks by produceState(emptyList<TextBlock>(), page, showBlocks) {
+        if (showBlocks) value = session.textBlocks(page)
+    }
+    val currentBlocks by rememberUpdatedState(blocks)
+    val outline = MaterialTheme.colorScheme.primary
     val drawing = remember { mutableStateListOf<NPoint>() }
     var boxStart by remember { mutableStateOf<NPoint?>(null) }
     var boxEnd by remember { mutableStateOf<NPoint?>(null) }
@@ -126,6 +168,19 @@ fun EditOverlay(
                     }
                 }
             }
+            Tool.EditText -> modifier.pointerInput(tool, page) {
+                detectTapGestures { o ->
+                    val p = NPoint(o.x / size.width, o.y / size.height)
+                    val hit = currentBlocks
+                        .filter { contains(it.rect, p, 0.006f) }
+                        .minByOrNull { (it.rect.right - it.rect.left) * (it.rect.bottom - it.rect.top) }
+                    when {
+                        hit == null -> session.editingBlock = null
+                        !hit.editable -> onMessage("Ce texte ne peut pas être modifié directement : utilisez « Masquer » puis « Texte ».")
+                        else -> session.editingBlock = hit
+                    }
+                }
+            }
             Tool.Pan -> modifier
         }
     }
@@ -141,6 +196,20 @@ fun EditOverlay(
                 fontFamily = FontFamily.SansSerif,
             )
             drawText(measurer, textMark.text, Offset(textMark.x * size.width, textMark.y * size.height), style)
+        }
+        // Lignes modifiables (outil « Éditer »)
+        if (showBlocks) {
+            val editing = session.editingBlock
+            for (b in blocks) {
+                if (b == editing) continue
+                val r = b.rect
+                drawRect(
+                    color = if (b.editable) outline.copy(alpha = 0.55f) else Color.Gray.copy(alpha = 0.35f),
+                    topLeft = Offset(r.left * size.width - 2f, r.top * size.height - 1f),
+                    size = Size((r.right - r.left) * size.width + 4f, (r.bottom - r.top) * size.height + 2f),
+                    style = Stroke(width = 1.2f),
+                )
+            }
         }
         // Trait en cours
         if (drawing.isNotEmpty()) {
@@ -158,6 +227,99 @@ fun EditOverlay(
                 Size((r.right - r.left) * size.width, (r.bottom - r.top) * size.height),
                 style = Stroke(width = 1.5f),
             )
+        }
+    }
+
+    // Ligne en cours de modification : champ de texte pose exactement dessus.
+    val editing = session.editingBlock
+    if (showBlocks && editing != null && editing.page == page) {
+        InlineTextEditor(
+            block = editing,
+            pageSize = pageSize,
+            onDone = { text -> onReplaceText(editing, text) },
+            onCancel = { session.editingBlock = null },
+        )
+    }
+}
+
+/** Champ de texte pose sur la ligne a modifier, avec Annuler / Valider. */
+@Composable
+private fun InlineTextEditor(block: TextBlock, pageSize: PageSize, onDone: (String) -> Unit, onCancel: () -> Unit) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val density = LocalDensity.current
+        val widthPx = constraints.maxWidth.toFloat()
+        val heightPx = constraints.maxHeight.toFloat()
+        val ptToPx = widthPx / pageSize.width
+        var value by remember(block) { mutableStateOf(TextFieldValue(block.text, TextRange(block.text.length))) }
+        val focus = remember { FocusRequester() }
+        LaunchedEffect(block) { focus.requestFocus() }
+        // Meme taille que le texte d'origine, mais jamais illisible.
+        val fontPx = max(block.fontSize * ptToPx, with(density) { 13.sp.toPx() })
+        val left = (block.rect.left * widthPx).roundToInt()
+        val top = (block.rect.top * heightPx).roundToInt()
+        val minWidth = with(density) { ((block.rect.right - block.rect.left) * widthPx).toDp() } + 12.dp
+        val buttonsAbove = block.rect.bottom > 0.85f
+        val colors = MaterialTheme.colorScheme
+
+        @Composable
+        fun Buttons() {
+            Row(Modifier.padding(vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Surface(
+                    onClick = onCancel,
+                    shape = RoundedCornerShape(50),
+                    color = colors.surfaceContainerHighest,
+                    contentColor = colors.onSurface,
+                    shadowElevation = 3.dp,
+                ) {
+                    Text("Annuler", Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
+                }
+                Surface(
+                    onClick = { onDone(value.text) },
+                    shape = RoundedCornerShape(50),
+                    color = colors.primary,
+                    contentColor = colors.onPrimary,
+                    shadowElevation = 3.dp,
+                ) {
+                    Text("Valider", Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
+
+        Column(
+            Modifier.offset {
+                IntOffset(left - 6, if (buttonsAbove) top - 4 - 44.dp.roundToPx() else top - 4)
+            },
+        ) {
+            if (buttonsAbove) Buttons()
+            Surface(
+                shape = RoundedCornerShape(4.dp),
+                color = Color.White,
+                border = BorderStroke(2.dp, colors.primary),
+                shadowElevation = 6.dp,
+            ) {
+                BasicTextField(
+                    value = value,
+                    onValueChange = { value = it },
+                    singleLine = true,
+                    textStyle = TextStyle(color = Color(0xFF1A1A1A), fontSize = with(density) { fontPx.toSp() }),
+                    cursorBrush = SolidColor(colors.primary),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onDone(value.text) }),
+                    modifier = Modifier
+                        .widthIn(min = minWidth)
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                        .focusRequester(focus)
+                        .onPreviewKeyEvent { e ->
+                            if (e.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                            when (e.key) {
+                                Key.Escape -> { onCancel(); true }
+                                Key.Enter, Key.NumPadEnter -> { onDone(value.text); true }
+                                else -> false
+                            }
+                        },
+                )
+            }
+            if (!buttonsAbove) Buttons()
         }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import app.nougat.pdf.engine.Mark
 import app.nougat.pdf.engine.PageText
+import app.nougat.pdf.engine.TextBlock
 import app.nougat.pdf.engine.PdfDocument
 import app.nougat.pdf.engine.SearchHit
 import app.nougat.pdf.engine.TextSearch
@@ -50,6 +51,25 @@ class DocumentSession(
 
     /** Annotations ajoutees mais pas encore gravees dans le PDF. */
     val marks = mutableStateListOf<Mark>()
+
+    /** Ligne de texte en cours de modification (outil « Éditer »). */
+    var editingBlock: TextBlock? by mutableStateOf(null)
+
+    private val blocks = HashMap<Int, List<TextBlock>>()
+    private val blocksMutex = Mutex()
+
+    /** Les lignes de texte modifiables de la page (calculees une fois). */
+    suspend fun textBlocks(page: Int): List<TextBlock> = blocksMutex.withLock {
+        blocks.getOrPut(page) {
+            try {
+                document.textBlocks(page)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Throwable) {
+                emptyList()
+            }
+        }
+    }
 
     private val scope = CoroutineScope(parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext[Job]))
 

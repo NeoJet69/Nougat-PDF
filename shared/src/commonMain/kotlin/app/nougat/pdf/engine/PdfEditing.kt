@@ -31,6 +31,13 @@ interface EditableDoc {
 
     /** Protege par mot de passe, ou retire la protection si [password] est null. */
     fun setPassword(password: String?)
+
+    /**
+     * Remplace le texte de la ligne [block] (trouvee par une analyse precedente de la meme page)
+     * par [newText], au meme endroit et dans le meme style.
+     * @throws TextEditException si la ligne n'est pas modifiable.
+     */
+    fun replaceText(block: TextBlock, newText: String): TextEditResult
 }
 
 /**

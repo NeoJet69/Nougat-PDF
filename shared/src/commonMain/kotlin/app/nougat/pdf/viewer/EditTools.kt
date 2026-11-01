@@ -8,6 +8,7 @@ import app.nougat.pdf.engine.NPoint
 
 enum class Tool(val label: String) {
     Pan("Naviguer"),
+    EditText("Éditer"),
     Pen("Stylo"),
     Highlighter("Surligneur"),
     Text("Texte"),

@@ -73,6 +73,10 @@ private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {
         }
     }
 
+    override suspend fun textBlocks(index: Int): List<TextBlock> = withContext(Dispatchers.IO) {
+        mutex.withLock { pageTextBlocks(doc, index) }
+    }
+
     override fun close() {
         // On attend la fin d'un rendu en cours, sans bloquer l'ecran.
         thread(name = "pdf-close", isDaemon = true) {

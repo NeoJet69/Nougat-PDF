@@ -70,6 +70,10 @@ object NougatIcons {
     val Save by lazy {
         svgIcon("Save", "M17,3H5c-1.11,0 -2,0.9 -2,2v14c0,1.1 0.89,2 2,2h14c1.1,0 2,-0.9 2,-2V7l-4,-4zM12,19c-1.66,0 -3,-1.34 -3,-3s1.34,-3 3,-3 3,1.34 3,3 -1.34,3 -3,3zM15,9H5V5h10v4z")
     }
+    /** Un « T » et un curseur de texte : modifier le texte existant. */
+    val EditText by lazy {
+        strokeIcon("EditText", "M3,5h11M8.5,5v14M18,7v13M16,7h4M16,20h4")
+    }
     val Undo by lazy {
         svgIcon("Undo", "M12.5,8c-2.65,0 -5.05,0.99 -6.9,2.6L2,7v9h9l-3.62,-3.62c1.39,-1.16 3.16,-1.88 5.12,-1.88 3.54,0 6.55,2.31 7.6,5.5l2.37,-0.78C21.08,11.03 17.15,8 12.5,8z")
     }

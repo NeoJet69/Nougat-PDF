@@ -82,6 +82,9 @@ private class AndroidEditableDoc(private val doc: PDDocument, private var passwo
         this.password = password
     }
 
+    override fun replaceText(block: TextBlock, newText: String): TextEditResult =
+        replaceTextWithPdfBoxAndroid(doc, block, newText)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

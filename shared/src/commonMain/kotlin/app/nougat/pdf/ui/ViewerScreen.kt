@@ -294,6 +294,20 @@ private fun EditToolbar(state: ViewerState, modifier: Modifier) {
     var showColors by remember { mutableStateOf(false) }
     val colors = MaterialTheme.colorScheme
     Column(modifier.widthIn(max = 760.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        if (tools.tool == Tool.EditText && state.session?.editingBlock == null) {
+            Surface(
+                shape = RoundedCornerShape(50),
+                color = colors.inverseSurface.copy(alpha = 0.9f),
+                contentColor = colors.inverseOnSurface,
+                modifier = Modifier.padding(bottom = 8.dp),
+            ) {
+                Text(
+                    "Touchez une ligne encadrée pour modifier son texte",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                )
+            }
+        }
         if (showColors && tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)) {
             Surface(shape = RoundedCornerShape(50), tonalElevation = 3.dp, shadowElevation = 6.dp, modifier = Modifier.padding(bottom = 8.dp)) {
                 Box(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
@@ -315,6 +329,7 @@ private fun EditToolbar(state: ViewerState, modifier: Modifier) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 ToolButton(NougatIcons.Hand, Tool.Pan, tools.tool) { tools.tool = it }
+                ToolButton(NougatIcons.EditText, Tool.EditText, tools.tool) { tools.tool = it }
                 ToolButton(NougatIcons.Pen, Tool.Pen, tools.tool) { tools.tool = it }
                 ToolButton(NougatIcons.Highlighter, Tool.Highlighter, tools.tool) { tools.tool = it }
                 ToolButton(NougatIcons.Text, Tool.Text, tools.tool) { tools.tool = it }
@@ -554,6 +569,8 @@ private fun PageView(
             pageSize = pageSize,
             onTextRequest = onTextRequest,
             onSignatureNeeded = { at -> onSignatureNeeded(index, at) },
+            onReplaceText = state::replaceText,
+            onMessage = state::showToast,
         )
     }
 }

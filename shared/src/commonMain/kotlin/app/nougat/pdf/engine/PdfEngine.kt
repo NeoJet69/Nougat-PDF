@@ -32,6 +32,9 @@ interface PdfDocument : AutoCloseable {
 
     /** Le texte de la page [index], lettre par lettre avec sa position. */
     suspend fun pageText(index: Int): PageText
+
+    /** Les lignes de texte de la page [index], pour les modifier. */
+    suspend fun textBlocks(index: Int): List<TextBlock>
 }
 
 data class PageSize(val width: Float, val height: Float) {

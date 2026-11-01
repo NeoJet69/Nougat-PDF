@@ -125,6 +125,13 @@ private class AndroidPdfDocument(
         }
     }
 
+    override suspend fun textBlocks(index: Int): List<TextBlock> = withContext(Dispatchers.IO) {
+        textMutex.withLock {
+            val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }
+            pageTextBlocksAndroid(doc, index)
+        }
+    }
+
     override fun close() {
         thread(name = "pdf-close", isDaemon = true) {
             runBlocking {
