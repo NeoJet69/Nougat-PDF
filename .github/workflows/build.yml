@@ -20,7 +20,22 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
+      - name: Clé de signature Android
+        env:
+          NOUGAT_KEYSTORE: ${{ secrets.NOUGAT_KEYSTORE }}
+        run: |
+          if [ -n "$NOUGAT_KEYSTORE" ]; then
+            echo "$NOUGAT_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/nougat.jks"
+            echo "NOUGAT_KEYSTORE_FILE=$RUNNER_TEMP/nougat.jks" >> "$GITHUB_ENV"
+            echo "APK signé avec la clé Nougat."
+          else
+            echo "::warning::Pas de clé NOUGAT_KEYSTORE : APK signé avec la clé de debug (voir README)."
+          fi
       - name: APK Android
+        env:
+          NOUGAT_KEYSTORE_PASSWORD: ${{ secrets.NOUGAT_KEYSTORE_PASSWORD }}
+          NOUGAT_KEY_ALIAS: ${{ secrets.NOUGAT_KEY_ALIAS }}
+          NOUGAT_KEY_PASSWORD: ${{ secrets.NOUGAT_KEY_PASSWORD }}
         run: ./gradlew :androidApp:assembleRelease --console=plain
       - name: Tests
         if: always()

@@ -23,7 +23,8 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Msi, TargetFormat.Exe)
             packageName = "Nougat PDF"
-            packageVersion = "1.0.0"
+            // Version croissante a chaque compilation GitHub : l'installateur remplace l'ancienne version.
+            packageVersion = "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
             description = "Lecteur et editeur de PDF, gratuit et hors ligne"
             vendor = "Nougat"
             // Modules Java utilises par PDFBox et l'interface.

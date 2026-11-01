@@ -4,6 +4,13 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+// Cle de signature : fournie par GitHub Actions (secrets NOUGAT_*), voir README.
+// Sans elle, l'APK est signe avec la cle de debug (il faut alors desinstaller avant chaque mise a jour).
+val keystoreFile = providers.environmentVariable("NOUGAT_KEYSTORE_FILE").orNull?.let { file(it) }?.takeIf { it.isFile }
+
+// Numero de version : celui de la compilation GitHub, pour que chaque APK remplace le precedent.
+val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull?.toIntOrNull() ?: 1
+
 android {
     namespace = "app.nougat.pdf.android"
     compileSdk = 37
@@ -12,8 +19,8 @@ android {
         applicationId = "app.nougat.pdf"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = buildNumber
+        versionName = "1.0.$buildNumber"
     }
 
     buildFeatures {
@@ -25,11 +32,21 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 
+    signingConfigs {
+        if (keystoreFile != null) {
+            create("nougat") {
+                storeFile = keystoreFile
+                storePassword = providers.environmentVariable("NOUGAT_KEYSTORE_PASSWORD").orNull
+                keyAlias = providers.environmentVariable("NOUGAT_KEY_ALIAS").orNull
+                keyPassword = providers.environmentVariable("NOUGAT_KEY_PASSWORD").orNull
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
-            // App personnelle, installee a la main : signee avec la cle de debug.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("nougat") ?: signingConfigs.getByName("debug")
         }
     }
 

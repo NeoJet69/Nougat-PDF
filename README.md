@@ -67,6 +67,37 @@ Chaque envoi sur GitHub construit l'app automatiquement (onglet **Actions** → 
 - `nougat-pdf-android` : le fichier `.apk` à installer sur le téléphone
   (autoriser « Installer des applis inconnues » quand Android le demande)
 
+## Clé de signature Android (une seule fois)
+
+Sans clé fixe, chaque APK est signé avec une clé de test différente : il faut désinstaller
+l'ancienne version avant d'installer la nouvelle. Avec la clé, les mises à jour s'installent
+par-dessus. Sur le Mac, dans le Terminal :
+
+1. Créer la clé (remplacer `MOT_DE_PASSE` par un vrai mot de passe, sans espace) :
+   ```bash
+   keytool -genkeypair -keystore nougat.jks -alias nougat -keyalg RSA -keysize 4096 -validity 36500 -storepass MOT_DE_PASSE -keypass MOT_DE_PASSE -dname "CN=Nougat PDF"
+   ```
+   (si `keytool` est introuvable : `"/Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/keytool"` à la place de `keytool`)
+2. Copier la clé encodée dans le presse-papiers :
+   ```bash
+   base64 -i nougat.jks | pbcopy
+   ```
+3. Sur GitHub : dépôt **Nougat-PDF** → **Settings** → **Secrets and variables** → **Actions** →
+   **New repository secret**, quatre fois :
+
+   | Nom | Valeur |
+   |---|---|
+   | `NOUGAT_KEYSTORE` | coller (Cmd+V) le contenu copié à l'étape 2 |
+   | `NOUGAT_KEYSTORE_PASSWORD` | le mot de passe |
+   | `NOUGAT_KEY_ALIAS` | `nougat` |
+   | `NOUGAT_KEY_PASSWORD` | le même mot de passe |
+
+4. Garder `nougat.jks` et le mot de passe en lieu sûr (gestionnaire de mots de passe, clé USB) :
+   sans eux, impossible de publier une mise à jour qui s'installe par-dessus.
+
+La compilation suivante signe l'APK avec cette clé. Désinstaller une dernière fois l'ancienne
+version (signée avec la clé de test), puis les mises à jour s'installeront normalement.
+
 ## Pour les développeurs
 
 Kotlin + Compose Multiplatform. Le moteur PDF est [Apache PDFBox](https://pdfbox.apache.org/) sur
