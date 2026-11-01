@@ -26,7 +26,10 @@ Le **dock** en bas de l'écran choisit le mode : **Lire**, **Éditer**, **Annote
 - Zoom : pincer avec deux doigts (téléphone), Ctrl + molette ou Ctrl +/− (ordinateur)
 
 **Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
-blanche ou un autre PDF à la fin.
+blanche, un autre PDF ou des images à la fin.
+
+**Créer un PDF** (accueil) : **Photos → PDF** (une page par photo ou image, remise droite et
+centrée sur une page A4) ou **Document vierge** (une page A4 à remplir avec Texte, Signature...).
 
 Menu **⋮** : enregistrer, enregistrer sous, imprimer, partager (Android), protéger par mot de
 passe ou retirer le mot de passe, thème clair / sombre / automatique.

@@ -48,16 +48,29 @@ internal fun createWithPdfBoxAndroid(dst: String, block: (EditableDoc) -> Unit) 
 }
 
 /**
- * Lit une image en la reduisant (au plus [maxSide] pixels de cote, pour la memoire) et en la
- * remettant droite : les photos du telephone sont souvent enregistrees couchees (EXIF).
+ * Lit une image en la reduisant (au plus [maxSide] pixels de cote : environ 250 dpi sur une page
+ * A4, net et leger) et en la remettant droite : les photos du telephone sont souvent
+ * enregistrees couchees (EXIF).
  */
-private fun loadUprightBitmap(path: String, maxSide: Int = 3000): Pair<Bitmap, Boolean>? {
+private fun loadUprightBitmap(path: String, maxSide: Int = 2400): Pair<Bitmap, Boolean>? {
     val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
     BitmapFactory.decodeFile(path, bounds)
     if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
     var sample = 1
     while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxSide) sample *= 2
-    val bitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample }) ?: return null
+    var bitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample }) ?: return null
+    val longest = maxOf(bitmap.width, bitmap.height)
+    if (longest > maxSide) {
+        val k = maxSide.toFloat() / longest
+        val scaled = Bitmap.createScaledBitmap(
+            bitmap,
+            (bitmap.width * k).toInt().coerceAtLeast(1),
+            (bitmap.height * k).toInt().coerceAtLeast(1),
+            true,
+        )
+        if (scaled !== bitmap) bitmap.recycle()
+        bitmap = scaled
+    }
     val lossless = bounds.outMimeType?.let { it.contains("png") || it.contains("webp") || it.contains("gif") || it.contains("bmp") } ?: false
     val degrees = runCatching {
         when (ExifInterface(path).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
