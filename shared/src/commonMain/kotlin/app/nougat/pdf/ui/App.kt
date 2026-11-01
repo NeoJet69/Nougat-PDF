@@ -142,14 +142,21 @@ private fun Toast(state: ViewerState, modifier: Modifier) {
 
 @Composable
 private fun LoadingOverlay(text: String) {
+    // Une operation rapide (cocher une case, tourner une page) ne fait pas clignoter l'ecran :
+    // les clics sont bloques tout de suite, mais le voile n'apparait qu'apres un court instant.
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        delay(250)
+        visible = true
+    }
     Box(
         Modifier.fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.28f))
+            .then(if (visible) Modifier.background(Color.Black.copy(alpha = 0.28f)) else Modifier)
             // Bloque les clics pendant l'operation.
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {},
         contentAlignment = Alignment.Center,
     ) {
-        Island(shape = RoundedCornerShape(28.dp), padding = 0.dp) {
+        if (visible) Island(shape = RoundedCornerShape(28.dp), padding = 0.dp) {
             Column(Modifier.padding(horizontal = 32.dp, vertical = 26.dp).widthIn(max = 320.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 NougatMascot(Modifier.size(64.dp))
                 Spacer(Modifier.height(10.dp))

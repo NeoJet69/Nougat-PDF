@@ -85,6 +85,8 @@ private class AndroidEditableDoc(private val doc: PDDocument, private var passwo
     override fun replaceText(block: TextBlock, newText: String): TextEditResult =
         replaceTextWithPdfBoxAndroid(doc, block, newText)
 
+    override fun setFieldValue(name: String, value: String) = setFormFieldValueAndroid(doc, name, value)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

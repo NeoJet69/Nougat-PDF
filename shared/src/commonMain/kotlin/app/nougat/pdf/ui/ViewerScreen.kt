@@ -89,7 +89,10 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -315,15 +318,20 @@ private fun DocumentIsland(
         // Le nom retrecit (avec « … ») si la place manque : l'ilot ne deborde jamais sur les autres.
         Column(Modifier.weight(1f, fill = false).widthIn(max = 300.dp).padding(end = 4.dp)) {
             Text(session.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}", style = MaterialTheme.typography.labelMedium, color = p.muted)
-                if (state.modified) {
-                    Spacer(Modifier.width(6.dp))
-                    Box(Modifier.size(6.dp).clip(CircleShape).background(NougatColors.Orange))
-                    Spacer(Modifier.width(4.dp))
-                    Text("modifié", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                }
-            }
+            val primary = MaterialTheme.colorScheme.primary
+            Text(
+                buildAnnotatedString {
+                    withStyle(SpanStyle(color = p.muted)) {
+                        append("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}")
+                    }
+                    if (state.modified) {
+                        withStyle(SpanStyle(color = primary)) { append("  •  modifié") }
+                    }
+                },
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
         DocumentMenu(state, session, onOpenFile, onProtect)
     }
@@ -484,8 +492,12 @@ private fun ViewerDock(
                 when (mode) {
                     DockMode.Read -> if (compact) PagePill(session, onAskPage) else NavigationIsland(session, onAskPage, Modifier)
                     DockMode.Edit -> HintTray(
-                        if (session.editingBlock == null) "Touchez une ligne encadrée pour modifier son texte"
-                        else "Modifiez puis validez — le style d'origine est conservé",
+                        when {
+                            session.editingBlock != null -> if (compact) "Validez : le style d'origine est gardé" else "Modifiez puis validez — le style d'origine est conservé"
+                            compact -> "Touchez une ligne encadrée"
+                            else -> "Touchez une ligne encadrée pour modifier son texte"
+                        },
+                        compact,
                     )
                     DockMode.Sign -> SignTray(hasSignature = tools.signature != null, onChange = onChangeSignature)
                     DockMode.Annotate -> AnnotateTray(state, compact)
@@ -518,10 +530,14 @@ private fun PagePill(session: DocumentSession, onAskPage: () -> Unit) {
 }
 
 @Composable
-private fun HintTray(text: String) {
+private fun HintTray(text: String, compact: Boolean) {
     Island(shape = RoundedCornerShape(50), padding = 4.dp) {
         GradientBadge(NougatIcons.EditText, size = 32.dp, iconSize = 18.dp)
-        Text(text, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 12.dp))
+        Text(
+            text,
+            style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(horizontal = 12.dp),
+        )
     }
 }
 
@@ -818,6 +834,20 @@ private fun PageView(
             inlineEditor = inlineEditor,
             onCommitPending = state::commitPendingTextEditLater,
         )
+
+        // Formulaire : en mode Lire (ou avec la main), toucher un champ pour le remplir.
+        if (session.hasForm && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
+            FormOverlay(
+                session = session,
+                page = index,
+                pageSize = pageSize,
+                inlineEditor = inlineEditor,
+                onSetValue = state::setFieldValue,
+                onStartEditing = state::startFieldEditing,
+                onCommitPending = state::commitPendingFieldEditLater,
+                onMessage = state::showToast,
+            )
+        }
     }
 }
 

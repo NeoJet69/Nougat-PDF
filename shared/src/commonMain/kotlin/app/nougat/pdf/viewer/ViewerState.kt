@@ -13,6 +13,9 @@ import app.nougat.pdf.assistant.AssistantUiState
 import app.nougat.pdf.assistant.ChatItem
 import app.nougat.pdf.assistant.NougatToolbox
 import app.nougat.pdf.engine.EditableDoc
+import app.nougat.pdf.engine.FieldKind
+import app.nougat.pdf.engine.FormField
+import app.nougat.pdf.engine.FormFieldException
 import app.nougat.pdf.engine.PasswordRequiredException
 import app.nougat.pdf.engine.PdfEngine
 import app.nougat.pdf.engine.TextBlock
@@ -216,6 +219,13 @@ class ViewerState(
                 addRecent(sourceRef, name)
                 pageSelection = emptySet()
                 pagesGrid = LazyGridState()
+                val opened = session
+                scope.launch {
+                    if (doc.hasForm() && session === opened) {
+                        opened?.hasForm = true
+                        toast = "Formulaire détecté : touchez un champ pour le remplir"
+                    }
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: PasswordRequiredException) {
@@ -341,6 +351,9 @@ class ViewerState(
         } catch (e: TextEditException) {
             errorMessage = e.message ?: "Ce texte ne peut pas être modifié."
             false
+        } catch (e: FormFieldException) {
+            errorMessage = e.message ?: "Ce champ ne peut pas être rempli."
+            false
         } catch (e: Throwable) {
             errorMessage = "La modification a échoué.\n${e.message ?: e::class.simpleName}"
             false
@@ -358,6 +371,7 @@ class ViewerState(
         )
         fresh.updateZoom(old.zoom)
         fresh.visiblePage = old.visiblePage.coerceAtMost(doc.pageCount - 1)
+        fresh.hasForm = old.hasForm
         old.close()
         pageSelection = pageSelection.filter { it < doc.pageCount }.toSet()
         session = fresh
@@ -571,6 +585,7 @@ class ViewerState(
     /** Grave les annotations en attente (et la ligne de texte en cours de modification). */
     private suspend fun commitMarks(): Boolean {
         if (!commitPendingTextEdit()) return false
+        if (!commitPendingFieldEdit()) return false
         val s = session ?: return false
         return s.marks.isEmpty() || editNow("Application des modifications…", s.password) {}
     }
@@ -583,6 +598,67 @@ class ViewerState(
         s.editingBlock = null
         if (text.trim() == block.text.trim()) return true
         return editNow("Modification du texte…", s.password) { it.replaceText(block, text) }
+    }
+
+    // ---- Formulaires ------------------------------------------------------------------------------
+
+    /**
+     * Remplit un champ : texte, choix d'une liste, case cochee ([FIELD_OFF] pour decocher) ou bouton
+     * radio. [next] : le champ a ouvrir ensuite (touche Tab ou Entree), dans le document mis a jour.
+     */
+    fun setFieldValue(field: FormField, value: String, next: FormField? = null) {
+        val s = session ?: return
+        // Un autre champ etait en cours de saisie : il est enregistre dans la meme operation.
+        val pending = s.editingField?.takeIf { !(it.name == field.name && it.rect == field.rect) }
+        val pendingText = s.editingFieldText
+        s.editingField = null
+        val writePending = pending != null && pendingText != pending.value
+        if (value == field.value && field.kind != FieldKind.Radio && !writePending) {
+            next?.let(s::startFieldEditing)
+            return
+        }
+        scope.launch {
+            val ok = editNow("Remplissage du formulaire…", s.password) { doc ->
+                if (writePending && pending != null) doc.setFieldValue(pending.name, pendingText)
+                if (value != field.value || field.kind == FieldKind.Radio) doc.setFieldValue(field.name, value)
+            }
+            if (ok) next?.let { session?.startFieldEditing(it) }
+        }
+    }
+
+    /** Ouvre la saisie d'un champ texte, apres avoir enregistre celui qui etait en cours. */
+    fun startFieldEditing(field: FormField) {
+        val s = session ?: return
+        val pending = s.editingField
+        val text = s.editingFieldText
+        if (pending == null || (pending.name == field.name && pending.rect == field.rect) || text == pending.value) {
+            s.startFieldEditing(field)
+            return
+        }
+        s.editingField = null
+        scope.launch {
+            val ok = editNow("Remplissage du formulaire…", s.password) { it.setFieldValue(pending.name, text) }
+            if (ok) session?.startFieldEditing(field)
+        }
+    }
+
+    /** Remplit un champ et attend la fin (assistant). */
+    suspend fun setFieldValueAwait(name: String, value: String) {
+        performEdit("Remplissage du formulaire…", session?.password) { it.setFieldValue(name, value) }
+    }
+
+    /** Applique le champ en cours de saisie (formulaire), si son texte a change. */
+    suspend fun commitPendingFieldEdit(): Boolean {
+        val s = session ?: return true
+        val field = s.editingField ?: return true
+        val text = s.editingFieldText
+        s.editingField = null
+        if (text == field.value) return true
+        return editNow("Remplissage du formulaire…", s.password) { it.setFieldValue(field.name, text) }
+    }
+
+    fun commitPendingFieldEditLater() {
+        scope.launch { commitPendingFieldEdit() }
     }
 
     /** Toucher ailleurs pendant une modification : on applique (au lieu de perdre le texte tape). */

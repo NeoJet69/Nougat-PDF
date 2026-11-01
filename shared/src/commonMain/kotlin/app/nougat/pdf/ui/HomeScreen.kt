@@ -103,6 +103,7 @@ fun HomeScreen(
                 FeatureChip(NougatIcons.EditText, "Éditer le texte")
                 FeatureChip(NougatIcons.Pen, "Annoter")
                 FeatureChip(NougatIcons.Signature, "Signer")
+                FeatureChip(NougatIcons.SelectAll, "Formulaires")
                 FeatureChip(NougatIcons.Pages, "Organiser")
                 FeatureChip(NougatIcons.Sparkle, "Claude intégré")
             }

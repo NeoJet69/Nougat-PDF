@@ -38,6 +38,12 @@ interface PdfDocument : AutoCloseable {
 
     /** La page [index] en image JPEG (pour l'assistant). */
     suspend fun renderPageJpeg(index: Int, widthPx: Int): ByteArray
+
+    /** Les champs de formulaire de la page [index] (vide si le PDF n'est pas un formulaire). */
+    suspend fun formFields(index: Int): List<FormField> = emptyList()
+
+    /** Vrai si le PDF contient des champs a remplir. */
+    suspend fun hasForm(): Boolean = false
 }
 
 data class PageSize(val width: Float, val height: Float) {

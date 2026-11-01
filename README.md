@@ -4,35 +4,43 @@ Un lecteur et éditeur de PDF **gratuit**, **hors ligne**, pour **Windows** et *
 
 ## Modifier un PDF
 
-Bouton **Modifier** en haut à droite, puis choisir un outil dans la barre du bas :
+Le **dock** en bas de l'écran choisit le mode : **Lire**, **Éditer**, **Annoter**, **Signer**,
+**Pages** et **Claude**.
 
 - **Éditer** : modifier le texte déjà présent dans le PDF. Les lignes modifiables sont
-  encadrées ; toucher une ligne ouvre un champ posé dessus (Entrée pour valider, Échap pour annuler).
+  encadrées ; toucher une ligne ouvre un champ posé dessus sur ordinateur (Entrée pour valider,
+  Échap pour annuler), une fenêtre sur téléphone (le bouton OK du clavier valide aussi).
   Le texte est réécrit au même endroit, dans la même taille et la même couleur, avec **la police
   d'origine** quand elle contient les lettres tapées. Sinon : la même police si elle est installée
   sur l'ordinateur (Windows), ou la police standard la plus proche (Helvetica, Times, Courier,
   en gras / italique selon l'original). Le reste de la page ne bouge pas.
-- **Stylo** et **Surligneur** (plusieurs couleurs)
-- **Texte** : toucher la page pour écrire ; toucher un texte ajouté pour le modifier
-- **Masquer** : tracer un rectangle blanc pour cacher une zone (utile pour le texte qu'« Éditer »
-  ne peut pas modifier : texte dans une image scannée, dans un formulaire...)
-- **Signature** : la dessiner une fois, puis toucher la page pour la poser
-- **Gomme** : toucher une annotation pour l'effacer
+- **Formulaires** : en mode Lire, les champs à remplir d'un formulaire PDF sont teintés. Toucher
+  un champ pour l'écrire (Tab ou « Suivant » passe au champ suivant), cocher une case, choisir un
+  bouton radio ou une valeur dans une liste. Les valeurs sont enregistrées dans le formulaire
+  lui-même : il reste modifiable dans les autres lecteurs.
+- **Annoter** : **stylo** et **surligneur** (plusieurs couleurs), **texte** (toucher la page pour
+  écrire, toucher un texte ajouté pour le modifier), **masquer** (rectangle blanc pour cacher une
+  zone), **gomme** (toucher une annotation pour l'effacer)
+- **Signer** : dessiner sa signature une fois, puis toucher la page pour la poser
 - **Annuler** (Ctrl+Z) : annule la dernière annotation ou la dernière opération
+- Zoom : pincer avec deux doigts (téléphone), Ctrl + molette ou Ctrl +/− (ordinateur)
 
-**Pages** (icône grille) : pivoter, déplacer, supprimer, extraire dans un nouveau fichier,
-ajouter une page blanche ou un autre PDF à la fin.
+**Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
+blanche ou un autre PDF à la fin.
 
-Menu **⋮** : enregistrer, enregistrer sous, imprimer, partager (Android),
-protéger par mot de passe ou retirer le mot de passe.
+Menu **⋮** : enregistrer, enregistrer sous, imprimer, partager (Android), protéger par mot de
+passe ou retirer le mot de passe, thème clair / sombre / automatique.
 
 Tout est gravé dans le PDF à l'enregistrement : il s'ouvre ensuite dans n'importe quel lecteur.
 
+**L'original est toujours gardé** : au premier enregistrement, Nougat en fait une copie nommée
+`Nom_miaou.pdf` (dans le même dossier sur Windows, dans *Téléchargements/Nougat PDF* sur Android).
+
 ## Assistant Claude (intelligence artificielle)
 
-Bouton ✨ en haut : Claude lit le document ouvert et agit dessus. Exemples : « résume ce document »,
+Bouton ✨ **Claude** du dock : Claude lit le document ouvert et agit dessus. Exemples : « résume ce document »,
 « corrige les fautes de la page 2 », « traduis cette page en anglais », « remplace Dupont par Martin
-partout », « surligne les montants », « supprime la page 3 ». Il modifie le texte avec le même moteur
+partout », « surligne les montants », « supprime la page 3 », « remplis ce formulaire avec mes coordonnées ». Il modifie le texte avec le même moteur
 que l'outil Éditer (même police, même place), lit les documents scannés en regardant l'image de la
 page, et tout s'annule avec le bouton Annuler.
 

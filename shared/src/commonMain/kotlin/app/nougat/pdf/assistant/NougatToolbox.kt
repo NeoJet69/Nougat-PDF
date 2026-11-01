@@ -1,6 +1,8 @@
 package app.nougat.pdf.assistant
 
 import app.nougat.pdf.engine.BoxMark
+import app.nougat.pdf.engine.FIELD_OFF
+import app.nougat.pdf.engine.FieldKind
 import app.nougat.pdf.engine.InkMark
 import app.nougat.pdf.engine.NPoint
 import app.nougat.pdf.engine.NormRect
@@ -25,6 +27,7 @@ Ce que tu peux faire avec les outils :
 - replace_text : remplacer le texte d'une ligne existante. Le texte est réécrit au même endroit, dans la même police, la même taille et la même couleur. C'est l'outil à préférer pour corriger, traduire ou changer un texte.
 - add_text, cover_area, highlight_text : ajouter du texte, masquer une zone (rectangle blanc), surligner une ligne.
 - rotate_pages, delete_pages, move_page, insert_blank_page, go_to_page : organiser les pages et naviguer.
+- list_form_fields, fill_form_field : remplir un formulaire PDF (champs à remplir, cases à cocher, listes). Pour un formulaire, commence toujours par list_form_fields ; si le document n'a pas de champs, écris avec add_text aux bons endroits.
 
 Règles :
 - Les pages sont numérotées à partir de 1. Les numéros de ligne viennent de read_page : après avoir modifié une page, relis-la avant de la modifier à nouveau (les numéros peuvent changer).
@@ -127,6 +130,18 @@ Règles :
             mapOf("page" to int("Numéro de page")),
             listOf("page"),
         ),
+        ToolSpec(
+            "list_form_fields",
+            "Liste les champs du formulaire PDF : nom (name, à passer à fill_form_field), libellé, page, type, valeur actuelle et choix possibles.",
+            emptyMap(),
+            emptyList(),
+        ),
+        ToolSpec(
+            "fill_form_field",
+            "Remplit un champ du formulaire. Texte : le texte. Case à cocher : « oui » ou « non ». Boutons radio ou liste : un des choix donnés par list_form_fields.",
+            mapOf("name" to str("Nom du champ (name), donné par list_form_fields"), "value" to str("Valeur")),
+            listOf("name", "value"),
+        ),
     )
 
     override fun label(name: String, input: Map<String, Any?>): String {
@@ -145,6 +160,8 @@ Règles :
             "move_page" -> "Déplace une page"
             "insert_blank_page" -> "Ajoute une page blanche"
             "go_to_page" -> "Affiche la page $p"
+            "list_form_fields" -> "Regarde les champs du formulaire"
+            "fill_form_field" -> "Remplit « ${short(input["name"])} » : « ${short(input["value"])} »"
             else -> name
         }
     }
@@ -169,6 +186,8 @@ Règles :
                 s.goToPage(p)
                 ToolOutput.Text("Page ${p + 1} affichée.")
             }
+            "list_form_fields" -> listFormFields(s)
+            "fill_form_field" -> fillFormField(s, input.string("name"), input.string("value", allowEmpty = true))
             else -> throw ToolError("Outil inconnu : $name")
         }
     } catch (e: CancellationException) {
@@ -177,6 +196,68 @@ Règles :
         ToolOutput.Text(e.message ?: "Erreur", isError = true)
     } catch (e: Throwable) {
         ToolOutput.Text("Erreur : ${e.message ?: e::class.simpleName}", isError = true)
+    }
+
+    // ---- Formulaires ----------------------------------------------------------------------------
+
+    private suspend fun listFormFields(s: DocumentSession): ToolOutput {
+        val all = s.allFormFields()
+        if (all.isEmpty()) {
+            return ToolOutput.Text("Ce document n'a pas de champs de formulaire. Pour remplir un formulaire « à plat », écris avec add_text aux bons endroits (regarde la page avec view_page).")
+        }
+        return ToolOutput.Text(
+            buildString {
+                for ((name, group) in all.groupBy { it.name }) {
+                    val f = group.first()
+                    append("- name=\"").append(name).append('"')
+                    if (f.label != name) append(" (libellé : ").append(f.label).append(')')
+                    append(", page ").append(f.page + 1).append(", ")
+                    when (f.kind) {
+                        FieldKind.Text -> {
+                            append(if (f.multiline) "texte sur plusieurs lignes" else "texte")
+                            if (f.maxLength > 0) append(" (").append(f.maxLength).append(" caractères max)")
+                            append(", valeur : « ").append(f.value).append(" »")
+                        }
+                        FieldKind.CheckBox -> append("case à cocher, ").append(if (group.any { it.checked }) "cochée" else "non cochée")
+                        FieldKind.Radio -> {
+                            append("boutons radio, choix : ").append(group.mapNotNull { it.onValue }.distinct().joinToString())
+                            append(", choisi : ").append(group.firstOrNull { it.checked }?.onValue ?: "aucun")
+                        }
+                        FieldKind.Choice -> {
+                            append("liste, choix : ")
+                            append(f.options.zip(f.optionValues).joinToString { (shown, stored) -> if (shown == stored) shown else "$shown [$stored]" })
+                            append(", valeur : « ").append(f.displayValue).append(" »")
+                        }
+                    }
+                    if (f.readOnly) append(" (lecture seule)")
+                    appendLine()
+                }
+            }.trim(),
+        )
+    }
+
+    private suspend fun fillFormField(s: DocumentSession, name: String, raw: String): ToolOutput {
+        val group = s.allFormFields().filter { it.name == name }
+        val f = group.firstOrNull() ?: throw ToolError("Champ introuvable : « $name ». Utilise list_form_fields pour avoir les noms exacts.")
+        if (f.readOnly) throw ToolError("Le champ « ${f.label} » est en lecture seule.")
+        val wanted = raw.trim()
+        val value = when (f.kind) {
+            FieldKind.Text -> raw
+            FieldKind.CheckBox -> {
+                val yes = wanted.lowercase() in setOf("oui", "yes", "true", "1", "x", "on", "coché", "cochée", "cocher") || wanted == f.onValue
+                if (yes) f.onValue ?: "Yes" else FIELD_OFF
+            }
+            FieldKind.Radio -> group.mapNotNull { it.onValue }.firstOrNull { it.equals(wanted, ignoreCase = true) }
+                ?: throw ToolError("Choix inconnu pour « ${f.label} ». Choix possibles : ${group.mapNotNull { it.onValue }.distinct().joinToString()}")
+            FieldKind.Choice -> {
+                val i = f.options.indexOfFirst { it.equals(wanted, ignoreCase = true) }
+                    .takeIf { it >= 0 } ?: f.optionValues.indexOfFirst { it.equals(wanted, ignoreCase = true) }
+                if (i < 0) throw ToolError("Choix inconnu pour « ${f.label} ». Choix possibles : ${f.options.joinToString()}")
+                f.optionValues[i]
+            }
+        }
+        state.setFieldValueAwait(name, value)
+        return ToolOutput.Text("Champ « ${f.label} » rempli.")
     }
 
     // ---- Lecture -------------------------------------------------------------------------------

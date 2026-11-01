@@ -11,6 +11,7 @@ import app.nougat.pdf.assistant.ChatItem
 import app.nougat.pdf.engine.DesktopPdfEngine
 import app.nougat.pdf.engine.InkMark
 import app.nougat.pdf.engine.NPoint
+import app.nougat.pdf.engine.makeSampleForm
 import app.nougat.pdf.viewer.DockMode
 import app.nougat.pdf.viewer.PlatformFiles
 import app.nougat.pdf.viewer.SavedFile
@@ -43,6 +44,7 @@ class CaptureTest {
     private val dir = createTempDirectory("nougat-captures").toFile()
 
     private val sample: String by lazy { invoice() }
+    private val formSample: String by lazy { makeSampleForm(File(dir, "inscription.pdf")) }
 
     @Test
     fun captures() {
@@ -77,6 +79,17 @@ class CaptureTest {
             session.editingText = "Client : Marie Nougat"
         }
         shot("11-telephone-accueil-sombre", 412, 892, 2f, phone, dark = true)
+        shot("12-formulaire", 1440, 900, 1f, desktop, form = true) { it.editFieldDemo("email", "marie@nougat.ch") }
+        shot("13-telephone-formulaire", 412, 892, 2f, phone, form = true) { it.editFieldDemo("nom", "Marie Nougat") }
+    }
+
+    /** Formulaire : un champ en cours de saisie. */
+    private fun ViewerState.editFieldDemo(name: String, text: String) {
+        val session = session ?: error("Pas de document")
+        session.hasForm = true
+        val field = runBlocking { session.formFields(0) }.first { it.name == name }
+        session.startFieldEditing(field)
+        session.editingFieldText = text
     }
 
     /** Quelques annotations visibles : un trait sous le total et un surlignage sur la date. */
@@ -111,6 +124,8 @@ class CaptureTest {
         dark: Boolean = false,
         /** Ouvrir la facture d'exemple (et attendre qu'elle soit ouverte) avant [setup]. */
         withDocument: Boolean = false,
+        /** Ouvrir le formulaire d'exemple a la place de la facture. */
+        form: Boolean = false,
         setup: (ViewerState) -> Unit = {},
     ) {
         val files = FakeFiles(dir)
@@ -132,9 +147,9 @@ class CaptureTest {
                 time += 50_000_000L
                 Thread.sleep(60)
             }
-            if (withDocument) {
+            if (withDocument || form) {
                 // L'ouverture remet l'ecran a zero (pages, Claude…) : on attend qu'elle soit finie.
-                state.open(sample, "Facture-2023-042.pdf")
+                if (form) state.open(formSample, "Inscription-club.pdf") else state.open(sample, "Facture-2023-042.pdf")
                 val deadline = System.currentTimeMillis() + 30_000
                 while ((state.session == null || state.busyMessage != null) && System.currentTimeMillis() < deadline) frame()
                 check(state.session != null && state.busyMessage == null) { "La facture d'exemple ne s'est pas ouverte" }

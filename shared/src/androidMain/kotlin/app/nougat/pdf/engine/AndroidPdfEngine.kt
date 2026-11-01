@@ -145,6 +145,24 @@ private class AndroidPdfDocument(
         }
     }
 
+    override suspend fun formFields(index: Int): List<FormField> = withContext(Dispatchers.IO) {
+        textMutex.withLock {
+            runCatching {
+                val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }
+                pageFormFieldsAndroid(doc, index)
+            }.getOrDefault(emptyList())
+        }
+    }
+
+    override suspend fun hasForm(): Boolean = withContext(Dispatchers.IO) {
+        textMutex.withLock {
+            runCatching {
+                val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }
+                documentHasFormAndroid(doc)
+            }.getOrDefault(false)
+        }
+    }
+
     override fun close() {
         thread(name = "pdf-close", isDaemon = true) {
             runBlocking {

@@ -85,6 +85,14 @@ private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {
         mutex.withLock { pageTextBlocks(doc, index) }
     }
 
+    override suspend fun formFields(index: Int): List<FormField> = withContext(Dispatchers.IO) {
+        mutex.withLock { runCatching { pageFormFields(doc, index) }.getOrDefault(emptyList()) }
+    }
+
+    override suspend fun hasForm(): Boolean = withContext(Dispatchers.IO) {
+        mutex.withLock { runCatching { documentHasForm(doc) }.getOrDefault(false) }
+    }
+
     override fun close() {
         // On attend la fin d'un rendu en cours, sans bloquer l'ecran.
         thread(name = "pdf-close", isDaemon = true) {

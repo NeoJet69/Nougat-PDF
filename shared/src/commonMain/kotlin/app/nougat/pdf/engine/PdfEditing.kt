@@ -38,6 +38,13 @@ interface EditableDoc {
      * @throws TextEditException si la ligne n'est pas modifiable.
      */
     fun replaceText(block: TextBlock, newText: String): TextEditResult
+
+    /**
+     * Remplit le champ de formulaire [name] (voir [FormField]) : texte, choix d'une liste, valeur
+     * « cochee » d'une case ou d'un bouton radio, ou [FIELD_OFF] pour decocher.
+     * @throws FormFieldException si le champ ne peut pas prendre cette valeur.
+     */
+    fun setFieldValue(name: String, value: String)
 }
 
 /**

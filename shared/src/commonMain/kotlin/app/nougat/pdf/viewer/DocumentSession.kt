@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
+import app.nougat.pdf.engine.FormField
 import app.nougat.pdf.engine.Mark
 import app.nougat.pdf.engine.PageText
 import app.nougat.pdf.engine.TextBlock
@@ -75,6 +76,39 @@ class DocumentSession(
                 emptyList()
             }
         }
+    }
+
+    private val fields = HashMap<Int, List<FormField>>()
+    private val fieldsMutex = Mutex()
+
+    /** Les champs de formulaire de la page (calcules une fois). */
+    suspend fun formFields(page: Int): List<FormField> = fieldsMutex.withLock {
+        fields.getOrPut(page) {
+            try {
+                document.formFields(page)
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (_: Throwable) {
+                emptyList()
+            }
+        }
+    }
+
+    fun cachedFormFields(page: Int): List<FormField>? = fields[page]
+
+    /** Tous les champs du document, page par page (pour l'assistant et la touche Tab). */
+    suspend fun allFormFields(): List<FormField> = (0 until pageCount).flatMap { formFields(it) }
+
+    /** Le PDF est un formulaire : les champs sont mis en evidence en mode Lire. */
+    var hasForm by mutableStateOf(false)
+
+    /** Champ en cours de saisie (formulaire). */
+    var editingField: FormField? by mutableStateOf(null)
+    var editingFieldText by mutableStateOf("")
+
+    fun startFieldEditing(field: FormField) {
+        editingField = field
+        editingFieldText = field.value
     }
 
     private val scope = CoroutineScope(parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext[Job]))
