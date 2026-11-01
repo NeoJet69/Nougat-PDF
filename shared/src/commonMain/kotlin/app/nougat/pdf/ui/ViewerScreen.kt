@@ -120,6 +120,7 @@ import app.nougat.pdf.i18n.I18n
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.text.style.TextDirection
 
 /** Ilot du document le plus etroit qu'on accepte avant de deplacer la navigation sous la page. */
 private val MinDocumentIsland = 220.dp
@@ -396,7 +397,8 @@ private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, mo
         Box(
             Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = onAskPage).padding(horizontal = 10.dp, vertical = 8.dp),
         ) {
-            Text("${session.visiblePage + 1} / ${session.pageCount}", style = MaterialTheme.typography.titleSmall)
+            // Chiffres toujours de gauche a droite (sinon « 2 / 1 » en arabe).
+            Text("${session.visiblePage + 1} / ${session.pageCount}", style = MaterialTheme.typography.titleSmall.copy(textDirection = TextDirection.Ltr))
         }
         IslandButton(NougatIcons.ArrowRight, tr(Str.NextPage), onClick = session::nextPage, enabled = session.visiblePage < session.pageCount - 1)
         IslandDivider()
@@ -404,7 +406,7 @@ private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, mo
         Box(
             Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = session::resetZoom).padding(horizontal = 8.dp, vertical = 8.dp),
         ) {
-            Text("${(session.zoom * 100).roundToInt()} %", style = MaterialTheme.typography.titleSmall)
+            Text("${(session.zoom * 100).roundToInt()} %", style = MaterialTheme.typography.titleSmall.copy(textDirection = TextDirection.Ltr))
         }
         IslandButton(Icons.Filled.Add, tr(Str.ZoomIn), onClick = session::zoomIn)
     }
@@ -472,7 +474,7 @@ private fun SearchIsland(session: DocumentSession, modifier: Modifier) {
             else -> ""
         }
         if (status.isNotEmpty()) {
-            Text(status, style = MaterialTheme.typography.labelLarge, color = LocalNougatPalette.current.muted, modifier = Modifier.padding(horizontal = 8.dp))
+            Text(status, style = MaterialTheme.typography.labelLarge.copy(textDirection = TextDirection.Ltr), color = LocalNougatPalette.current.muted, modifier = Modifier.padding(horizontal = 8.dp))
         }
         IslandButton(Icons.Filled.KeyboardArrowUp, tr(Str.PreviousResult), onClick = session::previousHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
         IslandButton(Icons.Filled.KeyboardArrowDown, tr(Str.NextResult), onClick = session::nextHit, enabled = session.hits.isNotEmpty(), size = 40.dp)

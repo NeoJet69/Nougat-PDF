@@ -150,7 +150,7 @@ fun AboutDialog(version: String?, onDismiss: () -> Unit) {
 @Composable
 private fun Credit(name: String, role: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(name, style = MaterialTheme.typography.titleMedium)
+        Text(name, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
         Text(role, style = MaterialTheme.typography.bodyMedium, color = LocalNougatPalette.current.muted, textAlign = TextAlign.Center)
     }
 }
