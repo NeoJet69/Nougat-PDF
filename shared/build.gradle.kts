@@ -43,7 +43,7 @@ if (!desktopOnly) {
     kotlin {
         targets.getByName("android").withGroovyBuilder {
             setProperty("namespace", "app.nougat.pdf.shared")
-            setProperty("compileSdk", 36)
+            setProperty("compileSdk", 37)
             setProperty("minSdk", 26)
         }
         sourceSets.getByName("androidMain").dependencies {
