@@ -37,7 +37,7 @@ SaveChoiceText = Remplacer le panier d'origine, ou faire une copie dans un autre
 ReplaceOriginal = Remplacer l'original (assumer)
 SaveCopy = Faire une copie miaou…
 
-Tagline = Lis, griffe, signe d'une patte et transforme tes PDF.\nAvec Claude qui ronronne dedans — et sans Internet pour le reste.
+Tagline = Lis, griffe, signe d'une patte et transforme tes PDF.\nGratuit et sans pub (ni chien) — avec Claude qui ronronne dedans.
 OpenPdf = Ouvrrrir un PDF
 DropHintDesktop = Lâche un fichier ici comme une souris morte, ou choisis-le  ·  Ctrl+O
 DropHintPhone = Choisis un fichier dans ton téléphone (pas dans la litière)
@@ -67,7 +67,7 @@ Languages = Langues
 Dialects = Dialectes
 MadeBy = Par NeoJet, Nougat 🐱 et Caramel ✨
 About = Qui a fait ça ?
-AboutTagline = Gratuit, hors ligne, sans pub (ni chien).
+AboutTagline = Gratuit et sans pub (ni chien).
 AboutNeoJet = L'humain : idée, direction et croquettes
 AboutNougat = Le chef, évidemment 🐾
 AboutCaramel = Code et design, et grattouilles (Claude, une IA d'Anthropic)

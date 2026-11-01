@@ -33,7 +33,7 @@ SaveChoiceText = Zastąpić oryginalny plik czy zapisać kopię w wybranym miejs
 ReplaceOriginal = Zastąp oryginał
 SaveCopy = Zapisz kopię…
 
-Tagline = Czytaj, edytuj, podpisuj i przekształcaj swoje pliki PDF.\nZ wbudowanym Claude — i bez internetu do wszystkiego innego.
+Tagline = Czytaj, edytuj, podpisuj i przekształcaj swoje pliki PDF.\nZa darmo i bez reklam — z wbudowanym Claude.
 OpenPdf = Otwórz PDF
 DropHintDesktop = Przeciągnij tu plik lub wybierz go  ·  Ctrl+O
 DropHintPhone = Wybierz plik na telefonie
@@ -63,7 +63,7 @@ Languages = Języki
 Dialects = Dialekty
 MadeBy = Autorzy: NeoJet, Nougat 🐱 i Caramel ✨
 About = O aplikacji
-AboutTagline = Bezpłatna, offline, bez reklam.
+AboutTagline = Za darmo i bez reklam.
 AboutNeoJet = Pomysł, kierownictwo i testy
 AboutNougat = Maskotka i główny tester 🐾
 AboutCaramel = Kod i projekt (Claude, AI od Anthropic)

@@ -33,7 +33,7 @@ SaveChoiceText = Ersätta originalfilen, eller spara en kopia var du vill?
 ReplaceOriginal = Ersätt originalet
 SaveCopy = Spara en kopia…
 
-Tagline = Läs, redigera, signera och förvandla dina PDF-filer.\nMed Claude inbyggt — och utan internet för allt annat.
+Tagline = Läs, redigera, signera och förvandla dina PDF-filer.\nGratis och utan reklam — med Claude inbyggt.
 OpenPdf = Öppna en PDF
 DropHintDesktop = Dra hit en fil eller välj en  ·  Ctrl+O
 DropHintPhone = Välj en fil på telefonen
@@ -63,7 +63,7 @@ Languages = Språk
 Dialects = Dialekter
 MadeBy = Av NeoJet, Nougat 🐱 och Caramel ✨
 About = Om
-AboutTagline = Gratis, offline, utan reklam.
+AboutTagline = Gratis och utan reklam.
 AboutNeoJet = Idé, ledning och tester
 AboutNougat = Maskot och chefstestare 🐾
 AboutCaramel = Kod och design (Claude, en AI från Anthropic)

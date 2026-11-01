@@ -34,7 +34,7 @@ SaveChoiceText = هل تريد استبدال الملف الأصلي، أم ح�
 ReplaceOriginal = استبدال الأصل
 SaveCopy = حفظ نسخة…
 
-Tagline = اقرأ ملفات PDF وعدّلها ووقّعها وحوّلها.\nمع Claude مدمجًا — ودون إنترنت لكل ما عدا ذلك.
+Tagline = اقرأ ملفات PDF وعدّلها ووقّعها وحوّلها.\nمجاني ودون إعلانات — مع Claude مدمجًا.
 OpenPdf = فتح ملف PDF
 DropHintDesktop = اسحب ملفًا إلى هنا أو اختره  ·  Ctrl+O
 DropHintPhone = اختر ملفًا من هاتفك
@@ -64,7 +64,7 @@ Languages = اللغات
 Dialects = اللهجات
 MadeBy = من NeoJet وNougat 🐱 وCaramel ✨
 About = حول التطبيق
-AboutTagline = مجاني، دون إنترنت، دون إعلانات.
+AboutTagline = مجاني ودون إعلانات.
 AboutNeoJet = الفكرة والإدارة والاختبار
 AboutNougat = التميمة وكبير المختبرين 🐾
 AboutCaramel = البرمجة والتصميم (Claude، ذكاء اصطناعي من Anthropic)

@@ -1,6 +1,6 @@
 # Nougat PDF 🐱
 
-Un lecteur et éditeur de PDF **gratuit**, **hors ligne**, pour **Windows** et **Android**.
+Un lecteur et éditeur de PDF **gratuit** et **sans pub**, pour **Windows** et **Android**.
 
 ## Modifier un PDF
 

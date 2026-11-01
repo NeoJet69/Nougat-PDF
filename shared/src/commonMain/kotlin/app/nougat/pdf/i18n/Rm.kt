@@ -34,7 +34,7 @@ SaveChoiceText = Remplazzar la datoteca originala u memorisar ina copia nua che 
 ReplaceOriginal = Remplazzar l'original
 SaveCopy = Memorisar ina copia…
 
-Tagline = Legia, elavura, suttascriva e transfurma tes PDFs.\nCun Claude integrà — e senza internet per tut il rest.
+Tagline = Legia, elavura, suttascriva e transfurma tes PDFs.\nGratuit e senza reclama — cun Claude integrà.
 OpenPdf = Avrir in PDF
 DropHintDesktop = Tira ina datoteca qua u tscherna ina  ·  Ctrl+O
 DropHintPhone = Tscherna ina datoteca sin tes telefonin
@@ -64,7 +64,7 @@ Languages = Linguas
 Dialects = Dialects
 MadeBy = Da NeoJet, Nougat 🐱 e Caramel ✨
 About = Davart
-AboutTagline = Gratuit, offline, senza reclama.
+AboutTagline = Gratuit e senza reclama.
 AboutNeoJet = Idea, direcziun e tests
 AboutNougat = Mascotta e testader principal 🐾
 AboutCaramel = Code e design (Claude, ina IA dad Anthropic)

@@ -34,7 +34,7 @@ SaveChoiceText = Erlec'hiañ ar restr orin, pe enrollañ un eilskouerenn el lec'
 ReplaceOriginal = Erlec'hiañ an orin
 SaveCopy = Enrollañ un eilskouerenn…
 
-Tagline = Lennit, embannit, sinit ha treuzfurmit ho PDF.\nGant Claude enframmet — hag hep Internet evit kement tra all.
+Tagline = Lennit, embannit, sinit ha treuzfurmit ho PDF.\nDigoust ha hep bruderezh — gant Claude enframmet.
 OpenPdf = Digeriñ ur PDF
 DropHintDesktop = Riklit ur restr amañ, pe dibabit anezhi  ·  Ctrl+O
 DropHintPhone = Dibabit ur restr war ho pellgomzer
@@ -64,7 +64,7 @@ Languages = Yezhoù
 Dialects = Rannyezhoù
 MadeBy = Gant NeoJet, Nougat 🐱 ha Caramel ✨
 About = Diwar-benn
-AboutTagline = Digoust, ezlinenn, hep bruderezh.
+AboutTagline = Digoust ha hep bruderezh.
 AboutNeoJet = Mennozh, renerezh hag amprouadennoù
 AboutNougat = Maskotenn hag amprouer-penn 🐾
 AboutCaramel = Kod ha design (Claude, un IA gant Anthropic)

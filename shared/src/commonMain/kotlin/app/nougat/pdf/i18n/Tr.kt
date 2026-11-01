@@ -33,7 +33,7 @@ SaveChoiceText = Orijinal dosya değiştirilsin mi, yoksa istediğiniz yere bir 
 ReplaceOriginal = Orijinalin yerine yaz
 SaveCopy = Kopya kaydet…
 
-Tagline = PDF'lerinizi okuyun, düzenleyin, imzalayın ve dönüştürün.\nClaude yerleşik — geri kalan her şey için İnternet gerekmez.
+Tagline = PDF'lerinizi okuyun, düzenleyin, imzalayın ve dönüştürün.\nÜcretsiz ve reklamsız — Claude yerleşik.
 OpenPdf = PDF aç
 DropHintDesktop = Dosyayı buraya sürükleyin veya seçin  ·  Ctrl+O
 DropHintPhone = Telefonunuzdan bir dosya seçin
@@ -63,7 +63,7 @@ Languages = Diller
 Dialects = Lehçeler
 MadeBy = NeoJet, Nougat 🐱 ve Caramel ✨ tarafından
 About = Hakkında
-AboutTagline = Ücretsiz, çevrimdışı, reklamsız.
+AboutTagline = Ücretsiz ve reklamsız.
 AboutNeoJet = Fikir, yönetim ve testler
 AboutNougat = Maskot ve baş test uzmanı 🐾
 AboutCaramel = Kod ve tasarım (Claude, Anthropic'in bir yapay zekâsı)

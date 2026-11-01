@@ -34,7 +34,7 @@ SaveChoiceText = Remplaçar lo fichièr d'origina, o enregistrar una còpia ont 
 ReplaceOriginal = Remplaçar l'original
 SaveCopy = Enregistrar una còpia…
 
-Tagline = Legissètz, modificatz, signatz e transformatz vòstres PDF.\nAmb Claude integrat — e sens Internet per tot lo demai.
+Tagline = Legissètz, modificatz, signatz e transformatz vòstres PDF.\nGratuit e sens publicitat — amb Claude integrat.
 OpenPdf = Dobrir un PDF
 DropHintDesktop = Fasètz lisar un fichièr aquí, o causissètz-lo  ·  Ctrl+O
 DropHintPhone = Causissètz un fichièr sus vòstre telefòn
@@ -64,7 +64,7 @@ Languages = Lengas
 Dialects = Dialèctes
 MadeBy = Per NeoJet, Nougat 🐱 e Caramel ✨
 About = A prepaus
-AboutTagline = Gratuit, fòra linha, sens publicitat.
+AboutTagline = Gratuit e sens publicitat.
 AboutNeoJet = Idèa, direccion e tèsts
 AboutNougat = Mascòta e tèstaire en cap 🐾
 AboutCaramel = Còdi e concepcion (Claude, una IA d'Anthropic)

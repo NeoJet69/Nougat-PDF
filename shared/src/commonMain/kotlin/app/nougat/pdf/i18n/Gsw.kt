@@ -34,7 +34,7 @@ SaveChoiceText = S Original ersetze oder e Kopie spichere, wo du wotsch?
 ReplaceOriginal = S Original ersetze
 SaveCopy = E Kopie spichere…
 
-Tagline = Lies, bearbeit, unterschriib und verwandle dini PDFs.\nMit Claude debii — und ohni Internet für alles anderi.
+Tagline = Lies, bearbeit, unterschriib und verwandle dini PDFs.\nGratis und ohni Wärbig — mit Claude debii.
 OpenPdf = Es PDF uftue
 DropHintDesktop = Zieh e Datei da ane oder wähl si us  ·  Ctrl+O
 DropHintPhone = Wähl e Datei uf dim Handy
@@ -64,7 +64,7 @@ Languages = Sprache
 Dialects = Dialäkt
 MadeBy = Vo NeoJet, Nougat 🐱 und Caramel ✨
 About = Über d App
-AboutTagline = Gratis, offline, ohni Wärbig.
+AboutTagline = Gratis und ohni Wärbig.
 AboutNeoJet = Idee, Leitig und Tests
 AboutNougat = Maskottli und Chef-Tester 🐾
 AboutCaramel = Code und Design (Claude, e KI vo Anthropic)

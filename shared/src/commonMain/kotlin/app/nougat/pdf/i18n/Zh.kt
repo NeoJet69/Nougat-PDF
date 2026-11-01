@@ -33,7 +33,7 @@ SaveChoiceText = 替换原始文件，还是把副本保存到你选择的位置
 ReplaceOriginal = 替换原文件
 SaveCopy = 保存副本…
 
-Tagline = 阅读、编辑、签署和转换你的 PDF。\n内置 Claude——其他一切都无需联网。
+Tagline = 阅读、编辑、签署和转换你的 PDF。\n免费、无广告——内置 Claude。
 OpenPdf = 打开 PDF
 DropHintDesktop = 把文件拖到这里，或选择文件  ·  Ctrl+O
 DropHintPhone = 从手机中选择文件
@@ -63,7 +63,7 @@ Languages = 语言
 Dialects = 方言
 MadeBy = 由 NeoJet、Nougat 🐱 和 Caramel ✨ 制作
 About = 关于
-AboutTagline = 免费、离线、无广告。
+AboutTagline = 免费、无广告。
 AboutNeoJet = 创意、指导与测试
 AboutNougat = 吉祥物兼首席测试员 🐾
 AboutCaramel = 代码与设计（Claude，Anthropic 的 AI）

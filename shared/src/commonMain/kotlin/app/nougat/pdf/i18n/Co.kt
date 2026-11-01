@@ -34,7 +34,7 @@ SaveChoiceText = Rimpiazzà u schedariu d'urigine, o arregistrà una copia induv
 ReplaceOriginal = Rimpiazzà l'uriginale
 SaveCopy = Arregistrà una copia…
 
-Tagline = Leghjite, mudificate, firmate è trasfurmate i vostri PDF.\nCù Claude integratu — è senza Internet per tuttu u restu.
+Tagline = Leghjite, mudificate, firmate è trasfurmate i vostri PDF.\nGratisi è senza publicità — cù Claude integratu.
 OpenPdf = Apre un PDF
 DropHintDesktop = Fate sguillà quì un schedariu, o sceglitelu  ·  Ctrl+O
 DropHintPhone = Sceglite un schedariu nant'à u vostru telefuninu
@@ -64,7 +64,7 @@ Languages = Lingue
 Dialects = Dialetti
 MadeBy = Da NeoJet, Nougat 🐱 è Caramel ✨
 About = Apprupositu
-AboutTagline = Gratisi, fora di linea, senza publicità.
+AboutTagline = Gratisi è senza publicità.
 AboutNeoJet = Idea, direzzione è teste
 AboutNougat = Mascotta è testadore in capu 🐾
 AboutCaramel = Codice è cuncepimentu (Claude, una IA d'Anthropic)
