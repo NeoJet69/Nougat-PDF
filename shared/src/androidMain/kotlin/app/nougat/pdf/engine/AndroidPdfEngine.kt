@@ -110,6 +110,19 @@ private class AndroidPdfDocument(
         }
     }
 
+    override suspend fun renderPageJpeg(index: Int, widthPx: Int): ByteArray = withContext(Dispatchers.IO) {
+        renderMutex.withLock {
+            renderer.openPage(index).use { page ->
+                val height = (widthPx * page.height / page.width.toFloat()).roundToInt().coerceAtLeast(1)
+                val bitmap = Bitmap.createBitmap(widthPx, height, Bitmap.Config.ARGB_8888)
+                bitmap.eraseColor(Color.WHITE)
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                java.io.ByteArrayOutputStream().also { bitmap.compress(Bitmap.CompressFormat.JPEG, 85, it) }.toByteArray()
+                    .also { bitmap.recycle() }
+            }
+        }
+    }
+
     override suspend fun pageText(index: Int): PageText = withContext(Dispatchers.IO) {
         textMutex.withLock {
             val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }

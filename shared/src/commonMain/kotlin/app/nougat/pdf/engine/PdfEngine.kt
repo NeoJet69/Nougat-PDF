@@ -35,6 +35,9 @@ interface PdfDocument : AutoCloseable {
 
     /** Les lignes de texte de la page [index], pour les modifier. */
     suspend fun textBlocks(index: Int): List<TextBlock>
+
+    /** La page [index] en image JPEG (pour l'assistant). */
+    suspend fun renderPageJpeg(index: Int, widthPx: Int): ByteArray
 }
 
 data class PageSize(val width: Float, val height: Float) {

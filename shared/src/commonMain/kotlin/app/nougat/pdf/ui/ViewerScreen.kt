@@ -44,6 +44,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -154,6 +156,15 @@ fun ViewerScreen(
                 },
                 actions = {
                     if (wide) ZoomControls(session)
+                    if (state.assistantAvailable) {
+                        IconButton(onClick = { state.assistant.open = !state.assistant.open }) {
+                            Icon(
+                                NougatIcons.Sparkle,
+                                contentDescription = "Assistant Claude",
+                                tint = if (state.assistant.open) MaterialTheme.colorScheme.primary else LocalContentColor.current,
+                            )
+                        }
+                    }
                     IconButton(onClick = session::openSearch) { Icon(Icons.Filled.Search, contentDescription = "Rechercher") }
                     if (!narrow) {
                         IconButton(onClick = { state.pagesOpen = true }) { Icon(NougatIcons.Pages, contentDescription = "Pages") }
@@ -174,19 +185,37 @@ fun ViewerScreen(
             SearchBar(session)
             HorizontalDivider()
         }
-        Box(Modifier.fillMaxSize()) {
-            PageList(
-                session = session,
-                state = state,
-                onTextRequest = { textRequest = it },
-                onSignatureNeeded = { page, at ->
-                    if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
-                },
-            )
-            if (tools.editing) {
-                EditToolbar(state, Modifier.align(Alignment.BottomCenter).padding(12.dp))
-            } else {
-                PageIndicator(session, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+        val dockToolbar = platform.isDesktop
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            // Ecran large : l'assistant a cote du document ; sinon par-dessus.
+            val sidePanel = maxWidth >= 900.dp
+            Column(Modifier.fillMaxSize()) {
+                if (tools.editing && dockToolbar) EditToolbar(state, Modifier, docked = true)
+                Row(Modifier.fillMaxSize()) {
+                    Box(Modifier.weight(1f).fillMaxHeight()) {
+                        PageList(
+                            session = session,
+                            state = state,
+                            inlineEditor = platform.isDesktop,
+                            onTextRequest = { textRequest = it },
+                            onSignatureNeeded = { page, at ->
+                                if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
+                            },
+                        )
+                        if (tools.editing && !dockToolbar) {
+                            EditToolbar(state, Modifier.align(Alignment.BottomCenter).padding(12.dp))
+                        } else {
+                            PageIndicator(session, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+                        }
+                    }
+                    if (state.assistant.open && sidePanel) {
+                        VerticalDivider()
+                        AssistantPanel(state, Modifier.width(400.dp).fillMaxHeight())
+                    }
+                }
+            }
+            if (state.assistant.open && !sidePanel) {
+                AssistantPanel(state, Modifier.fillMaxSize())
             }
         }
     }
@@ -287,19 +316,23 @@ private fun OverflowMenu(state: ViewerState, session: DocumentSession, onOpenFil
     }
 }
 
-/** La barre d'outils d'edition, en bas de l'ecran. */
+/**
+ * La barre d'outils d'edition : flottante en bas de l'ecran (telephone), ou fixee sous la barre
+ * du haut ([docked], ordinateur : la barre des taches de Windows ne peut pas la cacher).
+ */
 @Composable
-private fun EditToolbar(state: ViewerState, modifier: Modifier) {
+private fun EditToolbar(state: ViewerState, modifier: Modifier, docked: Boolean = false) {
     val tools = state.tools
     var showColors by remember { mutableStateOf(false) }
     val colors = MaterialTheme.colorScheme
-    Column(modifier.widthIn(max = 760.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+
+    val hint: @Composable () -> Unit = {
         if (tools.tool == Tool.EditText && state.session?.editingBlock == null) {
             Surface(
                 shape = RoundedCornerShape(50),
                 color = colors.inverseSurface.copy(alpha = 0.9f),
                 contentColor = colors.inverseOnSurface,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(vertical = 6.dp),
             ) {
                 Text(
                     "Touchez une ligne encadrée pour modifier son texte",
@@ -308,8 +341,10 @@ private fun EditToolbar(state: ViewerState, modifier: Modifier) {
                 )
             }
         }
+    }
+    val colorRow: @Composable () -> Unit = {
         if (showColors && tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)) {
-            Surface(shape = RoundedCornerShape(50), tonalElevation = 3.dp, shadowElevation = 6.dp, modifier = Modifier.padding(bottom = 8.dp)) {
+            Surface(shape = RoundedCornerShape(50), tonalElevation = 3.dp, shadowElevation = 6.dp, modifier = Modifier.padding(vertical = 6.dp)) {
                 Box(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
                     ColorRow(
                         if (tools.tool == Tool.Highlighter) InkColors.highlighter else InkColors.pen,
@@ -318,38 +353,55 @@ private fun EditToolbar(state: ViewerState, modifier: Modifier) {
                 }
             }
         }
-        Surface(
-            shape = RoundedCornerShape(28.dp),
-            color = colors.surfaceContainerLowest,
-            tonalElevation = 3.dp,
-            shadowElevation = 8.dp,
+    }
+    val buttons: @Composable () -> Unit = {
+        Row(
+            Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 6.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 6.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                ToolButton(NougatIcons.Hand, Tool.Pan, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.EditText, Tool.EditText, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Pen, Tool.Pen, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Highlighter, Tool.Highlighter, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Text, Tool.Text, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Whiteout, Tool.Whiteout, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Signature, Tool.Signature, tools.tool) { tools.tool = it }
-                ToolButton(NougatIcons.Eraser, Tool.Eraser, tools.tool) { tools.tool = it }
-                Box(Modifier.padding(horizontal = 6.dp).width(1.dp).height(28.dp).background(colors.outlineVariant))
-                // Pastille de couleur
-                Box(
-                    Modifier
-                        .padding(horizontal = 6.dp)
-                        .size(26.dp)
-                        .clip(CircleShape)
-                        .background(Color(tools.color))
-                        .clickable { showColors = !showColors },
-                )
-                IconButton(onClick = state::undo, enabled = state.canUndo) {
-                    Icon(NougatIcons.Undo, contentDescription = "Annuler")
-                }
+            ToolButton(NougatIcons.Hand, Tool.Pan, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.EditText, Tool.EditText, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Pen, Tool.Pen, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Highlighter, Tool.Highlighter, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Text, Tool.Text, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Whiteout, Tool.Whiteout, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Signature, Tool.Signature, tools.tool) { tools.tool = it }
+            ToolButton(NougatIcons.Eraser, Tool.Eraser, tools.tool) { tools.tool = it }
+            Box(Modifier.padding(horizontal = 6.dp).width(1.dp).height(28.dp).background(colors.outlineVariant))
+            // Pastille de couleur
+            Box(
+                Modifier
+                    .padding(horizontal = 6.dp)
+                    .size(26.dp)
+                    .clip(CircleShape)
+                    .background(Color(tools.color))
+                    .clickable { showColors = !showColors },
+            )
+            IconButton(onClick = state::undo, enabled = state.canUndo) {
+                Icon(NougatIcons.Undo, contentDescription = "Annuler")
             }
+        }
+    }
+
+    if (docked) {
+        Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(color = colors.surfaceContainer, modifier = Modifier.fillMaxWidth()) {
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { buttons() }
+            }
+            HorizontalDivider()
+            colorRow()
+            hint()
+        }
+    } else {
+        Column(modifier.widthIn(max = 760.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            hint()
+            colorRow()
+            Surface(
+                shape = RoundedCornerShape(28.dp),
+                color = colors.surfaceContainerLowest,
+                tonalElevation = 3.dp,
+                shadowElevation = 8.dp,
+            ) { buttons() }
         }
     }
 }
@@ -434,6 +486,7 @@ private fun SearchBar(session: DocumentSession) {
 private fun PageList(
     session: DocumentSession,
     state: ViewerState,
+    inlineEditor: Boolean,
     onTextRequest: (TextRequest) -> Unit,
     onSignatureNeeded: (Int, NPoint) -> Unit,
 ) {
@@ -493,7 +546,7 @@ private fun PageList(
                 verticalArrangement = Arrangement.spacedBy(PagePadding),
             ) {
                 items(session.pageCount, key = { it }) { index ->
-                    PageView(session, state, index, pageWidth, onTextRequest, onSignatureNeeded)
+                    PageView(session, state, index, pageWidth, inlineEditor, onTextRequest, onSignatureNeeded)
                 }
             }
         }
@@ -506,6 +559,7 @@ private fun PageView(
     state: ViewerState,
     index: Int,
     width: Dp,
+    inlineEditor: Boolean,
     onTextRequest: (TextRequest) -> Unit,
     onSignatureNeeded: (Int, NPoint) -> Unit,
 ) {
@@ -571,6 +625,8 @@ private fun PageView(
             onSignatureNeeded = { at -> onSignatureNeeded(index, at) },
             onReplaceText = state::replaceText,
             onMessage = state::showToast,
+            inlineEditor = inlineEditor,
+            onCommitPending = state::commitPendingTextEditLater,
         )
     }
 }

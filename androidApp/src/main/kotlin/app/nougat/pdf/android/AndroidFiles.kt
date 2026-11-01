@@ -85,6 +85,14 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
 
     override val canShare: Boolean = true
 
+    private val prefs = app.getSharedPreferences("nougat", android.content.Context.MODE_PRIVATE)
+
+    override fun loadSetting(key: String): String? = prefs.getString(key, null)
+
+    override fun saveSetting(key: String, value: String) {
+        prefs.edit().apply { if (value.isEmpty()) remove(key) else putString(key, value) }.apply()
+    }
+
     override suspend fun share(path: String, name: String) {
         val dir = File(app.cacheDir, "partage").apply { mkdirs() }
         dir.listFiles()?.forEach { it.delete() }

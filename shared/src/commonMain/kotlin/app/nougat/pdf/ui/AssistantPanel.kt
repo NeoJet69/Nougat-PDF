@@ -1,0 +1,283 @@
+package app.nougat.pdf.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import app.nougat.pdf.assistant.AssistantModels
+import app.nougat.pdf.assistant.ChatItem
+import app.nougat.pdf.viewer.ViewerState
+
+private val Suggestions = listOf(
+    "Résume ce document en quelques points.",
+    "Corrige les fautes d'orthographe de la page affichée.",
+    "Traduis la page affichée en anglais, en gardant la mise en page.",
+    "Remplace « … » par « … » dans tout le document.",
+    "Surligne les dates et les montants importants.",
+)
+
+/** Le panneau de l'assistant Claude : conversation, ou reglages (cle API, modele). */
+@Composable
+fun AssistantPanel(state: ViewerState, modifier: Modifier) {
+    val a = state.assistant
+    val colors = MaterialTheme.colorScheme
+    Surface(modifier, color = colors.surface) {
+        Column(Modifier.fillMaxSize()) {
+            Row(
+                Modifier.fillMaxWidth().background(colors.surfaceContainer).padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(NougatIcons.Sparkle, contentDescription = null, tint = colors.primary)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text("Assistant Claude", style = MaterialTheme.typography.titleMedium)
+                    Text(AssistantModels.label(state.assistantModel), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
+                }
+                IconButton(onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running) {
+                    Icon(Icons.Filled.Refresh, contentDescription = "Nouvelle conversation")
+                }
+                IconButton(onClick = { a.showSettings = !a.showSettings }) {
+                    Icon(Icons.Filled.Settings, contentDescription = "Réglages de l'assistant")
+                }
+                IconButton(onClick = { a.open = false }) {
+                    Icon(Icons.Filled.Close, contentDescription = "Fermer l'assistant")
+                }
+            }
+            HorizontalDivider()
+            if (a.showSettings || state.apiKey.isBlank()) {
+                AssistantSettingsForm(state, Modifier.weight(1f).fillMaxWidth())
+            } else {
+                Conversation(state, Modifier.weight(1f).fillMaxWidth())
+                HorizontalDivider()
+                InputRow(state)
+            }
+        }
+    }
+}
+
+@Composable
+private fun Conversation(state: ViewerState, modifier: Modifier) {
+    val a = state.assistant
+    val listState = rememberLazyListState()
+    LaunchedEffect(a.items.size, a.running) {
+        val last = a.items.size + (if (a.running) 1 else 0) - 1
+        if (last >= 0) listState.animateScrollToItem(last)
+    }
+    LazyColumn(
+        state = listState,
+        modifier = modifier,
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        if (a.items.isEmpty()) {
+            item { Welcome(onPick = { a.input = it }) }
+        }
+        items(a.items) { ChatBubble(it) }
+        if (a.running) {
+            item {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(4.dp)) {
+                    CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
+                    Spacer(Modifier.width(10.dp))
+                    Text("Claude travaille sur le document…", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Welcome(onPick: (String) -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            "Demandez à Claude de lire, corriger, traduire ou modifier ce PDF. Il agit directement sur le document, et tout s'annule avec le bouton Annuler.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = colors.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(4.dp))
+        for (s in Suggestions) {
+            Surface(
+                shape = RoundedCornerShape(14.dp),
+                color = colors.surfaceContainerHigh,
+                modifier = Modifier.fillMaxWidth().clickable { onPick(s) },
+            ) {
+                Text(s, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChatBubble(item: ChatItem) {
+    val colors = MaterialTheme.colorScheme
+    when (item) {
+        is ChatItem.User -> Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            Surface(shape = RoundedCornerShape(16.dp, 16.dp, 4.dp, 16.dp), color = colors.primaryContainer, contentColor = colors.onPrimaryContainer) {
+                Text(item.text, modifier = Modifier.widthIn(max = 320.dp).padding(horizontal = 12.dp, vertical = 8.dp))
+            }
+        }
+        is ChatItem.Assistant -> Surface(shape = RoundedCornerShape(16.dp, 16.dp, 16.dp, 4.dp), color = colors.surfaceContainerHigh) {
+            SelectionContainer {
+                Text(item.text, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
+            }
+        }
+        is ChatItem.Action -> Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(horizontal = 4.dp)) {
+            val failed = item.ok == false
+            Icon(
+                if (failed) Icons.Filled.Warning else Icons.Filled.Check,
+                contentDescription = null,
+                tint = if (failed) colors.error else NougatColors.StatusOk,
+                modifier = Modifier.size(16.dp).padding(top = 2.dp),
+            )
+            Spacer(Modifier.width(6.dp))
+            Column {
+                Text(item.label, style = MaterialTheme.typography.labelMedium, color = colors.onSurfaceVariant)
+                item.detail?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = colors.error) }
+            }
+        }
+        is ChatItem.Error -> Surface(shape = RoundedCornerShape(12.dp), color = colors.errorContainer, contentColor = colors.onErrorContainer) {
+            Text(item.text, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
+        }
+    }
+}
+
+@Composable
+private fun InputRow(state: ViewerState) {
+    val a = state.assistant
+    Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.Bottom) {
+        OutlinedTextField(
+            value = a.input,
+            onValueChange = { a.input = it },
+            placeholder = { Text("Demandez quelque chose à Claude…") },
+            maxLines = 5,
+            enabled = !a.running,
+            modifier = Modifier.weight(1f).onPreviewKeyEvent { e ->
+                // Entree envoie, Maj+Entree va a la ligne (ordinateur).
+                if (e.type == KeyEventType.KeyDown && (e.key == Key.Enter || e.key == Key.NumPadEnter) && !e.isShiftPressed) {
+                    state.sendToAssistant(a.input)
+                    true
+                } else false
+            },
+        )
+        Spacer(Modifier.width(8.dp))
+        if (a.running) {
+            OutlinedButton(onClick = state::stopAssistant, modifier = Modifier.padding(bottom = 4.dp)) { Text("Arrêter") }
+        } else {
+            Button(onClick = { state.sendToAssistant(a.input) }, enabled = a.input.isNotBlank(), modifier = Modifier.padding(bottom = 4.dp)) {
+                Text("Envoyer")
+            }
+        }
+    }
+}
+
+/** La cle API personnelle et le choix du modele. */
+@Composable
+private fun AssistantSettingsForm(state: ViewerState, modifier: Modifier) {
+    var key by remember { mutableStateOf(state.apiKey) }
+    var model by remember { mutableStateOf(state.assistantModel) }
+    val focus = remember { FocusRequester() }
+    val colors = MaterialTheme.colorScheme
+    Column(modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("Votre propre accès à Claude", style = MaterialTheme.typography.titleSmall)
+        Text(
+            "L'assistant utilise votre clé API Anthropic personnelle. Elle reste sur cet appareil. " +
+                "La consommation est facturée sur votre compte Anthropic, à l'usage (c'est séparé d'un abonnement Claude.ai).",
+            style = MaterialTheme.typography.bodyMedium,
+            color = colors.onSurfaceVariant,
+        )
+        Surface(shape = RoundedCornerShape(12.dp), color = colors.surfaceContainerHigh) {
+            Text(
+                "1. Créez un compte sur console.anthropic.com\n" +
+                    "2. Ajoutez un moyen de paiement (Billing)\n" +
+                    "3. API Keys → Create Key, puis collez la clé ci-dessous",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(12.dp),
+            )
+        }
+        OutlinedTextField(
+            value = key,
+            onValueChange = { key = it.trim() },
+            label = { Text("Clé API (sk-ant-…)") },
+            singleLine = true,
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth().focusRequester(focus),
+        )
+        Text("Modèle", style = MaterialTheme.typography.titleSmall)
+        for ((id, name, description) in AssistantModels.choices) {
+            Row(
+                Modifier.fillMaxWidth().clickable { model = id }.padding(vertical = 2.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                RadioButton(selected = model == id, onClick = { model = id })
+                Column {
+                    Text(name, style = MaterialTheme.typography.bodyLarge)
+                    Text(description, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
+                }
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = { state.saveAssistantSettings(key, model) }, enabled = key.isNotBlank()) { Text("Enregistrer") }
+            if (state.apiKey.isNotBlank()) {
+                TextButton(onClick = { state.assistant.showSettings = false }) { Text("Annuler") }
+                Spacer(Modifier.weight(1f))
+                TextButton(onClick = { key = ""; state.saveAssistantSettings("", model) }) {
+                    Text("Oublier la clé", color = colors.error)
+                }
+            }
+        }
+    }
+}

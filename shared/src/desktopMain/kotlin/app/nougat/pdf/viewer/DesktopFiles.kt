@@ -77,4 +77,13 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
     override val canShare: Boolean = false
 
     override suspend fun share(path: String, name: String) = Unit
+
+    private val prefs = java.util.prefs.Preferences.userRoot().node("app/nougat/pdf")
+
+    override fun loadSetting(key: String): String? = prefs.get(key, null)
+
+    override fun saveSetting(key: String, value: String) {
+        if (value.isEmpty()) prefs.remove(key) else prefs.put(key, value)
+        prefs.flush()
+    }
 }

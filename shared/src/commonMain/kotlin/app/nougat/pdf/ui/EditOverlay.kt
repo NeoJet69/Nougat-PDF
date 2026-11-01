@@ -13,7 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -92,6 +97,10 @@ fun EditOverlay(
     onSignatureNeeded: (NPoint) -> Unit,
     onReplaceText: (TextBlock, String) -> Unit,
     onMessage: (String) -> Unit,
+    /** Ordinateur : champ pose sur la ligne. Telephone : fenetre avec un grand bouton Valider. */
+    inlineEditor: Boolean,
+    /** Applique la ligne en cours de modification (toucher ailleurs ne doit pas perdre le texte). */
+    onCommitPending: () -> Unit,
 ) {
     val marks = session.marks.filter { it.page == page }
     // Outil « Éditer » : les lignes de texte de la page, chargees a la demande.
@@ -170,14 +179,18 @@ fun EditOverlay(
             }
             Tool.EditText -> modifier.pointerInput(tool, page) {
                 detectTapGestures { o ->
+                    if (session.editingBlock != null) {
+                        onCommitPending()
+                        return@detectTapGestures
+                    }
                     val p = NPoint(o.x / size.width, o.y / size.height)
                     val hit = currentBlocks
                         .filter { contains(it.rect, p, 0.006f) }
                         .minByOrNull { (it.rect.right - it.rect.left) * (it.rect.bottom - it.rect.top) }
                     when {
-                        hit == null -> session.editingBlock = null
+                        hit == null -> Unit
                         !hit.editable -> onMessage("Ce texte ne peut pas être modifié directement : utilisez « Masquer » puis « Texte ».")
-                        else -> session.editingBlock = hit
+                        else -> session.startEditing(hit)
                     }
                 }
             }
@@ -233,18 +246,71 @@ fun EditOverlay(
     // Ligne en cours de modification : champ de texte pose exactement dessus.
     val editing = session.editingBlock
     if (showBlocks && editing != null && editing.page == page) {
-        InlineTextEditor(
-            block = editing,
-            pageSize = pageSize,
-            onDone = { text -> onReplaceText(editing, text) },
-            onCancel = { session.editingBlock = null },
-        )
+        if (inlineEditor) {
+            InlineTextEditor(
+                block = editing,
+                pageSize = pageSize,
+                onTextChange = { session.editingText = it },
+                onDone = { text -> onReplaceText(editing, text) },
+                onCancel = { session.editingBlock = null },
+            )
+        } else {
+            TextEditDialog(
+                block = editing,
+                text = session.editingText,
+                onTextChange = { session.editingText = it },
+                onDone = { onReplaceText(editing, session.editingText) },
+                onCancel = { session.editingBlock = null },
+            )
+        }
     }
+}
+
+/** Telephone : la ligne a modifier dans une fenetre, avec un grand bouton Valider. */
+@Composable
+private fun TextEditDialog(
+    block: TextBlock,
+    text: String,
+    onTextChange: (String) -> Unit,
+    onDone: () -> Unit,
+    onCancel: () -> Unit,
+) {
+    val focus = remember { FocusRequester() }
+    LaunchedEffect(block) { focus.requestFocus() }
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = { Text("Modifier le texte") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = onTextChange,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onDone() }),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focus),
+                )
+                Text(
+                    "Le texte est réécrit au même endroit, dans la même police, taille et couleur.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+        confirmButton = { Button(onClick = onDone) { Text("Valider") } },
+        dismissButton = { TextButton(onClick = onCancel) { Text("Annuler") } },
+    )
 }
 
 /** Champ de texte pose sur la ligne a modifier, avec Annuler / Valider. */
 @Composable
-private fun InlineTextEditor(block: TextBlock, pageSize: PageSize, onDone: (String) -> Unit, onCancel: () -> Unit) {
+private fun InlineTextEditor(
+    block: TextBlock,
+    pageSize: PageSize,
+    onTextChange: (String) -> Unit,
+    onDone: (String) -> Unit,
+    onCancel: () -> Unit,
+) {
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val density = LocalDensity.current
         val widthPx = constraints.maxWidth.toFloat()
@@ -299,7 +365,10 @@ private fun InlineTextEditor(block: TextBlock, pageSize: PageSize, onDone: (Stri
             ) {
                 BasicTextField(
                     value = value,
-                    onValueChange = { value = it },
+                    onValueChange = {
+                        value = it
+                        onTextChange(it.text)
+                    },
                     singleLine = true,
                     textStyle = TextStyle(color = Color(0xFF1A1A1A), fontSize = with(density) { fontPx.toSp() }),
                     cursorBrush = SolidColor(colors.primary),

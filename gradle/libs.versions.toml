@@ -8,6 +8,8 @@ coroutines = "1.11.0"
 pdfbox = "3.0.8"
 pdfboxAndroid = "2.0.27.0"
 activity = "1.10.0"
+anthropic = "3.3.0"
+desugar = "2.1.5"
 lifecycle = "2.8.7"
 
 [libraries]
@@ -26,6 +28,8 @@ pdfbox-android = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfbo
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+anthropic-java = { module = "com.anthropic:anthropic-java", version.ref = "anthropic" }
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

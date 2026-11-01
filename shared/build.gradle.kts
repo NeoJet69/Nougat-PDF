@@ -28,9 +28,14 @@ kotlin {
             // Bibliotheque graphique native de Compose, pour rendre des pages pendant les tests.
             implementation(compose.desktop.currentOs)
         }
-        getByName("desktopMain").dependencies {
-            implementation(libs.pdfbox)
-            implementation(libs.kotlinx.coroutines.swing)
+        getByName("desktopMain") {
+            // Code commun a l'ordinateur et a Android (Java/JVM) : l'assistant Claude.
+            kotlin.srcDir("src/jvmShared/kotlin")
+            dependencies {
+                implementation(libs.pdfbox)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.anthropic.java)
+            }
         }
     }
 }
@@ -46,9 +51,13 @@ if (!desktopOnly) {
             setProperty("compileSdk", 37)
             setProperty("minSdk", 26)
         }
-        sourceSets.getByName("androidMain").dependencies {
-            implementation(libs.pdfbox.android)
-            implementation(libs.kotlinx.coroutines.android)
+        sourceSets.getByName("androidMain") {
+            kotlin.srcDir("src/jvmShared/kotlin")
+            dependencies {
+                implementation(libs.pdfbox.android)
+                implementation(libs.kotlinx.coroutines.android)
+                implementation(libs.anthropic.java)
+            }
         }
     }
 }

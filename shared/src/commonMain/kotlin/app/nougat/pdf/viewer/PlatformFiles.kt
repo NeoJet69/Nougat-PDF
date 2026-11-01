@@ -27,6 +27,10 @@ interface PlatformFiles {
     /** Partager (Android), si la plateforme sait le faire. */
     val canShare: Boolean
     suspend fun share(path: String, name: String)
+
+    /** Petits reglages conserves sur l'appareil (cle API de l'assistant...). */
+    fun loadSetting(key: String): String?
+    fun saveSetting(key: String, value: String)
 }
 
 /** Un fichier choisi par l'utilisateur : [ref] pour y reecrire, [path] lisible tout de suite. */

@@ -1,0 +1,199 @@
+package app.nougat.pdf.assistant
+
+import com.anthropic.client.AnthropicClient
+import com.anthropic.client.okhttp.AnthropicOkHttpClient
+import com.anthropic.core.JsonValue
+import com.anthropic.errors.AnthropicIoException
+import com.anthropic.errors.AnthropicServiceException
+import com.anthropic.errors.BadRequestException
+import com.anthropic.errors.InternalServerException
+import com.anthropic.errors.NotFoundException
+import com.anthropic.errors.PermissionDeniedException
+import com.anthropic.errors.RateLimitException
+import com.anthropic.errors.UnauthorizedException
+import com.anthropic.models.messages.Base64ImageSource
+import com.anthropic.models.messages.CacheControlEphemeral
+import com.anthropic.models.messages.ContentBlockParam
+import com.anthropic.models.messages.MessageCreateParams
+import com.anthropic.models.messages.MessageParam
+import com.anthropic.models.messages.OutputConfig
+import com.anthropic.models.messages.StopReason
+import com.anthropic.models.messages.TextBlockParam
+import com.anthropic.models.messages.Tool
+import com.anthropic.models.messages.ToolResultBlockParam
+import com.anthropic.models.messages.ToolUseBlock
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.util.Base64
+
+/**
+ * L'assistant Nougat avec le SDK Java officiel d'Anthropic : boucle d'outils manuelle
+ * (Claude demande un outil -> Nougat l'execute sur le document -> on renvoie le resultat).
+ */
+class ClaudeAssistantEngine : AssistantEngine {
+    /** La conversation, telle qu'envoyee a l'API (les blocs de reflexion sont renvoyes tels quels). */
+    private val history = ArrayList<MessageParam>()
+    private var client: AnthropicClient? = null
+    private var clientKey: String? = null
+
+    override fun reset() {
+        history.clear()
+    }
+
+    override suspend fun send(
+        userText: String,
+        settings: AssistantSettings,
+        toolbox: AssistantToolbox,
+        onItem: (ChatItem) -> Unit,
+    ) {
+        val client = clientFor(settings.apiKey)
+        val tools = toolbox.specs.map(::toTool)
+        val turnStart = history.size
+        history.add(MessageParam.ofUser(userText))
+        try {
+            repeat(MAX_STEPS) {
+                val response = withContext(Dispatchers.IO) {
+                    client.messages().create(request(settings, toolbox.systemPrompt, tools))
+                }
+                // La reponse complete (reflexion comprise) repart telle quelle dans l'historique.
+                history.add(response.toParam())
+
+                val toolUses = ArrayList<ToolUseBlock>()
+                for (block in response.content()) {
+                    block.text().ifPresent { t -> if (t.text().isNotBlank()) onItem(ChatItem.Assistant(t.text().trim())) }
+                    block.toolUse().ifPresent { toolUses.add(it) }
+                }
+
+                when (response.stopReason().orElse(null)) {
+                    StopReason.REFUSAL -> {
+                        onItem(ChatItem.Error("Claude a refusé cette demande."))
+                        return
+                    }
+                    StopReason.MAX_TOKENS -> if (toolUses.isEmpty()) {
+                        onItem(ChatItem.Error("La réponse a été coupée car elle était trop longue."))
+                        return
+                    }
+                    StopReason.TOOL_USE -> Unit
+                    else -> if (toolUses.isEmpty()) return
+                }
+                if (toolUses.isEmpty()) return
+
+                // Tous les resultats d'outils repartent ensemble, dans un seul message.
+                val results = ArrayList<ContentBlockParam>()
+                for (use in toolUses) {
+                    val input = inputOf(use)
+                    val output = toolbox.run(use.name(), input)
+                    val failed = output is ToolOutput.Text && output.isError
+                    onItem(ChatItem.Action(toolbox.label(use.name(), input), ok = !failed, detail = (output as? ToolOutput.Text)?.text?.takeIf { failed }))
+                    results.add(ContentBlockParam.ofToolResult(resultOf(use.id(), output)))
+                }
+                history.add(MessageParam.ofUserOfContentBlockParams(results))
+            }
+            onItem(ChatItem.Error("Arrêt après $MAX_STEPS étapes : la tâche est peut-être trop grande, découpe-la."))
+        } catch (e: CancellationException) {
+            dropTurn(turnStart)
+            throw e
+        } catch (e: Throwable) {
+            dropTurn(turnStart)
+            throw IllegalStateException(friendlyMessage(e), e)
+        }
+    }
+
+    private fun request(settings: AssistantSettings, system: String, tools: List<Tool>): MessageCreateParams {
+        val builder = MessageCreateParams.builder()
+            .model(settings.model)
+            .maxTokens(16000L)
+            // Consignes et outils identiques d'un appel a l'autre : mis en cache.
+            .systemOfTextBlockParams(
+                listOf(
+                    TextBlockParam.builder()
+                        .text(system)
+                        .cacheControl(CacheControlEphemeral.builder().build())
+                        .build(),
+                ),
+            )
+            .messages(history)
+            .cacheControl(CacheControlEphemeral.builder().build())
+            .outputConfig(OutputConfig.builder().effort(OutputConfig.Effort.MEDIUM).build())
+        tools.forEach { builder.addTool(it) }
+        if (settings.model.startsWith("claude-opus") || settings.model.startsWith("claude-sonnet")) {
+            // Si une demande est refusee par erreur, l'API la repasse a un autre modele.
+            builder.putAdditionalHeader("anthropic-beta", "server-side-fallback-2026-07-01")
+            builder.putAdditionalBodyProperty("fallbacks", JsonValue.from("default"))
+        }
+        return builder.build()
+    }
+
+    private fun clientFor(apiKey: String): AnthropicClient {
+        val current = client
+        if (current != null && clientKey == apiKey) return current
+        current?.close()
+        return AnthropicOkHttpClient.builder().apiKey(apiKey).build().also {
+            client = it
+            clientKey = apiKey
+        }
+    }
+
+    private fun toTool(spec: ToolSpec): Tool {
+        val properties = Tool.InputSchema.Properties.builder()
+        spec.properties.forEach { (name, schema) -> properties.putAdditionalProperty(name, JsonValue.from(schema)) }
+        return Tool.builder()
+            .name(spec.name)
+            .description(spec.description)
+            .inputSchema(
+                Tool.InputSchema.builder()
+                    .properties(properties.build())
+                    .required(spec.required)
+                    .build(),
+            )
+            .build()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun inputOf(use: ToolUseBlock): Map<String, Any?> =
+        runCatching { use._input().convert(Map::class.java) as? Map<String, Any?> }.getOrNull() ?: emptyMap()
+
+    private fun resultOf(toolUseId: String, output: ToolOutput): ToolResultBlockParam = when (output) {
+        is ToolOutput.Text -> ToolResultBlockParam.builder()
+            .toolUseId(toolUseId)
+            .content(output.text)
+            .isError(output.isError)
+            .build()
+        is ToolOutput.Image -> ToolResultBlockParam.builder()
+            .toolUseId(toolUseId)
+            .contentOfBlocks(
+                listOf(
+                    ToolResultBlockParam.Content.Block.ofText(output.caption),
+                    ToolResultBlockParam.Content.Block.ofImage(
+                        Base64ImageSource.builder()
+                            .data(Base64.getEncoder().encodeToString(output.jpeg))
+                            .mediaType(Base64ImageSource.MediaType.IMAGE_JPEG)
+                            .build(),
+                    ),
+                ),
+            )
+            .build()
+    }
+
+    /** Un echange interrompu ne doit pas laisser de demande d'outil sans reponse dans l'historique. */
+    private fun dropTurn(turnStart: Int) {
+        while (history.size > turnStart) history.removeAt(history.lastIndex)
+    }
+
+    private fun friendlyMessage(e: Throwable): String = when (e) {
+        is UnauthorizedException -> "Clé API refusée : vérifie-la dans les réglages de l'assistant."
+        is PermissionDeniedException -> "Cette clé API n'a pas accès à ce modèle."
+        is NotFoundException -> "Modèle introuvable : choisis-en un autre dans les réglages."
+        is RateLimitException -> "Trop de demandes en même temps : réessaie dans un instant."
+        is InternalServerException -> "Claude est momentanément surchargé : réessaie dans un instant."
+        is BadRequestException -> "Demande refusée par l'API : ${e.message}"
+        is AnthropicServiceException -> "Erreur de l'API (${e.statusCode()}) : ${e.message}"
+        is AnthropicIoException -> "Pas de connexion à Claude : vérifie Internet."
+        else -> e.message ?: e::class.simpleName ?: "Erreur inconnue"
+    }
+
+    private companion object {
+        const val MAX_STEPS = 30
+    }
+}

@@ -74,6 +74,10 @@ object NougatIcons {
     val EditText by lazy {
         strokeIcon("EditText", "M3,5h11M8.5,5v14M18,7v13M16,7h4M16,20h4")
     }
+    /** Etincelles : l'assistant Claude. */
+    val Sparkle by lazy {
+        svgIcon("Sparkle", "M19,9l1.25,-2.75L23,5l-2.75,-1.25L19,1l-1.25,2.75L15,5l2.75,1.25L19,9zM11.5,9.5L9,4L6.5,9.5L1,12l5.5,2.5L9,20l2.5,-5.5L17,12L11.5,9.5zM19,15l-1.25,2.75L15,19l2.75,1.25L19,23l1.25,-2.75L23,19l-2.75,-1.25L19,15z")
+    }
     val Undo by lazy {
         svgIcon("Undo", "M12.5,8c-2.65,0 -5.05,0.99 -6.9,2.6L2,7v9h9l-3.62,-3.62c1.39,-1.16 3.16,-1.88 5.12,-1.88 3.54,0 6.55,2.31 7.6,5.5l2.37,-0.78C21.08,11.03 17.15,8 12.5,8z")
     }

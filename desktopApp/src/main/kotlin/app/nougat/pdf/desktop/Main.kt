@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.window.WindowPlacement
+import app.nougat.pdf.assistant.ClaudeAssistantEngine
 import app.nougat.pdf.engine.DesktopPdfEngine
 import app.nougat.pdf.ui.NougatApp
 import app.nougat.pdf.ui.NougatIcons
@@ -39,7 +41,7 @@ fun main(args: Array<String>) = application {
     // La fenetre, pour y rattacher les boites de dialogue.
     var frame by remember { mutableStateOf<Frame?>(null) }
     val files = remember { DesktopFiles { frame } }
-    val state = remember { ViewerState(DesktopPdfEngine(), scope, files) }
+    val state = remember { ViewerState(DesktopPdfEngine(), scope, files, ClaudeAssistantEngine()) }
     val pickAndOpen = { files.chooseFile("Ouvrir un PDF", FileDialog.LOAD, "*.pdf")?.let(state::openFile); Unit }
 
     // Double-clic sur un PDF dans l'Explorateur Windows : le fichier arrive ici.
@@ -51,7 +53,8 @@ fun main(args: Array<String>) = application {
         onCloseRequest = { state.runAfterConfirm(::exitApplication) },
         title = state.session?.let { (if (state.modified) "• " else "") + "${it.name} – Nougat PDF" } ?: "Nougat PDF",
         icon = rememberVectorPainter(NougatIcons.NougatLogo),
-        state = rememberWindowState(width = 1180.dp, height = 840.dp),
+        // Fenetre agrandie : rien ne passe sous la barre des taches de Windows.
+        state = rememberWindowState(placement = WindowPlacement.Maximized, width = 1180.dp, height = 840.dp),
         onPreviewKeyEvent = { handleShortcut(it, state) { state.runAfterConfirm(pickAndOpen) } },
     ) {
         LaunchedEffect(window) {

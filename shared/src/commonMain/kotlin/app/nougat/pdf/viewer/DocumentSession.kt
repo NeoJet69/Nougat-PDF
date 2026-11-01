@@ -52,8 +52,14 @@ class DocumentSession(
     /** Annotations ajoutees mais pas encore gravees dans le PDF. */
     val marks = mutableStateListOf<Mark>()
 
-    /** Ligne de texte en cours de modification (outil « Éditer »). */
+    /** Ligne de texte en cours de modification (outil « Éditer »), et le texte tape. */
     var editingBlock: TextBlock? by mutableStateOf(null)
+    var editingText by mutableStateOf("")
+
+    fun startEditing(block: TextBlock) {
+        editingBlock = block
+        editingText = block.text
+    }
 
     private val blocks = HashMap<Int, List<TextBlock>>()
     private val blocksMutex = Mutex()

@@ -73,6 +73,14 @@ private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {
         }
     }
 
+    override suspend fun renderPageJpeg(index: Int, widthPx: Int): ByteArray = withContext(Dispatchers.IO) {
+        mutex.withLock {
+            val scale = widthPx / pageSizes[index].width
+            val image = renderer.renderImage(index, scale, ImageType.RGB)
+            java.io.ByteArrayOutputStream().also { javax.imageio.ImageIO.write(image, "jpg", it) }.toByteArray()
+        }
+    }
+
     override suspend fun textBlocks(index: Int): List<TextBlock> = withContext(Dispatchers.IO) {
         mutex.withLock { pageTextBlocks(doc, index) }
     }

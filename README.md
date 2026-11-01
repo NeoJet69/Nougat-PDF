@@ -28,6 +28,23 @@ protéger par mot de passe ou retirer le mot de passe.
 
 Tout est gravé dans le PDF à l'enregistrement : il s'ouvre ensuite dans n'importe quel lecteur.
 
+## Assistant Claude (intelligence artificielle)
+
+Bouton ✨ en haut : Claude lit le document ouvert et agit dessus. Exemples : « résume ce document »,
+« corrige les fautes de la page 2 », « traduis cette page en anglais », « remplace Dupont par Martin
+partout », « surligne les montants », « supprime la page 3 ». Il modifie le texte avec le même moteur
+que l'outil Éditer (même police, même place), lit les documents scannés en regardant l'image de la
+page, et tout s'annule avec le bouton Annuler.
+
+**Chacun utilise sa propre clé API Anthropic** : l'auteur de l'app ne paie rien et ne voit rien.
+1. Créer un compte sur [console.anthropic.com](https://console.anthropic.com)
+2. Ajouter un moyen de paiement (Billing) : la consommation est facturée à l'usage
+   (c'est séparé d'un abonnement Claude.ai, qui ne peut pas être utilisé par une autre app)
+3. API Keys → Create Key, puis coller la clé dans les réglages de l'assistant (⚙)
+
+La clé reste sur l'appareil. Modèles proposés : Claude Opus 5.5 (par défaut), Sonnet 5.5, Haiku 5.5.
+L'assistant est la seule partie de Nougat qui utilise Internet.
+
 ## Lire
 
 - Ouvrir un PDF : bouton « Ouvrir », glisser-déposer (Windows), « Ouvrir avec » (Windows et Android)

@@ -4,6 +4,12 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import app.nougat.pdf.assistant.AssistantEngine
+import app.nougat.pdf.assistant.AssistantModels
+import app.nougat.pdf.assistant.AssistantSettings
+import app.nougat.pdf.assistant.AssistantUiState
+import app.nougat.pdf.assistant.ChatItem
+import app.nougat.pdf.assistant.NougatToolbox
 import app.nougat.pdf.engine.EditableDoc
 import app.nougat.pdf.engine.PasswordRequiredException
 import app.nougat.pdf.engine.PdfEngine
@@ -22,6 +28,8 @@ class ViewerState(
     private val engine: PdfEngine,
     private val scope: CoroutineScope,
     val files: PlatformFiles,
+    /** L'assistant Claude (null si la plateforme ne le propose pas). */
+    private val assistantEngine: AssistantEngine? = null,
 ) {
     /** Le document ouvert, ou null pour l'ecran d'accueil. */
     var session: DocumentSession? by mutableStateOf(null)
@@ -47,6 +55,72 @@ class ViewerState(
 
     /** Outils d'edition (conserves d'un document a l'autre). */
     val tools = EditTools()
+
+    // ---- Assistant Claude ------------------------------------------------------------------------
+
+    val assistant = AssistantUiState()
+    val assistantAvailable: Boolean get() = assistantEngine != null
+
+    /** Cle API Anthropic de l'utilisateur (stockee seulement sur cet appareil). */
+    var apiKey by mutableStateOf(runCatching { files.loadSetting(SETTING_API_KEY) }.getOrNull().orEmpty())
+        private set
+    var assistantModel by mutableStateOf(
+        runCatching { files.loadSetting(SETTING_MODEL) }.getOrNull()?.takeIf { it.isNotBlank() } ?: AssistantModels.DEFAULT,
+    )
+        private set
+    private var assistantJob: Job? = null
+
+    fun saveAssistantSettings(key: String, model: String) {
+        apiKey = key.trim()
+        assistantModel = model
+        runCatching {
+            files.saveSetting(SETTING_API_KEY, apiKey)
+            files.saveSetting(SETTING_MODEL, model)
+        }
+        assistant.showSettings = false
+    }
+
+    fun sendToAssistant(text: String) {
+        val engine = assistantEngine ?: return
+        val message = text.trim()
+        if (message.isEmpty() || assistant.running) return
+        if (apiKey.isBlank()) {
+            assistant.showSettings = true
+            return
+        }
+        if (session == null) {
+            assistant.items.add(ChatItem.Error("Ouvre d'abord un PDF."))
+            return
+        }
+        assistant.items.add(ChatItem.User(message))
+        assistant.input = ""
+        assistant.running = true
+        assistantJob = scope.launch {
+            try {
+                engine.send(message, AssistantSettings(apiKey, assistantModel), NougatToolbox(this@ViewerState)) { item ->
+                    assistant.items.add(item)
+                }
+            } catch (e: CancellationException) {
+                assistant.items.add(ChatItem.Error("Arrêté."))
+                throw e
+            } catch (e: Throwable) {
+                assistant.items.add(ChatItem.Error(e.message ?: "Erreur inconnue"))
+            } finally {
+                assistant.running = false
+            }
+        }
+    }
+
+    fun stopAssistant() {
+        assistantJob?.cancel()
+    }
+
+    /** Nouvelle conversation. */
+    fun resetAssistant() {
+        stopAssistant()
+        assistantEngine?.reset()
+        assistant.items.clear()
+    }
 
     /** Ecran d'organisation des pages ouvert. */
     var pagesOpen by mutableStateOf(false)
@@ -95,6 +169,7 @@ class ViewerState(
                 session = DocumentSession(name, path, sourceRef, password, doc, scope)
                 savedPath = path
                 pagesOpen = false
+                resetAssistant()
                 pageSelection = emptySet()
                 pagesGrid = LazyGridState()
             } catch (e: CancellationException) {
@@ -179,14 +254,22 @@ class ViewerState(
         scope.launch { editNow(label, session?.password, block) }
     }
 
-    private suspend fun editNow(
-        label: String,
-        newPassword: String?,
-        block: (EditableDoc) -> Unit,
-    ): Boolean {
-        val s = session ?: return false
+    /** Applique une modification et attend la fin ; leve une exception en cas d'echec (assistant). */
+    suspend fun editAwait(label: String, block: (EditableDoc) -> Unit) {
+        performEdit(label, session?.password, block)
+    }
+
+    /** Remplace le texte d'une ligne et attend la fin (assistant). */
+    suspend fun replaceTextAwait(block: TextBlock, newText: String): TextEditResult {
+        var result: TextEditResult? = null
+        performEdit("Modification du texte…", session?.password) { doc -> result = doc.replaceText(block, newText) }
+        return result ?: TextEditResult.SameFont
+    }
+
+    private suspend fun performEdit(label: String, newPassword: String?, block: (EditableDoc) -> Unit) {
+        val s = session ?: throw IllegalStateException("Aucun document ouvert")
         busyMessage = label
-        return try {
+        try {
             val marks = s.marks.toList()
             val dst = newTempPath()
             engine.edit(s.path, s.password, dst) { doc ->
@@ -196,6 +279,18 @@ class ViewerState(
             history.add(Version(s.path, s.password))
             historySize = history.size
             reopen(dst, newPassword)
+        } finally {
+            busyMessage = null
+        }
+    }
+
+    private suspend fun editNow(
+        label: String,
+        newPassword: String?,
+        block: (EditableDoc) -> Unit,
+    ): Boolean {
+        return try {
+            performEdit(label, newPassword, block)
             true
         } catch (e: CancellationException) {
             throw e
@@ -205,8 +300,6 @@ class ViewerState(
         } catch (e: Throwable) {
             errorMessage = "La modification a échoué.\n${e.message ?: e::class.simpleName}"
             false
-        } finally {
-            busyMessage = null
         }
     }
 
@@ -419,10 +512,26 @@ class ViewerState(
         }
     }
 
-    /** Grave les annotations en attente. */
+    /** Grave les annotations en attente (et la ligne de texte en cours de modification). */
     private suspend fun commitMarks(): Boolean {
+        if (!commitPendingTextEdit()) return false
         val s = session ?: return false
         return s.marks.isEmpty() || editNow("Application des modifications…", s.password) {}
+    }
+
+    /** Applique la ligne en cours de modification (outil « Éditer »), si son texte a change. */
+    suspend fun commitPendingTextEdit(): Boolean {
+        val s = session ?: return true
+        val block = s.editingBlock ?: return true
+        val text = s.editingText
+        s.editingBlock = null
+        if (text.trim() == block.text.trim()) return true
+        return editNow("Modification du texte…", s.password) { it.replaceText(block, text) }
+    }
+
+    /** Toucher ailleurs pendant une modification : on applique (au lieu de perdre le texte tape). */
+    fun commitPendingTextEditLater() {
+        scope.launch { commitPendingTextEdit() }
     }
 
     private fun newTempPath(): String {
@@ -432,6 +541,11 @@ class ViewerState(
     }
 
     private data class Version(val path: String, val password: String?)
+
+    private companion object {
+        const val SETTING_API_KEY = "assistant.apiKey"
+        const val SETTING_MODEL = "assistant.model"
+    }
 }
 
 /** Nouvel ordre des pages quand on deplace [pages] d'un cran vers [direction]. */

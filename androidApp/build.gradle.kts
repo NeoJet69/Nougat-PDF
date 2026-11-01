@@ -30,6 +30,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+        // Le SDK d'Anthropic utilise des API Java recentes : Android les recoit par « desugaring ».
+        isCoreLibraryDesugaringEnabled = true
     }
 
     signingConfigs {
@@ -52,7 +54,16 @@ android {
 
     packaging {
         resources {
-            excludes += setOf("META-INF/{AL2.0,LGPL2.1}", "META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+            excludes += setOf(
+                "META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/versions/9/OSGI-INF/MANIFEST.MF",
+                "META-INF/versions/9/module-info.class",
+                "META-INF/DEPENDENCIES",
+                "META-INF/INDEX.LIST",
+                "META-INF/LICENSE*",
+                "META-INF/NOTICE*",
+                "META-INF/*.kotlin_module",
+            )
         }
     }
 }
@@ -61,4 +72,5 @@ dependencies {
     implementation(project(":shared"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
