@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import app.nougat.pdf.engine.AndroidPdfEngine
+import app.nougat.pdf.viewer.Tool
 import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -12,7 +13,10 @@ import kotlinx.coroutines.launch
 /** Garde le document ouvert quand l'ecran tourne. */
 class ViewerViewModel(app: Application) : AndroidViewModel(app) {
     val files = AndroidFiles(app)
-    val state = ViewerState(AndroidPdfEngine(app), viewModelScope, files)
+    val state = ViewerState(AndroidPdfEngine(app), viewModelScope, files).apply {
+        // Sur telephone, un doigt fait defiler : on choisit l'outil (stylo...) ensuite.
+        tools.tool = Tool.Pan
+    }
 
     /**
      * Android donne une adresse « content:// » et non un vrai fichier : on lit une copie privee,

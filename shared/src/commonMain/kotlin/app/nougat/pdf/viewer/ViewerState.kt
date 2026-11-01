@@ -1,5 +1,6 @@
 package app.nougat.pdf.viewer
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -47,6 +48,13 @@ class ViewerState(
     /** Ecran d'organisation des pages ouvert. */
     var pagesOpen by mutableStateOf(false)
 
+    /** Pages choisies dans l'ecran Pages (conservees d'une modification a l'autre). */
+    var pageSelection by mutableStateOf(emptySet<Int>())
+
+    /** Defilement de la grille des pages (idem). */
+    var pagesGrid = LazyGridState()
+        private set
+
     // Versions precedentes du document, pour « Annuler ».
     private val history = ArrayList<Version>()
     private var historySize by mutableStateOf(0)
@@ -84,6 +92,8 @@ class ViewerState(
                 session = DocumentSession(name, path, sourceRef, password, doc, scope)
                 savedPath = path
                 pagesOpen = false
+                pageSelection = emptySet()
+                pagesGrid = LazyGridState()
             } catch (e: CancellationException) {
                 throw e
             } catch (e: PasswordRequiredException) {
@@ -194,10 +204,15 @@ class ViewerState(
     private suspend fun reopen(path: String, password: String?) {
         val old = session ?: return
         val doc = engine.open(path, password)
-        val fresh = DocumentSession(old.name, path, old.sourceRef, password, doc, scope)
+        val fresh = DocumentSession(
+            old.name, path, old.sourceRef, password, doc, scope,
+            initialItem = old.listState.firstVisibleItemIndex,
+            initialOffset = old.listState.firstVisibleItemScrollOffset,
+        )
         fresh.updateZoom(old.zoom)
-        fresh.goToPage(old.visiblePage.coerceAtMost(doc.pageCount - 1))
+        fresh.visiblePage = old.visiblePage.coerceAtMost(doc.pageCount - 1)
         old.close()
+        pageSelection = pageSelection.filter { it < doc.pageCount }.toSet()
         session = fresh
     }
 
@@ -236,20 +251,23 @@ class ViewerState(
             errorMessage = "Un PDF doit garder au moins une page."
             return
         }
+        pageSelection = emptySet()
         edit("Suppression…") { doc -> doc.reorder((0 until doc.pageCount).filter { it !in pages }) }
     }
 
-    /** Deplace les pages choisies d'un cran ([direction] = -1 ou +1). Renvoie leurs nouvelles positions. */
-    fun movePages(pages: Set<Int>, direction: Int): Set<Int> {
-        val s = session ?: return pages
+    /** Deplace les pages choisies d'un cran ([direction] = -1 ou +1) ; la selection les suit. */
+    fun movePages(pages: Set<Int>, direction: Int) {
+        val s = session ?: return
         val order = moveInOrder(s.pageCount, pages, direction)
-        if (order != (0 until s.pageCount).toList()) edit("Déplacement…") { it.reorder(order) }
-        return order.indices.filter { order[it] in pages }.toSet()
+        if (order == (0 until s.pageCount).toList()) return
+        pageSelection = order.indices.filter { order[it] in pages }.toSet()
+        edit("Déplacement…") { it.reorder(order) }
     }
 
     fun insertBlankPage(at: Int) {
         val s = session ?: return
         val size = s.pageSizes.getOrNull((at - 1).coerceIn(0, s.pageCount - 1)) ?: return
+        pageSelection = setOf(at)
         edit("Ajout d'une page…") { it.insertBlankPage(at, size.width, size.height) }
     }
 

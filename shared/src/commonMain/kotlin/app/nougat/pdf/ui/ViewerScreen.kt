@@ -154,8 +154,10 @@ fun ViewerScreen(
                 actions = {
                     if (wide) ZoomControls(session)
                     IconButton(onClick = session::openSearch) { Icon(Icons.Filled.Search, contentDescription = "Rechercher") }
-                    IconButton(onClick = { state.pagesOpen = true }) { Icon(NougatIcons.Pages, contentDescription = "Pages") }
-                    EditToggle(active = tools.editing) { tools.editing = !tools.editing }
+                    if (maxWidth > 480.dp) {
+                        IconButton(onClick = { state.pagesOpen = true }) { Icon(NougatIcons.Pages, contentDescription = "Pages") }
+                    }
+                    EditToggle(active = tools.editing, compact = maxWidth <= 480.dp) { tools.editing = !tools.editing }
                     if (state.modified) {
                         IconButton(onClick = state::save) {
                             Icon(NougatIcons.Save, contentDescription = "Enregistrer", tint = MaterialTheme.colorScheme.primary)
@@ -229,7 +231,7 @@ fun ViewerScreen(
 }
 
 @Composable
-private fun EditToggle(active: Boolean, onClick: () -> Unit) {
+private fun EditToggle(active: Boolean, compact: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     Surface(
         onClick = onClick,
@@ -238,10 +240,19 @@ private fun EditToggle(active: Boolean, onClick: () -> Unit) {
         contentColor = if (active) colors.onPrimary else colors.onPrimaryContainer,
         modifier = Modifier.padding(horizontal = 4.dp),
     ) {
-        Row(Modifier.padding(horizontal = 12.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(NougatIcons.Pen, contentDescription = null, modifier = Modifier.size(18.dp))
-            Spacer(Modifier.width(6.dp))
-            Text(if (active) "Terminé" else "Modifier", style = MaterialTheme.typography.labelLarge)
+        Row(
+            Modifier.padding(horizontal = if (compact) 8.dp else 12.dp, vertical = if (compact) 8.dp else 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                NougatIcons.Pen,
+                contentDescription = if (compact) (if (active) "Terminer la modification" else "Modifier") else null,
+                modifier = Modifier.size(18.dp),
+            )
+            if (!compact) {
+                Spacer(Modifier.width(6.dp))
+                Text(if (active) "Terminé" else "Modifier", style = MaterialTheme.typography.labelLarge)
+            }
         }
     }
 }

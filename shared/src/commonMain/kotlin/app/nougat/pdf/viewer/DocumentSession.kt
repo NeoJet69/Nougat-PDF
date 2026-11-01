@@ -34,6 +34,9 @@ class DocumentSession(
     val password: String?,
     val document: PdfDocument,
     parentScope: CoroutineScope,
+    /** Position de depart (pour retrouver la meme vue apres une modification). */
+    initialItem: Int = 0,
+    initialOffset: Int = 0,
 ) {
     var name by mutableStateOf(name)
         private set
@@ -53,7 +56,7 @@ class DocumentSession(
     val pageCount: Int get() = document.pageCount
     val pageSizes get() = document.pageSizes
 
-    val listState = LazyListState()
+    val listState = LazyListState(initialItem.coerceIn(0, (document.pageCount - 1).coerceAtLeast(0)), initialOffset)
 
     // ---- Zoom ----------------------------------------------------------------------------
 

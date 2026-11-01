@@ -58,7 +58,7 @@ import kotlinx.coroutines.CancellationException
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PagesScreen(state: ViewerState, session: DocumentSession) {
-    var selected by remember(session) { mutableStateOf(emptySet<Int>()) }
+    var selected by state::pageSelection
     val count = session.pageCount
     val any = selected.isNotEmpty()
 
@@ -95,17 +95,15 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
         ) {
             ActionButton(NougatIcons.RotateLeft, "Pivoter à gauche", any) { state.rotatePages(selected, -90) }
             ActionButton(NougatIcons.RotateRight, "Pivoter à droite", any) { state.rotatePages(selected, 90) }
-            ActionButton(NougatIcons.ArrowLeft, "Avancer", any) { selected = state.movePages(selected, -1) }
-            ActionButton(NougatIcons.ArrowRight, "Reculer", any) { selected = state.movePages(selected, +1) }
+            ActionButton(NougatIcons.ArrowLeft, "Avancer", any) { state.movePages(selected, -1) }
+            ActionButton(NougatIcons.ArrowRight, "Reculer", any) { state.movePages(selected, +1) }
             ActionButton(NougatIcons.Extract, "Extraire", any) { state.extractPages(selected) }
-            ActionButton(Icons.Filled.Delete, "Supprimer", any, danger = true) {
-                state.deletePages(selected)
-                selected = emptySet()
-            }
+            ActionButton(Icons.Filled.Delete, "Supprimer", any, danger = true) { state.deletePages(selected) }
         }
         HorizontalDivider()
 
         LazyVerticalGrid(
+            state = state.pagesGrid,
             columns = GridCells.Adaptive(132.dp),
             modifier = Modifier.weight(1f).fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerLow),
             contentPadding = PaddingValues(16.dp),

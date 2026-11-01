@@ -25,13 +25,23 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
     }
 
     override suspend fun overwrite(path: String, sourceRef: String): Boolean = withContext(Dispatchers.IO) {
-        runCatching { File(path).copyTo(File(sourceRef), overwrite = true) }.isSuccess
+        // Ecriture « sur place » (sans effacer le fichier) : Windows refuse d'effacer un fichier
+        // encore ouvert, alors qu'il accepte qu'on le reecrive.
+        repeat(3) { attempt ->
+            if (runCatching { writeInPlace(File(path), File(sourceRef)) }.isSuccess) return@withContext true
+            kotlinx.coroutines.delay(300L * (attempt + 1))
+        }
+        false
+    }
+
+    private fun writeInPlace(src: File, dst: File) {
+        src.inputStream().use { input -> java.io.FileOutputStream(dst).use { input.copyTo(it) } }
     }
 
     override suspend fun saveAs(path: String, suggestedName: String): SavedFile? {
         val target = chooseFile("Enregistrer sous", FileDialog.SAVE, suggestedName) ?: return null
         val fixed = if (target.name.lowercase().endsWith(".pdf")) target else File(target.parentFile, target.name + ".pdf")
-        withContext(Dispatchers.IO) { File(path).copyTo(fixed, overwrite = true) }
+        withContext(Dispatchers.IO) { writeInPlace(File(path), fixed) }
         return SavedFile(fixed.absolutePath, fixed.name)
     }
 
