@@ -50,7 +50,7 @@ jobs:
             cp shared/build/captures/*.png captures/
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add captures
+            git add -f captures
             if ! git diff --cached --quiet; then
               git commit -m "Captures d'écran [skip ci]"
               git push origin "HEAD:${GITHUB_REF_NAME}" || echo "Branche déjà avancée : captures non envoyées"
