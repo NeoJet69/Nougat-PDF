@@ -5,4 +5,5 @@
     </style>
     <color name="nougat_cream">#FFFAFAFA</color>
     <color name="nougat_icon_background">#FFFFE7CF</color>
+    <color name="nougat_night">#FF121212</color>
 </resources>

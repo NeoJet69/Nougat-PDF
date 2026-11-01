@@ -3,5 +3,4 @@
     <style name="Theme.Nougat" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/nougat_night</item>
     </style>
-    <color name="nougat_night">#FF121212</color>
 </resources>
