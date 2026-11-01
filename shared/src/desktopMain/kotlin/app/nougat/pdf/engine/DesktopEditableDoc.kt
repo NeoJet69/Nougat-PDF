@@ -10,6 +10,7 @@ import org.apache.pdfbox.pdmodel.encryption.AccessPermission
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject
 import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState
 import org.apache.pdfbox.util.Matrix
 import java.io.ByteArrayOutputStream
@@ -21,6 +22,21 @@ internal fun editWithPdfBox(src: String, password: String?, dst: String, block: 
         val editable = DesktopEditableDoc(doc, password)
         try {
             block(editable)
+            editable.applySecurity()
+            doc.save(File(dst))
+        } finally {
+            editable.closeSources()
+        }
+    }
+}
+
+/** Cree un nouveau PDF avec PDFBox (version ordinateur). */
+internal fun createWithPdfBox(dst: String, block: (EditableDoc) -> Unit) {
+    PDDocument().use { doc ->
+        val editable = DesktopEditableDoc(doc, null)
+        try {
+            block(editable)
+            if (doc.numberOfPages == 0) doc.addPage(PDPage(PDRectangle(A4_WIDTH, A4_HEIGHT)))
             editable.applySecurity()
             doc.save(File(dst))
         } finally {
@@ -69,6 +85,16 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
         }
         sources.add(other)
         PDFMergerUtility().appendDocument(doc, other)
+    }
+
+    override fun appendImages(paths: List<String>) {
+        for (path in paths) {
+            val image = PDImageXObject.createFromFileByContent(File(path), doc)
+            val l = imagePageLayout(image.width, image.height)
+            val page = PDPage(PDRectangle(l[0], l[1]))
+            doc.addPage(page)
+            PDPageContentStream(doc, page).use { it.drawImage(image, l[2], l[3], l[4], l[5]) }
+        }
     }
 
     override fun draw(index: Int, block: (PageCanvas) -> Unit) {

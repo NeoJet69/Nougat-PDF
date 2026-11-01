@@ -12,6 +12,8 @@ import app.nougat.pdf.assistant.AssistantSettings
 import app.nougat.pdf.assistant.AssistantUiState
 import app.nougat.pdf.assistant.ChatItem
 import app.nougat.pdf.assistant.NougatToolbox
+import app.nougat.pdf.engine.A4_HEIGHT
+import app.nougat.pdf.engine.A4_WIDTH
 import app.nougat.pdf.engine.EditableDoc
 import app.nougat.pdf.engine.FieldKind
 import app.nougat.pdf.engine.FormField
@@ -203,7 +205,14 @@ class ViewerState(
      * Ouvre le PDF [path] ; [name] est le nom montre a l'utilisateur et [sourceRef]
      * l'endroit ou « Enregistrer » ecrira (le meme fichier par defaut).
      */
-    fun open(path: String, name: String, password: String? = null, sourceRef: String = path) {
+    fun open(
+        path: String,
+        name: String,
+        password: String? = null,
+        sourceRef: String = path,
+        /** Document cree dans l'app : pas encore enregistre nulle part (« Enregistrer » demande ou). */
+        isNew: Boolean = false,
+    ) {
         openJob?.cancel()
         passwordPrompt = null
         errorMessage = null
@@ -213,10 +222,11 @@ class ViewerState(
                 val doc = engine.open(path, password)
                 closeCurrent()
                 session = DocumentSession(name, path, sourceRef, password, doc, scope)
-                savedPath = path
+                savedPath = if (isNew) null else path
+                if (isNew) temps.add(path)
                 pagesOpen = false
                 resetAssistant()
-                addRecent(sourceRef, name)
+                if (!isNew) addRecent(sourceRef, name)
                 pageSelection = emptySet()
                 pagesGrid = LazyGridState()
                 val opened = session
@@ -598,6 +608,60 @@ class ViewerState(
         s.editingBlock = null
         if (text.trim() == block.text.trim()) return true
         return editNow("Modification du texte…", s.password) { it.replaceText(block, text) }
+    }
+
+    // ---- Creer un PDF -----------------------------------------------------------------------------
+
+    /** Nouveau document : une page A4 blanche, a remplir avec les outils (texte, signature...). */
+    fun createBlankPdf() = runAfterConfirm {
+        scope.launch { createNow("Document vierge.pdf", "Création du document…") { it.insertBlankPage(0, A4_WIDTH, A4_HEIGHT) } }
+    }
+
+    /** Nouveau PDF a partir de photos ou d'images : une page par image. */
+    fun createPdfFromImages() = runAfterConfirm {
+        scope.launch {
+            val images = pickImagesOrReport() ?: return@launch
+            val label = if (images.size > 1) "Création du PDF (${images.size} images)…" else "Création du PDF…"
+            createNow(if (images.size > 1) "Images.pdf" else "Image.pdf", label) { it.appendImages(images) }
+        }
+    }
+
+    /** Ajoute des photos ou des images a la fin du document ouvert. */
+    fun appendImages() {
+        scope.launch {
+            val images = pickImagesOrReport() ?: return@launch
+            val s = session ?: return@launch
+            if (editNow("Ajout des images…", s.password) { it.appendImages(images) }) {
+                toast = if (images.size > 1) "${images.size} pages ajoutées à la fin" else "Page ajoutée à la fin"
+            }
+        }
+    }
+
+    private suspend fun pickImagesOrReport(): List<String>? {
+        val images = try {
+            files.pickImages()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            errorMessage = "Impossible de lire les images.\n${e.message ?: e::class.simpleName}"
+            return null
+        }
+        return images.takeIf { it.isNotEmpty() }
+    }
+
+    private suspend fun createNow(name: String, label: String, block: (EditableDoc) -> Unit) {
+        val path = "${files.tempDir}/nouveau-${kotlin.random.Random.nextInt(1_000_000_000)}.pdf"
+        busyMessage = label
+        try {
+            engine.create(path, block)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            busyMessage = null
+            errorMessage = "Impossible de créer le PDF.\n${e.message ?: e::class.simpleName}"
+            return
+        }
+        open(path, name, sourceRef = "", isNew = true)
     }
 
     // ---- Formulaires ------------------------------------------------------------------------------

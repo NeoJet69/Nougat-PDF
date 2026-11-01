@@ -19,6 +19,9 @@ interface PdfEngine {
      * sauf si [block] change le mot de passe.
      */
     suspend fun edit(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit)
+
+    /** Cree un nouveau PDF [dst] : document vide, rempli par [block] (pages blanches, images...). */
+    suspend fun create(dst: String, block: (EditableDoc) -> Unit)
 }
 
 interface PdfDocument : AutoCloseable {

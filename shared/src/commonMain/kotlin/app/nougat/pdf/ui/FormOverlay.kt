@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -339,16 +340,22 @@ private fun FieldDialog(
                         imeAction = if (field.multiline) ImeAction.Default else if (hasNext) ImeAction.Next else ImeAction.Done,
                     ),
                     keyboardActions = KeyboardActions(onDone = { onDone(false) }, onNext = { onDone(true) }),
+                    // Champ suivant : la fleche (ou le bouton « Suivant » du clavier).
+                    trailingIcon = if (hasNext) {
+                        { IconButton(onClick = { onDone(true) }) { Icon(NougatIcons.ArrowRight, contentDescription = "Champ suivant") } }
+                    } else null,
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
                 )
+                if (hasNext) {
+                    Text(
+                        "La flèche passe au champ suivant.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
             }
         },
-        confirmButton = {
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                if (hasNext) TextButton(onClick = { onDone(true) }) { Text("Suivant") }
-                Button(onClick = { onDone(false) }) { Text("Valider") }
-            }
-        },
+        confirmButton = { Button(onClick = { onDone(false) }) { Text("Valider") } },
         dismissButton = { TextButton(onClick = onCancel) { Text("Annuler") } },
     )
 }

@@ -26,6 +26,12 @@ interface EditableDoc {
     /** Ajoute a la fin toutes les pages du PDF [path]. */
     fun appendPdf(path: String, password: String? = null)
 
+    /**
+     * Ajoute a la fin une page par image (photo, capture d'ecran, scan) : l'image entiere,
+     * centree sur une page A4 dans le meme sens qu'elle (portrait ou paysage).
+     */
+    fun appendImages(paths: List<String>)
+
     /** Dessine sur la page [index], dans le repere de la page telle qu'on la voit (voir [PageCanvas]). */
     fun draw(index: Int, block: (PageCanvas) -> Unit)
 
@@ -80,6 +86,21 @@ data class PageGeometry(val x0: Float, val y0: Float, val width: Float, val heig
 }
 
 fun normalizeRotation(degrees: Int): Int = ((degrees % 360) + 360) % 360
+
+/** Format A4 en points. */
+const val A4_WIDTH = 595.28f
+const val A4_HEIGHT = 841.89f
+
+/** Taille de page et place de l'image (x, y, largeur, hauteur) pour une image [w] x [h] pixels. */
+fun imagePageLayout(w: Int, h: Int): FloatArray {
+    val portrait = h >= w
+    val pageW = if (portrait) A4_WIDTH else A4_HEIGHT
+    val pageH = if (portrait) A4_HEIGHT else A4_WIDTH
+    val scale = minOf(pageW / w.coerceAtLeast(1), pageH / h.coerceAtLeast(1))
+    val iw = w * scale
+    val ih = h * scale
+    return floatArrayOf(pageW, pageH, (pageW - iw) / 2f, (pageH - ih) / 2f, iw, ih)
+}
 
 // ---- Annotations ajoutees par l'utilisateur ---------------------------------------------------
 

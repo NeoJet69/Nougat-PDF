@@ -50,6 +50,17 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         return SavedFile(file.absolutePath, file.name)
     }
 
+    override suspend fun pickImages(): List<String> {
+        val dialog = FileDialog(frame(), "Choisir des images", FileDialog.LOAD).apply {
+            isMultipleMode = true
+            // Windows filtre avec ce motif, les autres systemes avec le filtre.
+            file = IMAGE_EXTENSIONS.joinToString(";") { "*.$it" }
+            setFilenameFilter { _, name -> name.substringAfterLast('.', "").lowercase() in IMAGE_EXTENSIONS }
+            isVisible = true
+        }
+        return dialog.files.orEmpty().filter { it.isFile }.map { it.absolutePath }
+    }
+
     /** Fenetre « Ouvrir » / « Enregistrer » native, limitee aux PDF. */
     fun chooseFile(title: String, mode: Int, fileName: String): File? {
         val dialog = FileDialog(frame(), title, mode).apply {
@@ -59,6 +70,11 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         }
         val name = dialog.file ?: return null
         return File(dialog.directory, name)
+    }
+
+    private companion object {
+        /** Formats d'image que PDFBox sait mettre dans un PDF. */
+        val IMAGE_EXTENSIONS = listOf("jpg", "jpeg", "png", "bmp", "gif")
     }
 
     override val canPrint: Boolean = true

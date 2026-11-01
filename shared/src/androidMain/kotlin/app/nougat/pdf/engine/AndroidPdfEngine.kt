@@ -51,6 +51,9 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
             }
         }
 
+    override suspend fun create(dst: String, block: (EditableDoc) -> Unit) =
+        withContext(Dispatchers.IO) { createWithPdfBoxAndroid(dst, block) }
+
     private fun openEncrypted(file: File, password: String?): PdfDocument {
         val decrypted = File(appContext.cacheDir, "dechiffre-${System.nanoTime()}.pdf")
         try {

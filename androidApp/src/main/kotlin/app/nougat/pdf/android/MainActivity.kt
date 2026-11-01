@@ -13,6 +13,7 @@ import android.print.PrintManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.FileProvider
@@ -34,6 +35,11 @@ class MainActivity : ComponentActivity(), ActivityHost {
     private val openLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         openCallback?.invoke(it)
         openCallback = null
+    }
+    private var imagesCallback: ((List<Uri>) -> Unit)? = null
+    private val imagesLauncher = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
+        imagesCallback?.invoke(it)
+        imagesCallback = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +99,11 @@ class MainActivity : ComponentActivity(), ActivityHost {
     override fun openDocument(onResult: (Uri?) -> Unit) {
         openCallback = onResult
         openLauncher.launch(arrayOf("application/pdf"))
+    }
+
+    override fun pickImages(onResult: (List<Uri>) -> Unit) {
+        imagesCallback = onResult
+        imagesLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     override fun share(file: File, name: String) {

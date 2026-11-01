@@ -37,6 +37,9 @@ class DesktopPdfEngine : PdfEngine {
                 throw PasswordRequiredException(wrongPassword = password != null)
             }
         }
+
+    override suspend fun create(dst: String, block: (EditableDoc) -> Unit) =
+        withContext(Dispatchers.IO) { createWithPdfBox(dst, block) }
 }
 
 private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {

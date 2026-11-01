@@ -1,5 +1,8 @@
 package app.nougat.pdf.engine
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ExifInterface
 import com.tom_roush.pdfbox.multipdf.PDFMergerUtility
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.pdmodel.PDPage
@@ -8,6 +11,8 @@ import com.tom_roush.pdfbox.pdmodel.common.PDRectangle
 import com.tom_roush.pdfbox.pdmodel.encryption.AccessPermission
 import com.tom_roush.pdfbox.pdmodel.encryption.StandardProtectionPolicy
 import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
+import com.tom_roush.pdfbox.pdmodel.graphics.image.JPEGFactory
+import com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory
 import com.tom_roush.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState
 import com.tom_roush.pdfbox.util.Matrix
 import java.io.ByteArrayOutputStream
@@ -25,6 +30,47 @@ internal fun editWithPdfBoxAndroid(src: String, password: String?, dst: String, 
             editable.closeSources()
         }
     }
+}
+
+/** Cree un nouveau PDF avec PdfBox-Android. */
+internal fun createWithPdfBoxAndroid(dst: String, block: (EditableDoc) -> Unit) {
+    PDDocument().use { doc ->
+        val editable = AndroidEditableDoc(doc, null)
+        try {
+            block(editable)
+            if (doc.numberOfPages == 0) doc.addPage(PDPage(PDRectangle(A4_WIDTH, A4_HEIGHT)))
+            editable.applySecurity()
+            doc.save(File(dst))
+        } finally {
+            editable.closeSources()
+        }
+    }
+}
+
+/**
+ * Lit une image en la reduisant (au plus [maxSide] pixels de cote, pour la memoire) et en la
+ * remettant droite : les photos du telephone sont souvent enregistrees couchees (EXIF).
+ */
+private fun loadUprightBitmap(path: String, maxSide: Int = 3000): Pair<Bitmap, Boolean>? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeFile(path, bounds)
+    if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+    var sample = 1
+    while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxSide) sample *= 2
+    val bitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inSampleSize = sample }) ?: return null
+    val lossless = bounds.outMimeType?.let { it.contains("png") || it.contains("webp") || it.contains("gif") || it.contains("bmp") } ?: false
+    val degrees = runCatching {
+        when (ExifInterface(path).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270
+            else -> 0
+        }
+    }.getOrDefault(0)
+    if (degrees == 0) return bitmap to lossless
+    val rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, android.graphics.Matrix().apply { postRotate(degrees.toFloat()) }, true)
+    if (rotated !== bitmap) bitmap.recycle()
+    return rotated to lossless
 }
 
 private class AndroidEditableDoc(private val doc: PDDocument, private var password: String?) : EditableDoc {
@@ -67,6 +113,22 @@ private class AndroidEditableDoc(private val doc: PDDocument, private var passwo
         }
         sources.add(other)
         PDFMergerUtility().appendDocument(doc, other)
+    }
+
+    override fun appendImages(paths: List<String>) {
+        for (path in paths) {
+            val (bitmap, lossless) = loadUprightBitmap(path) ?: continue
+            try {
+                // Captures d'ecran : sans perte (texte net) ; photos : JPEG (fichier leger).
+                val image = if (lossless) LosslessFactory.createFromImage(doc, bitmap) else JPEGFactory.createFromImage(doc, bitmap, 0.88f)
+                val l = imagePageLayout(bitmap.width, bitmap.height)
+                val page = PDPage(PDRectangle(l[0], l[1]))
+                doc.addPage(page)
+                PDPageContentStream(doc, page).use { it.drawImage(image, l[2], l[3], l[4], l[5]) }
+            } finally {
+                bitmap.recycle()
+            }
+        }
     }
 
     override fun draw(index: Int, block: (PageCanvas) -> Unit) {

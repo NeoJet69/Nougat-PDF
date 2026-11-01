@@ -321,11 +321,12 @@ private fun DocumentIsland(
             val primary = MaterialTheme.colorScheme.primary
             Text(
                 buildAnnotatedString {
+                    // « modifié » d'abord : sur un petit ecran, c'est le nombre de pages qui est coupe.
+                    if (state.modified) {
+                        withStyle(SpanStyle(color = primary)) { append("modifié  •  ") }
+                    }
                     withStyle(SpanStyle(color = p.muted)) {
                         append("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}")
-                    }
-                    if (state.modified) {
-                        withStyle(SpanStyle(color = primary)) { append("  •  modifié") }
                     }
                 },
                 style = MaterialTheme.typography.labelMedium,
@@ -358,6 +359,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             HorizontalDivider()
             item("Organiser les pages", NougatIcons.Pages) { state.pagesOpen = true }
             item("Ajouter un PDF à la fin", Icons.Filled.Add, state::appendPdf)
+            item("Ajouter des images à la fin", NougatIcons.Image, state::appendImages)
             if (session.password == null) {
                 item("Protéger par mot de passe", Icons.Filled.Lock, onProtect)
             } else {

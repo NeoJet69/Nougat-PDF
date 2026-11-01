@@ -20,6 +20,13 @@ interface PlatformFiles {
     /** Choisit un autre PDF (pour l'ajouter a la fin). Null si annule. */
     suspend fun pickPdf(): SavedFile?
 
+    /**
+     * Choisit des photos ou des images (plusieurs a la fois), liste vide si l'utilisateur annule.
+     * Les chemins sont lisibles par le moteur PDF (copies privees sur Android). Ce sont parfois les
+     * fichiers de l'utilisateur lui-meme : ne jamais les effacer.
+     */
+    suspend fun pickImages(): List<String> = emptyList()
+
     /** Imprimer, si la plateforme sait le faire. */
     val canPrint: Boolean
     suspend fun print(path: String, password: String?, name: String)

@@ -15,6 +15,7 @@ import kotlin.coroutines.resume
 interface ActivityHost {
     fun createDocument(suggestedName: String, onResult: (Uri?) -> Unit)
     fun openDocument(onResult: (Uri?) -> Unit)
+    fun pickImages(onResult: (List<Uri>) -> Unit)
     fun print(path: String, name: String)
     fun share(file: File, name: String)
 }
@@ -60,6 +61,25 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
         val h = host ?: return null
         val uri = suspendCancellableCoroutine<Uri?> { cont -> h.openDocument { cont.resume(it) } } ?: return null
         return copyToCache(uri)
+    }
+
+    private val imagesDir = File(app.cacheDir, "images").apply { mkdirs() }
+
+    /** Photos choisies dans la galerie, copiees dans le cache (le moteur lit des fichiers). */
+    override suspend fun pickImages(): List<String> {
+        val h = host ?: return emptyList()
+        val uris = suspendCancellableCoroutine<List<Uri>> { cont -> h.pickImages { cont.resume(it) } }
+        if (uris.isEmpty()) return emptyList()
+        return withContext(Dispatchers.IO) {
+            imagesDir.listFiles()?.forEach { it.delete() }
+            uris.mapIndexedNotNull { i, uri ->
+                runCatching {
+                    val target = File(imagesDir, "image-$i-${System.nanoTime()}")
+                    app.contentResolver.openInputStream(uri)!!.use { src -> target.outputStream().use { src.copyTo(it) } }
+                    target.absolutePath
+                }.getOrNull()
+            }
+        }
     }
 
     /** Copie privee d'un fichier choisi, que PDFBox et PdfRenderer savent lire. */

@@ -94,6 +94,19 @@ fun HomeScreen(
                 GradientButton("Choisir un PDF", onClick = onOpenFile, icon = NougatIcons.Folder)
             }
 
+            // Creer un PDF
+            Spacer(Modifier.height(14.dp))
+            Row(Modifier.widthIn(max = 620.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                CreateCard(
+                    NougatIcons.Image,
+                    if (platform.isDesktop) "Images → PDF" else "Photos → PDF",
+                    if (platform.isDesktop) "Une page par image" else "Une page par photo",
+                    Modifier.weight(1f),
+                    onClick = state::createPdfFromImages,
+                )
+                CreateCard(NougatIcons.NewDocument, "Document vierge", "Une page A4 à remplir", Modifier.weight(1f), onClick = state::createBlankPdf)
+            }
+
             Spacer(Modifier.height(22.dp))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
@@ -123,6 +136,18 @@ fun HomeScreen(
         // Theme, en haut a droite
         Island(Modifier.align(Alignment.TopEnd).padding(14.dp)) {
             IslandButton(NougatIcons.Contrast, "Thème : ${themeLabel(state.themeMode)}", onClick = state::cycleTheme)
+        }
+    }
+}
+
+@Composable
+private fun CreateCard(icon: ImageVector, title: String, subtitle: String, modifier: Modifier, onClick: () -> Unit) {
+    Island(modifier.clickable(onClick = onClick), shape = RoundedCornerShape(22.dp), padding = 10.dp) {
+        GradientBadge(icon, size = 38.dp, iconSize = 20.dp)
+        Spacer(Modifier.width(10.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(subtitle, style = MaterialTheme.typography.labelMedium, color = LocalNougatPalette.current.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }

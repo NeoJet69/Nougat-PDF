@@ -127,6 +127,7 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
                 state.insertBlankPage(selected.maxOrNull()?.plus(1) ?: count)
             }
             PageAction(NougatIcons.Folder, "Ajouter PDF", true, compact, onClick = state::appendPdf)
+            PageAction(NougatIcons.Image, if (compact) "Photos" else "Images", true, compact, onClick = state::appendImages)
         }
     }
 }
