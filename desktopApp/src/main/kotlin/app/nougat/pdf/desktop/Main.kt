@@ -35,6 +35,8 @@ import java.awt.dnd.DropTargetAdapter
 import java.awt.dnd.DropTargetDropEvent
 import java.io.File
 import javax.swing.SwingUtilities
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 fun main(args: Array<String>) = application {
     val scope = rememberCoroutineScope()
@@ -42,7 +44,7 @@ fun main(args: Array<String>) = application {
     var frame by remember { mutableStateOf<Frame?>(null) }
     val files = remember { DesktopFiles { frame } }
     val state = remember { ViewerState(DesktopPdfEngine(), scope, files, ClaudeAssistantEngine()) }
-    val pickAndOpen = { files.chooseFile("Ouvrir un PDF", FileDialog.LOAD, "*.pdf")?.let(state::openFile); Unit }
+    val pickAndOpen = { files.chooseFile(tr(Str.OpenPdf), FileDialog.LOAD, "*.pdf")?.let(state::openFile); Unit }
 
     // Double-clic sur un PDF dans l'Explorateur Windows : le fichier arrive ici.
     LaunchedEffect(Unit) {
@@ -63,7 +65,7 @@ fun main(args: Array<String>) = application {
         }
         NougatApp(
             state = state,
-            platform = PlatformInfo(isDesktop = true),
+            platform = PlatformInfo(isDesktop = true, version = System.getProperty("jpackage.app-version")),
             onOpenFile = pickAndOpen,
             onOpenRecent = { recent ->
                 val file = File(recent.ref)
@@ -71,7 +73,7 @@ fun main(args: Array<String>) = application {
                     state.runAfterConfirm { state.openFile(file) }
                 } else {
                     state.forgetRecent(recent.ref)
-                    state.showError("« ${recent.name} » est introuvable : il a peut-être été déplacé ou supprimé.")
+                    state.showError(tr(Str.RecentNotFound, recent.name))
                 }
             },
         )

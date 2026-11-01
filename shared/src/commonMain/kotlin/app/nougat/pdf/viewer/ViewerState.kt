@@ -29,6 +29,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.launch
+import app.nougat.pdf.i18n.I18n
+import app.nougat.pdf.i18n.Lang
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
+import app.nougat.pdf.i18n.trn
+import kotlinx.coroutines.CompletableDeferred
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -62,6 +68,25 @@ class ViewerState(
 
     /** Outils d'edition (conserves d'un document a l'autre). */
     val tools = EditTools()
+
+    // ---- Langue -----------------------------------------------------------------------------------
+
+    init {
+        // La langue choisie, sinon celle de l'appareil (si Nougat la parle), sinon l'anglais.
+        I18n.lang = Lang.fromCode(runCatching { files.loadSetting(SETTING_LANGUAGE) }.getOrNull()) ?: Lang.fromSystem()
+    }
+
+    /** Fenetre « Choisir la langue » ouverte. */
+    var languageOpen by mutableStateOf(false)
+
+    /** Fenetre « A propos » ouverte. */
+    var aboutOpen by mutableStateOf(false)
+
+    fun setLanguage(lang: Lang) {
+        I18n.lang = lang
+        languageOpen = false
+        runCatching { files.saveSetting(SETTING_LANGUAGE, lang.code) }
+    }
 
     // ---- Theme et fichiers recents ---------------------------------------------------------------
 
@@ -134,7 +159,7 @@ class ViewerState(
             return
         }
         if (session == null) {
-            assistant.items.add(ChatItem.Error("Ouvre d'abord un PDF."))
+            assistant.items.add(ChatItem.Error(tr(Str.OpenPdfFirst)))
             return
         }
         assistant.items.add(ChatItem.User(message))
@@ -146,10 +171,10 @@ class ViewerState(
                     assistant.items.add(item)
                 }
             } catch (e: CancellationException) {
-                assistant.items.add(ChatItem.Error("Arrêté."))
+                assistant.items.add(ChatItem.Error(tr(Str.Stopped)))
                 throw e
             } catch (e: Throwable) {
-                assistant.items.add(ChatItem.Error(e.message ?: "Erreur inconnue"))
+                assistant.items.add(ChatItem.Error(e.message ?: tr(Str.UnknownError)))
             } finally {
                 assistant.running = false
             }
@@ -177,8 +202,20 @@ class ViewerState(
     var pagesGrid = LazyGridState()
         private set
 
-    /** Fichiers d'origine deja sauvegardes (« _miaou ») pendant cette utilisation. */
-    private val backedUp = HashSet<String>()
+    /** Fichiers que l'utilisateur a accepte de remplacer (on ne redemande pas a chaque fois). */
+    private val replaceAllowed = HashSet<String>()
+
+    /** « Remplacer l'original ou enregistrer une copie ? » : le nom du document, pendant la question. */
+    var savePrompt: String? by mutableStateOf(null)
+        private set
+    private var saveDecision: CompletableDeferred<SaveChoice?>? = null
+
+    /** Reponse a [savePrompt] ; null = annuler. */
+    fun answerSave(choice: SaveChoice?) {
+        savePrompt = null
+        saveDecision?.complete(choice)
+        saveDecision = null
+    }
 
     // Versions precedentes du document, pour « Annuler ».
     private val history = ArrayList<Version>()
@@ -216,7 +253,7 @@ class ViewerState(
         openJob?.cancel()
         passwordPrompt = null
         errorMessage = null
-        busyMessage = "Ouverture de « $name »…"
+        busyMessage = tr(Str.Opening, name)
         openJob = scope.launch {
             try {
                 val doc = engine.open(path, password)
@@ -233,7 +270,7 @@ class ViewerState(
                 scope.launch {
                     if (doc.hasForm() && session === opened) {
                         opened?.hasForm = true
-                        toast = "Formulaire détecté : touchez un champ pour le remplir"
+                        toast = tr(Str.FormDetected)
                     }
                 }
             } catch (e: CancellationException) {
@@ -241,7 +278,7 @@ class ViewerState(
             } catch (e: PasswordRequiredException) {
                 passwordPrompt = PasswordPrompt(path, name, sourceRef, e.wrongPassword)
             } catch (e: Throwable) {
-                errorMessage = "Impossible d'ouvrir « $name ».\n${e.message ?: e::class.simpleName}"
+                errorMessage = tr(Str.CannotOpen, name, e.message ?: e::class.simpleName)
             } finally {
                 // Une ouverture plus recente a pris la main : c'est elle qui gere l'indicateur.
                 if (openJob == currentCoroutineContext()[Job]) busyMessage = null
@@ -326,7 +363,7 @@ class ViewerState(
     /** Remplace le texte d'une ligne et attend la fin (assistant). */
     suspend fun replaceTextAwait(block: TextBlock, newText: String): TextEditResult {
         var result: TextEditResult? = null
-        performEdit("Modification du texte…", session?.password) { doc -> result = doc.replaceText(block, newText) }
+        performEdit(tr(Str.EditingText), session?.password) { doc -> result = doc.replaceText(block, newText) }
         return result ?: TextEditResult.SameFont
     }
 
@@ -359,13 +396,13 @@ class ViewerState(
         } catch (e: CancellationException) {
             throw e
         } catch (e: TextEditException) {
-            errorMessage = e.message ?: "Ce texte ne peut pas être modifié."
+            errorMessage = e.message
             false
         } catch (e: FormFieldException) {
-            errorMessage = e.message ?: "Ce champ ne peut pas être rempli."
+            errorMessage = e.message
             false
         } catch (e: Throwable) {
-            errorMessage = "La modification a échoué.\n${e.message ?: e::class.simpleName}"
+            errorMessage = tr(Str.EditFailed, e.message ?: e::class.simpleName)
             false
         }
     }
@@ -397,13 +434,13 @@ class ViewerState(
         val previous = history.removeLastOrNull() ?: return
         historySize = history.size
         scope.launch {
-            busyMessage = "Annulation…"
+            busyMessage = tr(Str.Undoing)
             try {
                 reopen(previous.path, previous.password)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
-                errorMessage = "Impossible d'annuler.\n${e.message}"
+                errorMessage = tr(Str.CannotUndo, e.message)
             } finally {
                 busyMessage = null
             }
@@ -412,18 +449,18 @@ class ViewerState(
 
     // ---- Pages -----------------------------------------------------------------------------------
 
-    fun rotatePages(pages: Set<Int>, delta: Int) = edit("Rotation…") { doc ->
+    fun rotatePages(pages: Set<Int>, delta: Int) = edit(tr(Str.Rotating)) { doc ->
         for (i in pages) doc.setRotation(i, doc.geometry(i).rotation + delta)
     }
 
     fun deletePages(pages: Set<Int>) {
         val s = session ?: return
         if (pages.size >= s.pageCount) {
-            errorMessage = "Un PDF doit garder au moins une page."
+            errorMessage = tr(Str.KeepOnePage)
             return
         }
         pageSelection = emptySet()
-        edit("Suppression…") { doc -> doc.reorder((0 until doc.pageCount).filter { it !in pages }) }
+        edit(tr(Str.Deleting)) { doc -> doc.reorder((0 until doc.pageCount).filter { it !in pages }) }
     }
 
     /** Deplace les pages choisies d'un cran ([direction] = -1 ou +1) ; la selection les suit. */
@@ -432,20 +469,20 @@ class ViewerState(
         val order = moveInOrder(s.pageCount, pages, direction)
         if (order == (0 until s.pageCount).toList()) return
         pageSelection = order.indices.filter { order[it] in pages }.toSet()
-        edit("Déplacement…") { it.reorder(order) }
+        edit(tr(Str.Moving)) { it.reorder(order) }
     }
 
     fun insertBlankPage(at: Int) {
         val s = session ?: return
         val size = s.pageSizes.getOrNull((at - 1).coerceIn(0, s.pageCount - 1)) ?: return
         pageSelection = setOf(at)
-        edit("Ajout d'une page…") { it.insertBlankPage(at, size.width, size.height) }
+        edit(tr(Str.AddingPage)) { it.insertBlankPage(at, size.width, size.height) }
     }
 
     fun appendPdf() {
         scope.launch {
             val other = files.pickPdf() ?: return@launch
-            editNow("Ajout de « ${other.name} »…", session?.password) { it.appendPdf(other.path) }
+            editNow(tr(Str.AddingFile, other.name), session?.password) { it.appendPdf(other.path) }
         }
     }
 
@@ -453,7 +490,7 @@ class ViewerState(
     fun extractPages(pages: Set<Int>) {
         val s = session ?: return
         scope.launch {
-            busyMessage = "Extraction…"
+            busyMessage = tr(Str.Extracting)
             try {
                 val dst = newTempPath()
                 val marks = s.marks.toList()
@@ -462,12 +499,12 @@ class ViewerState(
                     doc.reorder(pages.sorted())
                 }
                 busyMessage = null
-                val saved = files.saveAs(dst, s.name.removeSuffix(".pdf") + " (extrait).pdf")
-                if (saved != null) toast = "Pages enregistrées dans « ${saved.name} »"
+                val saved = files.saveAs(dst, s.name.removeSuffix(".pdf") + " (" + tr(Str.ExtractedSuffix) + ").pdf")
+                if (saved != null) toast = tr(Str.PagesSavedIn, saved.name)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
-                errorMessage = "L'extraction a échoué.\n${e.message}"
+                errorMessage = tr(Str.ExtractFailed, e.message)
             } finally {
                 busyMessage = null
             }
@@ -483,14 +520,14 @@ class ViewerState(
         if (newText.trim() == block.text.trim()) return
         scope.launch {
             var result: TextEditResult? = null
-            val ok = editNow("Modification du texte…", s.password) { doc ->
+            val ok = editNow(tr(Str.EditingText), s.password) { doc ->
                 result = doc.replaceText(block, newText)
             }
             if (ok) {
                 toast = when (result) {
-                    TextEditResult.SimilarFont -> "Texte modifié (police proche : l'originale ne contient pas ces caractères)"
-                    TextEditResult.InstalledFont -> "Texte modifié (police d'origine installée sur cet ordinateur)"
-                    else -> "Texte modifié"
+                    TextEditResult.SimilarFont -> tr(Str.TextChangedSimilar)
+                    TextEditResult.InstalledFont -> tr(Str.TextChangedInstalled)
+                    else -> tr(Str.TextChanged)
                 }
             }
         }
@@ -498,7 +535,7 @@ class ViewerState(
 
     /** Protege le PDF par mot de passe, ou retire la protection ([password] null). */
     fun setPassword(password: String?) {
-        val label = if (password == null) "Retrait du mot de passe…" else "Protection…"
+        val label = tr(if (password == null) Str.RemovingPassword else Str.Protecting)
         scope.launch { editNow(label, password) { it.setPassword(password) } }
     }
 
@@ -513,19 +550,21 @@ class ViewerState(
         if (!commitMarks()) return false
         val s = session ?: return false
         if (s.path == savedPath) return true
-        busyMessage = "Enregistrement…"
-        // La premiere fois, l'original est d'abord mis a l'abri : « Nom_miaou.pdf ».
-        var backup: String? = null
-        if (s.sourceRef !in backedUp) {
-            backup = try {
-                files.backupOriginal(s.sourceRef, s.name)
-            } catch (e: CancellationException) {
-                throw e
-            } catch (_: Throwable) {
-                null
+        // Document cree dans l'app : il n'existe encore nulle part.
+        if (s.sourceRef.isBlank()) return saveAsNow()
+        // La premiere fois : remplacer l'original, ou enregistrer une copie (« Nom_miaou.pdf ») ailleurs.
+        if (s.sourceRef !in replaceAllowed) {
+            val decision = CompletableDeferred<SaveChoice?>()
+            saveDecision?.complete(null)
+            saveDecision = decision
+            savePrompt = s.name
+            when (decision.await()) {
+                null -> return false
+                SaveChoice.Copy -> return saveAsNow(copyName(s.name))
+                SaveChoice.Replace -> replaceAllowed.add(s.sourceRef)
             }
-            backedUp.add(s.sourceRef)
         }
+        busyMessage = tr(Str.Saving)
         val ok = try {
             files.overwrite(s.path, s.sourceRef)
         } catch (e: CancellationException) {
@@ -537,7 +576,7 @@ class ViewerState(
         }
         if (ok) {
             savedPath = s.path
-            toast = if (backup != null) "Enregistré · l'original est gardé dans « $backup »" else "Enregistré"
+            toast = tr(Str.Saved)
             return true
         }
         return saveAsNow()
@@ -547,19 +586,21 @@ class ViewerState(
         scope.launch { saveAsNow() }
     }
 
-    private suspend fun saveAsNow(): Boolean {
+    private suspend fun saveAsNow(suggestedName: String? = null): Boolean {
         if (!commitMarks()) return false
         val s = session ?: return false
         return try {
-            val saved = files.saveAs(s.path, s.name) ?: return false
+            val saved = files.saveAs(s.path, suggestedName ?: s.name) ?: return false
             s.rename(saved.name, saved.ref)
             savedPath = s.path
-            toast = "Enregistré sous « ${saved.name} »"
+            // C'est le fichier choisi par l'utilisateur : les prochains enregistrements vont dedans.
+            replaceAllowed.add(saved.ref)
+            toast = tr(Str.SavedAs, saved.name)
             true
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            errorMessage = "Impossible d'enregistrer.\n${e.message}"
+            errorMessage = tr(Str.CannotSave, e.message)
             false
         }
     }
@@ -573,7 +614,7 @@ class ViewerState(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
-                errorMessage = "Impression impossible.\n${e.message}"
+                errorMessage = tr(Str.CannotPrint, e.message)
             }
         }
     }
@@ -587,7 +628,7 @@ class ViewerState(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
-                errorMessage = "Partage impossible.\n${e.message}"
+                errorMessage = tr(Str.CannotShare, e.message)
             }
         }
     }
@@ -597,7 +638,7 @@ class ViewerState(
         if (!commitPendingTextEdit()) return false
         if (!commitPendingFieldEdit()) return false
         val s = session ?: return false
-        return s.marks.isEmpty() || editNow("Application des modifications…", s.password) {}
+        return s.marks.isEmpty() || editNow(tr(Str.ApplyingChanges), s.password) {}
     }
 
     /** Applique la ligne en cours de modification (outil « Éditer »), si son texte a change. */
@@ -607,22 +648,22 @@ class ViewerState(
         val text = s.editingText
         s.editingBlock = null
         if (text.trim() == block.text.trim()) return true
-        return editNow("Modification du texte…", s.password) { it.replaceText(block, text) }
+        return editNow(tr(Str.EditingText), s.password) { it.replaceText(block, text) }
     }
 
     // ---- Creer un PDF -----------------------------------------------------------------------------
 
     /** Nouveau document : une page A4 blanche, a remplir avec les outils (texte, signature...). */
     fun createBlankPdf() = runAfterConfirm {
-        scope.launch { createNow("Document vierge.pdf", "Création du document…") { it.insertBlankPage(0, A4_WIDTH, A4_HEIGHT) } }
+        scope.launch { createNow(tr(Str.BlankPdfName) + ".pdf", tr(Str.CreatingDocument)) { it.insertBlankPage(0, A4_WIDTH, A4_HEIGHT) } }
     }
 
     /** Nouveau PDF a partir de photos ou d'images : une page par image. */
     fun createPdfFromImages() = runAfterConfirm {
         scope.launch {
             val images = pickImagesOrReport() ?: return@launch
-            val label = if (images.size > 1) "Création du PDF (${images.size} images)…" else "Création du PDF…"
-            createNow(if (images.size > 1) "Images.pdf" else "Image.pdf", label) { it.appendImages(images) }
+            val label = if (images.size > 1) tr(Str.CreatingPdfImages, images.size) else tr(Str.CreatingPdf)
+            createNow(tr(if (images.size > 1) Str.ImagesPdfName else Str.ImagePdfName) + ".pdf", label) { it.appendImages(images) }
         }
     }
 
@@ -631,8 +672,8 @@ class ViewerState(
         scope.launch {
             val images = pickImagesOrReport() ?: return@launch
             val s = session ?: return@launch
-            if (editNow("Ajout des images…", s.password) { it.appendImages(images) }) {
-                toast = if (images.size > 1) "${images.size} pages ajoutées à la fin" else "Page ajoutée à la fin"
+            if (editNow(tr(Str.AddingImages), s.password) { it.appendImages(images) }) {
+                toast = trn(Str.PagesAddedAtEnd, images.size)
             }
         }
     }
@@ -643,7 +684,7 @@ class ViewerState(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Throwable) {
-            errorMessage = "Impossible de lire les images.\n${e.message ?: e::class.simpleName}"
+            errorMessage = tr(Str.CannotReadImages, e.message ?: e::class.simpleName)
             return null
         }
         return images.takeIf { it.isNotEmpty() }
@@ -658,7 +699,7 @@ class ViewerState(
             throw e
         } catch (e: Throwable) {
             busyMessage = null
-            errorMessage = "Impossible de créer le PDF.\n${e.message ?: e::class.simpleName}"
+            errorMessage = tr(Str.CannotCreate, e.message ?: e::class.simpleName)
             return
         }
         open(path, name, sourceRef = "", isNew = true)
@@ -682,7 +723,7 @@ class ViewerState(
             return
         }
         scope.launch {
-            val ok = editNow("Remplissage du formulaire…", s.password) { doc ->
+            val ok = editNow(tr(Str.FillingForm), s.password) { doc ->
                 if (writePending && pending != null) doc.setFieldValue(pending.name, pendingText)
                 if (value != field.value || field.kind == FieldKind.Radio) doc.setFieldValue(field.name, value)
             }
@@ -701,14 +742,14 @@ class ViewerState(
         }
         s.editingField = null
         scope.launch {
-            val ok = editNow("Remplissage du formulaire…", s.password) { it.setFieldValue(pending.name, text) }
+            val ok = editNow(tr(Str.FillingForm), s.password) { it.setFieldValue(pending.name, text) }
             if (ok) session?.startFieldEditing(field)
         }
     }
 
     /** Remplit un champ et attend la fin (assistant). */
     suspend fun setFieldValueAwait(name: String, value: String) {
-        performEdit("Remplissage du formulaire…", session?.password) { it.setFieldValue(name, value) }
+        performEdit(tr(Str.FillingForm), session?.password) { it.setFieldValue(name, value) }
     }
 
     /** Applique le champ en cours de saisie (formulaire), si son texte a change. */
@@ -718,7 +759,7 @@ class ViewerState(
         val text = s.editingFieldText
         s.editingField = null
         if (text == field.value) return true
-        return editNow("Remplissage du formulaire…", s.password) { it.setFieldValue(field.name, text) }
+        return editNow(tr(Str.FillingForm), s.password) { it.setFieldValue(field.name, text) }
     }
 
     fun commitPendingFieldEditLater() {
@@ -743,6 +784,7 @@ class ViewerState(
         const val SETTING_MODEL = "assistant.model"
         const val SETTING_THEME = "theme"
         const val SETTING_RECENTS = "recents"
+        const val SETTING_LANGUAGE = "language"
         const val MAX_RECENTS = 8
     }
 }
@@ -766,3 +808,9 @@ internal fun moveInOrder(pageCount: Int, pages: Set<Int>, direction: Int): List<
 data class RecentFile(val ref: String, val name: String)
 
 data class PasswordPrompt(val path: String, val name: String, val sourceRef: String, val wrongPassword: Boolean)
+
+/** Reponse a « Remplacer l'original ou enregistrer une copie ? ». */
+enum class SaveChoice { Replace, Copy }
+
+/** « Facture.pdf » -> « Facture_miaou.pdf » : le nom propose pour une copie. */
+fun copyName(name: String): String = name.replace(Regex("(?i)\\.pdf$"), "") + "_miaou.pdf"

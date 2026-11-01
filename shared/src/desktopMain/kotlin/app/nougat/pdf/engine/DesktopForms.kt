@@ -16,6 +16,7 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDTerminalField
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField
 import org.apache.pdfbox.pdmodel.interactive.form.PDVariableText
 import java.util.IdentityHashMap
+import app.nougat.pdf.i18n.Str
 
 /** Vrai si le PDF contient au moins un champ a remplir. */
 internal fun documentHasForm(doc: PDDocument): Boolean {
@@ -76,9 +77,9 @@ internal fun pageFormFields(doc: PDDocument, pageIndex: Int): List<FormField> {
  * ou d'un bouton radio, ou [FIELD_OFF] pour decocher.
  */
 internal fun setFormFieldValue(doc: PDDocument, name: String, value: String) {
-    val form = doc.documentCatalog.acroForm ?: throw FormFieldException("Ce PDF n'a pas de formulaire.")
-    val field = form.getField(name) ?: throw FormFieldException("Ce champ n'existe plus dans le document.")
-    if (field.isReadOnly) throw FormFieldException("Ce champ est en lecture seule.")
+    val form = doc.documentCatalog.acroForm ?: throw FormFieldException(Str.ErrNoForm)
+    val field = form.getField(name) ?: throw FormFieldException(Str.ErrFieldGone)
+    if (field.isReadOnly) throw FormFieldException(Str.FieldReadOnly)
     try {
         when (field) {
             is PDCheckBox -> if (value == FIELD_OFF || value.isEmpty()) field.unCheck() else field.setValue(value)
@@ -92,14 +93,12 @@ internal fun setFormFieldValue(doc: PDDocument, name: String, value: String) {
                     (field as PDChoice).setValue(value)
                 }
             }
-            else -> throw FormFieldException("Ce champ ne se remplit pas dans Nougat.")
+            else -> throw FormFieldException(Str.ErrFieldUnsupported)
         }
     } catch (e: FormFieldException) {
         throw e
     } catch (e: IllegalArgumentException) {
-        throw FormFieldException(
-            "La police du formulaire ne contient pas un des caractères tapés (${e.message ?: "caractère inconnu"}).",
-        )
+        throw FormFieldException(Str.ErrFieldCharset, e.message ?: "?")
     }
     // Certains PDF demandent au lecteur de redessiner les champs : on le fait nous-memes.
     if (form.needAppearances) runCatching { form.refreshAppearances(listOf<PDField>(field)) }

@@ -24,6 +24,7 @@ import com.tom_roush.pdfbox.util.Matrix
 import com.tom_roush.pdfbox.util.Vector
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import app.nougat.pdf.i18n.Str
 
 /** Analyse d'une page avec PdfBox-Android : les lettres, les operateurs de texte et leurs polices. */
 internal class AndroidPageAnalysis(val analysis: PageTextAnalysis, val fonts: Map<Int, PDFont>)
@@ -57,12 +58,12 @@ internal fun replaceTextWithPdfBoxAndroid(doc: PDDocument, block: TextBlock, new
 
     val result = analyzePageTextAndroid(doc, block.page, w, h)
     val target = groupTextBlocks(block.page, result.analysis, w, h).findMatch(block)
-        ?: throw TextEditException("Ce texte n'a pas été retrouvé dans la page.")
-    if (!target.editable) throw TextEditException("Ce texte ne peut pas être modifié directement.")
+        ?: throw TextEditException(Str.ErrTextNotFound)
+    if (!target.editable) throw TextEditException(Str.ErrTextNotEditable)
 
     val anchorOp = result.analysis.ops[target.glyphs.first().op]
-        ?: throw TextEditException("Instruction de texte introuvable.")
-    val font = result.fonts[anchorOp.index] ?: throw TextEditException("Police introuvable.")
+        ?: throw TextEditException(Str.ErrTextOpNotFound)
+    val font = result.fonts[anchorOp.index] ?: throw TextEditException(Str.ErrFontNotFound)
     val text = newText.replace('\n', ' ').replace('\t', ' ')
 
     val same = sameFontReplacement(font, text, anchorOp)
@@ -113,7 +114,7 @@ private fun sameFontReplacement(font: PDFont, text: String, op: AnalyzedTextOp):
 
 /** Le nouveau texte dans la police standard la plus proche, ajoutee aux ressources de la page. */
 private fun otherFontReplacement(page: PDPage, original: PDFont, text: String, op: AnalyzedTextOp): Replacement.OtherFont {
-    if (op.fontResource == null) throw TextEditException("Police d'origine introuvable.")
+    if (op.fontResource == null) throw TextEditException(Str.ErrOriginalFontNotFound)
     val descriptor = original.fontDescriptor
     val choice = closestStandardFont(
         fontName = original.name,

@@ -21,6 +21,8 @@ import app.nougat.pdf.ui.NougatApp
 import app.nougat.pdf.ui.PlatformInfo
 import java.io.File
 import java.io.FileOutputStream
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 class MainActivity : ComponentActivity(), ActivityHost {
     private val viewModel: ViewerViewModel by viewModels()
@@ -52,7 +54,7 @@ class MainActivity : ComponentActivity(), ActivityHost {
         setContent {
             NougatApp(
                 state = viewModel.state,
-                platform = PlatformInfo(isDesktop = false),
+                platform = PlatformInfo(isDesktop = false, version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull()),
                 onOpenFile = {
                     openDocument { uri ->
                         if (uri != null) {
@@ -114,7 +116,7 @@ class MainActivity : ComponentActivity(), ActivityHost {
             putExtra(Intent.EXTRA_SUBJECT, name)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        startActivity(Intent.createChooser(send, "Partager « $name »"))
+        startActivity(Intent.createChooser(send, tr(Str.ShareTitle, name)))
     }
 
     override fun print(path: String, name: String) {

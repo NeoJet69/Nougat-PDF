@@ -49,11 +49,19 @@ import androidx.compose.ui.unit.dp
 import app.nougat.pdf.viewer.RecentFile
 import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.delay
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
+import app.nougat.pdf.i18n.I18n
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 
 /** Ce qui change d'une plateforme a l'autre dans l'interface. */
 data class PlatformInfo(
     /** Ordinateur : glisser-deposer et raccourcis clavier disponibles. */
     val isDesktop: Boolean,
+    /** Numero de version, pour « A propos » (null si inconnu). */
+    val version: String? = null,
 )
 
 /**
@@ -68,6 +76,9 @@ fun NougatApp(
     onOpenRecent: (RecentFile) -> Unit = {},
 ) {
     NougatTheme(state.themeMode) {
+      // L'arabe s'ecrit de droite a gauche : toute l'interface suit (pas les pages du PDF).
+      val direction = if (I18n.lang.rtl) LayoutDirection.Rtl else LayoutDirection.Ltr
+      CompositionLocalProvider(LocalLayoutDirection provides direction) {
         val p = LocalNougatPalette.current
         Box(Modifier.fillMaxSize().nougatCanvas(p)) {
             // Sur Android, le contenu ne passe ni sous la barre d'etat ni sous la barre de navigation.
@@ -98,18 +109,22 @@ fun NougatApp(
                     )
                 }
                 if (state.confirmDiscard != null) {
-                    ConfirmSaveDialog(session?.name ?: "Le document", state::answerConfirm)
+                    ConfirmSaveDialog(session?.name ?: tr(Str.DocDefaultName), state::answerConfirm)
                 }
+                state.savePrompt?.let { name -> SaveChoiceDialog(name, state::answerSave) }
+                if (state.languageOpen) LanguageDialog(I18n.lang, state::setLanguage) { state.languageOpen = false }
+                if (state.aboutOpen) AboutDialog(platform.version) { state.aboutOpen = false }
                 state.errorMessage?.let { message ->
                     AlertDialog(
                         onDismissRequest = state::dismissError,
-                        confirmButton = { TextButton(onClick = state::dismissError) { Text("OK") } },
-                        title = { Text("Oups") },
+                        confirmButton = { TextButton(onClick = state::dismissError) { Text(tr(Str.Ok)) } },
+                        title = { Text(tr(Str.Oops)) },
                         text = { Text(message) },
                     )
                 }
             }
         }
+      }
     }
 }
 
@@ -180,19 +195,19 @@ private fun PasswordDialog(
     LaunchedEffect(Unit) { focus.requestFocus() }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("PDF protégé") },
+        title = { Text(tr(Str.PdfProtected)) },
         text = {
             Column {
-                Text("« $fileName » demande un mot de passe.")
+                Text(tr(Str.AsksPassword, fileName))
                 Spacer(Modifier.height(12.dp))
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Mot de passe") },
+                    label = { Text(tr(Str.Password)) },
                     singleLine = true,
                     isError = wrongPassword,
                     supportingText = if (wrongPassword) {
-                        { Text("Mot de passe incorrect") }
+                        { Text(tr(Str.WrongPassword)) }
                     } else null,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
@@ -201,7 +216,7 @@ private fun PasswordDialog(
                 )
             }
         },
-        confirmButton = { TextButton(onClick = { onSubmit(password) }) { Text("Ouvrir") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
+        confirmButton = { TextButton(onClick = { onSubmit(password) }) { Text(tr(Str.Open)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
     )
 }

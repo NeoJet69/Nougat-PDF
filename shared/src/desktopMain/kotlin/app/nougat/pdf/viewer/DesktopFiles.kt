@@ -9,6 +9,8 @@ import java.awt.Frame
 import java.awt.print.PrinterJob
 import java.io.File
 import java.nio.file.Files
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Fichiers sur ordinateur : boites de dialogue Windows, copies, impression. */
 class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
@@ -39,19 +41,19 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
     }
 
     override suspend fun saveAs(path: String, suggestedName: String): SavedFile? {
-        val target = chooseFile("Enregistrer sous", FileDialog.SAVE, suggestedName) ?: return null
+        val target = chooseFile(tr(Str.SaveAs).trimEnd('…'), FileDialog.SAVE, suggestedName) ?: return null
         val fixed = if (target.name.lowercase().endsWith(".pdf")) target else File(target.parentFile, target.name + ".pdf")
         withContext(Dispatchers.IO) { writeInPlace(File(path), fixed) }
         return SavedFile(fixed.absolutePath, fixed.name)
     }
 
     override suspend fun pickPdf(): SavedFile? {
-        val file = chooseFile("Choisir un PDF", FileDialog.LOAD, "*.pdf") ?: return null
+        val file = chooseFile(tr(Str.ChoosePdf), FileDialog.LOAD, "*.pdf") ?: return null
         return SavedFile(file.absolutePath, file.name)
     }
 
     override suspend fun pickImages(): List<String> {
-        val dialog = FileDialog(frame(), "Choisir des images", FileDialog.LOAD).apply {
+        val dialog = FileDialog(frame(), tr(Str.ChooseImages), FileDialog.LOAD).apply {
             isMultipleMode = true
             // Windows filtre avec ce motif, les autres systemes avec le filtre.
             file = IMAGE_EXTENSIONS.joinToString(";") { "*.$it" }
@@ -93,17 +95,6 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
     override val canShare: Boolean = false
 
     override suspend fun share(path: String, name: String) = Unit
-
-    override suspend fun backupOriginal(sourceRef: String, name: String): String? = withContext(Dispatchers.IO) {
-        val original = File(sourceRef)
-        if (!original.isFile) return@withContext null
-        // A cote de l'original : « Facture_miaou.pdf ». Si elle existe deja, c'est la toute
-        // premiere version : on la garde telle quelle.
-        val backup = File(original.parentFile, "${original.nameWithoutExtension}_miaou.pdf")
-        if (backup.exists()) return@withContext null
-        original.copyTo(backup)
-        backup.name
-    }
 
     private val prefs = java.util.prefs.Preferences.userRoot().node("app/nougat/pdf")
 

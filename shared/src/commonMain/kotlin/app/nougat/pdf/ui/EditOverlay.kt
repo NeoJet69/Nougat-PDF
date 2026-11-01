@@ -79,6 +79,8 @@ import app.nougat.pdf.viewer.Tool
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Demande d'ecrire un texte a un endroit de la page (nouveau ou existant). */
 data class TextRequest(val page: Int, val x: Float, val y: Float, val existing: TextMark? = null)
@@ -188,7 +190,7 @@ fun EditOverlay(
                     val hit = nearestBlock(currentBlocks, o, size.width.toFloat(), size.height.toFloat(), 10.dp.toPx(), 28.dp.toPx())
                     when {
                         hit == null -> Unit
-                        !hit.editable -> onMessage("Ce texte ne peut pas être modifié directement : utilisez « Masquer » puis « Texte ».")
+                        !hit.editable -> onMessage(tr(Str.TextNotEditableHint))
                         else -> session.startEditing(hit)
                     }
                 }
@@ -278,7 +280,7 @@ private fun TextEditDialog(
     LaunchedEffect(block) { focus.requestFocus() }
     AlertDialog(
         onDismissRequest = onCancel,
-        title = { Text("Modifier le texte") },
+        title = { Text(tr(Str.EditTextTitle)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
@@ -290,14 +292,14 @@ private fun TextEditDialog(
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
                 )
                 Text(
-                    "Le texte est réécrit au même endroit, dans la même police, taille et couleur.",
+                    tr(Str.EditTextHint),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         },
-        confirmButton = { Button(onClick = onDone) { Text("Valider") } },
-        dismissButton = { TextButton(onClick = onCancel) { Text("Annuler") } },
+        confirmButton = { Button(onClick = onDone) { Text(tr(Str.Validate)) } },
+        dismissButton = { TextButton(onClick = onCancel) { Text(tr(Str.Cancel)) } },
     )
 }
 
@@ -336,7 +338,7 @@ private fun InlineTextEditor(
                     contentColor = colors.onSurface,
                     shadowElevation = 3.dp,
                 ) {
-                    Text("Annuler", Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
+                    Text(tr(Str.Cancel), Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
                 }
                 Surface(
                     onClick = { onDone(value.text) },
@@ -345,7 +347,7 @@ private fun InlineTextEditor(
                     contentColor = colors.onPrimary,
                     shadowElevation = 3.dp,
                 ) {
-                    Text("Valider", Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
+                    Text(tr(Str.Validate), Modifier.padding(horizontal = 12.dp, vertical = 6.dp), style = MaterialTheme.typography.labelLarge)
                 }
             }
         }

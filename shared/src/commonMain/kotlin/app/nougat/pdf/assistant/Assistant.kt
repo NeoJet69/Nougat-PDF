@@ -1,5 +1,7 @@
 package app.nougat.pdf.assistant
 
+import app.nougat.pdf.i18n.Str
+
 /*
  * L'assistant Nougat : Claude, branche sur le document ouvert.
  *
@@ -15,11 +17,11 @@ data class AssistantSettings(val apiKey: String, val model: String)
 object AssistantModels {
     const val DEFAULT = "claude-opus-5-5"
 
-    /** Identifiant, nom affiche, description courte. */
+    /** Identifiant, nom affiche, description courte (traduite). */
     val choices = listOf(
-        Triple("claude-opus-5-5", "Claude Opus 5.5", "Le plus capable (recommandé)"),
-        Triple("claude-sonnet-5-5", "Claude Sonnet 5.5", "Rapide et capable"),
-        Triple("claude-haiku-5-5", "Claude Haiku 5.5", "Le plus économique"),
+        Triple("claude-opus-5-5", "Claude Opus 5.5", Str.ModelOpusDesc),
+        Triple("claude-sonnet-5-5", "Claude Sonnet 5.5", Str.ModelSonnetDesc),
+        Triple("claude-haiku-5-5", "Claude Haiku 5.5", Str.ModelHaikuDesc),
     )
 
     fun label(id: String) = choices.firstOrNull { it.first == id }?.second ?: id

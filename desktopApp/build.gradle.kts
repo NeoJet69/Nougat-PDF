@@ -26,7 +26,7 @@ compose.desktop {
             // Version croissante a chaque compilation GitHub : l'installateur remplace l'ancienne version.
             packageVersion = "1.0." + (System.getenv("GITHUB_RUN_NUMBER") ?: "0")
             description = "Lecteur et editeur de PDF, gratuit et hors ligne"
-            vendor = "Nougat"
+            vendor = "NeoJet, Nougat et Caramel"
             // Modules Java utilises par PDFBox et l'interface.
             modules("java.desktop", "java.logging", "java.naming", "java.xml", "jdk.unsupported")
 

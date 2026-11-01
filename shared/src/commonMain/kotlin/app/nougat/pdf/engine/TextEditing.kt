@@ -2,6 +2,8 @@ package app.nougat.pdf.engine
 
 import kotlin.math.abs
 import kotlin.math.max
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /*
  * Modifier le texte deja present dans un PDF.
@@ -44,7 +46,10 @@ enum class TextEditResult {
     SimilarFont,
 }
 
-class TextEditException(message: String) : Exception(message)
+/** Une ligne qu'on ne sait pas modifier. Le message est dans la langue choisie au moment ou on le lit. */
+class TextEditException(val key: Str, vararg val args: Any?) : Exception() {
+    override val message: String get() = tr(key, *args)
+}
 
 // ---- Ce que la plateforme fournit ----------------------------------------------------------------
 
@@ -243,12 +248,12 @@ object TextEditPlanner {
      * un decalage apres chaque lettre retiree garde la suite exactement au meme endroit.
      */
     fun plan(analysis: PageTextAnalysis, block: TextBlock, replacement: Replacement): Map<Int, List<ContentOp>> {
-        val anchor = block.glyphs.firstOrNull() ?: throw TextEditException("Ligne vide")
+        val anchor = block.glyphs.firstOrNull() ?: throw TextEditException(Str.ErrEmptyLine)
         val removed = removedGlyphs(analysis, block.glyphs)
         val touched = removed.map { it.op }.distinct().sorted()
         val result = LinkedHashMap<Int, List<ContentOp>>()
         for (index in touched) {
-            val op = analysis.ops[index] ?: throw TextEditException("Instruction de texte introuvable")
+            val op = analysis.ops[index] ?: throw TextEditException(Str.ErrTextOpNotFound)
             result[index] = rewriteOp(op, removed, anchor, replacement)
         }
         return result
@@ -280,7 +285,7 @@ object TextEditPlanner {
             }
         }
         val scale = op.fontSize * op.hScale
-        if (scale == 0f) throw TextEditException("Taille de texte nulle")
+        if (scale == 0f) throw TextEditException(Str.ErrZeroSize)
 
         var current = ArrayList<Any>()
         val kept = ByteBuffer()
@@ -318,7 +323,7 @@ object TextEditPlanner {
                                     is Replacement.SameFont -> current.addAll(replacement.elements)
                                     is Replacement.OtherFont -> {
                                         val original = op.fontResource
-                                            ?: throw TextEditException("Police d'origine introuvable")
+                                            ?: throw TextEditException(Str.ErrOriginalFontNotFound)
                                         if (current.isNotEmpty()) out += ContentOp.ShowArray(current)
                                         current = ArrayList()
                                         out += ContentOp.SetFont(replacement.resource, op.fontSize)

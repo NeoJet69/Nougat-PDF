@@ -113,6 +113,13 @@ import kotlinx.coroutines.delay
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
+import app.nougat.pdf.i18n.trn
+import app.nougat.pdf.i18n.I18n
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 
 /** Ilot du document le plus etroit qu'on accepte avant de deplacer la navigation sous la page. */
 private val MinDocumentIsland = 220.dp
@@ -178,19 +185,21 @@ fun ViewerScreen(
         val searchBelow = session.searchOpen && !centerOnTop
         val documentMax = if (centerOnTop) pageCenter - centerHalf - 24.dp else rightEdge - actionsWidth - 24.dp
 
-        // Le document
+        // Le document (toujours de gauche a droite, meme en arabe : ce sont les pages du PDF)
         Box(Modifier.fillMaxSize().padding(start = railWidth, end = assistantWidth)) {
-            PageList(
-                session = session,
-                state = state,
-                inlineEditor = platform.isDesktop,
-                topPadding = topSpace + if (searchBelow) 64.dp else 0.dp,
-                bottomPadding = 170.dp,
-                onTextRequest = { textRequest = it },
-                onSignatureNeeded = { page, at ->
-                    if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
-                },
-            )
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                PageList(
+                    session = session,
+                    state = state,
+                    inlineEditor = platform.isDesktop,
+                    topPadding = topSpace + if (searchBelow) 64.dp else 0.dp,
+                    bottomPadding = 170.dp,
+                    onTextRequest = { textRequest = it },
+                    onSignatureNeeded = { page, at ->
+                        if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
+                    },
+                )
+            }
         }
 
         // Miniatures (grand ecran)
@@ -232,7 +241,7 @@ fun ViewerScreen(
             compact = compact,
             navInDock = navInDock,
             onAskPage = { askPage = true },
-            onChangeSignature = { tools.signature = null; state.showToast("Touchez la page pour dessiner une nouvelle signature") },
+            onChangeSignature = { tools.signature = null; state.showToast(tr(Str.TapToDrawNewSignature)) },
             modifier = Modifier.align(Alignment.BottomCenter).padding(start = railWidth, end = assistantWidth, bottom = 14.dp),
         )
 
@@ -310,7 +319,7 @@ private fun DocumentIsland(
 ) {
     val p = LocalNougatPalette.current
     Island(modifier) {
-        IslandButton(Icons.Filled.Close, "Fermer le document", onClick = { state.runAfterConfirm(state::closeDocument) })
+        IslandButton(Icons.Filled.Close, tr(Str.CloseDocument), onClick = { state.runAfterConfirm(state::closeDocument) })
         if (showMascot) {
             NougatMascot(Modifier.size(34.dp), animated = false)
             Spacer(Modifier.width(8.dp))
@@ -323,10 +332,10 @@ private fun DocumentIsland(
                 buildAnnotatedString {
                     // « modifié » d'abord : sur un petit ecran, c'est le nombre de pages qui est coupe.
                     if (state.modified) {
-                        withStyle(SpanStyle(color = primary)) { append("modifié  •  ") }
+                        withStyle(SpanStyle(color = primary)) { append(tr(Str.Modified) + "  •  ") }
                     }
                     withStyle(SpanStyle(color = p.muted)) {
-                        append("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}")
+                        append(trn(Str.PagesCount, session.pageCount))
                     }
                 },
                 style = MaterialTheme.typography.labelMedium,
@@ -342,7 +351,7 @@ private fun DocumentIsland(
 private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFile: () -> Unit, onProtect: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box {
-        IslandButton(Icons.Filled.MoreVert, "Menu du document", onClick = { open = true })
+        IslandButton(Icons.Filled.MoreVert, tr(Str.DocumentMenu), onClick = { open = true })
         DropdownMenu(expanded = open, onDismissRequest = { open = false }, shape = RoundedCornerShape(20.dp)) {
             @Composable
             fun item(label: String, icon: ImageVector, action: () -> Unit) = DropdownMenuItem(
@@ -351,51 +360,53 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
                 onClick = { open = false; action() },
                 modifier = Modifier.height(52.dp),
             )
-            item("Ouvrir un autre PDF", NougatIcons.Folder) { state.runAfterConfirm(onOpenFile) }
-            item("Enregistrer", NougatIcons.Save, state::save)
-            item("Enregistrer sous…", NougatIcons.Save, state::saveAs)
-            if (state.files.canShare) item("Partager", Icons.Filled.Share, state::share)
-            if (state.files.canPrint) item("Imprimer", NougatIcons.Print, state::print)
+            item(tr(Str.OpenAnotherPdf), NougatIcons.Folder) { state.runAfterConfirm(onOpenFile) }
+            item(tr(Str.Save), NougatIcons.Save, state::save)
+            item(tr(Str.SaveAs), NougatIcons.Save, state::saveAs)
+            if (state.files.canShare) item(tr(Str.Share), Icons.Filled.Share, state::share)
+            if (state.files.canPrint) item(tr(Str.Print), NougatIcons.Print, state::print)
             HorizontalDivider()
-            item("Organiser les pages", NougatIcons.Pages) { state.pagesOpen = true }
-            item("Ajouter un PDF à la fin", Icons.Filled.Add, state::appendPdf)
-            item("Ajouter des images à la fin", NougatIcons.Image, state::appendImages)
+            item(tr(Str.OrganizePages), NougatIcons.Pages) { state.pagesOpen = true }
+            item(tr(Str.AppendPdf), Icons.Filled.Add, state::appendPdf)
+            item(tr(Str.AppendImages), NougatIcons.Image, state::appendImages)
             if (session.password == null) {
-                item("Protéger par mot de passe", Icons.Filled.Lock, onProtect)
+                item(tr(Str.ProtectWithPassword), Icons.Filled.Lock, onProtect)
             } else {
-                item("Retirer le mot de passe", Icons.Filled.Lock) { state.setPassword(null) }
+                item(tr(Str.RemovePassword), Icons.Filled.Lock) { state.setPassword(null) }
             }
             HorizontalDivider()
-            item("Thème : ${themeLabel(state.themeMode)}", NougatIcons.Contrast, state::cycleTheme)
+            item(tr(Str.ThemeLabel, themeLabel(state.themeMode)), NougatIcons.Contrast, state::cycleTheme)
+            item(tr(Str.LanguageLabel, I18n.lang.nativeName), NougatIcons.Language) { state.languageOpen = true }
+            item(tr(Str.About), NougatIcons.Sparkle) { state.aboutOpen = true }
         }
     }
 }
 
 fun themeLabel(mode: ThemeMode) = when (mode) {
-    ThemeMode.Auto -> "automatique"
-    ThemeMode.Light -> "clair"
-    ThemeMode.Dark -> "sombre"
+    ThemeMode.Auto -> tr(Str.ThemeAuto)
+    ThemeMode.Light -> tr(Str.ThemeLight)
+    ThemeMode.Dark -> tr(Str.ThemeDark)
 }
 
 /** En haut au centre (grand ecran) : pages et zoom. */
 @Composable
 private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, modifier: Modifier) {
     Island(modifier) {
-        IslandButton(NougatIcons.ArrowLeft, "Page précédente", onClick = session::previousPage, enabled = session.visiblePage > 0)
+        IslandButton(NougatIcons.ArrowLeft, tr(Str.PreviousPage), onClick = session::previousPage, enabled = session.visiblePage > 0)
         Box(
             Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = onAskPage).padding(horizontal = 10.dp, vertical = 8.dp),
         ) {
             Text("${session.visiblePage + 1} / ${session.pageCount}", style = MaterialTheme.typography.titleSmall)
         }
-        IslandButton(NougatIcons.ArrowRight, "Page suivante", onClick = session::nextPage, enabled = session.visiblePage < session.pageCount - 1)
+        IslandButton(NougatIcons.ArrowRight, tr(Str.NextPage), onClick = session::nextPage, enabled = session.visiblePage < session.pageCount - 1)
         IslandDivider()
-        IslandButton(NougatIcons.Remove, "Dézoomer", onClick = session::zoomOut)
+        IslandButton(NougatIcons.Remove, tr(Str.ZoomOut), onClick = session::zoomOut)
         Box(
             Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = session::resetZoom).padding(horizontal = 8.dp, vertical = 8.dp),
         ) {
             Text("${(session.zoom * 100).roundToInt()} %", style = MaterialTheme.typography.titleSmall)
         }
-        IslandButton(Icons.Filled.Add, "Zoomer", onClick = session::zoomIn)
+        IslandButton(Icons.Filled.Add, tr(Str.ZoomIn), onClick = session::zoomIn)
     }
 }
 
@@ -403,14 +414,14 @@ private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, mo
 @Composable
 private fun ActionsIsland(state: ViewerState, session: DocumentSession, compact: Boolean, modifier: Modifier) {
     Island(modifier) {
-        IslandButton(Icons.Filled.Search, "Rechercher", onClick = session::openSearch, active = session.searchOpen)
-        if (state.canUndo) IslandButton(NougatIcons.Undo, "Annuler", onClick = state::undo)
+        IslandButton(Icons.Filled.Search, tr(Str.Search), onClick = session::openSearch, active = session.searchOpen)
+        if (state.canUndo) IslandButton(NougatIcons.Undo, tr(Str.Undo), onClick = state::undo)
         if (state.modified) {
             if (compact) {
-                IslandButton(NougatIcons.Save, "Enregistrer", onClick = state::save, tint = MaterialTheme.colorScheme.primary)
+                IslandButton(NougatIcons.Save, tr(Str.Save), onClick = state::save, tint = MaterialTheme.colorScheme.primary)
             } else {
                 Spacer(Modifier.width(4.dp))
-                GradientButton("Enregistrer", onClick = state::save, icon = NougatIcons.Save, height = 44.dp)
+                GradientButton(tr(Str.Save), onClick = state::save, icon = NougatIcons.Save, height = 44.dp)
             }
         }
     }
@@ -430,7 +441,7 @@ private fun SearchIsland(session: DocumentSession, modifier: Modifier) {
         Icon(Icons.Filled.Search, contentDescription = null, tint = colors.primary, modifier = Modifier.padding(start = 10.dp, end = 8.dp).size(22.dp))
         Box(Modifier.weight(1f, fill = false).widthIn(min = 160.dp, max = 320.dp)) {
             if (session.query.isEmpty()) {
-                Text("Rechercher dans le document", style = MaterialTheme.typography.bodyLarge, color = LocalNougatPalette.current.muted)
+                Text(tr(Str.SearchInDocument), style = MaterialTheme.typography.bodyLarge, color = LocalNougatPalette.current.muted)
             }
             BasicTextField(
                 value = session.query,
@@ -463,9 +474,9 @@ private fun SearchIsland(session: DocumentSession, modifier: Modifier) {
         if (status.isNotEmpty()) {
             Text(status, style = MaterialTheme.typography.labelLarge, color = LocalNougatPalette.current.muted, modifier = Modifier.padding(horizontal = 8.dp))
         }
-        IslandButton(Icons.Filled.KeyboardArrowUp, "Résultat précédent", onClick = session::previousHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
-        IslandButton(Icons.Filled.KeyboardArrowDown, "Résultat suivant", onClick = session::nextHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
-        IslandButton(Icons.Filled.Close, "Fermer la recherche", onClick = session::closeSearch, size = 40.dp)
+        IslandButton(Icons.Filled.KeyboardArrowUp, tr(Str.PreviousResult), onClick = session::previousHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
+        IslandButton(Icons.Filled.KeyboardArrowDown, tr(Str.NextResult), onClick = session::nextHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
+        IslandButton(Icons.Filled.Close, tr(Str.CloseSearch), onClick = session::closeSearch, size = 40.dp)
     }
 }
 
@@ -495,9 +506,9 @@ private fun ViewerDock(
                     DockMode.Read -> if (compact) PagePill(session, onAskPage) else NavigationIsland(session, onAskPage, Modifier)
                     DockMode.Edit -> HintTray(
                         when {
-                            session.editingBlock != null -> if (compact) "Validez : le style d'origine est gardé" else "Modifiez puis validez — le style d'origine est conservé"
-                            compact -> "Touchez une ligne encadrée"
-                            else -> "Touchez une ligne encadrée pour modifier son texte"
+                            session.editingBlock != null -> tr(if (compact) Str.HintEditingCompact else Str.HintEditing)
+                            compact -> tr(Str.HintTapLineCompact)
+                            else -> tr(Str.HintTapLine)
                         },
                         compact,
                     )
@@ -507,11 +518,11 @@ private fun ViewerDock(
             }
         }
         Island(shape = RoundedCornerShape(30.dp), padding = 6.dp, scrollable = true) {
-            DockItem(NougatIcons.Eye, "Lire", mode == DockMode.Read, { tools.enter(DockMode.Read) }, compact)
-            DockItem(NougatIcons.EditText, "Éditer", mode == DockMode.Edit, { tools.enter(DockMode.Edit) }, compact)
-            DockItem(NougatIcons.Pen, "Annoter", mode == DockMode.Annotate, { tools.enter(DockMode.Annotate) }, compact)
-            DockItem(NougatIcons.Signature, "Signer", mode == DockMode.Sign, { tools.enter(DockMode.Sign) }, compact)
-            DockItem(NougatIcons.Pages, "Pages", false, { state.pagesOpen = true }, compact)
+            DockItem(NougatIcons.Eye, tr(Str.DockRead), mode == DockMode.Read, { tools.enter(DockMode.Read) }, compact)
+            DockItem(NougatIcons.EditText, tr(Str.DockEdit), mode == DockMode.Edit, { tools.enter(DockMode.Edit) }, compact)
+            DockItem(NougatIcons.Pen, tr(Str.DockAnnotate), mode == DockMode.Annotate, { tools.enter(DockMode.Annotate) }, compact)
+            DockItem(NougatIcons.Signature, tr(Str.DockSign), mode == DockMode.Sign, { tools.enter(DockMode.Sign) }, compact)
+            DockItem(NougatIcons.Pages, tr(Str.DockPages), false, { state.pagesOpen = true }, compact)
             if (state.assistantAvailable) {
                 IslandDivider()
                 DockItem(NougatIcons.Sparkle, "Claude", state.assistant.open, { state.assistant.open = !state.assistant.open }, compact)
@@ -524,7 +535,7 @@ private fun ViewerDock(
 private fun PagePill(session: DocumentSession, onAskPage: () -> Unit) {
     Island(shape = RoundedCornerShape(50), padding = 0.dp, modifier = Modifier.clickable(onClick = onAskPage)) {
         Text(
-            "Page ${session.visiblePage + 1} / ${session.pageCount}",
+            tr(Str.PagePill, session.visiblePage + 1, session.pageCount),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
         )
@@ -548,12 +559,12 @@ private fun SignTray(hasSignature: Boolean, onChange: () -> Unit) {
     Island(shape = RoundedCornerShape(50), padding = 4.dp) {
         GradientBadge(NougatIcons.Signature, size = 32.dp, iconSize = 18.dp)
         Text(
-            if (hasSignature) "Touchez la page pour poser votre signature" else "Touchez la page pour dessiner votre signature",
+            tr(if (hasSignature) Str.TapToPlaceSignature else Str.TapToDrawSignature),
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = 12.dp),
         )
         if (hasSignature) {
-            TextButton(onClick = onChange) { Text("Changer") }
+            TextButton(onClick = onChange) { Text(tr(Str.Change)) }
         }
     }
 }
@@ -664,7 +675,7 @@ private fun RailThumbnail(session: DocumentSession, index: Int) {
                 .border(if (current) 2.5.dp else 1.dp, if (current) colors.primary else colors.outlineVariant, RoundedCornerShape(4.dp)),
         ) {
             image?.let {
-                Image(it, "Page ${index + 1}", Modifier.fillMaxSize(), contentScale = ContentScale.Fit, filterQuality = FilterQuality.Medium)
+                Image(it, tr(Str.PageN, index + 1), Modifier.fillMaxSize(), contentScale = ContentScale.Fit, filterQuality = FilterQuality.Medium)
             }
         }
         Text(
@@ -798,7 +809,7 @@ private fun PageView(
         if (img != null) {
             Image(
                 bitmap = img,
-                contentDescription = "Page ${index + 1}",
+                contentDescription = tr(Str.PageN, index + 1),
                 contentScale = ContentScale.FillBounds,
                 filterQuality = FilterQuality.Medium,
                 modifier = Modifier.fillMaxSize(),
@@ -870,12 +881,12 @@ private fun GoToPageDialog(pageCount: Int, onGo: (Int) -> Unit, onDismiss: () ->
     LaunchedEffect(Unit) { focus.requestFocus() }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Aller à la page") },
+        title = { Text(tr(Str.GoToPage)) },
         text = {
             OutlinedTextField(
                 value = text,
                 onValueChange = { v -> text = v.filter(Char::isDigit).take(6) },
-                label = { Text("Page (1 à $pageCount)") },
+                label = { Text(tr(Str.PageRange, pageCount)) },
                 singleLine = true,
                 isError = text.isNotEmpty() && !valid,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Go),
@@ -887,8 +898,8 @@ private fun GoToPageDialog(pageCount: Int, onGo: (Int) -> Unit, onDismiss: () ->
                 },
             )
         },
-        confirmButton = { TextButton(onClick = { if (valid) onGo(number) }, enabled = valid) { Text("Aller") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
+        confirmButton = { TextButton(onClick = { if (valid) onGo(number) }, enabled = valid) { Text(tr(Str.Go)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
     )
 }
 

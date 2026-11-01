@@ -5,16 +5,21 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.nougat.pdf.engine.NPoint
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
-enum class Tool(val label: String) {
-    Pan("Naviguer"),
-    EditText("Éditer"),
-    Pen("Stylo"),
-    Highlighter("Surligneur"),
-    Text("Texte"),
-    Whiteout("Masquer"),
-    Signature("Signature"),
-    Eraser("Gomme"),
+enum class Tool(private val key: Str) {
+    Pan(Str.ToolPan),
+    EditText(Str.ToolEdit),
+    Pen(Str.ToolPen),
+    Highlighter(Str.ToolHighlighter),
+    Text(Str.ToolText),
+    Whiteout(Str.ToolWhiteout),
+    Signature(Str.ToolSignature),
+    Eraser(Str.ToolEraser);
+
+    /** Le nom de l'outil dans la langue choisie. */
+    val label: String get() = tr(key)
 }
 
 /** Les couleurs proposees, en ARGB. */

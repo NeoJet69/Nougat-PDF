@@ -81,6 +81,11 @@ class CaptureTest {
         shot("11-telephone-accueil-sombre", 412, 892, 2f, phone, dark = true)
         shot("12-formulaire", 1440, 900, 1f, desktop, form = true) { it.editFieldDemo("email", "marie@nougat.ch") }
         shot("13-telephone-formulaire", 412, 892, 2f, phone, form = true) { it.editFieldDemo("nom", "Marie Nougat") }
+        shot("14-langues", 1440, 900, 1f, desktop) { it.languageOpen = true }
+        shot("15-arabe", 1440, 900, 1f, desktop, withDocument = true, language = "ar") { it.tools.enter(DockMode.Edit) }
+        shot("16-telephone-miaou", 412, 892, 2f, phone, language = "miaou")
+        shot("17-enregistrer", 1440, 900, 1f, desktop, withDocument = true) { it.annotateDemo(); it.save() }
+        shot("18-a-propos", 412, 892, 2f, phone) { it.aboutOpen = true }
     }
 
     /** Formulaire : un champ en cours de saisie. */
@@ -126,9 +131,11 @@ class CaptureTest {
         withDocument: Boolean = false,
         /** Ouvrir le formulaire d'exemple a la place de la facture. */
         form: Boolean = false,
+        /** Langue de l'interface (code, voir Lang). */
+        language: String = "fr",
         setup: (ViewerState) -> Unit = {},
     ) {
-        val files = FakeFiles(dir)
+        val files = FakeFiles(dir, language)
         val state = ViewerState(DesktopPdfEngine(), CoroutineScope(SupervisorJob() + Dispatchers.Default), files, NoAssistant)
         // Auto -> Clair -> Sombre
         state.cycleTheme()
@@ -170,8 +177,9 @@ class CaptureTest {
         override fun reset() = Unit
     }
 
-    private class FakeFiles(dir: File) : PlatformFiles {
+    private class FakeFiles(dir: File, language: String) : PlatformFiles {
         private val settings = mutableMapOf(
+            "language" to language,
             "recents" to "C:/Users/moi/Documents/Facture-2024-007.pdf\tFacture-2024-007.pdf\n" +
                 "C:/Users/moi/Documents/Contrat de location.pdf\tContrat de location.pdf\n" +
                 "C:/Users/moi/Téléchargements/Formulaire impôts.pdf\tFormulaire impôts.pdf",
@@ -186,7 +194,6 @@ class CaptureTest {
         override suspend fun print(path: String, password: String?, name: String) = Unit
         override val canShare = false
         override suspend fun share(path: String, name: String) = Unit
-        override suspend fun backupOriginal(sourceRef: String, name: String): String? = null
         override fun loadSetting(key: String): String? = settings[key]
         override fun saveSetting(key: String, value: String) { settings[key] = value }
     }

@@ -9,6 +9,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import app.nougat.pdf.i18n.I18n
+import app.nougat.pdf.i18n.Lang
+import app.nougat.pdf.i18n.Str
 
 class DesktopFormsTest {
     private val dir = createTempDirectory("nougat-forms").toFile()
@@ -96,7 +99,13 @@ class DesktopFormsTest {
         val e = assertFailsWith<FormFieldException> {
             runBlocking { DesktopPdfEngine().edit(src, null, File(dir, "c.pdf").absolutePath) { it.setFieldValue("nom", "Łódź") } }
         }
-        assertTrue(e.message!!.contains("police"))
+        assertEquals(Str.ErrFieldCharset, e.key)
+        // Le message suit la langue choisie.
+        I18n.lang = Lang.Fr
+        assertTrue(e.message.contains("police"))
+        I18n.lang = Lang.En
+        assertTrue(e.message.contains("font"))
+        I18n.lang = Lang.Fr
     }
 
     @Test

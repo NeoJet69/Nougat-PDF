@@ -67,14 +67,11 @@ import androidx.compose.ui.unit.dp
 import app.nougat.pdf.assistant.AssistantModels
 import app.nougat.pdf.assistant.ChatItem
 import app.nougat.pdf.viewer.ViewerState
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
-private val Suggestions = listOf(
-    "Résume ce document en quelques points.",
-    "Corrige les fautes d'orthographe de la page affichée.",
-    "Traduis la page affichée en anglais, en gardant la mise en page.",
-    "Remplace « … » par « … » dans tout le document.",
-    "Surligne les dates et les montants importants.",
-)
+/** Idees de demandes, dans la langue choisie (Claude repond dans la meme langue). */
+private val Suggestions = listOf(Str.Suggest1, Str.Suggest2, Str.Suggest3, Str.Suggest4, Str.Suggest5)
 
 /** Le panneau de l'assistant Claude : conversation, ou reglages (cle API, modele). */
 @Composable
@@ -101,9 +98,9 @@ fun AssistantPanel(state: ViewerState, modifier: Modifier) {
                     Text("Claude", style = MaterialTheme.typography.titleMedium)
                     Text(AssistantModels.label(state.assistantModel), style = MaterialTheme.typography.labelMedium, color = p.muted)
                 }
-                IslandButton(Icons.Filled.Refresh, "Nouvelle conversation", onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running, size = 42.dp, iconSize = 22.dp)
-                IslandButton(Icons.Filled.Settings, "Réglages de l'assistant", onClick = { a.showSettings = !a.showSettings }, active = a.showSettings, size = 42.dp, iconSize = 22.dp)
-                IslandButton(Icons.Filled.Close, "Fermer l'assistant", onClick = { a.open = false }, size = 42.dp, iconSize = 22.dp)
+                IslandButton(Icons.Filled.Refresh, tr(Str.NewConversation), onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running, size = 42.dp, iconSize = 22.dp)
+                IslandButton(Icons.Filled.Settings, tr(Str.AssistantSettings), onClick = { a.showSettings = !a.showSettings }, active = a.showSettings, size = 42.dp, iconSize = 22.dp)
+                IslandButton(Icons.Filled.Close, tr(Str.CloseAssistant), onClick = { a.open = false }, size = 42.dp, iconSize = 22.dp)
             }
             HorizontalDivider(color = p.islandBorder)
             if (a.showSettings || state.apiKey.isBlank()) {
@@ -140,7 +137,7 @@ private fun Conversation(state: ViewerState, modifier: Modifier) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(4.dp)) {
                     CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
                     Spacer(Modifier.width(10.dp))
-                    Text("Claude travaille sur le document…", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(tr(Str.ClaudeWorking), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
@@ -152,12 +149,13 @@ private fun Welcome(onPick: (String) -> Unit) {
     val colors = MaterialTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            "Demandez à Claude de lire, corriger, traduire ou modifier ce PDF. Il agit directement sur le document, et tout s'annule avec le bouton Annuler.",
+            tr(Str.AssistantIntro),
             style = MaterialTheme.typography.bodyMedium,
             color = colors.onSurfaceVariant,
         )
         Spacer(Modifier.height(4.dp))
-        for (s in Suggestions) {
+        for (key in Suggestions) {
+            val s = tr(key)
             Surface(
                 shape = RoundedCornerShape(14.dp),
                 color = colors.surfaceContainerHigh,
@@ -210,7 +208,7 @@ private fun InputRow(state: ViewerState) {
         OutlinedTextField(
             value = a.input,
             onValueChange = { a.input = it },
-            placeholder = { Text("Demandez quelque chose à Claude…") },
+            placeholder = { Text(tr(Str.AskClaude)) },
             maxLines = 5,
             enabled = !a.running,
             shape = RoundedCornerShape(24.dp),
@@ -224,7 +222,7 @@ private fun InputRow(state: ViewerState) {
         )
         Spacer(Modifier.width(8.dp))
         if (a.running) {
-            OutlinedButton(onClick = state::stopAssistant, modifier = Modifier.padding(bottom = 4.dp)) { Text("Arrêter") }
+            OutlinedButton(onClick = state::stopAssistant, modifier = Modifier.padding(bottom = 4.dp)) { Text(tr(Str.Stop)) }
         } else {
             Box(
                 Modifier
@@ -232,10 +230,10 @@ private fun InputRow(state: ViewerState) {
                     .size(52.dp)
                     .clip(CircleShape)
                     .background(if (a.input.isNotBlank()) NougatGradient else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray)))
-                    .clickable(enabled = a.input.isNotBlank(), onClickLabel = "Envoyer") { state.sendToAssistant(a.input) },
+                    .clickable(enabled = a.input.isNotBlank(), onClickLabel = tr(Str.Send)) { state.sendToAssistant(a.input) },
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(NougatIcons.Send, contentDescription = "Envoyer", tint = Color.White, modifier = Modifier.size(22.dp))
+                Icon(NougatIcons.Send, contentDescription = tr(Str.Send), tint = Color.White, modifier = Modifier.size(22.dp))
             }
         }
     }
@@ -249,18 +247,15 @@ private fun AssistantSettingsForm(state: ViewerState, modifier: Modifier) {
     val focus = remember { FocusRequester() }
     val colors = MaterialTheme.colorScheme
     Column(modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text("Votre propre accès à Claude", style = MaterialTheme.typography.titleSmall)
+        Text(tr(Str.OwnAccess), style = MaterialTheme.typography.titleSmall)
         Text(
-            "L'assistant utilise votre clé API Anthropic personnelle. Elle reste sur cet appareil. " +
-                "La consommation est facturée sur votre compte Anthropic, à l'usage (c'est séparé d'un abonnement Claude.ai).",
+            tr(Str.ApiKeyExplain),
             style = MaterialTheme.typography.bodyMedium,
             color = colors.onSurfaceVariant,
         )
         Surface(shape = RoundedCornerShape(12.dp), color = colors.surfaceContainerHigh) {
             Text(
-                "1. Créez un compte sur console.anthropic.com\n" +
-                    "2. Ajoutez un moyen de paiement (Billing)\n" +
-                    "3. API Keys → Create Key, puis collez la clé ci-dessous",
+                tr(Str.ApiKeySteps),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(12.dp),
             )
@@ -268,12 +263,12 @@ private fun AssistantSettingsForm(state: ViewerState, modifier: Modifier) {
         OutlinedTextField(
             value = key,
             onValueChange = { key = it.trim() },
-            label = { Text("Clé API (sk-ant-…)") },
+            label = { Text(tr(Str.ApiKeyLabel)) },
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth().focusRequester(focus),
         )
-        Text("Modèle", style = MaterialTheme.typography.titleSmall)
+        Text(tr(Str.Model), style = MaterialTheme.typography.titleSmall)
         for ((id, name, description) in AssistantModels.choices) {
             Row(
                 Modifier.fillMaxWidth().clickable { model = id }.padding(vertical = 2.dp),
@@ -282,17 +277,17 @@ private fun AssistantSettingsForm(state: ViewerState, modifier: Modifier) {
                 RadioButton(selected = model == id, onClick = { model = id })
                 Column {
                     Text(name, style = MaterialTheme.typography.bodyLarge)
-                    Text(description, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
+                    Text(tr(description), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
                 }
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            Button(onClick = { state.saveAssistantSettings(key, model) }, enabled = key.isNotBlank()) { Text("Enregistrer") }
+            Button(onClick = { state.saveAssistantSettings(key, model) }, enabled = key.isNotBlank()) { Text(tr(Str.Save)) }
             if (state.apiKey.isNotBlank()) {
-                TextButton(onClick = { state.assistant.showSettings = false }) { Text("Annuler") }
+                TextButton(onClick = { state.assistant.showSettings = false }) { Text(tr(Str.Cancel)) }
                 Spacer(Modifier.weight(1f))
                 TextButton(onClick = { key = ""; state.saveAssistantSettings("", model) }) {
-                    Text("Oublier la clé", color = colors.error)
+                    Text(tr(Str.ForgetKey), color = colors.error)
                 }
             }
         }

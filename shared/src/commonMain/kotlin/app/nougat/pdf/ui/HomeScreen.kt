@@ -34,6 +34,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.nougat.pdf.viewer.RecentFile
 import app.nougat.pdf.viewer.ViewerState
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
+import app.nougat.pdf.i18n.I18n
 
 /** L'accueil : Nougat le chat, la zone de depot animee, les fichiers recents. */
 @OptIn(ExperimentalLayoutApi::class)
@@ -61,7 +64,7 @@ fun HomeScreen(
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Lisez, éditez, signez et transformez vos PDF.\nAvec Claude intégré — et sans Internet pour tout le reste.",
+                tr(Str.Tagline),
                 style = MaterialTheme.typography.bodyLarge,
                 color = p.muted,
                 textAlign = TextAlign.Center,
@@ -82,16 +85,16 @@ fun HomeScreen(
             ) {
                 GradientBadge(NougatIcons.Upload, size = 68.dp, iconSize = 34.dp)
                 Spacer(Modifier.height(14.dp))
-                Text("Ouvrir un PDF", style = MaterialTheme.typography.headlineSmall)
+                Text(tr(Str.OpenPdf), style = MaterialTheme.typography.headlineSmall)
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    if (platform.isDesktop) "Glissez un fichier ici, ou choisissez-le  ·  Ctrl+O" else "Choisissez un fichier sur votre téléphone",
+                    tr(if (platform.isDesktop) Str.DropHintDesktop else Str.DropHintPhone),
                     style = MaterialTheme.typography.bodyMedium,
                     color = p.muted,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(Modifier.height(18.dp))
-                GradientButton("Choisir un PDF", onClick = onOpenFile, icon = NougatIcons.Folder)
+                GradientButton(tr(Str.ChoosePdf), onClick = onOpenFile, icon = NougatIcons.Folder)
             }
 
             // Creer un PDF (cote a cote sur grand ecran, l'une sous l'autre sur telephone)
@@ -99,15 +102,15 @@ fun HomeScreen(
             @Composable
             fun FromImages(modifier: Modifier) = CreateCard(
                 NougatIcons.Image,
-                if (platform.isDesktop) "Images → PDF" else "Photos → PDF",
-                if (platform.isDesktop) "Une page par image" else "Une page par photo",
+                tr(if (platform.isDesktop) Str.ImagesToPdf else Str.PhotosToPdf),
+                tr(if (platform.isDesktop) Str.OnePagePerImage else Str.OnePagePerPhoto),
                 modifier,
                 onClick = state::createPdfFromImages,
             )
 
             @Composable
             fun Blank(modifier: Modifier) =
-                CreateCard(NougatIcons.NewDocument, "Document vierge", "Une page A4 à remplir", modifier, onClick = state::createBlankPdf)
+                CreateCard(NougatIcons.NewDocument, tr(Str.BlankDocument), tr(Str.BlankDocumentHint), modifier, onClick = state::createBlankPdf)
             if (compact) {
                 Column(Modifier.widthIn(max = 620.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     FromImages(Modifier.fillMaxWidth())
@@ -126,29 +129,39 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.widthIn(max = 620.dp),
             ) {
-                FeatureChip(NougatIcons.EditText, "Éditer le texte")
-                FeatureChip(NougatIcons.Pen, "Annoter")
-                FeatureChip(NougatIcons.Signature, "Signer")
-                FeatureChip(NougatIcons.SelectAll, "Formulaires")
-                FeatureChip(NougatIcons.Pages, "Organiser")
-                FeatureChip(NougatIcons.Sparkle, "Claude intégré")
+                FeatureChip(NougatIcons.EditText, tr(Str.FeatEditText))
+                FeatureChip(NougatIcons.Pen, tr(Str.FeatAnnotate))
+                FeatureChip(NougatIcons.Signature, tr(Str.FeatSign))
+                FeatureChip(NougatIcons.SelectAll, tr(Str.FeatForms))
+                FeatureChip(NougatIcons.Pages, tr(Str.FeatOrganize))
+                FeatureChip(NougatIcons.Sparkle, tr(Str.FeatClaude))
             }
 
             if (state.recents.isNotEmpty()) {
                 Spacer(Modifier.height(30.dp))
                 Column(Modifier.widthIn(max = 620.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Récents", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 6.dp))
+                    Text(tr(Str.Recents), style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(start = 6.dp))
                     for (recent in state.recents.take(6)) {
                         RecentRow(recent, onOpen = { onOpenRecent(recent) }, onForget = { state.forgetRecent(recent.ref) })
                     }
                 }
             }
-            Spacer(Modifier.height(40.dp))
+            // Les auteurs (et « A propos »)
+            Spacer(Modifier.height(28.dp))
+            Text(
+                tr(Str.MadeBy),
+                style = MaterialTheme.typography.labelLarge,
+                color = p.muted,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.clip(RoundedCornerShape(50)).clickable { state.aboutOpen = true }.padding(horizontal = 14.dp, vertical = 8.dp),
+            )
+            Spacer(Modifier.height(24.dp))
         }
 
-        // Theme, en haut a droite
+        // Langue et theme, en haut a droite
         Island(Modifier.align(Alignment.TopEnd).padding(14.dp)) {
-            IslandButton(NougatIcons.Contrast, "Thème : ${themeLabel(state.themeMode)}", onClick = state::cycleTheme)
+            IslandButton(NougatIcons.Language, tr(Str.LanguageLabel, I18n.lang.nativeName), onClick = { state.languageOpen = true })
+            IslandButton(NougatIcons.Contrast, tr(Str.ThemeLabel, themeLabel(state.themeMode)), onClick = state::cycleTheme)
         }
     }
 }
@@ -184,7 +197,7 @@ private fun RecentRow(recent: RecentFile, onOpen: () -> Unit, onForget: () -> Un
         Column(Modifier.weight(1f)) {
             Text(recent.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(
-                recent.ref.substringBeforeLast('/', "").substringAfterLast('/').ifEmpty { "Récent" },
+                recent.ref.substringBeforeLast('/', "").substringAfterLast('/').ifEmpty { tr(Str.Recent) },
                 style = MaterialTheme.typography.labelMedium,
                 color = LocalNougatPalette.current.muted,
                 maxLines = 1,
@@ -192,7 +205,7 @@ private fun RecentRow(recent: RecentFile, onOpen: () -> Unit, onForget: () -> Un
             )
         }
         Box {
-            IslandButton(Icons.Filled.Close, "Retirer des récents", onClick = onForget, size = 40.dp, iconSize = 18.dp)
+            IslandButton(Icons.Filled.Close, tr(Str.RemoveRecent), onClick = onForget, size = 40.dp, iconSize = 18.dp)
         }
     }
 }

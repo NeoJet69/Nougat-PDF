@@ -36,8 +36,21 @@ passe ou retirer le mot de passe, thème clair / sombre / automatique.
 
 Tout est gravé dans le PDF à l'enregistrement : il s'ouvre ensuite dans n'importe quel lecteur.
 
-**L'original est toujours gardé** : au premier enregistrement, Nougat en fait une copie nommée
-`Nom_miaou.pdf` (dans le même dossier sur Windows, dans *Téléchargements/Nougat PDF* sur Android).
+**Enregistrer** : la première fois, Nougat demande **Remplacer l'original** ou **Enregistrer une
+copie…** (proposée sous le nom `Nom_miaou.pdf`, à l'endroit de votre choix). Ensuite, les
+enregistrements vont dans le fichier choisi sans redemander.
+
+## 24 langues
+
+Bouton 🌐 de l'accueil, ou menu ⋮ → Langue. Par défaut, la langue de l'appareil.
+
+- **16 langues** : français, English, Deutsch, italiano, español, português, Nederlands, polski,
+  Türkçe, русский, українська, العربية (de droite à gauche), 中文, svenska, ελληνικά, română
+- **8 dialectes** : Schwiizerdütsch, rumantsch, français québécois, Elsässisch (alsacien),
+  occitan, brezhoneg (breton), corsu (corse) et **Miaou 🐱**, la langue de Nougat
+
+Les dialectes ont été écrits avec soin mais sans relecture par des locuteurs natifs : les
+corrections sont les bienvenues (fichiers `shared/src/commonMain/kotlin/app/nougat/pdf/i18n/`).
 
 ## Assistant Claude (intelligence artificielle)
 
@@ -151,3 +164,9 @@ Commandes utiles :
 ```
 
 Sans SDK Android, ajouter `-Pnougat.desktopOnly=true` pour ne construire que la version ordinateur.
+
+## Auteurs
+
+- **NeoJet** : idée, direction et tests
+- **Nougat** 🐱 : mascotte et testeur en chef
+- **Caramel** ✨ : code et design (Claude, une IA d'Anthropic)

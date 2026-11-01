@@ -74,6 +74,8 @@ import app.nougat.pdf.viewer.DocumentSession
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /**
  * Calque des formulaires (mode Lire) : les champs a remplir sont teintes. Toucher un champ texte
@@ -112,7 +114,7 @@ fun FormOverlay(
                     when {
                         // Toucher a cote : le champ en cours de saisie est enregistre.
                         hit == null -> if (session.editingField != null) onCommitPending()
-                        hit.readOnly -> onMessage("Ce champ est en lecture seule.")
+                        hit.readOnly -> onMessage(tr(Str.FieldReadOnly))
                         hit.kind == FieldKind.Text -> onStartEditing(hit)
                         hit.kind == FieldKind.CheckBox ->
                             onSetValue(hit, if (hit.checked) FIELD_OFF else hit.onValue ?: "Yes", null)
@@ -245,9 +247,9 @@ private fun InlineFieldEditor(
     @Composable
     fun Buttons() {
         Row(Modifier.padding(vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            Pill("Annuler", colors.surfaceContainerHighest, colors.onSurface, onCancel)
-            if (hasNext) Pill("Suivant", colors.secondaryContainer, colors.onSecondaryContainer) { onDone(value.text, true) }
-            Pill("Valider", colors.primary, colors.onPrimary) { onDone(value.text, false) }
+            Pill(tr(Str.Cancel), colors.surfaceContainerHighest, colors.onSurface, onCancel)
+            if (hasNext) Pill(tr(Str.Next), colors.secondaryContainer, colors.onSecondaryContainer) { onDone(value.text, true) }
+            Pill(tr(Str.Validate), colors.primary, colors.onPrimary) { onDone(value.text, false) }
         }
     }
 
@@ -342,20 +344,20 @@ private fun FieldDialog(
                     keyboardActions = KeyboardActions(onDone = { onDone(false) }, onNext = { onDone(true) }),
                     // Champ suivant : la fleche (ou le bouton « Suivant » du clavier).
                     trailingIcon = if (hasNext) {
-                        { IconButton(onClick = { onDone(true) }) { Icon(NougatIcons.ArrowRight, contentDescription = "Champ suivant") } }
+                        { IconButton(onClick = { onDone(true) }) { Icon(NougatIcons.ArrowRight, contentDescription = tr(Str.NextField)) } }
                     } else null,
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
                 )
                 if (hasNext) {
                     Text(
-                        "La flèche passe au champ suivant.",
+                        tr(Str.ArrowNextField),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
         },
-        confirmButton = { Button(onClick = { onDone(false) }) { Text("Valider") } },
-        dismissButton = { TextButton(onClick = onCancel) { Text("Annuler") } },
+        confirmButton = { Button(onClick = { onDone(false) }) { Text(tr(Str.Validate)) } },
+        dismissButton = { TextButton(onClick = onCancel) { Text(tr(Str.Cancel)) } },
     )
 }

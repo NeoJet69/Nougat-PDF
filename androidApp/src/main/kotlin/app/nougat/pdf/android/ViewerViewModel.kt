@@ -10,6 +10,8 @@ import app.nougat.pdf.viewer.Tool
 import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Garde le document ouvert quand l'ecran tourne. */
 class ViewerViewModel(app: Application) : AndroidViewModel(app) {
@@ -33,7 +35,7 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
                     throw e
                 } catch (e: Throwable) {
                     onFailure()
-                    state.showError("Impossible de lire ce fichier.\n${e.message ?: e::class.simpleName}")
+                    state.showError(tr(Str.CannotReadFile, e.message ?: e::class.simpleName))
                 }
             }
         }

@@ -49,6 +49,9 @@ import androidx.compose.ui.unit.dp
 import app.nougat.pdf.viewer.DocumentSession
 import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.CancellationException
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
+import app.nougat.pdf.i18n.trn
 
 /** Organiser les pages : pivoter, deplacer, supprimer, extraire, ajouter. */
 @Composable
@@ -82,15 +85,15 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
             verticalAlignment = Alignment.Top,
         ) {
             Island(Modifier.weight(1f, fill = false)) {
-                IslandButton(Icons.AutoMirrored.Filled.ArrowBack, "Retour au document", onClick = { state.pagesOpen = false })
+                IslandButton(Icons.AutoMirrored.Filled.ArrowBack, tr(Str.BackToDocument), onClick = { state.pagesOpen = false })
                 Column(Modifier.weight(1f, fill = false).padding(horizontal = 6.dp)) {
                     Text(
-                        if (any) "${selected.size} sélectionnée${if (selected.size > 1) "s" else ""}" else "Pages",
+                        if (any) trn(Str.SelectedCount, selected.size) else tr(Str.Pages),
                         style = MaterialTheme.typography.titleSmall,
                         maxLines = 1,
                     )
                     Text(
-                        if (any) "sur $count" else "Touchez des pages pour les choisir",
+                        if (any) tr(Str.OfCount, count) else tr(Str.TapPagesToSelect),
                         style = MaterialTheme.typography.labelMedium,
                         color = p.muted,
                         maxLines = 1,
@@ -102,11 +105,11 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
             Island {
                 IslandButton(
                     NougatIcons.SelectAll,
-                    if (selected.size == count) "Tout désélectionner" else "Tout sélectionner",
+                    tr(if (selected.size == count) Str.DeselectAll else Str.SelectAll),
                     onClick = { selected = if (selected.size == count) emptySet() else (0 until count).toSet() },
                     active = selected.size == count && count > 0,
                 )
-                IslandButton(NougatIcons.Undo, "Annuler", onClick = state::undo, enabled = state.canUndo)
+                IslandButton(NougatIcons.Undo, tr(Str.Undo), onClick = state::undo, enabled = state.canUndo)
             }
         }
 
@@ -116,18 +119,18 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
             shape = RoundedCornerShape(30.dp),
             scrollable = true,
         ) {
-            PageAction(NougatIcons.RotateLeft, "Gauche", any, compact) { state.rotatePages(selected, -90) }
-            PageAction(NougatIcons.RotateRight, "Droite", any, compact) { state.rotatePages(selected, 90) }
-            PageAction(NougatIcons.ArrowLeft, "Avancer", any, compact) { state.movePages(selected, -1) }
-            PageAction(NougatIcons.ArrowRight, "Reculer", any, compact) { state.movePages(selected, +1) }
-            PageAction(NougatIcons.Extract, "Extraire", any, compact) { state.extractPages(selected) }
-            PageAction(Icons.Filled.Delete, "Supprimer", any, compact, danger = true) { state.deletePages(selected) }
+            PageAction(NougatIcons.RotateLeft, tr(Str.RotateLeft), any, compact) { state.rotatePages(selected, -90) }
+            PageAction(NougatIcons.RotateRight, tr(Str.RotateRight), any, compact) { state.rotatePages(selected, 90) }
+            PageAction(NougatIcons.ArrowLeft, tr(Str.MoveForward), any, compact) { state.movePages(selected, -1) }
+            PageAction(NougatIcons.ArrowRight, tr(Str.MoveBack), any, compact) { state.movePages(selected, +1) }
+            PageAction(NougatIcons.Extract, tr(Str.Extract), any, compact) { state.extractPages(selected) }
+            PageAction(Icons.Filled.Delete, tr(Str.Delete), any, compact, danger = true) { state.deletePages(selected) }
             IslandDivider()
-            PageAction(Icons.Filled.Add, "Page blanche", true, compact) {
+            PageAction(Icons.Filled.Add, tr(Str.BlankPage), true, compact) {
                 state.insertBlankPage(selected.maxOrNull()?.plus(1) ?: count)
             }
-            PageAction(NougatIcons.Folder, "Ajouter PDF", true, compact, onClick = state::appendPdf)
-            PageAction(NougatIcons.Image, if (compact) "Photos" else "Images", true, compact, onClick = state::appendImages)
+            PageAction(NougatIcons.Folder, tr(Str.AddPdf), true, compact, onClick = state::appendPdf)
+            PageAction(NougatIcons.Image, tr(if (compact) Str.Photos else Str.Images), true, compact, onClick = state::appendImages)
         }
     }
 }
@@ -189,7 +192,7 @@ private fun Thumbnail(session: DocumentSession, index: Int, selected: Boolean, o
             ) {
                 val img = image
                 if (img != null) {
-                    Image(img, "Page ${index + 1}", Modifier.fillMaxSize(), contentScale = ContentScale.Fit, filterQuality = FilterQuality.Medium)
+                    Image(img, tr(Str.PageN, index + 1), Modifier.fillMaxSize(), contentScale = ContentScale.Fit, filterQuality = FilterQuality.Medium)
                 } else {
                     CircularProgressIndicator(Modifier.align(Alignment.Center).size(24.dp), strokeWidth = 2.dp)
                 }

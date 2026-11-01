@@ -2,6 +2,8 @@ package app.nougat.pdf.engine
 
 import kotlin.math.max
 import kotlin.math.min
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Les sortes de champs de formulaire que Nougat sait remplir. */
 enum class FieldKind { Text, CheckBox, Radio, Choice }
@@ -45,7 +47,9 @@ data class FormField(
 const val FIELD_OFF = "Off"
 
 /** Un champ qu'on ne peut pas remplir (lecture seule, caractere absent de la police...). */
-class FormFieldException(message: String) : Exception(message)
+class FormFieldException(val key: Str, vararg val args: Any?) : Exception() {
+    override val message: String get() = tr(key, *args)
+}
 
 /**
  * Rectangle du fichier PDF (repere de la page, origine en bas a gauche, en points) vers

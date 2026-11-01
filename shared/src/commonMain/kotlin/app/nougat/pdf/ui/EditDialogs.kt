@@ -49,6 +49,8 @@ import app.nougat.pdf.viewer.InkColors
 import app.nougat.pdf.viewer.Signature
 import kotlin.math.max
 import kotlin.math.min
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Ecrire ou modifier un texte. Renvoie (texte, taille, couleur) ; un texte vide supprime. */
 @Composable
@@ -67,30 +69,30 @@ fun TextDialog(
     LaunchedEffect(Unit) { focus.requestFocus() }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (isNew) "Ajouter du texte" else "Modifier le texte") },
+        title = { Text(tr(if (isNew) Str.AddText else Str.EditTextTitle)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    placeholder = { Text("Votre texte") },
+                    placeholder = { Text(tr(Str.YourText)) },
                     minLines = 2,
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
                 )
-                Text("Taille", style = MaterialTheme.typography.labelLarge)
+                Text(tr(Str.Size), style = MaterialTheme.typography.labelLarge)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    for ((label, value) in listOf("Petit" to 10f, "Normal" to 14f, "Grand" to 20f, "Titre" to 28f)) {
+                    for ((label, value) in listOf(tr(Str.SizeSmall) to 10f, tr(Str.SizeNormal) to 14f, tr(Str.SizeLarge) to 20f, tr(Str.SizeTitle) to 28f)) {
                         FilterChip(selected = size == value, onClick = { size = value }, label = { Text(label) })
                     }
                 }
-                Text("Couleur", style = MaterialTheme.typography.labelLarge)
+                Text(tr(Str.Color), style = MaterialTheme.typography.labelLarge)
                 ColorRow(InkColors.pen, color) { color = it }
             }
         },
         confirmButton = {
-            TextButton(onClick = { onDone(text.trimEnd(), size, color) }) { Text(if (isNew) "Ajouter" else "OK") }
+            TextButton(onClick = { onDone(text.trimEnd(), size, color) }) { Text(tr(if (isNew) Str.Add else Str.Ok)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
     )
 }
 
@@ -124,10 +126,10 @@ fun SignatureDialog(onDone: (Signature) -> Unit, onDismiss: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Votre signature") },
+        title = { Text(tr(Str.YourSignature)) },
         text = {
             Column {
-                Text("Signez dans le cadre ci-dessous.", style = MaterialTheme.typography.bodyMedium)
+                Text(tr(Str.SignInBox), style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.height(12.dp))
                 Box(
                     Modifier
@@ -165,12 +167,12 @@ fun SignatureDialog(onDone: (Signature) -> Unit, onDismiss: () -> Unit) {
             TextButton(
                 enabled = strokes.isNotEmpty(),
                 onClick = { normalize(strokes)?.let(onDone) },
-            ) { Text("Utiliser") }
+            ) { Text(tr(Str.Use)) }
         },
         dismissButton = {
             Row {
-                TextButton(onClick = { strokes.clear() }) { Text("Effacer") }
-                TextButton(onClick = onDismiss) { Text("Annuler") }
+                TextButton(onClick = { strokes.clear() }) { Text(tr(Str.Clear)) }
+                TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) }
             }
         },
     )
@@ -201,20 +203,20 @@ fun SetPasswordDialog(onDone: (String) -> Unit, onDismiss: () -> Unit) {
     val mismatch = second.isNotEmpty() && first != second
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Protéger par mot de passe") },
+        title = { Text(tr(Str.ProtectWithPassword)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Il faudra ce mot de passe pour ouvrir le PDF. Ne l'oubliez pas : il est impossible de le retrouver.")
+                Text(tr(Str.PasswordWarning))
                 OutlinedTextField(
-                    value = first, onValueChange = { first = it }, label = { Text("Mot de passe") }, singleLine = true,
+                    value = first, onValueChange = { first = it }, label = { Text(tr(Str.Password)) }, singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
-                    value = second, onValueChange = { second = it }, label = { Text("Confirmer") }, singleLine = true,
+                    value = second, onValueChange = { second = it }, label = { Text(tr(Str.Confirm)) }, singleLine = true,
                     isError = mismatch,
-                    supportingText = if (mismatch) ({ Text("Les deux mots de passe sont différents") }) else null,
+                    supportingText = if (mismatch) ({ Text(tr(Str.PasswordsDiffer)) }) else null,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     modifier = Modifier.fillMaxWidth(),
@@ -222,9 +224,9 @@ fun SetPasswordDialog(onDone: (String) -> Unit, onDismiss: () -> Unit) {
             }
         },
         confirmButton = {
-            TextButton(enabled = first.isNotEmpty() && first == second, onClick = { onDone(first) }) { Text("Protéger") }
+            TextButton(enabled = first.isNotEmpty() && first == second, onClick = { onDone(first) }) { Text(tr(Str.Protect)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
     )
 }
 
@@ -233,14 +235,14 @@ fun SetPasswordDialog(onDone: (String) -> Unit, onDismiss: () -> Unit) {
 fun ConfirmSaveDialog(name: String, onAnswer: (Boolean?) -> Unit) {
     AlertDialog(
         onDismissRequest = { onAnswer(null) },
-        title = { Text("Enregistrer les modifications ?") },
-        text = { Text("« $name » a été modifié. Sans enregistrement, les modifications seront perdues.") },
-        confirmButton = { TextButton(onClick = { onAnswer(true) }) { Text("Enregistrer") } },
+        title = { Text(tr(Str.SaveChangesTitle)) },
+        text = { Text(tr(Str.SaveChangesText, name)) },
+        confirmButton = { TextButton(onClick = { onAnswer(true) }) { Text(tr(Str.Save)) } },
         dismissButton = {
             Row(Modifier.padding(end = 4.dp)) {
-                TextButton(onClick = { onAnswer(null) }) { Text("Annuler") }
+                TextButton(onClick = { onAnswer(null) }) { Text(tr(Str.Cancel)) }
                 TextButton(onClick = { onAnswer(false) }) {
-                    Text("Ne pas enregistrer", color = MaterialTheme.colorScheme.error)
+                    Text(tr(Str.DontSave), color = MaterialTheme.colorScheme.error)
                 }
             }
         },

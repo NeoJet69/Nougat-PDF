@@ -26,6 +26,8 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Base64
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /**
  * L'assistant Nougat avec le SDK Java officiel d'Anthropic : boucle d'outils manuelle
@@ -67,11 +69,11 @@ class ClaudeAssistantEngine : AssistantEngine {
 
                 when (response.stopReason().orElse(null)) {
                     StopReason.REFUSAL -> {
-                        onItem(ChatItem.Error("Claude a refusé cette demande."))
+                        onItem(ChatItem.Error(tr(Str.ClaudeRefused)))
                         return
                     }
                     StopReason.MAX_TOKENS -> if (toolUses.isEmpty()) {
-                        onItem(ChatItem.Error("La réponse a été coupée car elle était trop longue."))
+                        onItem(ChatItem.Error(tr(Str.ReplyTooLong)))
                         return
                     }
                     StopReason.TOOL_USE -> Unit
@@ -90,7 +92,7 @@ class ClaudeAssistantEngine : AssistantEngine {
                 }
                 history.add(MessageParam.ofUserOfContentBlockParams(results))
             }
-            onItem(ChatItem.Error("Arrêt après $MAX_STEPS étapes : la tâche est peut-être trop grande, découpe-la."))
+            onItem(ChatItem.Error(tr(Str.TooManySteps, MAX_STEPS)))
         } catch (e: CancellationException) {
             dropTurn(turnStart)
             throw e
@@ -182,15 +184,15 @@ class ClaudeAssistantEngine : AssistantEngine {
     }
 
     private fun friendlyMessage(e: Throwable): String = when (e) {
-        is UnauthorizedException -> "Clé API refusée : vérifie-la dans les réglages de l'assistant."
-        is PermissionDeniedException -> "Cette clé API n'a pas accès à ce modèle."
-        is NotFoundException -> "Modèle introuvable : choisis-en un autre dans les réglages."
-        is RateLimitException -> "Trop de demandes en même temps : réessaie dans un instant."
-        is InternalServerException -> "Claude est momentanément surchargé : réessaie dans un instant."
-        is BadRequestException -> "Demande refusée par l'API : ${e.message}"
-        is AnthropicServiceException -> "Erreur de l'API (${e.statusCode()}) : ${e.message}"
-        is AnthropicIoException -> "Pas de connexion à Claude : vérifie Internet."
-        else -> e.message ?: e::class.simpleName ?: "Erreur inconnue"
+        is UnauthorizedException -> tr(Str.ErrApiKey)
+        is PermissionDeniedException -> tr(Str.ErrNoModelAccess)
+        is NotFoundException -> tr(Str.ErrModelNotFound)
+        is RateLimitException -> tr(Str.ErrRateLimit)
+        is InternalServerException -> tr(Str.ErrOverloaded)
+        is BadRequestException -> tr(Str.ErrBadRequest, e.message)
+        is AnthropicServiceException -> tr(Str.ErrApi, e.statusCode(), e.message)
+        is AnthropicIoException -> tr(Str.ErrNoConnection)
+        else -> e.message ?: e::class.simpleName ?: tr(Str.UnknownError)
     }
 
     private companion object {

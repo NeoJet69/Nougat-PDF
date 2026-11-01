@@ -14,6 +14,8 @@ import app.nougat.pdf.viewer.InkColors
 import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.CancellationException
 import kotlin.math.roundToInt
+import app.nougat.pdf.i18n.Str
+import app.nougat.pdf.i18n.tr
 
 /** Les outils de Claude sur le document ouvert dans [state]. Pages numerotees a partir de 1. */
 class NougatToolbox(private val state: ViewerState) : AssistantToolbox {
@@ -147,21 +149,21 @@ Règles :
     override fun label(name: String, input: Map<String, Any?>): String {
         val p = input["page"]?.let { intOf(it) }
         return when (name) {
-            "get_document_info" -> "Regarde le document"
-            "read_page" -> "Lit la page $p"
-            "view_page" -> "Regarde la page $p"
-            "search_text" -> "Cherche « ${input["query"]} »"
-            "replace_text" -> "Modifie « ${short(input["old_text"])} » → « ${short(input["new_text"])} » (page $p)"
-            "add_text" -> "Ajoute « ${short(input["text"])} » (page $p)"
-            "cover_area" -> "Masque une zone (page $p)"
-            "highlight_text" -> "Surligne une ligne (page $p)"
-            "rotate_pages" -> "Fait pivoter des pages"
-            "delete_pages" -> "Supprime des pages"
-            "move_page" -> "Déplace une page"
-            "insert_blank_page" -> "Ajoute une page blanche"
-            "go_to_page" -> "Affiche la page $p"
-            "list_form_fields" -> "Regarde les champs du formulaire"
-            "fill_form_field" -> "Remplit « ${short(input["name"])} » : « ${short(input["value"])} »"
+            "get_document_info" -> tr(Str.ActLookDocument)
+            "read_page" -> tr(Str.ActReadPage, p)
+            "view_page" -> tr(Str.ActViewPage, p)
+            "search_text" -> tr(Str.ActSearch, input["query"])
+            "replace_text" -> tr(Str.ActReplace, short(input["old_text"]), short(input["new_text"]), p)
+            "add_text" -> tr(Str.ActAddText, short(input["text"]), p)
+            "cover_area" -> tr(Str.ActCover, p)
+            "highlight_text" -> tr(Str.ActHighlight, p)
+            "rotate_pages" -> tr(Str.ActRotate)
+            "delete_pages" -> tr(Str.ActDelete)
+            "move_page" -> tr(Str.ActMove)
+            "insert_blank_page" -> tr(Str.ActInsertBlank)
+            "go_to_page" -> tr(Str.ActGoTo, p)
+            "list_form_fields" -> tr(Str.ActListFields)
+            "fill_form_field" -> tr(Str.ActFillField, short(input["name"]), short(input["value"]))
             else -> name
         }
     }

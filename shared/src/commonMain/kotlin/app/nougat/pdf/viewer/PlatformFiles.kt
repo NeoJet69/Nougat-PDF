@@ -35,12 +35,6 @@ interface PlatformFiles {
     val canShare: Boolean
     suspend fun share(path: String, name: String)
 
-    /**
-     * Avant d'ecraser l'original pour la premiere fois : en garde une copie « Nom_miaou.pdf ».
-     * Renvoie ou elle se trouve (pour le dire a l'utilisateur), ou null si rien n'a ete fait.
-     */
-    suspend fun backupOriginal(sourceRef: String, name: String): String?
-
     /** Petits reglages conserves sur l'appareil (cle API de l'assistant...). */
     fun loadSetting(key: String): String?
     fun saveSetting(key: String, value: String)
