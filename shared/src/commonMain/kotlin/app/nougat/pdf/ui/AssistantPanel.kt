@@ -1,6 +1,12 @@
 package app.nougat.pdf.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -75,29 +81,31 @@ private val Suggestions = listOf(
 fun AssistantPanel(state: ViewerState, modifier: Modifier) {
     val a = state.assistant
     val colors = MaterialTheme.colorScheme
-    Surface(modifier, color = colors.surface) {
+    val p = LocalNougatPalette.current
+    val shape = RoundedCornerShape(28.dp)
+    Box(
+        modifier
+            .shadow(24.dp, shape, ambientColor = p.shadow, spotColor = p.shadow)
+            .clip(shape)
+            .background(colors.surface)
+            .border(1.dp, p.islandBorder, shape),
+    ) {
         Column(Modifier.fillMaxSize()) {
             Row(
-                Modifier.fillMaxWidth().background(colors.surfaceContainer).padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+                Modifier.fillMaxWidth().padding(start = 16.dp, end = 6.dp, top = 12.dp, bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(NougatIcons.Sparkle, contentDescription = null, tint = colors.primary)
-                Spacer(Modifier.width(10.dp))
+                GradientBadge(NougatIcons.Sparkle, size = 40.dp, iconSize = 22.dp)
+                Spacer(Modifier.width(12.dp))
                 Column(Modifier.weight(1f)) {
-                    Text("Assistant Claude", style = MaterialTheme.typography.titleMedium)
-                    Text(AssistantModels.label(state.assistantModel), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
+                    Text("Claude", style = MaterialTheme.typography.titleMedium)
+                    Text(AssistantModels.label(state.assistantModel), style = MaterialTheme.typography.labelMedium, color = p.muted)
                 }
-                IconButton(onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running) {
-                    Icon(Icons.Filled.Refresh, contentDescription = "Nouvelle conversation")
-                }
-                IconButton(onClick = { a.showSettings = !a.showSettings }) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Réglages de l'assistant")
-                }
-                IconButton(onClick = { a.open = false }) {
-                    Icon(Icons.Filled.Close, contentDescription = "Fermer l'assistant")
-                }
+                IslandButton(Icons.Filled.Refresh, "Nouvelle conversation", onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running, size = 42.dp, iconSize = 22.dp)
+                IslandButton(Icons.Filled.Settings, "Réglages de l'assistant", onClick = { a.showSettings = !a.showSettings }, active = a.showSettings, size = 42.dp, iconSize = 22.dp)
+                IslandButton(Icons.Filled.Close, "Fermer l'assistant", onClick = { a.open = false }, size = 42.dp, iconSize = 22.dp)
             }
-            HorizontalDivider()
+            HorizontalDivider(color = p.islandBorder)
             if (a.showSettings || state.apiKey.isBlank()) {
                 AssistantSettingsForm(state, Modifier.weight(1f).fillMaxWidth())
             } else {
@@ -166,13 +174,13 @@ private fun ChatBubble(item: ChatItem) {
     val colors = MaterialTheme.colorScheme
     when (item) {
         is ChatItem.User -> Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            Surface(shape = RoundedCornerShape(16.dp, 16.dp, 4.dp, 16.dp), color = colors.primaryContainer, contentColor = colors.onPrimaryContainer) {
-                Text(item.text, modifier = Modifier.widthIn(max = 320.dp).padding(horizontal = 12.dp, vertical = 8.dp))
+            Box(Modifier.clip(RoundedCornerShape(20.dp, 20.dp, 6.dp, 20.dp)).background(NougatGradient)) {
+                Text(item.text, color = Color.White, modifier = Modifier.widthIn(max = 320.dp).padding(horizontal = 14.dp, vertical = 10.dp))
             }
         }
-        is ChatItem.Assistant -> Surface(shape = RoundedCornerShape(16.dp, 16.dp, 16.dp, 4.dp), color = colors.surfaceContainerHigh) {
+        is ChatItem.Assistant -> Surface(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 6.dp), color = colors.surfaceContainerHigh) {
             SelectionContainer {
-                Text(item.text, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp))
+                Text(item.text, modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
             }
         }
         is ChatItem.Action -> Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(horizontal = 4.dp)) {
@@ -198,13 +206,14 @@ private fun ChatBubble(item: ChatItem) {
 @Composable
 private fun InputRow(state: ViewerState) {
     val a = state.assistant
-    Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.Bottom) {
+    Row(Modifier.fillMaxWidth().padding(10.dp), verticalAlignment = Alignment.Bottom) {
         OutlinedTextField(
             value = a.input,
             onValueChange = { a.input = it },
             placeholder = { Text("Demandez quelque chose à Claude…") },
             maxLines = 5,
             enabled = !a.running,
+            shape = RoundedCornerShape(24.dp),
             modifier = Modifier.weight(1f).onPreviewKeyEvent { e ->
                 // Entree envoie, Maj+Entree va a la ligne (ordinateur).
                 if (e.type == KeyEventType.KeyDown && (e.key == Key.Enter || e.key == Key.NumPadEnter) && !e.isShiftPressed) {
@@ -217,8 +226,16 @@ private fun InputRow(state: ViewerState) {
         if (a.running) {
             OutlinedButton(onClick = state::stopAssistant, modifier = Modifier.padding(bottom = 4.dp)) { Text("Arrêter") }
         } else {
-            Button(onClick = { state.sendToAssistant(a.input) }, enabled = a.input.isNotBlank(), modifier = Modifier.padding(bottom = 4.dp)) {
-                Text("Envoyer")
+            Box(
+                Modifier
+                    .padding(bottom = 4.dp)
+                    .size(52.dp)
+                    .clip(CircleShape)
+                    .background(if (a.input.isNotBlank()) NougatGradient else Brush.linearGradient(listOf(Color.LightGray, Color.LightGray)))
+                    .clickable(enabled = a.input.isNotBlank(), onClickLabel = "Envoyer") { state.sendToAssistant(a.input) },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(NougatIcons.Send, contentDescription = "Envoyer", tint = Color.White, modifier = Modifier.size(22.dp))
             }
         }
     }

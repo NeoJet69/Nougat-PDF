@@ -47,9 +47,26 @@ class MainActivity : ComponentActivity(), ActivityHost {
             NougatApp(
                 state = viewModel.state,
                 platform = PlatformInfo(isDesktop = false),
-                onOpenFile = { openDocument { uri -> if (uri != null) viewModel.openUri(uri) } },
+                onOpenFile = {
+                    openDocument { uri ->
+                        if (uri != null) {
+                            keepAccess(uri)
+                            viewModel.openUri(uri)
+                        }
+                    }
+                },
+                onOpenRecent = { recent ->
+                    viewModel.openUri(Uri.parse(recent.ref), onFailure = { viewModel.state.forgetRecent(recent.ref) })
+                },
             )
         }
+    }
+
+    /** Garde l'acces au fichier choisi, pour le rouvrir plus tard depuis « Récents ». */
+    private fun keepAccess(uri: Uri) {
+        val readWrite = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        runCatching { contentResolver.takePersistableUriPermission(uri, readWrite) }
+            .recoverCatching { contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION) }
     }
 
     override fun onDestroy() {

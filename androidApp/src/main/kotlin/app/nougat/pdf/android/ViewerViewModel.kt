@@ -23,7 +23,7 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
      * Android donne une adresse « content:// » et non un vrai fichier : on lit une copie privee,
      * et « Enregistrer » ecrira a l'adresse d'origine.
      */
-    fun openUri(uri: Uri) {
+    fun openUri(uri: Uri, onFailure: () -> Unit = {}) {
         state.runAfterConfirm {
             viewModelScope.launch {
                 try {
@@ -32,6 +32,7 @@ class ViewerViewModel(app: Application) : AndroidViewModel(app) {
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Throwable) {
+                    onFailure()
                     state.showError("Impossible de lire ce fichier.\n${e.message ?: e::class.simpleName}")
                 }
             }

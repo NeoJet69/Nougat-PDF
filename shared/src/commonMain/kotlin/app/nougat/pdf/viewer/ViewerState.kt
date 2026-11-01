@@ -2,6 +2,8 @@ package app.nougat.pdf.viewer
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import app.nougat.pdf.ui.ThemeMode
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import app.nougat.pdf.assistant.AssistantEngine
@@ -55,6 +57,44 @@ class ViewerState(
 
     /** Outils d'edition (conserves d'un document a l'autre). */
     val tools = EditTools()
+
+    // ---- Theme et fichiers recents ---------------------------------------------------------------
+
+    var themeMode by mutableStateOf(
+        ThemeMode.entries.firstOrNull { it.name == runCatching { files.loadSetting(SETTING_THEME) }.getOrNull() } ?: ThemeMode.Auto,
+    )
+        private set
+
+    /** Auto -> Clair -> Sombre -> Auto. */
+    fun cycleTheme() {
+        themeMode = ThemeMode.entries[(themeMode.ordinal + 1) % ThemeMode.entries.size]
+        runCatching { files.saveSetting(SETTING_THEME, themeMode.name) }
+    }
+
+    /** Les derniers fichiers ouverts (le plus recent en premier). */
+    val recents = mutableStateListOf<RecentFile>().apply { addAll(loadRecents()) }
+
+    private fun loadRecents(): List<RecentFile> =
+        runCatching { files.loadSetting(SETTING_RECENTS) }.getOrNull().orEmpty().lines().mapNotNull { line ->
+            val parts = line.split('\t')
+            if (parts.size == 2 && parts[0].isNotBlank()) RecentFile(parts[0], parts[1]) else null
+        }
+
+    private fun addRecent(ref: String, name: String) {
+        recents.removeAll { it.ref == ref }
+        recents.add(0, RecentFile(ref, name))
+        while (recents.size > MAX_RECENTS) recents.removeAt(recents.lastIndex)
+        saveRecents()
+    }
+
+    fun forgetRecent(ref: String) {
+        recents.removeAll { it.ref == ref }
+        saveRecents()
+    }
+
+    private fun saveRecents() {
+        runCatching { files.saveSetting(SETTING_RECENTS, recents.joinToString("\n") { "${it.ref}\t${it.name}" }) }
+    }
 
     // ---- Assistant Claude ------------------------------------------------------------------------
 
@@ -170,6 +210,7 @@ class ViewerState(
                 savedPath = path
                 pagesOpen = false
                 resetAssistant()
+                addRecent(sourceRef, name)
                 pageSelection = emptySet()
                 pagesGrid = LazyGridState()
             } catch (e: CancellationException) {
@@ -545,6 +586,9 @@ class ViewerState(
     private companion object {
         const val SETTING_API_KEY = "assistant.apiKey"
         const val SETTING_MODEL = "assistant.model"
+        const val SETTING_THEME = "theme"
+        const val SETTING_RECENTS = "recents"
+        const val MAX_RECENTS = 8
     }
 }
 
@@ -562,5 +606,8 @@ internal fun moveInOrder(pageCount: Int, pages: Set<Int>, direction: Int): List<
     }
     return order
 }
+
+/** Un fichier ouvert recemment : [ref] = chemin (ordinateur) ou adresse content:// (Android). */
+data class RecentFile(val ref: String, val name: String)
 
 data class PasswordPrompt(val path: String, val name: String, val sourceRef: String, val wrongPassword: Boolean)

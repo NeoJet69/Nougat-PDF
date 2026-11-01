@@ -13,6 +13,8 @@ jobs:
   android:
     name: Tests + APK Android
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -40,6 +42,20 @@ jobs:
       - name: Tests
         if: always()
         run: ./gradlew :shared:desktopTest --console=plain
+      - name: Captures d'écran (dossier captures/)
+        if: always() && github.event_name == 'push' && github.ref_name != 'main'
+        run: |
+          if ls shared/build/captures/*.png >/dev/null 2>&1; then
+            mkdir -p captures
+            cp shared/build/captures/*.png captures/
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add captures
+            if ! git diff --cached --quiet; then
+              git commit -m "Captures d'écran [skip ci]"
+              git push origin "HEAD:${GITHUB_REF_NAME}" || echo "Branche déjà avancée : captures non envoyées"
+            fi
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:

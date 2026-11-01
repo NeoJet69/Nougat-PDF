@@ -35,11 +35,39 @@ object InkColors {
 /** Une signature dessinee : ses traits en fractions de son cadre, et le rapport largeur/hauteur du cadre. */
 data class Signature(val strokes: List<List<NPoint>>, val aspectRatio: Float)
 
+/** Les modes du dock. */
+enum class DockMode { Read, Edit, Annotate, Sign }
+
 /** L'outil choisi et ses reglages. */
 class EditTools {
     /** Mode edition affiche (barre d'outils visible). */
     var editing by mutableStateOf(false)
     var tool by mutableStateOf(Tool.Pen)
+
+    /** Dernier outil d'annotation utilise (pour revenir au bon outil en mode Annoter). */
+    private var lastAnnotationTool = Tool.Pen
+
+    val mode: DockMode
+        get() = when {
+            !editing -> DockMode.Read
+            tool == Tool.EditText -> DockMode.Edit
+            tool == Tool.Signature -> DockMode.Sign
+            else -> DockMode.Annotate
+        }
+
+    fun enter(mode: DockMode) {
+        when (mode) {
+            DockMode.Read -> editing = false
+            DockMode.Edit -> { editing = true; tool = Tool.EditText }
+            DockMode.Sign -> { editing = true; tool = Tool.Signature }
+            DockMode.Annotate -> { editing = true; tool = lastAnnotationTool }
+        }
+    }
+
+    fun pick(t: Tool) {
+        tool = t
+        if (t != Tool.EditText && t != Tool.Signature) lastAnnotationTool = t
+    }
     var penColor by mutableIntStateOf(InkColors.Blue)
     var highlighterColor by mutableIntStateOf(InkColors.Yellow)
     var penWidth by mutableStateOf(2f)

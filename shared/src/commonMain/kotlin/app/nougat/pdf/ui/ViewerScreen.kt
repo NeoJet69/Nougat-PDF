@@ -1,8 +1,14 @@
 package app.nougat.pdf.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
@@ -14,7 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +33,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -42,21 +49,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -76,6 +74,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
@@ -96,6 +95,7 @@ import app.nougat.pdf.engine.NPoint
 import app.nougat.pdf.engine.NormRect
 import app.nougat.pdf.engine.SignatureMark
 import app.nougat.pdf.engine.TextMark
+import app.nougat.pdf.viewer.DockMode
 import app.nougat.pdf.viewer.DocumentSession
 import app.nougat.pdf.viewer.InkColors
 import app.nougat.pdf.viewer.Tool
@@ -106,14 +106,17 @@ import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-/** Largeur d'une page a 100 % : la largeur de l'ecran, sans depasser cette valeur. */
+/** Largeur d'une page a 100 % : la largeur disponible, sans depasser cette valeur. */
 private val MaxPageWidth = 900.dp
-private val PagePadding = 12.dp
+private val PageGap = 22.dp
 
 /** Au-dela, l'image est agrandie au lieu d'etre recalculee (memoire). */
 private const val MaxRenderPixels = 5_000_000f
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * L'ecran de lecture « Caramel Glass » : le document sur une toile chaude, des ilots flottants
+ * en haut, le dock des modes en bas, les miniatures a gauche et Claude a droite (ecran large).
+ */
 @Composable
 fun ViewerScreen(
     state: ViewerState,
@@ -125,6 +128,7 @@ fun ViewerScreen(
     var textRequest by remember { mutableStateOf<TextRequest?>(null) }
     var signatureAt by remember { mutableStateOf<Pair<Int, NPoint>?>(null) }
     var askPassword by remember { mutableStateOf(false) }
+    var askPage by remember { mutableStateOf(false) }
 
     fun placeSignature(page: Int, at: NPoint) {
         val sig = tools.signature ?: return
@@ -136,85 +140,69 @@ fun ViewerScreen(
         session.marks.add(SignatureMark(page, NormRect(left, top, left + w, top + h), sig.strokes, InkColors.Blue))
     }
 
-    Column(Modifier.fillMaxSize()) {
-        BoxWithConstraints {
-            val wide = maxWidth > 720.dp
-            val narrow = maxWidth <= 480.dp
-            TopAppBar(
-                title = {
-                    Column {
-                        Text(session.name, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
-                        if (state.modified) {
-                            Text("Modifié", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
-                        }
-                    }
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val compact = maxWidth < 600.dp
+        val wide = maxWidth >= 900.dp
+        val showRail = maxWidth >= 1100.dp
+        val sideAssistant = wide && state.assistant.open
+        val topSpace = if (compact) 76.dp else 84.dp
+        val railWidth = if (showRail) 112.dp else 0.dp
+        val assistantWidth = if (sideAssistant) 424.dp else 0.dp
+
+        // Le document
+        Box(Modifier.fillMaxSize().padding(start = railWidth, end = assistantWidth)) {
+            PageList(
+                session = session,
+                state = state,
+                inlineEditor = platform.isDesktop,
+                topPadding = topSpace + if (session.searchOpen && compact) 64.dp else 0.dp,
+                bottomPadding = 170.dp,
+                onTextRequest = { textRequest = it },
+                onSignatureNeeded = { page, at ->
+                    if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
                 },
-                navigationIcon = {
-                    IconButton(onClick = { state.runAfterConfirm(state::closeDocument) }) {
-                        Icon(Icons.Filled.Close, contentDescription = "Fermer le document")
-                    }
-                },
-                actions = {
-                    if (wide) ZoomControls(session)
-                    if (state.assistantAvailable) {
-                        IconButton(onClick = { state.assistant.open = !state.assistant.open }) {
-                            Icon(
-                                NougatIcons.Sparkle,
-                                contentDescription = "Assistant Claude",
-                                tint = if (state.assistant.open) MaterialTheme.colorScheme.primary else LocalContentColor.current,
-                            )
-                        }
-                    }
-                    IconButton(onClick = session::openSearch) { Icon(Icons.Filled.Search, contentDescription = "Rechercher") }
-                    if (!narrow) {
-                        IconButton(onClick = { state.pagesOpen = true }) { Icon(NougatIcons.Pages, contentDescription = "Pages") }
-                    }
-                    EditToggle(active = tools.editing, compact = narrow) { tools.editing = !tools.editing }
-                    if (state.modified) {
-                        IconButton(onClick = state::save) {
-                            Icon(NougatIcons.Save, contentDescription = "Enregistrer", tint = MaterialTheme.colorScheme.primary)
-                        }
-                    }
-                    OverflowMenu(state, session, onOpenFile, onProtect = { askPassword = true })
-                },
-                windowInsets = WindowInsets(0, 0, 0, 0),
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
             )
         }
-        if (session.searchOpen) {
-            SearchBar(session)
-            HorizontalDivider()
+
+        // Miniatures (grand ecran)
+        if (showRail) {
+            ThumbnailRail(session, Modifier.align(Alignment.CenterStart).padding(start = 14.dp, top = topSpace + 8.dp, bottom = 120.dp).width(92.dp))
         }
-        val dockToolbar = platform.isDesktop
-        BoxWithConstraints(Modifier.fillMaxSize()) {
-            // Ecran large : l'assistant a cote du document ; sinon par-dessus.
-            val sidePanel = maxWidth >= 900.dp
-            Column(Modifier.fillMaxSize()) {
-                if (tools.editing && dockToolbar) EditToolbar(state, Modifier, docked = true)
-                Row(Modifier.fillMaxSize()) {
-                    Box(Modifier.weight(1f).fillMaxHeight()) {
-                        PageList(
-                            session = session,
-                            state = state,
-                            inlineEditor = platform.isDesktop,
-                            onTextRequest = { textRequest = it },
-                            onSignatureNeeded = { page, at ->
-                                if (tools.signature == null) signatureAt = page to at else placeSignature(page, at)
-                            },
-                        )
-                        if (tools.editing && !dockToolbar) {
-                            EditToolbar(state, Modifier.align(Alignment.BottomCenter).padding(12.dp))
-                        } else {
-                            PageIndicator(session, Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
-                        }
-                    }
-                    if (state.assistant.open && sidePanel) {
-                        VerticalDivider()
-                        AssistantPanel(state, Modifier.width(400.dp).fillMaxHeight())
-                    }
-                }
+
+        // Ilots du haut
+        Box(Modifier.fillMaxWidth().padding(12.dp).align(Alignment.TopCenter)) {
+            DocumentIsland(state, session, compact, onOpenFile, onProtect = { askPassword = true }, modifier = Modifier.align(Alignment.TopStart))
+            if (session.searchOpen) {
+                SearchIsland(
+                    session,
+                    Modifier.align(if (compact) Alignment.TopStart else Alignment.TopCenter)
+                        .padding(top = if (compact) 64.dp else 0.dp)
+                        .then(if (compact) Modifier.fillMaxWidth() else Modifier.widthIn(max = 560.dp)),
+                )
+            } else if (!compact) {
+                NavigationIsland(session, onAskPage = { askPage = true }, modifier = Modifier.align(Alignment.TopCenter))
             }
-            if (state.assistant.open && !sidePanel) {
+            ActionsIsland(state, session, compact, modifier = Modifier.align(Alignment.TopEnd).padding(end = assistantWidth))
+        }
+
+        // Le dock et le plateau d'outils du mode
+        ViewerDock(
+            state = state,
+            session = session,
+            compact = compact,
+            showPagePill = compact,
+            onAskPage = { askPage = true },
+            onChangeSignature = { tools.signature = null; state.showToast("Touchez la page pour dessiner une nouvelle signature") },
+            modifier = Modifier.align(Alignment.BottomCenter).padding(start = railWidth, end = assistantWidth, bottom = 14.dp),
+        )
+
+        // Claude : carte flottante a droite (grand ecran) ou plein ecran (telephone)
+        if (state.assistant.open) {
+            if (wide) {
+                Box(Modifier.align(Alignment.CenterEnd).padding(top = 12.dp, bottom = 12.dp, end = 12.dp).width(400.dp).fillMaxHeight()) {
+                    AssistantPanel(state, Modifier.fillMaxSize())
+                }
+            } else {
                 AssistantPanel(state, Modifier.fillMaxSize())
             }
         }
@@ -258,46 +246,63 @@ fun ViewerScreen(
             onDismiss = { askPassword = false },
         )
     }
+
+    if (askPage) {
+        GoToPageDialog(
+            pageCount = session.pageCount,
+            onGo = { session.goToPage(it - 1); askPage = false },
+            onDismiss = { askPage = false },
+        )
+    }
 }
 
+// ---- Ilots du haut -------------------------------------------------------------------------------
+
+/** En haut a gauche : fermer, le chat, le nom du document, le menu du document. */
 @Composable
-private fun EditToggle(active: Boolean, compact: Boolean, onClick: () -> Unit) {
-    val colors = MaterialTheme.colorScheme
-    Surface(
-        onClick = onClick,
-        shape = RoundedCornerShape(50),
-        color = if (active) colors.primary else colors.primaryContainer,
-        contentColor = if (active) colors.onPrimary else colors.onPrimaryContainer,
-        modifier = Modifier.padding(horizontal = 4.dp),
-    ) {
-        Row(
-            Modifier.padding(horizontal = if (compact) 8.dp else 12.dp, vertical = if (compact) 8.dp else 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                NougatIcons.Pen,
-                contentDescription = if (compact) (if (active) "Terminer la modification" else "Modifier") else null,
-                modifier = Modifier.size(18.dp),
-            )
-            if (!compact) {
-                Spacer(Modifier.width(6.dp))
-                Text(if (active) "Terminé" else "Modifier", style = MaterialTheme.typography.labelLarge)
+private fun DocumentIsland(
+    state: ViewerState,
+    session: DocumentSession,
+    compact: Boolean,
+    onOpenFile: () -> Unit,
+    onProtect: () -> Unit,
+    modifier: Modifier,
+) {
+    val p = LocalNougatPalette.current
+    Island(modifier) {
+        IslandButton(Icons.Filled.Close, "Fermer le document", onClick = { state.runAfterConfirm(state::closeDocument) })
+        if (!compact) {
+            NougatMascot(Modifier.size(34.dp), animated = false)
+            Spacer(Modifier.width(8.dp))
+        }
+        Column(Modifier.widthIn(max = if (compact) 150.dp else 300.dp).padding(end = 4.dp)) {
+            Text(session.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}", style = MaterialTheme.typography.labelMedium, color = p.muted)
+                if (state.modified) {
+                    Spacer(Modifier.width(6.dp))
+                    Box(Modifier.size(6.dp).clip(CircleShape).background(NougatColors.Orange))
+                    Spacer(Modifier.width(4.dp))
+                    Text("modifié", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                }
             }
         }
+        DocumentMenu(state, session, onOpenFile, onProtect)
     }
 }
 
 @Composable
-private fun OverflowMenu(state: ViewerState, session: DocumentSession, onOpenFile: () -> Unit, onProtect: () -> Unit) {
+private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFile: () -> Unit, onProtect: () -> Unit) {
     var open by remember { mutableStateOf(false) }
     Box {
-        IconButton(onClick = { open = true }) { Icon(Icons.Filled.MoreVert, contentDescription = "Plus d'actions") }
-        DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
+        IslandButton(Icons.Filled.MoreVert, "Menu du document", onClick = { open = true })
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, shape = RoundedCornerShape(20.dp)) {
             @Composable
             fun item(label: String, icon: ImageVector, action: () -> Unit) = DropdownMenuItem(
-                text = { Text(label) },
+                text = { Text(label, style = MaterialTheme.typography.bodyLarge) },
                 leadingIcon = { Icon(icon, contentDescription = null) },
                 onClick = { open = false; action() },
+                modifier = Modifier.height(52.dp),
             )
             item("Ouvrir un autre PDF", NougatIcons.Folder) { state.runAfterConfirm(onOpenFile) }
             item("Enregistrer", NougatIcons.Save, state::save)
@@ -312,190 +317,302 @@ private fun OverflowMenu(state: ViewerState, session: DocumentSession, onOpenFil
             } else {
                 item("Retirer le mot de passe", Icons.Filled.Lock) { state.setPassword(null) }
             }
-        }
-    }
-}
-
-/**
- * La barre d'outils d'edition : flottante en bas de l'ecran (telephone), ou fixee sous la barre
- * du haut ([docked], ordinateur : la barre des taches de Windows ne peut pas la cacher).
- */
-@Composable
-private fun EditToolbar(state: ViewerState, modifier: Modifier, docked: Boolean = false) {
-    val tools = state.tools
-    var showColors by remember { mutableStateOf(false) }
-    val colors = MaterialTheme.colorScheme
-
-    val hint: @Composable () -> Unit = {
-        if (tools.tool == Tool.EditText && state.session?.editingBlock == null) {
-            Surface(
-                shape = RoundedCornerShape(50),
-                color = colors.inverseSurface.copy(alpha = 0.9f),
-                contentColor = colors.inverseOnSurface,
-                modifier = Modifier.padding(vertical = 6.dp),
-            ) {
-                Text(
-                    "Touchez une ligne encadrée pour modifier son texte",
-                    style = MaterialTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                )
-            }
-        }
-    }
-    val colorRow: @Composable () -> Unit = {
-        if (showColors && tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)) {
-            Surface(shape = RoundedCornerShape(50), tonalElevation = 3.dp, shadowElevation = 6.dp, modifier = Modifier.padding(vertical = 6.dp)) {
-                Box(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
-                    ColorRow(
-                        if (tools.tool == Tool.Highlighter) InkColors.highlighter else InkColors.pen,
-                        tools.color,
-                    ) { tools.setColor(it); showColors = false }
-                }
-            }
-        }
-    }
-    val buttons: @Composable () -> Unit = {
-        Row(
-            Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 6.dp, vertical = 6.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ToolButton(NougatIcons.Hand, Tool.Pan, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.EditText, Tool.EditText, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Pen, Tool.Pen, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Highlighter, Tool.Highlighter, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Text, Tool.Text, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Whiteout, Tool.Whiteout, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Signature, Tool.Signature, tools.tool) { tools.tool = it }
-            ToolButton(NougatIcons.Eraser, Tool.Eraser, tools.tool) { tools.tool = it }
-            Box(Modifier.padding(horizontal = 6.dp).width(1.dp).height(28.dp).background(colors.outlineVariant))
-            // Pastille de couleur
-            Box(
-                Modifier
-                    .padding(horizontal = 6.dp)
-                    .size(26.dp)
-                    .clip(CircleShape)
-                    .background(Color(tools.color))
-                    .clickable { showColors = !showColors },
-            )
-            IconButton(onClick = state::undo, enabled = state.canUndo) {
-                Icon(NougatIcons.Undo, contentDescription = "Annuler")
-            }
-        }
-    }
-
-    if (docked) {
-        Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Surface(color = colors.surfaceContainer, modifier = Modifier.fillMaxWidth()) {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { buttons() }
-            }
             HorizontalDivider()
-            colorRow()
-            hint()
-        }
-    } else {
-        Column(modifier.widthIn(max = 760.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            hint()
-            colorRow()
-            Surface(
-                shape = RoundedCornerShape(28.dp),
-                color = colors.surfaceContainerLowest,
-                tonalElevation = 3.dp,
-                shadowElevation = 8.dp,
-            ) { buttons() }
+            item("Thème : ${themeLabel(state.themeMode)}", NougatIcons.Contrast, state::cycleTheme)
         }
     }
 }
 
+fun themeLabel(mode: ThemeMode) = when (mode) {
+    ThemeMode.Auto -> "automatique"
+    ThemeMode.Light -> "clair"
+    ThemeMode.Dark -> "sombre"
+}
+
+/** En haut au centre (grand ecran) : pages et zoom. */
 @Composable
-private fun ToolButton(icon: ImageVector, tool: Tool, current: Tool, onSelect: (Tool) -> Unit) {
-    val selected = tool == current
-    val colors = MaterialTheme.colorScheme
-    Column(
-        Modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(if (selected) colors.primaryContainer else Color.Transparent)
-            .clickable { onSelect(tool) }
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(icon, contentDescription = tool.label, tint = if (selected) colors.onPrimaryContainer else colors.onSurfaceVariant, modifier = Modifier.size(22.dp))
-        Text(tool.label, style = MaterialTheme.typography.labelSmall, color = if (selected) colors.onPrimaryContainer else colors.onSurfaceVariant)
+private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, modifier: Modifier) {
+    Island(modifier) {
+        IslandButton(NougatIcons.ArrowLeft, "Page précédente", onClick = session::previousPage, enabled = session.visiblePage > 0)
+        Box(
+            Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = onAskPage).padding(horizontal = 10.dp, vertical = 8.dp),
+        ) {
+            Text("${session.visiblePage + 1} / ${session.pageCount}", style = MaterialTheme.typography.titleSmall)
+        }
+        IslandButton(NougatIcons.ArrowRight, "Page suivante", onClick = session::nextPage, enabled = session.visiblePage < session.pageCount - 1)
+        IslandDivider()
+        IslandButton(NougatIcons.Remove, "Dézoomer", onClick = session::zoomOut)
+        Box(
+            Modifier.clip(RoundedCornerShape(14.dp)).clickable(onClick = session::resetZoom).padding(horizontal = 8.dp, vertical = 8.dp),
+        ) {
+            Text("${(session.zoom * 100).roundToInt()} %", style = MaterialTheme.typography.titleSmall)
+        }
+        IslandButton(Icons.Filled.Add, "Zoomer", onClick = session::zoomIn)
+    }
+}
+
+/** En haut a droite : chercher, enregistrer. */
+@Composable
+private fun ActionsIsland(state: ViewerState, session: DocumentSession, compact: Boolean, modifier: Modifier) {
+    Island(modifier) {
+        IslandButton(Icons.Filled.Search, "Rechercher", onClick = session::openSearch, active = session.searchOpen)
+        if (state.canUndo) IslandButton(NougatIcons.Undo, "Annuler", onClick = state::undo)
+        if (state.modified) {
+            if (compact) {
+                IslandButton(NougatIcons.Save, "Enregistrer", onClick = state::save, tint = MaterialTheme.colorScheme.primary)
+            } else {
+                Spacer(Modifier.width(4.dp))
+                GradientButton("Enregistrer", onClick = state::save, icon = NougatIcons.Save, height = 44.dp)
+            }
+        }
     }
 }
 
 @Composable
-private fun ZoomControls(session: DocumentSession) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = session::zoomOut) { Icon(NougatIcons.Remove, contentDescription = "Dézoomer") }
-        TextButton(onClick = session::resetZoom) { Text("${(session.zoom * 100).roundToInt()} %") }
-        IconButton(onClick = session::zoomIn) { Icon(Icons.Filled.Add, contentDescription = "Zoomer") }
-    }
+fun IslandDivider() {
+    Box(Modifier.padding(horizontal = 6.dp).width(1.dp).height(28.dp).background(LocalNougatPalette.current.islandBorder))
 }
 
 @Composable
-private fun SearchBar(session: DocumentSession) {
+private fun SearchIsland(session: DocumentSession, modifier: Modifier) {
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { focus.requestFocus() }
-    Row(
-        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainer).padding(horizontal = 8.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextField(
-            value = session.query,
-            onValueChange = session::onQueryChange,
-            placeholder = { Text("Rechercher dans le document") },
-            singleLine = true,
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { session.onSearchSubmit() }),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-            ),
-            modifier = Modifier.weight(1f).focusRequester(focus).onPreviewKeyEvent { e ->
-                if (e.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
-                when (e.key) {
-                    Key.Escape -> { session.closeSearch(); true }
-                    Key.Enter, Key.NumPadEnter -> {
-                        if (e.isShiftPressed) session.previousHit() else session.onSearchSubmit()
-                        true
+    val colors = MaterialTheme.colorScheme
+    Island(modifier) {
+        Icon(Icons.Filled.Search, contentDescription = null, tint = colors.primary, modifier = Modifier.padding(start = 10.dp, end = 8.dp).size(22.dp))
+        Box(Modifier.weight(1f, fill = false).widthIn(min = 160.dp, max = 320.dp)) {
+            if (session.query.isEmpty()) {
+                Text("Rechercher dans le document", style = MaterialTheme.typography.bodyLarge, color = LocalNougatPalette.current.muted)
+            }
+            BasicTextField(
+                value = session.query,
+                onValueChange = session::onQueryChange,
+                singleLine = true,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface),
+                cursorBrush = SolidColor(colors.primary),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { session.onSearchSubmit() }),
+                modifier = Modifier.fillMaxWidth().focusRequester(focus).onPreviewKeyEvent { e ->
+                    if (e.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+                    when (e.key) {
+                        Key.Escape -> { session.closeSearch(); true }
+                        Key.Enter, Key.NumPadEnter -> {
+                            if (e.isShiftPressed) session.previousHit() else session.onSearchSubmit()
+                            true
+                        }
+                        else -> false
                     }
-                    else -> false
-                }
-            },
-        )
+                },
+            )
+        }
         val status = when {
             session.query.isBlank() -> ""
-            session.hits.isNotEmpty() -> "${session.currentHit + 1} / ${session.hits.size}" + if (session.searching) "…" else ""
-            session.searching -> "Recherche…"
-            session.searchDone -> "Aucun résultat"
+            session.hits.isNotEmpty() -> "${session.currentHit + 1}/${session.hits.size}" + if (session.searching) "…" else ""
+            session.searching -> "…"
+            session.searchDone -> "0"
             else -> ""
         }
-        Text(status, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(horizontal = 8.dp))
-        IconButton(onClick = session::previousHit, enabled = session.hits.isNotEmpty()) {
-            Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Résultat précédent")
+        if (status.isNotEmpty()) {
+            Text(status, style = MaterialTheme.typography.labelLarge, color = LocalNougatPalette.current.muted, modifier = Modifier.padding(horizontal = 8.dp))
         }
-        IconButton(onClick = session::nextHit, enabled = session.hits.isNotEmpty()) {
-            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Résultat suivant")
-        }
-        IconButton(onClick = session::closeSearch) { Icon(Icons.Filled.Close, contentDescription = "Fermer la recherche") }
+        IslandButton(Icons.Filled.KeyboardArrowUp, "Résultat précédent", onClick = session::previousHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
+        IslandButton(Icons.Filled.KeyboardArrowDown, "Résultat suivant", onClick = session::nextHit, enabled = session.hits.isNotEmpty(), size = 40.dp)
+        IslandButton(Icons.Filled.Close, "Fermer la recherche", onClick = session::closeSearch, size = 40.dp)
     }
 }
+
+// ---- Le dock -------------------------------------------------------------------------------------
+
+@Composable
+private fun ViewerDock(
+    state: ViewerState,
+    session: DocumentSession,
+    compact: Boolean,
+    showPagePill: Boolean,
+    onAskPage: () -> Unit,
+    onChangeSignature: () -> Unit,
+    modifier: Modifier,
+) {
+    val tools = state.tools
+    val mode = tools.mode
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        AnimatedVisibility(
+            visible = mode != DockMode.Read || showPagePill,
+            enter = fadeIn() + slideInVertically { it / 2 },
+            exit = fadeOut() + slideOutVertically { it / 2 },
+        ) {
+            Box(Modifier.padding(bottom = 10.dp)) {
+                when (mode) {
+                    DockMode.Read -> PagePill(session, onAskPage)
+                    DockMode.Edit -> HintTray(
+                        if (session.editingBlock == null) "Touchez une ligne encadrée pour modifier son texte"
+                        else "Modifiez puis validez — le style d'origine est conservé",
+                    )
+                    DockMode.Sign -> SignTray(hasSignature = tools.signature != null, onChange = onChangeSignature)
+                    DockMode.Annotate -> AnnotateTray(state, compact)
+                }
+            }
+        }
+        Island(shape = RoundedCornerShape(30.dp), padding = 6.dp, scrollable = true) {
+            DockItem(NougatIcons.Eye, "Lire", mode == DockMode.Read, { tools.enter(DockMode.Read) }, compact)
+            DockItem(NougatIcons.EditText, "Éditer", mode == DockMode.Edit, { tools.enter(DockMode.Edit) }, compact)
+            DockItem(NougatIcons.Pen, "Annoter", mode == DockMode.Annotate, { tools.enter(DockMode.Annotate) }, compact)
+            DockItem(NougatIcons.Signature, "Signer", mode == DockMode.Sign, { tools.enter(DockMode.Sign) }, compact)
+            DockItem(NougatIcons.Pages, "Pages", false, { state.pagesOpen = true }, compact)
+            if (state.assistantAvailable) {
+                IslandDivider()
+                DockItem(NougatIcons.Sparkle, "Claude", state.assistant.open, { state.assistant.open = !state.assistant.open }, compact)
+            }
+        }
+    }
+}
+
+@Composable
+private fun PagePill(session: DocumentSession, onAskPage: () -> Unit) {
+    Island(shape = RoundedCornerShape(50), padding = 0.dp, modifier = Modifier.clickable(onClick = onAskPage)) {
+        Text(
+            "Page ${session.visiblePage + 1} / ${session.pageCount}",
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+        )
+    }
+}
+
+@Composable
+private fun HintTray(text: String) {
+    Island(shape = RoundedCornerShape(50), padding = 4.dp) {
+        GradientBadge(NougatIcons.EditText, size = 32.dp, iconSize = 18.dp)
+        Text(text, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 12.dp))
+    }
+}
+
+@Composable
+private fun SignTray(hasSignature: Boolean, onChange: () -> Unit) {
+    Island(shape = RoundedCornerShape(50), padding = 4.dp) {
+        GradientBadge(NougatIcons.Signature, size = 32.dp, iconSize = 18.dp)
+        Text(
+            if (hasSignature) "Touchez la page pour poser votre signature" else "Touchez la page pour dessiner votre signature",
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(horizontal = 12.dp),
+        )
+        if (hasSignature) {
+            TextButton(onClick = onChange) { Text("Changer") }
+        }
+    }
+}
+
+@Composable
+private fun AnnotateTray(state: ViewerState, compact: Boolean) {
+    val tools = state.tools
+    val colors = MaterialTheme.colorScheme
+    Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) {
+        if (compact) TrayTool(NougatIcons.Hand, Tool.Pan, state)
+        TrayTool(NougatIcons.Pen, Tool.Pen, state)
+        TrayTool(NougatIcons.Highlighter, Tool.Highlighter, state)
+        TrayTool(NougatIcons.Text, Tool.Text, state)
+        TrayTool(NougatIcons.Whiteout, Tool.Whiteout, state)
+        TrayTool(NougatIcons.Eraser, Tool.Eraser, state)
+        if (tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)) {
+            IslandDivider()
+            val palette = if (tools.tool == Tool.Highlighter) InkColors.highlighter else InkColors.pen
+            for (c in palette) {
+                val selected = c == tools.color
+                Box(
+                    Modifier
+                        .padding(horizontal = 4.dp)
+                        .size(if (selected) 30.dp else 24.dp)
+                        .clip(CircleShape)
+                        .background(Color(c))
+                        .border(if (selected) 3.dp else 1.dp, if (selected) colors.primary else colors.outline, CircleShape)
+                        .clickable { tools.setColor(c) },
+                )
+            }
+            Spacer(Modifier.width(4.dp))
+        }
+    }
+}
+
+@Composable
+private fun TrayTool(icon: ImageVector, tool: Tool, state: ViewerState) {
+    IslandButton(icon, tool.label, onClick = { state.tools.pick(tool) }, active = state.tools.tool == tool, size = 44.dp, iconSize = 22.dp)
+}
+
+// ---- Miniatures ----------------------------------------------------------------------------------
+
+@Composable
+private fun ThumbnailRail(session: DocumentSession, modifier: Modifier) {
+    val p = LocalNougatPalette.current
+    val shape = RoundedCornerShape(24.dp)
+    Box(
+        modifier
+            .shadow(20.dp, shape, ambientColor = p.shadow, spotColor = p.shadow)
+            .clip(shape)
+            .background(p.island)
+            .border(1.dp, p.islandBorder, shape),
+    ) {
+        LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            items(session.pageCount, key = { it }) { index -> RailThumbnail(session, index) }
+        }
+    }
+}
+
+@Composable
+private fun RailThumbnail(session: DocumentSession, index: Int) {
+    val size = session.pageSizes[index]
+    val image by produceState(session.cachedThumbnail(index), index) {
+        try {
+            value = session.thumbnail(index, 200)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Throwable) {
+        }
+    }
+    val current = session.visiblePage == index
+    val colors = MaterialTheme.colorScheme
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.clickable { session.goToPage(index) }) {
+        Box(
+            Modifier
+                .width(66.dp)
+                .aspectRatio(size.aspectRatio)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White)
+                .border(if (current) 2.5.dp else 1.dp, if (current) colors.primary else colors.outlineVariant, RoundedCornerShape(4.dp)),
+        ) {
+            image?.let {
+                Image(it, "Page ${index + 1}", Modifier.fillMaxSize(), contentScale = ContentScale.Fit, filterQuality = FilterQuality.Medium)
+            }
+        }
+        Text(
+            "${index + 1}",
+            style = MaterialTheme.typography.labelMedium,
+            color = if (current) colors.primary else LocalNougatPalette.current.muted,
+            modifier = Modifier.padding(top = 3.dp),
+        )
+    }
+}
+
+// ---- Les pages -------------------------------------------------------------------------------------
 
 @Composable
 private fun PageList(
     session: DocumentSession,
     state: ViewerState,
     inlineEditor: Boolean,
+    topPadding: Dp,
+    bottomPadding: Dp,
     onTextRequest: (TextRequest) -> Unit,
     onSignatureNeeded: (Int, NPoint) -> Unit,
 ) {
-    BoxWithConstraints(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceContainerLow)) {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
         val viewportWidth = maxWidth
         val viewportHeight = maxHeight
-        val baseWidth = min(viewportWidth - PagePadding * 2, MaxPageWidth).coerceAtLeast(120.dp)
+        val baseWidth = min(viewportWidth - 40.dp, MaxPageWidth).coerceAtLeast(120.dp)
         val pageWidth = baseWidth * session.zoom
-        val contentWidth = max(viewportWidth, pageWidth + PagePadding * 2)
+        val contentWidth = max(viewportWidth, pageWidth + 40.dp)
         val density = LocalDensity.current
         val listState = session.listState
         val hScroll = rememberScrollState()
@@ -542,8 +659,8 @@ private fun PageList(
                 state = listState,
                 modifier = Modifier.width(contentWidth).fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(top = PagePadding, bottom = 96.dp),
-                verticalArrangement = Arrangement.spacedBy(PagePadding),
+                contentPadding = PaddingValues(top = topPadding, bottom = bottomPadding),
+                verticalArrangement = Arrangement.spacedBy(PageGap),
             ) {
                 items(session.pageCount, key = { it }) { index ->
                     PageView(session, state, index, pageWidth, inlineEditor, onTextRequest, onSignatureNeeded)
@@ -567,6 +684,7 @@ private fun PageView(
     val height = width / pageSize.aspectRatio
     val widthPx = with(LocalDensity.current) { width.toPx() }
     val targetPx = renderWidthFor(widthPx, pageSize.aspectRatio)
+    val p = LocalNougatPalette.current
 
     val image by produceState(session.cachedPage(index), index, targetPx) {
         // Pendant un zoom au doigt, on attend que le geste se calme avant de recalculer.
@@ -580,10 +698,13 @@ private fun PageView(
         }
     }
 
+    val shape = RoundedCornerShape(6.dp)
     Box(
         Modifier
             .size(width, height)
-            .shadow(2.dp, RoundedCornerShape(2.dp))
+            // Du papier pose sur la toile : ombre large et douce.
+            .shadow(14.dp, shape, ambientColor = p.paperShadow, spotColor = p.paperShadow)
+            .clip(shape)
             .background(Color.White),
     ) {
         val img = image
@@ -640,30 +761,6 @@ private fun renderWidthFor(widthPx: Float, aspectRatio: Float): Int {
 }
 
 @Composable
-private fun PageIndicator(session: DocumentSession, modifier: Modifier) {
-    var askPage by remember { mutableStateOf(false) }
-    Surface(
-        modifier = modifier.clip(RoundedCornerShape(50)).clickable { askPage = true },
-        shape = RoundedCornerShape(50),
-        color = MaterialTheme.colorScheme.inverseSurface.copy(alpha = 0.85f),
-        contentColor = MaterialTheme.colorScheme.inverseOnSurface,
-    ) {
-        Text(
-            "Page ${session.visiblePage + 1} / ${session.pageCount}",
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            style = MaterialTheme.typography.labelLarge,
-        )
-    }
-    if (askPage) {
-        GoToPageDialog(
-            pageCount = session.pageCount,
-            onGo = { session.goToPage(it - 1); askPage = false },
-            onDismiss = { askPage = false },
-        )
-    }
-}
-
-@Composable
 private fun GoToPageDialog(pageCount: Int, onGo: (Int) -> Unit, onDismiss: () -> Unit) {
     var text by remember { mutableStateOf("") }
     val number = text.toIntOrNull()
@@ -681,15 +778,15 @@ private fun GoToPageDialog(pageCount: Int, onGo: (Int) -> Unit, onDismiss: () ->
                 singleLine = true,
                 isError = text.isNotEmpty() && !valid,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Go),
-                keyboardActions = KeyboardActions(onGo = { if (valid) onGo(number!!) }),
+                keyboardActions = KeyboardActions(onGo = { if (valid) onGo(number) }),
                 modifier = Modifier.focusRequester(focus).onPreviewKeyEvent { e ->
                     if (e.type == KeyEventType.KeyDown && (e.key == Key.Enter || e.key == Key.NumPadEnter) && valid) {
-                        onGo(number!!); true
+                        onGo(number); true
                     } else false
                 },
             )
         },
-        confirmButton = { TextButton(onClick = { onGo(number!!) }, enabled = valid) { Text("Aller") } },
+        confirmButton = { TextButton(onClick = { if (valid) onGo(number) }, enabled = valid) { Text("Aller") } },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
     )
 }

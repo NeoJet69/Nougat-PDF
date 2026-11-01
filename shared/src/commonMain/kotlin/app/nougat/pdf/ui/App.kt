@@ -1,10 +1,13 @@
 package app.nougat.pdf.ui
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,14 +18,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -32,21 +36,19 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
-import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import app.nougat.pdf.viewer.RecentFile
 import app.nougat.pdf.viewer.ViewerState
+import kotlinx.coroutines.delay
 
 /** Ce qui change d'une plateforme a l'autre dans l'interface. */
 data class PlatformInfo(
@@ -56,17 +58,23 @@ data class PlatformInfo(
 
 /**
  * L'app entiere. [onOpenFile] ouvre le selecteur de fichiers de la plateforme,
- * qui appelle ensuite [ViewerState.open].
+ * qui appelle ensuite [ViewerState.open] ; [onOpenRecent] rouvre un fichier recent.
  */
 @Composable
-fun NougatApp(state: ViewerState, platform: PlatformInfo, onOpenFile: () -> Unit) {
-    NougatTheme {
-        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+fun NougatApp(
+    state: ViewerState,
+    platform: PlatformInfo,
+    onOpenFile: () -> Unit,
+    onOpenRecent: (RecentFile) -> Unit = {},
+) {
+    NougatTheme(state.themeMode) {
+        val p = LocalNougatPalette.current
+        Box(Modifier.fillMaxSize().nougatCanvas(p)) {
             // Sur Android, le contenu ne passe ni sous la barre d'etat ni sous la barre de navigation.
             Box(Modifier.fillMaxSize().safeDrawingPadding()) {
                 val session = state.session
                 if (session == null) {
-                    HomeScreen(platform, onOpenFile)
+                    HomeScreen(state, platform, onOpenFile, onOpenRecent)
                 } else {
                     // Tout l'etat de l'ecran repart de zero pour chaque version du document.
                     key(session) {
@@ -78,21 +86,7 @@ fun NougatApp(state: ViewerState, platform: PlatformInfo, onOpenFile: () -> Unit
                     }
                 }
 
-                state.toast?.let { message ->
-                    LaunchedEffect(message) {
-                        delay(2500)
-                        state.dismissToast()
-                    }
-                    Surface(
-                        shape = RoundedCornerShape(50),
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        contentColor = MaterialTheme.colorScheme.inverseOnSurface,
-                        shadowElevation = 6.dp,
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 72.dp),
-                    ) {
-                        Text(message, modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp))
-                    }
-                }
+                Toast(state, Modifier.align(Alignment.TopCenter).padding(top = 92.dp))
 
                 state.busyMessage?.let { LoadingOverlay(it) }
                 state.passwordPrompt?.let { prompt ->
@@ -119,54 +113,49 @@ fun NougatApp(state: ViewerState, platform: PlatformInfo, onOpenFile: () -> Unit
     }
 }
 
+/** Petit message de confirmation, en pilule flottante. */
 @Composable
-private fun HomeScreen(platform: PlatformInfo, onOpenFile: () -> Unit) {
-    Column(
-        Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Image(rememberVectorPainter(NougatIcons.NougatLogo), contentDescription = null, modifier = Modifier.size(140.dp))
-        Spacer(Modifier.height(16.dp))
-        Text("Nougat PDF", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-        Spacer(Modifier.height(6.dp))
-        Text(
-            "Lisez, annotez, signez et modifiez vos PDF.\nGratuit et sans Internet.",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-        )
-        Spacer(Modifier.height(32.dp))
-        Button(onClick = onOpenFile) {
-            Icon(NougatIcons.Folder, contentDescription = null)
-            Spacer(Modifier.size(8.dp))
-            Text("Ouvrir un PDF")
+private fun Toast(state: ViewerState, modifier: Modifier) {
+    val message = state.toast
+    LaunchedEffect(message) {
+        if (message != null) {
+            delay(2800)
+            state.dismissToast()
         }
-        if (platform.isDesktop) {
-            Spacer(Modifier.height(16.dp))
+    }
+    AnimatedVisibility(
+        visible = message != null,
+        enter = fadeIn() + slideInVertically { -it },
+        exit = fadeOut() + slideOutVertically { -it },
+        modifier = modifier,
+    ) {
+        Island(shape = RoundedCornerShape(50), padding = 6.dp, modifier = Modifier.widthIn(max = 560.dp)) {
+            GradientBadge(Icons.Filled.Check, size = 30.dp, iconSize = 18.dp)
             Text(
-                "ou glissez un fichier PDF dans cette fenêtre  ·  Ctrl+O",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                textAlign = TextAlign.Center,
+                message ?: "",
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.padding(start = 10.dp, end = 14.dp),
             )
         }
     }
 }
 
 @Composable
-private fun LoadingOverlay(name: String) {
+private fun LoadingOverlay(text: String) {
     Box(
         Modifier.fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.35f))
-            // Bloque les clics pendant l'ouverture.
+            .background(Color.Black.copy(alpha = 0.28f))
+            // Bloque les clics pendant l'operation.
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {},
         contentAlignment = Alignment.Center,
     ) {
-        Surface(shape = MaterialTheme.shapes.large, tonalElevation = 6.dp) {
-            Column(Modifier.padding(28.dp).widthIn(max = 320.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                CircularProgressIndicator()
-                Spacer(Modifier.height(16.dp))
-                Text(name, textAlign = TextAlign.Center)
+        Island(shape = RoundedCornerShape(28.dp), padding = 0.dp) {
+            Column(Modifier.padding(horizontal = 32.dp, vertical = 26.dp).widthIn(max = 320.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                NougatMascot(Modifier.size(64.dp))
+                Spacer(Modifier.height(10.dp))
+                CircularProgressIndicator(Modifier.size(28.dp), strokeWidth = 3.dp, color = MaterialTheme.colorScheme.primary)
+                Spacer(Modifier.height(12.dp))
+                Text(text, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
             }
         }
     }
@@ -199,8 +188,8 @@ private fun PasswordDialog(
                         { Text("Mot de passe incorrect") }
                     } else null,
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = androidx.compose.ui.text.input.ImeAction.Done),
-                    keyboardActions = androidx.compose.foundation.text.KeyboardActions(onDone = { onSubmit(password) }),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { onSubmit(password) }),
                     modifier = Modifier.fillMaxWidth().focusRequester(focus),
                 )
             }

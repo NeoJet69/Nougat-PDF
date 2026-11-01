@@ -74,6 +74,29 @@ object NougatIcons {
     val EditText by lazy {
         strokeIcon("EditText", "M3,5h11M8.5,5v14M18,7v13M16,7h4M16,20h4")
     }
+    /** Avion en papier : envoyer. */
+    val Send by lazy { svgIcon("Send", "M2.01,21L23,12 2.01,3 2,10l15,2 -15,2z") }
+
+    /** Un oeil : le mode Lire. */
+    val Eye by lazy {
+        svgIcon("Eye", "M12,4.5C7,4.5 2.73,7.61 1,12c1.73,4.39 6,7.5 11,7.5s9.27,-3.11 11,-7.5c-1.73,-4.39 -6,-7.5 -11,-7.5zM12,17c-2.76,0 -5,-2.24 -5,-5s2.24,-5 5,-5 5,2.24 5,5 -2.24,5 -5,5zM12,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3 3,-1.34 3,-3 -1.34,-3 -3,-3z")
+    }
+
+    /** Disque moitie plein : le theme (clair / sombre). */
+    val Contrast by lazy {
+        svgIcon("Contrast", "M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20V4c4.41,0 8,3.59 8,8s-3.59,8 -8,8z")
+    }
+
+    /** Un document : l'accueil, les fichiers recents. */
+    val Document by lazy {
+        svgIcon("Document", "M14,2H6c-1.1,0 -2,0.9 -2,2v16c0,1.1 0.9,2 2,2h12c1.1,0 2,-0.9 2,-2V8l-6,-6zM16,18H8v-2h8v2zM16,14H8v-2h8v2zM13,9V3.5L18.5,9H13z")
+    }
+
+    /** Fleche vers le haut dans un nuage : deposer un fichier. */
+    val Upload by lazy {
+        svgIcon("Upload", "M19.35,10.04C18.67,6.59 15.64,4 12,4 9.11,4 6.6,5.64 5.35,8.04 2.34,8.36 0,10.91 0,14c0,3.31 2.69,6 6,6h13c2.76,0 5,-2.24 5,-5 0,-2.64 -2.05,-4.78 -4.65,-4.96zM14,13v4h-4v-4H7l5,-5 5,5h-3z")
+    }
+
     /** Etincelles : l'assistant Claude. */
     val Sparkle by lazy {
         svgIcon("Sparkle", "M19,9l1.25,-2.75L23,5l-2.75,-1.25L19,1l-1.25,2.75L15,5l2.75,1.25L19,9zM11.5,9.5L9,4L6.5,9.5L1,12l5.5,2.5L9,20l2.5,-5.5L17,12L11.5,9.5zM19,15l-1.25,2.75L15,19l2.75,1.25L19,23l1.25,-2.75L23,19l-2.75,-1.25L19,15z")

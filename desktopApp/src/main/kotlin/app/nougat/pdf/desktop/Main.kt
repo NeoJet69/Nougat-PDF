@@ -65,6 +65,15 @@ fun main(args: Array<String>) = application {
             state = state,
             platform = PlatformInfo(isDesktop = true),
             onOpenFile = pickAndOpen,
+            onOpenRecent = { recent ->
+                val file = File(recent.ref)
+                if (file.isFile) {
+                    state.runAfterConfirm { state.openFile(file) }
+                } else {
+                    state.forgetRecent(recent.ref)
+                    state.showError("« ${recent.name} » est introuvable : il a peut-être été déplacé ou supprimé.")
+                }
+            },
         )
     }
 }
