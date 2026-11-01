@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      release:
+        description: "Publier une Release (APK + installateurs Windows)"
+        type: boolean
+        default: false
 
 concurrency:
   group: build-${{ github.ref }}
@@ -43,7 +48,7 @@ jobs:
         if: always()
         run: ./gradlew :shared:desktopTest --console=plain
       - name: Captures d'écran (dossier captures/)
-        if: always() && github.event_name == 'push' && github.ref_name != 'main'
+        if: always() && github.event_name == 'push' && github.ref_type == 'branch' && github.ref_name != 'main'
         run: |
           if ls shared/build/captures/*.png >/dev/null 2>&1; then
             mkdir -p captures
@@ -86,3 +91,30 @@ jobs:
           path: |
             desktopApp/build/compose/binaries/main/msi/*.msi
             desktopApp/build/compose/binaries/main/exe/*.exe
+
+  release:
+    name: Release
+    if: github.event_name == 'workflow_dispatch' && inputs.release
+    needs: [android, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: fichiers
+      - name: Publier la Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: 1.0.${{ github.run_number }}
+        run: |
+          mkdir sortie
+          cp fichiers/nougat-pdf-android/*.apk "sortie/Nougat-PDF-$VERSION.apk"
+          cp fichiers/nougat-pdf-windows/exe/*.exe "sortie/Nougat-PDF-$VERSION.exe" 2>/dev/null || cp fichiers/nougat-pdf-windows/*.exe "sortie/Nougat-PDF-$VERSION.exe"
+          cp fichiers/nougat-pdf-windows/msi/*.msi "sortie/Nougat-PDF-$VERSION.msi" 2>/dev/null || cp fichiers/nougat-pdf-windows/*.msi "sortie/Nougat-PDF-$VERSION.msi"
+          ls -la sortie
+          gh release create "v$VERSION" sortie/* \
+            --target "$GITHUB_SHA" \
+            --title "Nougat PDF $VERSION" \
+            --notes-file .github/release-notes.md
