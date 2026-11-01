@@ -183,10 +183,9 @@ fun EditOverlay(
                         onCommitPending()
                         return@detectTapGestures
                     }
-                    val p = NPoint(o.x / size.width, o.y / size.height)
-                    val hit = currentBlocks
-                        .filter { contains(it.rect, p, 0.006f) }
-                        .minByOrNull { (it.rect.right - it.rect.left) * (it.rect.bottom - it.rect.top) }
+                    // Tolerance pensee pour un doigt : la ligne sous le doigt (a 10 dp pres),
+                    // sinon la plus proche a moins de 28 dp.
+                    val hit = nearestBlock(currentBlocks, o, size.width.toFloat(), size.height.toFloat(), 10.dp.toPx(), 28.dp.toPx())
                     when {
                         hit == null -> Unit
                         !hit.editable -> onMessage("Ce texte ne peut pas être modifié directement : utilisez « Masquer » puis « Texte ».")
@@ -432,4 +431,25 @@ private fun contains(r: NormRect, p: NPoint, margin: Float) =
 private fun hits(mark: Mark, p: NPoint): Boolean = when (mark) {
     is InkMark -> mark.points.any { abs(it.x - p.x) < 0.02f && abs(it.y - p.y) < 0.015f }
     else -> contains(mark.bounds(), p, 0.01f)
+}
+
+/** Distance (en pixels) entre un point et le rectangle d'une ligne ; 0 si le point est dedans. */
+private fun distanceTo(b: TextBlock, o: Offset, w: Float, h: Float): Float {
+    val left = b.rect.left * w
+    val right = b.rect.right * w
+    val top = b.rect.top * h
+    val bottom = b.rect.bottom * h
+    val dx = maxOf(left - o.x, 0f, o.x - right)
+    val dy = maxOf(top - o.y, 0f, o.y - bottom)
+    return kotlin.math.sqrt(dx * dx + dy * dy)
+}
+
+/** La ligne touchee : la plus petite qui contient le point (avec une marge), sinon la plus proche. */
+internal fun nearestBlock(blocks: List<TextBlock>, o: Offset, w: Float, h: Float, margin: Float, maxDistance: Float): TextBlock? {
+    val inside = blocks.filter { distanceTo(it, o, w, h) <= margin }
+    if (inside.isNotEmpty()) {
+        // Plusieurs candidates : la plus proche du doigt, puis la plus petite.
+        return inside.minWith(compareBy<TextBlock>({ distanceTo(it, o, w, h) }, { (it.rect.right - it.rect.left) * (it.rect.bottom - it.rect.top) }))
+    }
+    return blocks.minByOrNull { distanceTo(it, o, w, h) }?.takeIf { distanceTo(it, o, w, h) <= maxDistance }
 }

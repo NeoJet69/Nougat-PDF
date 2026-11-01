@@ -85,6 +85,35 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
 
     override val canShare: Boolean = true
 
+    /**
+     * Android n'autorise pas a ecrire a cote du fichier d'origine : la copie « _miaou » va dans
+     * Telechargements/Nougat PDF (ou, sur les vieux Android, dans le dossier de l'app).
+     */
+    override suspend fun backupOriginal(sourceRef: String, name: String): String? = withContext(Dispatchers.IO) {
+        if (!sourceRef.startsWith("content://")) return@withContext null
+        val resolver = app.contentResolver
+        val fileName = name.replace(Regex("(?i)\\.pdf$"), "") + "_miaou.pdf"
+        val input = resolver.openInputStream(Uri.parse(sourceRef)) ?: return@withContext null
+        input.use { src ->
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                val values = android.content.ContentValues().apply {
+                    put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                    put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS + "/Nougat PDF")
+                }
+                val target = resolver.insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                    ?: return@withContext null
+                resolver.openOutputStream(target)!!.use { src.copyTo(it) }
+                "Téléchargements/Nougat PDF/$fileName"
+            } else {
+                val dir = File(app.getExternalFilesDir(null), "Sauvegardes").apply { mkdirs() }
+                val target = File(dir, fileName)
+                target.outputStream().use { src.copyTo(it) }
+                target.absolutePath
+            }
+        }
+    }
+
     private val prefs = app.getSharedPreferences("nougat", android.content.Context.MODE_PRIVATE)
 
     override fun loadSetting(key: String): String? = prefs.getString(key, null)

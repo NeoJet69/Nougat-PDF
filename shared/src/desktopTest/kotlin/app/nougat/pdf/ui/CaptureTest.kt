@@ -145,6 +145,7 @@ class CaptureTest {
         override suspend fun print(path: String, password: String?, name: String) = Unit
         override val canShare = false
         override suspend fun share(path: String, name: String) = Unit
+        override suspend fun backupOriginal(sourceRef: String, name: String): String? = null
         override fun loadSetting(key: String): String? = settings[key]
         override fun saveSetting(key: String, value: String) { settings[key] = value }
     }

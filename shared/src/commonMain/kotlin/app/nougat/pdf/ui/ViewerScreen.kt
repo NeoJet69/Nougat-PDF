@@ -10,8 +10,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.rememberTransformableState
-import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -644,15 +649,21 @@ private fun PageList(
             session.scrollHandled(request)
         }
 
-        val transform = rememberTransformableState { zoomChange, _, _ ->
-            session.updateZoom(session.zoom * zoomChange)
+        // Zoom autour d'un point : le contenu sous les doigts (ou la souris) reste en place.
+        fun zoomAround(factor: Float, centroid: Offset) {
+            val before = session.zoom
+            session.updateZoom(before * factor)
+            val f = session.zoom / before
+            if (f == 1f) return
+            listState.dispatchRawDelta((listState.firstVisibleItemScrollOffset + centroid.y) * (f - 1f))
+            hScroll.dispatchRawDelta((hScroll.value + centroid.x) * (f - 1f))
         }
 
         Box(
             Modifier
                 .fillMaxSize()
-                .ctrlWheelZoom { factor -> session.updateZoom(session.zoom * factor) }
-                .transformable(transform, canPan = { false })
+                .ctrlWheelZoom { factor, position -> zoomAround(factor, position) }
+                .pinchToZoom { factor, centroid -> zoomAround(factor, centroid) }
                 .horizontalScroll(hScroll, enabled = contentWidth > viewportWidth),
         ) {
             LazyColumn(
@@ -790,3 +801,22 @@ private fun GoToPageDialog(pageCount: Int, onGo: (Int) -> Unit, onDismiss: () ->
         dismissButton = { TextButton(onClick = onDismiss) { Text("Annuler") } },
     )
 }
+
+/**
+ * Pincer pour zoomer. Le geste est lu AVANT la liste des pages (passe « Initial ») : sinon la
+ * liste, qui defile, le consomme et le pincement marche mal.
+ */
+private fun Modifier.pinchToZoom(onZoom: (factor: Float, centroid: Offset) -> Unit): Modifier =
+    pointerInput(Unit) {
+        awaitEachGesture {
+            awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
+            do {
+                val event = awaitPointerEvent(PointerEventPass.Initial)
+                if (event.changes.count { it.pressed } >= 2) {
+                    val zoom = event.calculateZoom()
+                    if (zoom != 1f && !zoom.isNaN()) onZoom(zoom, event.calculateCentroid(useCurrent = true))
+                    event.changes.forEach { if (it.positionChanged()) it.consume() }
+                }
+            } while (event.changes.any { it.pressed })
+        }
+    }

@@ -78,6 +78,17 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
 
     override suspend fun share(path: String, name: String) = Unit
 
+    override suspend fun backupOriginal(sourceRef: String, name: String): String? = withContext(Dispatchers.IO) {
+        val original = File(sourceRef)
+        if (!original.isFile) return@withContext null
+        // A cote de l'original : « Facture_miaou.pdf ». Si elle existe deja, c'est la toute
+        // premiere version : on la garde telle quelle.
+        val backup = File(original.parentFile, "${original.nameWithoutExtension}_miaou.pdf")
+        if (backup.exists()) return@withContext null
+        original.copyTo(backup)
+        backup.name
+    }
+
     private val prefs = java.util.prefs.Preferences.userRoot().node("app/nougat/pdf")
 
     override fun loadSetting(key: String): String? = prefs.get(key, null)

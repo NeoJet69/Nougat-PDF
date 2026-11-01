@@ -172,6 +172,9 @@ class ViewerState(
     var pagesGrid = LazyGridState()
         private set
 
+    /** Fichiers d'origine deja sauvegardes (« _miaou ») pendant cette utilisation. */
+    private val backedUp = HashSet<String>()
+
     // Versions precedentes du document, pour « Annuler ».
     private val history = ArrayList<Version>()
     private var historySize by mutableStateOf(0)
@@ -487,6 +490,18 @@ class ViewerState(
         val s = session ?: return false
         if (s.path == savedPath) return true
         busyMessage = "Enregistrement…"
+        // La premiere fois, l'original est d'abord mis a l'abri : « Nom_miaou.pdf ».
+        var backup: String? = null
+        if (s.sourceRef !in backedUp) {
+            backup = try {
+                files.backupOriginal(s.sourceRef, s.name)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Throwable) {
+                null
+            }
+            backedUp.add(s.sourceRef)
+        }
         val ok = try {
             files.overwrite(s.path, s.sourceRef)
         } catch (e: CancellationException) {
@@ -498,7 +513,7 @@ class ViewerState(
         }
         if (ok) {
             savedPath = s.path
-            toast = "Enregistré"
+            toast = if (backup != null) "Enregistré · l'original est gardé dans « $backup »" else "Enregistré"
             return true
         }
         return saveAsNow()
