@@ -20,11 +20,13 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
-      - name: Tests
-        run: ./gradlew :shared:desktopTest --console=plain
       - name: APK Android
         run: ./gradlew :androidApp:assembleRelease --console=plain
+      - name: Tests
+        if: always()
+        run: ./gradlew :shared:desktopTest --console=plain
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: nougat-pdf-android
           path: androidApp/build/outputs/apk/release/*.apk

@@ -87,7 +87,7 @@ private fun handleShortcut(event: KeyEvent, state: ViewerState, openDialog: () -
             Key.Equals, Key.Plus, Key.NumPadAdd -> session.zoomIn()
             Key.Minus, Key.NumPadSubtract -> session.zoomOut()
             Key.Zero, Key.NumPad0 -> session.resetZoom()
-            Key.Home -> session.goToPage(0)
+            Key.MoveHome -> session.goToPage(0)
             Key.MoveEnd -> session.goToPage(session.pageCount - 1)
             else -> return false
         }

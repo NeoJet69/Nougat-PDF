@@ -24,6 +24,10 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
         }
+        getByName("desktopTest").dependencies {
+            // Bibliotheque graphique native de Compose, pour rendre des pages pendant les tests.
+            implementation(compose.desktop.currentOs)
+        }
         getByName("desktopMain").dependencies {
             implementation(libs.pdfbox)
             implementation(libs.kotlinx.coroutines.swing)
