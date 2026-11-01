@@ -11,7 +11,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont
 import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts
-import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceStream
 import org.apache.pdfbox.text.PDFTextStripper
 import java.io.File
 import kotlin.io.path.createTempDirectory
@@ -100,7 +100,7 @@ class DesktopTextEditTest {
             cs.beginText()
             cs.setFont(helvetica, 14f)
             cs.newLineAtOffset(72f, 700f)
-            cs.showTextWithPositioning(arrayOf("Fac", -40f, "ture", 25f, " 2023"))
+            cs.showTextWithPositioning(arrayOf<Any>("Fac", -40f, "ture", 25f, " 2023"))
             cs.endText()
             cs.line(helveticaBold, 14f, 300f, 700f, "Total : 120")
         }
@@ -174,7 +174,8 @@ class DesktopTextEditTest {
         PDDocument().use { doc ->
             val page = PDPage(PDRectangle.A4)
             doc.addPage(page)
-            val form = PDFormXObject(doc).apply {
+            // PDAppearanceStream est un PDFormXObject (formulaire) sur lequel PDFBox sait ecrire.
+            val form = PDAppearanceStream(doc).apply {
                 bBox = PDRectangle.A4
                 resources = PDResources()
             }
