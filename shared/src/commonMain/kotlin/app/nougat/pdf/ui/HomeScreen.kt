@@ -94,17 +94,30 @@ fun HomeScreen(
                 GradientButton("Choisir un PDF", onClick = onOpenFile, icon = NougatIcons.Folder)
             }
 
-            // Creer un PDF
+            // Creer un PDF (cote a cote sur grand ecran, l'une sous l'autre sur telephone)
             Spacer(Modifier.height(14.dp))
-            Row(Modifier.widthIn(max = 620.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                CreateCard(
-                    NougatIcons.Image,
-                    if (platform.isDesktop) "Images → PDF" else "Photos → PDF",
-                    if (platform.isDesktop) "Une page par image" else "Une page par photo",
-                    Modifier.weight(1f),
-                    onClick = state::createPdfFromImages,
-                )
-                CreateCard(NougatIcons.NewDocument, "Document vierge", "Une page A4 à remplir", Modifier.weight(1f), onClick = state::createBlankPdf)
+            @Composable
+            fun FromImages(modifier: Modifier) = CreateCard(
+                NougatIcons.Image,
+                if (platform.isDesktop) "Images → PDF" else "Photos → PDF",
+                if (platform.isDesktop) "Une page par image" else "Une page par photo",
+                modifier,
+                onClick = state::createPdfFromImages,
+            )
+
+            @Composable
+            fun Blank(modifier: Modifier) =
+                CreateCard(NougatIcons.NewDocument, "Document vierge", "Une page A4 à remplir", modifier, onClick = state::createBlankPdf)
+            if (compact) {
+                Column(Modifier.widthIn(max = 620.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    FromImages(Modifier.fillMaxWidth())
+                    Blank(Modifier.fillMaxWidth())
+                }
+            } else {
+                Row(Modifier.widthIn(max = 620.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    FromImages(Modifier.weight(1f))
+                    Blank(Modifier.weight(1f))
+                }
             }
 
             Spacer(Modifier.height(22.dp))
