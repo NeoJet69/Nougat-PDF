@@ -3,6 +3,6 @@
     <style name="Theme.Nougat" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/nougat_cream</item>
     </style>
-    <color name="nougat_cream">#FFFFF8F0</color>
+    <color name="nougat_cream">#FFFAFAFA</color>
     <color name="nougat_icon_background">#FFFFE7CF</color>
 </resources>

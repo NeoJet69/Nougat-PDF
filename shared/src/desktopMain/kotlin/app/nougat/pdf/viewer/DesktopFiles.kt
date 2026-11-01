@@ -1,0 +1,70 @@
+package app.nougat.pdf.viewer
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.apache.pdfbox.Loader
+import org.apache.pdfbox.printing.PDFPageable
+import java.awt.FileDialog
+import java.awt.Frame
+import java.awt.print.PrinterJob
+import java.io.File
+import java.nio.file.Files
+
+/** Fichiers sur ordinateur : boites de dialogue Windows, copies, impression. */
+class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
+
+    override val tempDir: String = Files.createTempDirectory("nougat-pdf").toFile().apply { deleteOnExit() }.absolutePath
+
+    override fun copy(src: String, dst: String) {
+        File(src).copyTo(File(dst), overwrite = true)
+    }
+
+    override fun delete(path: String) {
+        val f = File(path)
+        if (!f.delete()) f.deleteOnExit()
+    }
+
+    override suspend fun overwrite(path: String, sourceRef: String): Boolean = withContext(Dispatchers.IO) {
+        runCatching { File(path).copyTo(File(sourceRef), overwrite = true) }.isSuccess
+    }
+
+    override suspend fun saveAs(path: String, suggestedName: String): SavedFile? {
+        val target = chooseFile("Enregistrer sous", FileDialog.SAVE, suggestedName) ?: return null
+        val fixed = if (target.name.lowercase().endsWith(".pdf")) target else File(target.parentFile, target.name + ".pdf")
+        withContext(Dispatchers.IO) { File(path).copyTo(fixed, overwrite = true) }
+        return SavedFile(fixed.absolutePath, fixed.name)
+    }
+
+    override suspend fun pickPdf(): SavedFile? {
+        val file = chooseFile("Choisir un PDF", FileDialog.LOAD, "*.pdf") ?: return null
+        return SavedFile(file.absolutePath, file.name)
+    }
+
+    /** Fenetre « Ouvrir » / « Enregistrer » native, limitee aux PDF. */
+    fun chooseFile(title: String, mode: Int, fileName: String): File? {
+        val dialog = FileDialog(frame(), title, mode).apply {
+            file = fileName
+            setFilenameFilter { _, name -> name.lowercase().endsWith(".pdf") }
+            isVisible = true
+        }
+        val name = dialog.file ?: return null
+        return File(dialog.directory, name)
+    }
+
+    override val canPrint: Boolean = true
+
+    override suspend fun print(path: String, password: String?, name: String) {
+        withContext(Dispatchers.IO) {
+            Loader.loadPDF(File(path), password ?: "").use { doc ->
+                val job = PrinterJob.getPrinterJob()
+                job.jobName = name
+                job.setPageable(PDFPageable(doc))
+                if (job.printDialog()) job.print()
+            }
+        }
+    }
+
+    override val canShare: Boolean = false
+
+    override suspend fun share(path: String, name: String) = Unit
+}

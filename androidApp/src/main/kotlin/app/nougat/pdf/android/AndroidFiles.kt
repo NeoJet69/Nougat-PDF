@@ -1,0 +1,96 @@
+package app.nougat.pdf.android
+
+import android.app.Application
+import android.net.Uri
+import android.provider.OpenableColumns
+import app.nougat.pdf.viewer.PlatformFiles
+import app.nougat.pdf.viewer.SavedFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import java.io.File
+import kotlin.coroutines.resume
+
+/** Ce que seule l'activite sait faire (boites de dialogue du systeme, impression, partage). */
+interface ActivityHost {
+    fun createDocument(suggestedName: String, onResult: (Uri?) -> Unit)
+    fun openDocument(onResult: (Uri?) -> Unit)
+    fun print(path: String, name: String)
+    fun share(file: File, name: String)
+}
+
+/** Fichiers sur Android : adresses « content:// » du selecteur de fichiers, copies dans le cache. */
+class AndroidFiles(private val app: Application) : PlatformFiles {
+    /** L'activite au premier plan (null pendant une rotation de l'ecran). */
+    var host: ActivityHost? = null
+
+    override val tempDir: String = File(app.cacheDir, "travail").apply { mkdirs() }.absolutePath
+    private val openedDir = File(app.cacheDir, "ouverts").apply { mkdirs() }
+
+    override fun copy(src: String, dst: String) {
+        File(src).copyTo(File(dst), overwrite = true)
+    }
+
+    override fun delete(path: String) {
+        File(path).delete()
+    }
+
+    override suspend fun overwrite(path: String, sourceRef: String): Boolean = withContext(Dispatchers.IO) {
+        if (!sourceRef.startsWith("content://")) return@withContext false
+        val uri = Uri.parse(sourceRef)
+        for (mode in listOf("wt", "rwt", "w")) {
+            val ok = runCatching {
+                app.contentResolver.openOutputStream(uri, mode)!!.use { out -> File(path).inputStream().use { it.copyTo(out) } }
+            }.isSuccess
+            if (ok) return@withContext true
+        }
+        false
+    }
+
+    override suspend fun saveAs(path: String, suggestedName: String): SavedFile? {
+        val h = host ?: return null
+        val uri = suspendCancellableCoroutine<Uri?> { cont -> h.createDocument(suggestedName) { cont.resume(it) } } ?: return null
+        withContext(Dispatchers.IO) {
+            app.contentResolver.openOutputStream(uri, "w")!!.use { out -> File(path).inputStream().use { it.copyTo(out) } }
+        }
+        return SavedFile(uri.toString(), displayName(uri) ?: suggestedName)
+    }
+
+    override suspend fun pickPdf(): SavedFile? {
+        val h = host ?: return null
+        val uri = suspendCancellableCoroutine<Uri?> { cont -> h.openDocument { cont.resume(it) } } ?: return null
+        return copyToCache(uri)
+    }
+
+    /** Copie privee d'un fichier choisi, que PDFBox et PdfRenderer savent lire. */
+    suspend fun copyToCache(uri: Uri, keep: String? = null): SavedFile = withContext(Dispatchers.IO) {
+        openedDir.listFiles()?.filter { it.absolutePath != keep && it.lastModified() < System.currentTimeMillis() - 60_000 }?.forEach { it.delete() }
+        val target = File(openedDir, "document-${System.nanoTime()}.pdf")
+        val input = app.contentResolver.openInputStream(uri) ?: error("Fichier introuvable")
+        input.use { src -> target.outputStream().use { dst -> src.copyTo(dst) } }
+        SavedFile(uri.toString(), displayName(uri) ?: "document.pdf", target.absolutePath)
+    }
+
+    fun displayName(uri: Uri): String? = runCatching {
+        app.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
+            if (c.moveToFirst()) c.getString(0) else null
+        }
+    }.getOrNull() ?: uri.lastPathSegment?.substringAfterLast('/')
+
+    override val canPrint: Boolean = true
+
+    override suspend fun print(path: String, password: String?, name: String) {
+        host?.print(path, name)
+    }
+
+    override val canShare: Boolean = true
+
+    override suspend fun share(path: String, name: String) {
+        val dir = File(app.cacheDir, "partage").apply { mkdirs() }
+        dir.listFiles()?.forEach { it.delete() }
+        val safeName = name.replace(Regex("[\\\\/:*?\"<>|]"), "_").let { if (it.lowercase().endsWith(".pdf")) it else "$it.pdf" }
+        val copy = File(dir, safeName)
+        withContext(Dispatchers.IO) { File(path).copyTo(copy, overwrite = true) }
+        host?.share(copy, safeName)
+    }
+}

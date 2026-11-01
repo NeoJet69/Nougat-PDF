@@ -4,9 +4,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
+import app.nougat.pdf.engine.Mark
 import app.nougat.pdf.engine.PageText
 import app.nougat.pdf.engine.PdfDocument
 import app.nougat.pdf.engine.SearchHit
@@ -20,13 +22,32 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-/** Un document ouvert : pages, zoom, recherche. */
+/**
+ * Un document ouvert : pages, zoom, recherche, annotations en attente.
+ * [path] est le fichier lu (souvent une copie de travail) ; [sourceRef] l'endroit ou enregistrer.
+ */
 class DocumentSession(
-    val name: String,
+    name: String,
     val path: String,
+    sourceRef: String,
+    /** Mot de passe du fichier [path], s'il est protege. */
+    val password: String?,
     val document: PdfDocument,
     parentScope: CoroutineScope,
 ) {
+    var name by mutableStateOf(name)
+        private set
+    var sourceRef by mutableStateOf(sourceRef)
+        private set
+
+    fun rename(newName: String, newSourceRef: String) {
+        name = newName
+        sourceRef = newSourceRef
+    }
+
+    /** Annotations ajoutees mais pas encore gravees dans le PDF. */
+    val marks = mutableStateListOf<Mark>()
+
     private val scope = CoroutineScope(parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext[Job]))
 
     val pageCount: Int get() = document.pageCount
@@ -40,13 +61,13 @@ class DocumentSession(
     var zoom by mutableFloatStateOf(1f)
         private set
 
-    fun setZoom(value: Float) {
+    fun updateZoom(value: Float) {
         zoom = value.coerceIn(MIN_ZOOM, MAX_ZOOM)
     }
 
-    fun zoomIn() = setZoom(nextStep(up = true))
-    fun zoomOut() = setZoom(nextStep(up = false))
-    fun resetZoom() = setZoom(1f)
+    fun zoomIn() = updateZoom(nextStep(up = true))
+    fun zoomOut() = updateZoom(nextStep(up = false))
+    fun resetZoom() = updateZoom(1f)
 
     private fun nextStep(up: Boolean): Float {
         val steps = ZOOM_STEPS
@@ -89,6 +110,18 @@ class DocumentSession(
         bitmaps.put(page, widthPx, image)
         return image
     }
+
+    private val thumbnails = BitmapCache(maxEntries = 120)
+
+    /** Vignette (pour l'ecran des pages). */
+    suspend fun thumbnail(page: Int, widthPx: Int): ImageBitmap {
+        thumbnails.get(page, widthPx)?.let { return it }
+        val image = document.renderPage(page, widthPx)
+        thumbnails.put(page, widthPx, image)
+        return image
+    }
+
+    fun cachedThumbnail(page: Int): ImageBitmap? = thumbnails.anyFor(page)
 
     // ---- Recherche ---------------------------------------------------------------------------
 
@@ -201,6 +234,7 @@ class DocumentSession(
     fun close() {
         scope.cancel()
         bitmaps.clear()
+        thumbnails.clear()
         runCatching { document.close() }
     }
 

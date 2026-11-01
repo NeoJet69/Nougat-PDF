@@ -12,6 +12,13 @@ interface PdfEngine {
      * @throws PasswordRequiredException si le PDF est protege et que [password] est absent ou faux.
      */
     suspend fun open(path: String, password: String? = null): PdfDocument
+
+    /**
+     * Ouvre [src] pour modification, applique [block] puis enregistre le resultat dans [dst].
+     * Le fichier [src] n'est jamais modifie. Un PDF protege le reste (meme mot de passe),
+     * sauf si [block] change le mot de passe.
+     */
+    suspend fun edit(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit)
 }
 
 interface PdfDocument : AutoCloseable {

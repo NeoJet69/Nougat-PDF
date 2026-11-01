@@ -28,6 +28,15 @@ class DesktopPdfEngine : PdfEngine {
         }
         DesktopPdfDocument(doc)
     }
+
+    override suspend fun edit(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit) =
+        withContext(Dispatchers.IO) {
+            try {
+                editWithPdfBox(src, password, dst, block)
+            } catch (e: InvalidPasswordException) {
+                throw PasswordRequiredException(wrongPassword = password != null)
+            }
+        }
 }
 
 private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {

@@ -32,7 +32,9 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -66,13 +68,33 @@ fun NougatApp(state: ViewerState, platform: PlatformInfo, onOpenFile: () -> Unit
                 if (session == null) {
                     HomeScreen(platform, onOpenFile)
                 } else {
-                    // Tout l'etat de l'ecran repart de zero pour chaque document.
+                    // Tout l'etat de l'ecran repart de zero pour chaque version du document.
                     key(session) {
-                        ViewerScreen(session, platform, onOpenFile, onClose = state::closeDocument)
+                        if (state.pagesOpen) {
+                            PagesScreen(state, session)
+                        } else {
+                            ViewerScreen(state, session, platform, onOpenFile = { state.runAfterConfirm(onOpenFile) })
+                        }
                     }
                 }
 
-                state.loadingName?.let { LoadingOverlay(it) }
+                state.toast?.let { message ->
+                    LaunchedEffect(message) {
+                        delay(2500)
+                        state.dismissToast()
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        contentColor = MaterialTheme.colorScheme.inverseOnSurface,
+                        shadowElevation = 6.dp,
+                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 72.dp),
+                    ) {
+                        Text(message, modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp))
+                    }
+                }
+
+                state.busyMessage?.let { LoadingOverlay(it) }
                 state.passwordPrompt?.let { prompt ->
                     PasswordDialog(
                         fileName = prompt.name,
@@ -80,6 +102,9 @@ fun NougatApp(state: ViewerState, platform: PlatformInfo, onOpenFile: () -> Unit
                         onSubmit = state::submitPassword,
                         onDismiss = state::dismissPassword,
                     )
+                }
+                if (state.confirmDiscard != null) {
+                    ConfirmSaveDialog(session?.name ?: "Le document", state::answerConfirm)
                 }
                 state.errorMessage?.let { message ->
                     AlertDialog(
@@ -106,7 +131,7 @@ private fun HomeScreen(platform: PlatformInfo, onOpenFile: () -> Unit) {
         Text("Nougat PDF", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.height(6.dp))
         Text(
-            "Lisez vos PDF, gratuitement et sans Internet.",
+            "Lisez, annotez, signez et modifiez vos PDF.\nGratuit et sans Internet.",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
         )
@@ -141,7 +166,7 @@ private fun LoadingOverlay(name: String) {
             Column(Modifier.padding(28.dp).widthIn(max = 320.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator()
                 Spacer(Modifier.height(16.dp))
-                Text("Ouverture de « $name »…", textAlign = TextAlign.Center)
+                Text(name, textAlign = TextAlign.Center)
             }
         }
     }

@@ -1,8 +1,27 @@
 # Nougat PDF 🐱
 
-Un lecteur (et bientôt éditeur) de PDF **gratuit**, **hors ligne**, pour **Windows** et **Android**.
+Un lecteur et éditeur de PDF **gratuit**, **hors ligne**, pour **Windows** et **Android**.
 
-## Étape 1 : le lecteur (fait)
+## Modifier un PDF
+
+Bouton **Modifier** en haut à droite, puis choisir un outil dans la barre du bas :
+
+- **Stylo** et **Surligneur** (plusieurs couleurs)
+- **Texte** : toucher la page pour écrire ; toucher un texte ajouté pour le modifier
+- **Masquer** : tracer un rectangle blanc pour cacher un texte, puis écrire par-dessus avec l'outil Texte
+- **Signature** : la dessiner une fois, puis toucher la page pour la poser
+- **Gomme** : toucher une annotation pour l'effacer
+- **Annuler** (Ctrl+Z) : annule la dernière annotation ou la dernière opération
+
+**Pages** (icône grille) : pivoter, déplacer, supprimer, extraire dans un nouveau fichier,
+ajouter une page blanche ou un autre PDF à la fin.
+
+Menu **⋮** : enregistrer, enregistrer sous, imprimer, partager (Android),
+protéger par mot de passe ou retirer le mot de passe.
+
+Tout est gravé dans le PDF à l'enregistrement : il s'ouvre ensuite dans n'importe quel lecteur.
+
+## Lire
 
 - Ouvrir un PDF : bouton « Ouvrir », glisser-déposer (Windows), « Ouvrir avec » (Windows et Android)
 - Faire défiler les pages, zoomer (boutons, Ctrl + molette, pincer avec les doigts)
@@ -16,6 +35,10 @@ Un lecteur (et bientôt éditeur) de PDF **gratuit**, **hors ligne**, pour **Win
 | Touche | Action |
 |---|---|
 | Ctrl + O | Ouvrir un PDF |
+| Ctrl + S / Ctrl + Maj + S | Enregistrer / Enregistrer sous |
+| Ctrl + E | Mode modification |
+| Ctrl + Z | Annuler |
+| Ctrl + P | Imprimer |
 | Ctrl + F | Rechercher (Entrée = suivant, Maj + Entrée = précédent, Échap = fermer) |
 | F3 | Résultat suivant |
 | Ctrl + + / Ctrl + − / Ctrl + 0 | Zoomer / dézoomer / 100 % |
@@ -23,12 +46,11 @@ Un lecteur (et bientôt éditeur) de PDF **gratuit**, **hors ligne**, pour **Win
 | Ctrl + Début / Ctrl + Fin | Première / dernière page |
 | Ctrl + W | Fermer le document |
 
-## Prochaines étapes
+## Prochaines idées
 
-2. Organiser les pages : fusionner, découper, réordonner, pivoter, supprimer
-3. Annoter et signer
-4. Créer des PDF à partir de photos, compresser, protéger par mot de passe
-5. Remplir les formulaires, OCR
+- Créer un PDF à partir de photos, compresser
+- Remplir les formulaires PDF, OCR
+- Déplacer / redimensionner une annotation après l'avoir posée
 
 ## Installer
 

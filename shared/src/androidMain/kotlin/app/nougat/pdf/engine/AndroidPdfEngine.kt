@@ -42,6 +42,15 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
         }
     }
 
+    override suspend fun edit(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit) =
+        withContext(Dispatchers.IO) {
+            try {
+                editWithPdfBoxAndroid(src, password, dst, block)
+            } catch (_: InvalidPasswordException) {
+                throw PasswordRequiredException(wrongPassword = password != null)
+            }
+        }
+
     private fun openEncrypted(file: File, password: String?): PdfDocument {
         val decrypted = File(appContext.cacheDir, "dechiffre-${System.nanoTime()}.pdf")
         try {
