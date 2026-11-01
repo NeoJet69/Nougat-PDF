@@ -37,6 +37,9 @@ enum class TextEditResult {
     /** Le texte a ete reecrit avec la police d'origine. */
     SameFont,
 
+    /** La police embarquee etait incomplete : la meme police, installee sur l'ordinateur, a ete utilisee. */
+    InstalledFont,
+
     /** La police d'origine ne contenait pas ces caracteres : une police standard proche a ete utilisee. */
     SimilarFont,
 }

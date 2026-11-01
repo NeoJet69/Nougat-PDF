@@ -328,6 +328,7 @@ class ViewerState(
             if (ok) {
                 toast = when (result) {
                     TextEditResult.SimilarFont -> "Texte modifié (police proche : l'originale ne contient pas ces caractères)"
+                    TextEditResult.InstalledFont -> "Texte modifié (police d'origine installée sur cet ordinateur)"
                     else -> "Texte modifié"
                 }
             }

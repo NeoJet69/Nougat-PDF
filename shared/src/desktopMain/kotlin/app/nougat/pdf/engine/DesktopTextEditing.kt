@@ -13,7 +13,9 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDResources
 import org.apache.pdfbox.pdmodel.common.PDStream
+import org.apache.pdfbox.pdmodel.font.FontMappers
 import org.apache.pdfbox.pdmodel.font.PDFont
+import org.apache.pdfbox.pdmodel.font.PDType0Font
 import org.apache.pdfbox.pdmodel.font.PDType1Font
 import org.apache.pdfbox.pdmodel.font.PDType3Font
 import org.apache.pdfbox.pdmodel.font.PDVectorFont
@@ -67,10 +69,46 @@ internal fun replaceTextWithPdfBox(doc: PDDocument, block: TextBlock, newText: S
     val text = newText.replace('\n', ' ').replace('\t', ' ')
 
     val same = sameFontReplacement(font, text, anchorOp)
-    val replacement = same ?: otherFontReplacement(page, font, text, anchorOp)
+    val installed = if (same == null) installedFontReplacement(doc, page, font, text, anchorOp) else null
+    val replacement = same ?: installed ?: otherFontReplacement(page, font, text, anchorOp)
     val plan = TextEditPlanner.plan(result.analysis, target, replacement)
     rewriteContent(doc, page, plan)
-    return if (same != null) TextEditResult.SameFont else TextEditResult.SimilarFont
+    return when {
+        same != null -> TextEditResult.SameFont
+        installed != null -> TextEditResult.InstalledFont
+        else -> TextEditResult.SimilarFont
+    }
+}
+
+/**
+ * La police d'origine est embarquee partiellement, mais elle est peut-etre installee sur
+ * l'ordinateur (Arial, Calibri, Times New Roman...) : on l'embarque alors en entier pour
+ * ecrire le nouveau texte a l'identique.
+ */
+private fun installedFontReplacement(doc: PDDocument, page: PDPage, original: PDFont, text: String, op: AnalyzedTextOp): Replacement.OtherFont? {
+    if (op.fontResource == null) return null
+    val baseName = original.name?.substringAfter('+')?.takeIf { it.isNotBlank() } ?: return null
+    val mapping = runCatching { FontMappers.instance().getTrueTypeFont(baseName, original.fontDescriptor) }.getOrNull()
+        ?: return null
+    if (mapping.isFallback) return null
+    val ttf = mapping.font ?: return null
+    val font = runCatching { PDType0Font.load(doc, ttf, true) }.getOrNull() ?: return null
+    val bytes = ByteArrayOutputStream()
+    var width = 0f
+    var i = 0
+    while (i < text.length) {
+        val cp = text.codePointAt(i)
+        val ch = String(Character.toChars(cp))
+        i += ch.length
+        val encoded = runCatching { font.encode(ch) }.getOrNull() ?: return null
+        val code = runCatching { font.readCode(ByteArrayInputStream(encoded)) }.getOrNull() ?: return null
+        if (!runCatching { font.hasGlyph(code) }.getOrDefault(false)) return null
+        font.addToSubset(cp)
+        width += (font.getWidth(code) / 1000f * op.fontSize + op.charSpacing) * op.hScale
+        bytes.write(encoded)
+    }
+    val resources = page.resources ?: PDResources().also { page.resources = it }
+    return Replacement.OtherFont(resources.add(font).name, bytes.toByteArray(), width)
 }
 
 /** Le nouveau texte dans la police d'origine, ou null si elle n'a pas toutes les lettres necessaires. */
@@ -235,7 +273,8 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
         if (depth == 0) {
             opIndex++
             topName = operator.name
-            topOperands = operands
+            // Copie : PDFBox reutilise (et vide) la liste apres chaque operateur.
+            topOperands = operands.toList()
             segment = -1
             when (operator.name) {
                 "q" -> fontStack.add(fontResource)

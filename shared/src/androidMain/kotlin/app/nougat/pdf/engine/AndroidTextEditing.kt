@@ -233,7 +233,8 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
         if (depth == 0) {
             opIndex++
             topName = operator.name
-            topOperands = operands
+            // Copie : PDFBox reutilise (et vide) la liste apres chaque operateur.
+            topOperands = operands.toList()
             segment = -1
             when (operator.name) {
                 "q" -> fontStack.add(fontResource)

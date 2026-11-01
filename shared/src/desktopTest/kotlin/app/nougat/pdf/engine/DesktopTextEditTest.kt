@@ -144,7 +144,8 @@ class DesktopTextEditTest {
             cs.line(helvetica, 14f, 72f, 700f, "Bonjour Nougat")
         }
         val (out, _) = replace(path, "Nougat", "Bonjour Caramel")
-        assertTrue("Bonjour Caramel" in text(out))
+        // Sur une page pivotee, l'extraction de PDFBox coupe les lignes : on compare sans les blancs.
+        assertTrue("BonjourCaramel" in text(out).filterNot { it.isWhitespace() }, text(out))
     }
 
     @Test
@@ -162,9 +163,9 @@ class DesktopTextEditTest {
         val (same, sameMode) = replace(path, "Prix", "Prix 210")
         assertEquals(TextEditResult.SameFont, sameMode)
         assertTrue("Prix 210" in text(same), text(same))
-        // Le 9 n'y est pas : police standard proche.
+        // Le 9 n'y est pas : la police installee sur la machine, sinon une police standard proche.
         val (other, otherMode) = replace(path, "Prix", "Prix 999")
-        assertEquals(TextEditResult.SimilarFont, otherMode)
+        assertTrue(otherMode == TextEditResult.InstalledFont || otherMode == TextEditResult.SimilarFont, "$otherMode")
         assertTrue("Prix 999" in text(other), text(other))
     }
 
