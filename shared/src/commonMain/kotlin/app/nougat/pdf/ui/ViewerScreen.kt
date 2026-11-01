@@ -137,6 +137,7 @@ fun ViewerScreen(
     Column(Modifier.fillMaxSize()) {
         BoxWithConstraints {
             val wide = maxWidth > 720.dp
+            val narrow = maxWidth <= 480.dp
             TopAppBar(
                 title = {
                     Column {
@@ -154,10 +155,10 @@ fun ViewerScreen(
                 actions = {
                     if (wide) ZoomControls(session)
                     IconButton(onClick = session::openSearch) { Icon(Icons.Filled.Search, contentDescription = "Rechercher") }
-                    if (maxWidth > 480.dp) {
+                    if (!narrow) {
                         IconButton(onClick = { state.pagesOpen = true }) { Icon(NougatIcons.Pages, contentDescription = "Pages") }
                     }
-                    EditToggle(active = tools.editing, compact = maxWidth <= 480.dp) { tools.editing = !tools.editing }
+                    EditToggle(active = tools.editing, compact = narrow) { tools.editing = !tools.editing }
                     if (state.modified) {
                         IconButton(onClick = state::save) {
                             Icon(NougatIcons.Save, contentDescription = "Enregistrer", tint = MaterialTheme.colorScheme.primary)
