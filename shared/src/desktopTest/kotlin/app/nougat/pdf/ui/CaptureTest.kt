@@ -18,6 +18,7 @@ import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.runBlocking
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -29,6 +30,7 @@ import org.jetbrains.skia.EncodedImageFormat
 import java.awt.Color
 import java.io.File
 import kotlin.io.path.createTempDirectory
+import kotlin.math.sin
 import kotlin.test.Test
 
 /**
@@ -47,14 +49,10 @@ class CaptureTest {
         val desktop = PlatformInfo(isDesktop = true)
         val phone = PlatformInfo(isDesktop = false)
         shot("1-accueil", 1440, 900, 1f, desktop)
-        shot("2-lecture", 1440, 900, 1f, desktop) { it.openSample() }
-        shot("3-editer", 1440, 900, 1f, desktop) { it.openSample(); it.tools.enter(DockMode.Edit) }
-        shot("4-annoter-sombre", 1440, 900, 1f, desktop, dark = true) {
-            it.openSample()
-            it.tools.enter(DockMode.Annotate)
-        }
-        shot("5-claude", 1440, 900, 1f, desktop) {
-            it.openSample()
+        shot("2-lecture", 1440, 900, 1f, desktop, withDocument = true)
+        shot("3-editer", 1440, 900, 1f, desktop, withDocument = true) { it.tools.enter(DockMode.Edit) }
+        shot("4-annoter-sombre", 1440, 900, 1f, desktop, dark = true, withDocument = true) { it.annotateDemo() }
+        shot("5-claude", 1440, 900, 1f, desktop, withDocument = true) {
             it.saveAssistantSettings("sk-ant-demo", AssistantModels.DEFAULT)
             it.assistant.open = true
             it.assistant.items.addAll(
@@ -67,16 +65,42 @@ class CaptureTest {
                 ),
             )
         }
-        shot("6-pages", 1440, 900, 1f, desktop) { it.openSample(); it.pagesOpen = true }
+        shot("6-pages", 1440, 900, 1f, desktop, withDocument = true) { it.pagesOpen = true; it.pageSelection = setOf(1) }
         shot("7-telephone-accueil", 412, 892, 2f, phone)
-        shot("8-telephone-lecture", 412, 892, 2f, phone) { it.openSample() }
-        shot("9-telephone-annoter-sombre", 412, 892, 2f, phone, dark = true) {
-            it.openSample()
-            it.tools.enter(DockMode.Annotate)
+        shot("8-telephone-lecture", 412, 892, 2f, phone, withDocument = true)
+        shot("9-telephone-annoter-sombre", 412, 892, 2f, phone, dark = true, withDocument = true) { it.annotateDemo() }
+        shot("10-telephone-editer", 412, 892, 2f, phone, withDocument = true) { state ->
+            state.tools.enter(DockMode.Edit)
+            val session = state.session ?: error("Pas de document")
+            val block = runBlocking { session.textBlocks(0) }.first { it.text.startsWith("Client") }
+            session.startEditing(block)
+            session.editingText = "Client : Marie Nougat"
         }
+        shot("11-telephone-accueil-sombre", 412, 892, 2f, phone, dark = true)
     }
 
-    private fun ViewerState.openSample() = open(sample, "Facture-2023-042.pdf")
+    /** Quelques annotations visibles : un trait sous le total et un surlignage sur la date. */
+    private fun ViewerState.annotateDemo() {
+        tools.enter(DockMode.Annotate)
+        val marks = session?.marks ?: return
+        marks.add(
+            InkMark(
+                page = 0,
+                points = (0..40).map { i -> NPoint(0.565f + i * 0.0068f, 0.379f + sin(i / 2.6).toFloat() * 0.0035f) },
+                argb = 0xFF1E5BD8.toInt(),
+                width = 2.5f,
+            ),
+        )
+        marks.add(
+            InkMark(
+                page = 0,
+                points = listOf(NPoint(0.08f, 0.159f), NPoint(0.265f, 0.159f)),
+                argb = 0xFFFFE14D.toInt(),
+                width = 14f,
+                opacity = 0.4f,
+            ),
+        )
+    }
 
     private fun shot(
         name: String,
@@ -85,6 +109,8 @@ class CaptureTest {
         density: Float,
         platform: PlatformInfo,
         dark: Boolean = false,
+        /** Ouvrir la facture d'exemple (et attendre qu'elle soit ouverte) avant [setup]. */
+        withDocument: Boolean = false,
         setup: (ViewerState) -> Unit = {},
     ) {
         val files = FakeFiles(dir)
@@ -92,7 +118,6 @@ class CaptureTest {
         // Auto -> Clair -> Sombre
         state.cycleTheme()
         if (dark) state.cycleTheme()
-        setup(state)
         val scene = ImageComposeScene(
             width = (widthDp * density).toInt(),
             height = (heightDp * density).toInt(),
@@ -101,14 +126,22 @@ class CaptureTest {
             NougatApp(state, platform, onOpenFile = {})
         }
         try {
-            // Laisser le temps d'ouvrir le PDF, de dessiner les pages et les miniatures.
             var time = 0L
-            repeat(45) {
+            fun frame() {
                 scene.render(time)
                 time += 50_000_000L
-                Thread.sleep(70)
-                if (it == 20) state.session?.marks?.let { marks -> if (dark && marks.isEmpty()) marks.add(demoInk()) }
+                Thread.sleep(60)
             }
+            if (withDocument) {
+                // L'ouverture remet l'ecran a zero (pages, Claude…) : on attend qu'elle soit finie.
+                state.open(sample, "Facture-2023-042.pdf")
+                val deadline = System.currentTimeMillis() + 30_000
+                while ((state.session == null || state.busyMessage != null) && System.currentTimeMillis() < deadline) frame()
+                check(state.session != null && state.busyMessage == null) { "La facture d'exemple ne s'est pas ouverte" }
+            }
+            setup(state)
+            // Laisser le temps de dessiner les pages, les miniatures et finir les animations.
+            repeat(40) { frame() }
             val image = scene.render(time)
             val png = image.encodeToData(EncodedImageFormat.PNG) ?: error("Image vide")
             File(out, "$name.png").writeBytes(png.bytes)
@@ -116,13 +149,6 @@ class CaptureTest {
             scene.close()
         }
     }
-
-    private fun demoInk() = InkMark(
-        page = 0,
-        points = (0..30).map { i -> NPoint(0.1f + i * 0.012f, 0.53f + kotlin.math.sin(i / 3.0).toFloat() * 0.01f) },
-        argb = 0xFF1E5BD8.toInt(),
-        width = 2.5f,
-    )
 
     private object NoAssistant : AssistantEngine {
         override suspend fun send(userText: String, settings: AssistantSettings, toolbox: AssistantToolbox, onItem: (ChatItem) -> Unit) = Unit

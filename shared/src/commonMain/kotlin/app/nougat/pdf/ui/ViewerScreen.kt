@@ -111,6 +111,9 @@ import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+/** Ilot du document le plus etroit qu'on accepte avant de deplacer la navigation sous la page. */
+private val MinDocumentIsland = 220.dp
+
 /** Largeur d'une page a 100 % : la largeur disponible, sans depasser cette valeur. */
 private val MaxPageWidth = 900.dp
 private val PageGap = 22.dp
@@ -154,13 +157,31 @@ fun ViewerScreen(
         val railWidth = if (showRail) 112.dp else 0.dp
         val assistantWidth = if (sideAssistant) 424.dp else 0.dp
 
+        // Ilots du haut : le document a gauche, les actions a droite et, au-dessus de la page, la
+        // navigation (ou la recherche) si elle tient sans rien chevaucher ; sinon elle passe dessous.
+        val pageCenter = railWidth + (maxWidth - railWidth - assistantWidth) / 2
+        val rightEdge = maxWidth - 12.dp - assistantWidth
+        val centerHalf = if (session.searchOpen) 280.dp else 180.dp
+        val baseActions = 12.dp + 48.dp + if (state.canUndo) 48.dp else 0.dp
+        val fullActions = baseActions + if (state.modified) 194.dp else 0.dp
+        val iconActions = baseActions + if (state.modified) 48.dp else 0.dp
+        fun centerFits(actions: Dp) = !compact &&
+            pageCenter - centerHalf - 24.dp >= MinDocumentIsland &&
+            pageCenter + centerHalf + 12.dp <= rightEdge - actions
+        val compactActions = compact || (!centerFits(fullActions) && centerFits(iconActions))
+        val actionsWidth = if (compactActions) iconActions else fullActions
+        val centerOnTop = centerFits(actionsWidth)
+        val navInDock = session.searchOpen || !centerOnTop
+        val searchBelow = session.searchOpen && !centerOnTop
+        val documentMax = if (centerOnTop) pageCenter - centerHalf - 24.dp else rightEdge - actionsWidth - 24.dp
+
         // Le document
         Box(Modifier.fillMaxSize().padding(start = railWidth, end = assistantWidth)) {
             PageList(
                 session = session,
                 state = state,
                 inlineEditor = platform.isDesktop,
-                topPadding = topSpace + if (session.searchOpen && compact) 64.dp else 0.dp,
+                topPadding = topSpace + if (searchBelow) 64.dp else 0.dp,
                 bottomPadding = 170.dp,
                 onTextRequest = { textRequest = it },
                 onSignatureNeeded = { page, at ->
@@ -175,19 +196,30 @@ fun ViewerScreen(
         }
 
         // Ilots du haut
-        Box(Modifier.fillMaxWidth().padding(12.dp).align(Alignment.TopCenter)) {
-            DocumentIsland(state, session, compact, onOpenFile, onProtect = { askPassword = true }, modifier = Modifier.align(Alignment.TopStart))
+        Row(
+            Modifier.fillMaxWidth().padding(start = 12.dp, top = 12.dp, end = 12.dp + assistantWidth),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
+        ) {
+            DocumentIsland(
+                state, session,
+                showMascot = !compact && documentMax >= 360.dp,
+                onOpenFile = onOpenFile,
+                onProtect = { askPassword = true },
+                modifier = Modifier.weight(1f, fill = false).widthIn(max = documentMax.coerceAtLeast(MinDocumentIsland)),
+            )
+            Spacer(Modifier.width(12.dp))
+            ActionsIsland(state, session, compactActions, modifier = Modifier)
+        }
+        Box(
+            Modifier.fillMaxWidth()
+                .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = if (searchBelow) 76.dp else 12.dp),
+        ) {
             if (session.searchOpen) {
-                SearchIsland(
-                    session,
-                    Modifier.align(if (compact) Alignment.TopStart else Alignment.TopCenter)
-                        .padding(top = if (compact) 64.dp else 0.dp)
-                        .then(if (compact) Modifier.fillMaxWidth() else Modifier.widthIn(max = 560.dp)),
-                )
-            } else if (!compact) {
+                SearchIsland(session, Modifier.align(Alignment.TopCenter).widthIn(max = 560.dp).then(if (compact) Modifier.fillMaxWidth() else Modifier))
+            } else if (centerOnTop) {
                 NavigationIsland(session, onAskPage = { askPage = true }, modifier = Modifier.align(Alignment.TopCenter))
             }
-            ActionsIsland(state, session, compact, modifier = Modifier.align(Alignment.TopEnd).padding(end = assistantWidth))
         }
 
         // Le dock et le plateau d'outils du mode
@@ -195,7 +227,7 @@ fun ViewerScreen(
             state = state,
             session = session,
             compact = compact,
-            showPagePill = compact,
+            navInDock = navInDock,
             onAskPage = { askPage = true },
             onChangeSignature = { tools.signature = null; state.showToast("Touchez la page pour dessiner une nouvelle signature") },
             modifier = Modifier.align(Alignment.BottomCenter).padding(start = railWidth, end = assistantWidth, bottom = 14.dp),
@@ -268,7 +300,7 @@ fun ViewerScreen(
 private fun DocumentIsland(
     state: ViewerState,
     session: DocumentSession,
-    compact: Boolean,
+    showMascot: Boolean,
     onOpenFile: () -> Unit,
     onProtect: () -> Unit,
     modifier: Modifier,
@@ -276,11 +308,12 @@ private fun DocumentIsland(
     val p = LocalNougatPalette.current
     Island(modifier) {
         IslandButton(Icons.Filled.Close, "Fermer le document", onClick = { state.runAfterConfirm(state::closeDocument) })
-        if (!compact) {
+        if (showMascot) {
             NougatMascot(Modifier.size(34.dp), animated = false)
             Spacer(Modifier.width(8.dp))
         }
-        Column(Modifier.widthIn(max = if (compact) 150.dp else 300.dp).padding(end = 4.dp)) {
+        // Le nom retrecit (avec « … ») si la place manque : l'ilot ne deborde jamais sur les autres.
+        Column(Modifier.weight(1f, fill = false).widthIn(max = 300.dp).padding(end = 4.dp)) {
             Text(session.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("${session.pageCount} page${if (session.pageCount > 1) "s" else ""}", style = MaterialTheme.typography.labelMedium, color = p.muted)
@@ -433,7 +466,8 @@ private fun ViewerDock(
     state: ViewerState,
     session: DocumentSession,
     compact: Boolean,
-    showPagePill: Boolean,
+    /** La navigation n'a pas de place en haut : en mode Lire, elle s'affiche au-dessus du dock. */
+    navInDock: Boolean,
     onAskPage: () -> Unit,
     onChangeSignature: () -> Unit,
     modifier: Modifier,
@@ -442,13 +476,13 @@ private fun ViewerDock(
     val mode = tools.mode
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         AnimatedVisibility(
-            visible = mode != DockMode.Read || showPagePill,
+            visible = mode != DockMode.Read || navInDock,
             enter = fadeIn() + slideInVertically { it / 2 },
             exit = fadeOut() + slideOutVertically { it / 2 },
         ) {
             Box(Modifier.padding(bottom = 10.dp)) {
                 when (mode) {
-                    DockMode.Read -> PagePill(session, onAskPage)
+                    DockMode.Read -> if (compact) PagePill(session, onAskPage) else NavigationIsland(session, onAskPage, Modifier)
                     DockMode.Edit -> HintTray(
                         if (session.editingBlock == null) "Touchez une ligne encadrée pour modifier son texte"
                         else "Modifiez puis validez — le style d'origine est conservé",
@@ -509,32 +543,56 @@ private fun SignTray(hasSignature: Boolean, onChange: () -> Unit) {
 @Composable
 private fun AnnotateTray(state: ViewerState, compact: Boolean) {
     val tools = state.tools
-    val colors = MaterialTheme.colorScheme
-    Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) {
-        if (compact) TrayTool(NougatIcons.Hand, Tool.Pan, state)
-        TrayTool(NougatIcons.Pen, Tool.Pen, state)
-        TrayTool(NougatIcons.Highlighter, Tool.Highlighter, state)
-        TrayTool(NougatIcons.Text, Tool.Text, state)
-        TrayTool(NougatIcons.Whiteout, Tool.Whiteout, state)
-        TrayTool(NougatIcons.Eraser, Tool.Eraser, state)
-        if (tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)) {
-            IslandDivider()
-            val palette = if (tools.tool == Tool.Highlighter) InkColors.highlighter else InkColors.pen
-            for (c in palette) {
-                val selected = c == tools.color
-                Box(
-                    Modifier
-                        .padding(horizontal = 4.dp)
-                        .size(if (selected) 30.dp else 24.dp)
-                        .clip(CircleShape)
-                        .background(Color(c))
-                        .border(if (selected) 3.dp else 1.dp, if (selected) colors.primary else colors.outline, CircleShape)
-                        .clickable { tools.setColor(c) },
-                )
+    val withColors = tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)
+    if (compact) {
+        // Telephone : les couleurs dans un petit ilot au-dessus des outils, rien n'est coupe.
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            if (withColors) {
+                Island(shape = RoundedCornerShape(50), padding = 6.dp, scrollable = true) { ColorDots(state) }
+                Spacer(Modifier.height(8.dp))
             }
-            Spacer(Modifier.width(4.dp))
+            Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) { TrayTools(state, withPan = true) }
+        }
+    } else {
+        Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) {
+            TrayTools(state, withPan = false)
+            if (withColors) {
+                IslandDivider()
+                ColorDots(state)
+            }
         }
     }
+}
+
+@Composable
+private fun TrayTools(state: ViewerState, withPan: Boolean) {
+    if (withPan) TrayTool(NougatIcons.Hand, Tool.Pan, state)
+    TrayTool(NougatIcons.Pen, Tool.Pen, state)
+    TrayTool(NougatIcons.Highlighter, Tool.Highlighter, state)
+    TrayTool(NougatIcons.Text, Tool.Text, state)
+    TrayTool(NougatIcons.Whiteout, Tool.Whiteout, state)
+    TrayTool(NougatIcons.Eraser, Tool.Eraser, state)
+}
+
+@Composable
+private fun ColorDots(state: ViewerState) {
+    val tools = state.tools
+    val colors = MaterialTheme.colorScheme
+    val palette = if (tools.tool == Tool.Highlighter) InkColors.highlighter else InkColors.pen
+    Spacer(Modifier.width(2.dp))
+    for (c in palette) {
+        val selected = c == tools.color
+        Box(Modifier.size(38.dp).clip(CircleShape).clickable { tools.setColor(c) }, contentAlignment = Alignment.Center) {
+            Box(
+                Modifier
+                    .size(if (selected) 30.dp else 24.dp)
+                    .clip(CircleShape)
+                    .background(Color(c))
+                    .border(if (selected) 3.dp else 1.dp, if (selected) colors.primary else colors.outline, CircleShape),
+            )
+        }
+    }
+    Spacer(Modifier.width(2.dp))
 }
 
 @Composable

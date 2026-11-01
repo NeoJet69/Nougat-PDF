@@ -80,17 +80,19 @@ fun Island(
     content: @Composable RowScope.() -> Unit,
 ) {
     val p = LocalNougatPalette.current
-    Row(
-        modifier
-            .shadow(20.dp, shape, ambientColor = p.shadow, spotColor = p.shadow)
-            .clip(shape)
-            .background(p.island)
-            .border(1.dp, p.islandBorder, shape)
-            .then(if (scrollable) Modifier.horizontalScroll(rememberScrollState()) else Modifier)
-            .padding(padding),
-        verticalAlignment = Alignment.CenterVertically,
-        content = content,
-    )
+    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurface) {
+        Row(
+            modifier
+                .shadow(20.dp, shape, ambientColor = p.shadow, spotColor = p.shadow)
+                .clip(shape)
+                .background(p.island)
+                .border(1.dp, p.islandBorder, shape)
+                .then(if (scrollable) Modifier.horizontalScroll(rememberScrollState()) else Modifier)
+                .padding(padding),
+            verticalAlignment = Alignment.CenterVertically,
+            content = content,
+        )
+    }
 }
 
 /** Grand bouton rond pour les ilots (cible de 48 dp, icone de 24 dp). */

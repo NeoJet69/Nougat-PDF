@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -42,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.nougat.pdf.viewer.DocumentSession
 import app.nougat.pdf.viewer.ViewerState
@@ -72,29 +75,39 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
             }
         }
 
-        // En haut : retour, titre, tout selectionner, annuler
-        Island(Modifier.align(Alignment.TopStart).padding(12.dp)) {
-            IslandButton(Icons.AutoMirrored.Filled.ArrowBack, "Retour au document", onClick = { state.pagesOpen = false })
-            Column(Modifier.padding(horizontal = 6.dp)) {
-                Text(
-                    if (any) "${selected.size} sélectionnée${if (selected.size > 1) "s" else ""}" else "Pages",
-                    style = MaterialTheme.typography.titleSmall,
-                )
-                Text(
-                    if (any) "sur $count" else "Touchez des pages pour les choisir",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = p.muted,
-                )
+        // En haut : retour, titre, tout selectionner, annuler (sur une ligne, sans chevauchement)
+        Row(
+            Modifier.fillMaxWidth().padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top,
+        ) {
+            Island(Modifier.weight(1f, fill = false)) {
+                IslandButton(Icons.AutoMirrored.Filled.ArrowBack, "Retour au document", onClick = { state.pagesOpen = false })
+                Column(Modifier.weight(1f, fill = false).padding(horizontal = 6.dp)) {
+                    Text(
+                        if (any) "${selected.size} sélectionnée${if (selected.size > 1) "s" else ""}" else "Pages",
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                    )
+                    Text(
+                        if (any) "sur $count" else "Touchez des pages pour les choisir",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = p.muted,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
-        }
-        Island(Modifier.align(Alignment.TopEnd).padding(12.dp)) {
-            IslandButton(
-                NougatIcons.SelectAll,
-                if (selected.size == count) "Tout désélectionner" else "Tout sélectionner",
-                onClick = { selected = if (selected.size == count) emptySet() else (0 until count).toSet() },
-                active = selected.size == count && count > 0,
-            )
-            IslandButton(NougatIcons.Undo, "Annuler", onClick = state::undo, enabled = state.canUndo)
+            Spacer(Modifier.width(12.dp))
+            Island {
+                IslandButton(
+                    NougatIcons.SelectAll,
+                    if (selected.size == count) "Tout désélectionner" else "Tout sélectionner",
+                    onClick = { selected = if (selected.size == count) emptySet() else (0 until count).toSet() },
+                    active = selected.size == count && count > 0,
+                )
+                IslandButton(NougatIcons.Undo, "Annuler", onClick = state::undo, enabled = state.canUndo)
+            }
         }
 
         // En bas : les actions

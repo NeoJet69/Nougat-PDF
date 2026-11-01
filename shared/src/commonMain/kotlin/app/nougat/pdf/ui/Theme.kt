@@ -2,6 +2,7 @@ package app.nougat.pdf.ui
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
@@ -179,12 +180,11 @@ fun NougatTheme(mode: ThemeMode = ThemeMode.Auto, content: @Composable () -> Uni
         ThemeMode.Light -> false
         ThemeMode.Dark -> true
     }
+    val scheme = if (dark) Dark else Light
     CompositionLocalProvider(LocalNougatPalette provides if (dark) DarkPalette else LightPalette) {
-        MaterialTheme(
-            colorScheme = if (dark) Dark else Light,
-            shapes = NougatShapes,
-            typography = NougatTypography,
-            content = content,
-        )
+        MaterialTheme(colorScheme = scheme, shapes = NougatShapes, typography = NougatTypography) {
+            // Sans « Surface », le texte serait noir par defaut : illisible en theme sombre.
+            CompositionLocalProvider(LocalContentColor provides scheme.onBackground, content = content)
+        }
     }
 }
