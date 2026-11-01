@@ -6,9 +6,16 @@ Un lecteur et éditeur de PDF **gratuit**, **hors ligne**, pour **Windows** et *
 
 Bouton **Modifier** en haut à droite, puis choisir un outil dans la barre du bas :
 
+- **Éditer** : modifier le texte déjà présent dans le PDF. Les lignes modifiables sont
+  encadrées ; toucher une ligne ouvre un champ posé dessus (Entrée pour valider, Échap pour annuler).
+  Le texte est réécrit au même endroit, dans la même taille et la même couleur, avec **la police
+  d'origine** quand elle contient les lettres tapées. Sinon : la même police si elle est installée
+  sur l'ordinateur (Windows), ou la police standard la plus proche (Helvetica, Times, Courier,
+  en gras / italique selon l'original). Le reste de la page ne bouge pas.
 - **Stylo** et **Surligneur** (plusieurs couleurs)
 - **Texte** : toucher la page pour écrire ; toucher un texte ajouté pour le modifier
-- **Masquer** : tracer un rectangle blanc pour cacher un texte, puis écrire par-dessus avec l'outil Texte
+- **Masquer** : tracer un rectangle blanc pour cacher une zone (utile pour le texte qu'« Éditer »
+  ne peut pas modifier : texte dans une image scannée, dans un formulaire...)
 - **Signature** : la dessiner une fois, puis toucher la page pour la poser
 - **Gomme** : toucher une annotation pour l'effacer
 - **Annuler** (Ctrl+Z) : annule la dernière annotation ou la dernière opération
