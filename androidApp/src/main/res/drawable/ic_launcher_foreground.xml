@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nougat, le chat (memes formes que NougatIcons.NougatLogo), reduit pour la zone visible des icones Android. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.62"
+        android:scaleY="0.62"
+        android:translateY="-2">
+        <path android:fillColor="#8A5226" android:pathData="M20,52 L26,12 L52,34 Z M88,52 L82,12 L56,34 Z" />
+        <path android:fillColor="#E89AA4" android:pathData="M28,44 L31,22 L45,34 Z M80,44 L77,22 L63,34 Z" />
+        <path android:fillColor="#B0703A" android:pathData="M16,62 A38,32 0 1,1 92,62 A38,32 0 1,1 16,62 Z" />
+        <path android:fillColor="#FFF8F0" android:pathData="M36,76 A18,13 0 1,1 72,76 A18,13 0 1,1 36,76 Z" />
+        <path android:fillColor="#3B2A20" android:pathData="M35,60 A5,6.5 0 1,1 45,60 A5,6.5 0 1,1 35,60 Z M63,60 A5,6.5 0 1,1 73,60 A5,6.5 0 1,1 63,60 Z" />
+        <path android:fillColor="#FFFFFF" android:pathData="M40,57.8 A1.6,1.6 0 1,1 43.2,57.8 A1.6,1.6 0 1,1 40,57.8 Z M68,57.8 A1.6,1.6 0 1,1 71.2,57.8 A1.6,1.6 0 1,1 68,57.8 Z" />
+        <path android:fillColor="#E89AA4" android:pathData="M49,70 L59,70 L54,76 Z" />
+        <path
+            android:strokeColor="#3B2A20"
+            android:strokeWidth="2"
+            android:strokeLineCap="round"
+            android:pathData="M54,76 L54,80 M54,80 C51,84 47,83 46,80 M54,80 C57,84 61,83 62,80 M36,74 L14,70 M36,78 L15,80 M72,74 L94,70 M72,78 L93,80" />
+    </group>
+</vector>
