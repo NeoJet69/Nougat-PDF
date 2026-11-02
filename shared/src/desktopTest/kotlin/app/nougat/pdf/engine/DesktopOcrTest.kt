@@ -104,6 +104,17 @@ class DesktopOcrTest {
     }
 
     @Test
+    fun readsAPhotoWithAShadow() {
+        // Sans la correction de l'eclairage, Tesseract n'y lit rien du tout.
+        val dst = File(dir, "photo-lue.pdf").absolutePath
+        assertEquals(1, recognize(makeSamplePhoto(File(dir, "photo.pdf")), dst).recognized)
+        val found = text(dst).split(Regex("\\s+")).toSet()
+        val words = SCAN_PAGE_1.flatMap { it.text.split(" ") }
+        val read = words.count { it in found }
+        assertTrue(read >= words.size * 0.9, "$read mots lus sur ${words.size} :\n${text(dst)}")
+    }
+
+    @Test
     fun againDoesNothingAndRedoReplaces() {
         val once = File(dir, "une-fois.pdf").absolutePath
         recognize(scan(), once)

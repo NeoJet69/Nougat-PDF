@@ -102,3 +102,44 @@ internal fun makeSampleScan(file: File, skewDegrees: Double = 1.2, upsideDownSec
     }
     return file.absolutePath
 }
+
+/**
+ * Une photo de la page 1 prise au telephone : 150 dpi, eclairage inegal (coin sombre), ombre
+ * de la main sur la gauche, encre grise, bruit et JPEG tres compresse.
+ */
+internal fun makeSamplePhoto(file: File): String {
+    val clean = PDDocument()
+    val page = PDPage(PDRectangle.A4)
+    clean.addPage(page)
+    val helv = PDType1Font(Standard14Fonts.FontName.HELVETICA)
+    val times = PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN)
+    PDPageContentStream(clean, page).use { cs ->
+        for ((i, l) in SCAN_PAGE_1.withIndex()) {
+            cs.beginText(); cs.setFont(if (i % 3 == 2) times else helv, l.size); cs.newLineAtOffset(l.x, l.baseline); cs.showText(l.text); cs.endText()
+        }
+    }
+    val image = PDFRenderer(clean).renderImageWithDPI(0, 150f, ImageType.RGB)
+    clean.close()
+    val w = image.width
+    val h = image.height
+    val random = Random(7)
+    val photo = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+    for (y in 0 until h) for (x in 0 until w) {
+        val ink = 1f - (image.getRGB(x, y) and 0xFF) / 255f
+        val dx = x / w.toFloat() - 0.4f
+        val dy = y / h.toFloat() - 0.25f
+        val shadow = 0.55f + 0.45f / (1f + kotlin.math.exp(-(x / w.toFloat() - 0.32f) * 18f))
+        val light = (1f - 0.55f * kotlin.math.sqrt(dx * dx + dy * dy)) * shadow
+        val noise = random.nextInt(-10, 11)
+        fun ch(paper: Float, inkTone: Float) = ((paper * (1 - ink) + inkTone * ink) * light + noise).toInt().coerceIn(0, 255)
+        photo.setRGB(x, y, (ch(232f, 70f) shl 16) or (ch(226f, 66f) shl 8) or ch(210f, 72f))
+    }
+    PDDocument().use { doc ->
+        val p = PDPage(PDRectangle.A4)
+        doc.addPage(p)
+        val jpeg = JPEGFactory.createFromImage(doc, photo, 0.45f)
+        PDPageContentStream(doc, p).use { it.drawImage(jpeg, 0f, 0f, PDRectangle.A4.width, PDRectangle.A4.height) }
+        doc.save(file)
+    }
+    return file.absolutePath
+}

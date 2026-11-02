@@ -205,7 +205,7 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
             Button(
                 enabled = languages.isNotEmpty(),
                 onClick = {
-                    state.setOcrLanguages(languages)
+                    state.chooseOcrLanguages(languages)
                     state.recognizeText(currentOnly, autoRotate, redo)
                 },
             ) { Text(tr(Str.OcrStart)) }

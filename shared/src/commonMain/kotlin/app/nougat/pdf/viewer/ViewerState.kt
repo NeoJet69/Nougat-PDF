@@ -683,7 +683,7 @@ class ViewerState(
     )
         private set
 
-    fun setOcrLanguages(languages: List<String>) {
+    fun chooseOcrLanguages(languages: List<String>) {
         ocrLanguages = languages
         runCatching { files.saveSetting(SETTING_OCR_LANGUAGES, languages.joinToString(",")) }
     }

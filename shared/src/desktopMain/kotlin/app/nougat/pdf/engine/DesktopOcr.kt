@@ -112,7 +112,7 @@ internal class Tesseract(dataDir: File, languages: String) : AutoCloseable {
     }
 
     fun recognize(image: BufferedImage, dpi: Int): OcrResult {
-        val gray = toGray(image)
+        val gray = evenLighting(toGray(image))
         val data = (gray.raster.dataBuffer as DataBufferByte).data
         api.SetImage(data, gray.width, gray.height, 1, gray.width)
         api.SetSourceResolution(dpi)
@@ -183,6 +183,79 @@ internal fun toGray(image: BufferedImage): BufferedImage {
     g.drawImage(image, 0, 0, null)
     g.dispose()
     return gray
+}
+
+/**
+ * Corrige l'eclairage d'un scan ou d'une photo : ombre de la main ou du telephone, coin plus
+ * sombre, papier jauni. On estime la teinte du papier case par case (les pixels les plus clairs,
+ * pour ignorer l'encre), on la lisse, puis on divise chaque pixel par elle : le papier devient
+ * blanc partout et l'encre garde son contraste. Sur une photo avec une ombre, Tesseract passe
+ * ainsi de rien (ou presque) a quasiment tout. Les zones sombres (bandeau colore, photo) ne sont pas
+ * du papier : on n'y touche pas, le texte clair sur fond fonce reste lisible.
+ */
+internal fun evenLighting(gray: BufferedImage): BufferedImage {
+    val w = gray.width
+    val h = gray.height
+    val src = (gray.raster.dataBuffer as DataBufferByte).data
+    if (src.size < w * h) return gray
+    val cell = max(8, min(w, h) / 60)
+    val gw = (w + cell - 1) / cell
+    val gh = (h + cell - 1) / cell
+    val paper = FloatArray(gw * gh)
+    val hist = IntArray(256)
+    for (gy in 0 until gh) for (gx in 0 until gw) {
+        hist.fill(0)
+        var n = 0
+        for (y in gy * cell until min(h, (gy + 1) * cell)) for (x in gx * cell until min(w, (gx + 1) * cell)) {
+            hist[src[y * w + x].toInt() and 0xFF]++
+            n++
+        }
+        // Le 90e centile : le papier, meme dans une case pleine de texte.
+        var seen = 0
+        var v = 255
+        while (v > 0) {
+            seen += hist[v]
+            if (seen >= n / 10) break
+            v--
+        }
+        paper[gy * gw + gx] = v.toFloat()
+    }
+    val sorted = paper.sortedArray()
+    val pageLevel = sorted[min(sorted.size - 1, (sorted.size * 0.9).toInt())]
+    if (pageLevel < 40f) return gray // page presque noire : rien a corriger
+    for (i in paper.indices) if (paper[i] < pageLevel * 0.4f) paper[i] = pageLevel
+    // Lisser (le papier varie doucement) ; garder le plus clair evite d'assombrir le bord des lettres.
+    repeat(2) {
+        val copy = paper.copyOf()
+        for (gy in 0 until gh) for (gx in 0 until gw) {
+            var sum = 0f
+            var k = 0
+            for (yy in max(0, gy - 1)..min(gh - 1, gy + 1)) for (xx in max(0, gx - 1)..min(gw - 1, gx + 1)) {
+                sum += copy[yy * gw + xx]
+                k++
+            }
+            paper[gy * gw + gx] = max(copy[gy * gw + gx], sum / k)
+        }
+    }
+    val out = BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY)
+    val dst = (out.raster.dataBuffer as DataBufferByte).data
+    for (y in 0 until h) {
+        val fy = ((y + 0.5f) / cell - 0.5f).coerceIn(0f, gh - 1f)
+        val y0 = fy.toInt()
+        val y1 = min(gh - 1, y0 + 1)
+        val ty = fy - y0
+        for (x in 0 until w) {
+            val fx = ((x + 0.5f) / cell - 0.5f).coerceIn(0f, gw - 1f)
+            val x0 = fx.toInt()
+            val x1 = min(gw - 1, x0 + 1)
+            val tx = fx - x0
+            val level = (paper[y0 * gw + x0] * (1 - tx) + paper[y0 * gw + x1] * tx) * (1 - ty) +
+                (paper[y1 * gw + x0] * (1 - tx) + paper[y1 * gw + x1] * tx) * ty
+            val v = (src[y * w + x].toInt() and 0xFF) / max(level, 1f)
+            dst[y * w + x] = (min(1f, v) * 255f).roundToInt().toByte()
+        }
+    }
+    return out
 }
 
 /** Tourne l'image de [quarter] quarts de tour dans le sens des aiguilles d'une montre. */
