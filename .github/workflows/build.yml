@@ -44,6 +44,9 @@ jobs:
           NOUGAT_KEY_ALIAS: ${{ secrets.NOUGAT_KEY_ALIAS }}
           NOUGAT_KEY_PASSWORD: ${{ secrets.NOUGAT_KEY_PASSWORD }}
         run: ./gradlew :androidApp:assembleRelease --console=plain
+      - name: Police chinoise (captures d'écran : 中文)
+        if: always()
+        run: sudo apt-get install -y --no-install-recommends fonts-noto-cjk || echo "Police chinoise non installée"
       - name: Tests
         if: always()
         run: ./gradlew :shared:desktopTest --console=plain

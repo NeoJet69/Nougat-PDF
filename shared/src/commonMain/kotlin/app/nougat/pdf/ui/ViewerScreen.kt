@@ -560,11 +560,24 @@ private fun PagePill(session: DocumentSession, onAskPage: () -> Unit) {
 /** « Document scanne : le texte n'est pas encore reconnu » + bouton. */
 @Composable
 private fun ScanBanner(pages: Int, compact: Boolean, onRecognize: () -> Unit, onClose: () -> Unit, modifier: Modifier) {
+    if (compact) {
+        // Telephone : le texte sur toute la largeur, le bouton dessous.
+        Island(modifier.fillMaxWidth(), shape = RoundedCornerShape(24.dp), padding = 8.dp) {
+            GradientBadge(NougatIcons.Scan, Modifier.align(Alignment.Top), size = 36.dp, iconSize = 20.dp)
+            Column(Modifier.weight(1f).padding(start = 10.dp, top = 2.dp)) {
+                Text(trn(Str.ScanBanner, pages), style = MaterialTheme.typography.labelLarge)
+                Spacer(Modifier.height(8.dp))
+                GradientButton(tr(Str.ScanBannerButton), onClick = onRecognize, height = 38.dp)
+            }
+            IslandButton(Icons.Filled.Close, tr(Str.Close), onClick = onClose, Modifier.align(Alignment.Top), size = 36.dp, iconSize = 18.dp)
+        }
+        return
+    }
     Island(modifier.widthIn(max = 640.dp), shape = RoundedCornerShape(26.dp), padding = 6.dp) {
         GradientBadge(NougatIcons.Scan, size = 36.dp, iconSize = 20.dp)
         Text(
             trn(Str.ScanBanner, pages),
-            style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.weight(1f, fill = false).padding(horizontal = 10.dp),
         )
         GradientButton(tr(Str.ScanBannerButton), onClick = onRecognize, height = 40.dp)

@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -186,10 +187,21 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     for ((code, name) in OCR_LANGUAGES) {
                         if (code !in state.ocrLanguageChoices) continue
+                        val selected = code in languages
                         FilterChip(
-                            selected = code in languages,
-                            onClick = { languages = if (code in languages) languages - code else languages + code },
+                            selected = selected,
+                            onClick = { languages = if (selected) languages - code else languages + code },
                             label = { Text(name) },
+                            leadingIcon = if (selected) {
+                                { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
+                            } else {
+                                null
+                            },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary,
+                                selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+                            ),
                         )
                     }
                 }
