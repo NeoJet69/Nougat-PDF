@@ -268,4 +268,24 @@ ChooseImages = Alege imagini
 RecentNotFound = „{0}” nu a fost găsit: poate a fost mutat sau șters.
 ShareTitle = Distribuie „{0}”
 CannotReadFile = Acest fișier nu poate fi citit.\n{0}
+
+RecognizeText = Recunoaște textul (OCR)
+FeatOcr = Text din scanări (OCR)
+ScanBanner = {0} pagină scanată: textul ei nu e încă recunoscut.|{0} pagini scanate: textul lor nu e încă recunoscut.|{0} de pagini scanate: textul lor nu e încă recunoscut.
+ScanBannerButton = Recunoaște textul
+OcrExplain = Nougat citește textul paginilor scanate și îl așază, invizibil, peste imagine: apoi poți căuta, copia, i-l poți da lui Claude să-l citească și poți modifica textul. Pagina arată la fel. Totul se face pe acest computer, fără internet.
+OcrLanguages = Limbile documentului
+OcrPagesAll = Tot documentul
+OcrPagesCurrent = Doar pagina afișată
+OcrAutoRotate = Îndreaptă paginile culcate sau cu susul în jos
+OcrRedo = Refă paginile deja recunoscute
+OcrStart = Recunoaște
+OcrPreparing = Se pregătește recunoașterea…
+OcrProgress = Se recunoaște textul… pagina {0} din {1}
+OcrDone = Text recunoscut pe {0} pagină|Text recunoscut pe {0} pagini|Text recunoscut pe {0} de pagini
+OcrRotated = , {0} pagină îndreptată|, {0} pagini îndreptate|, {0} de pagini îndreptate
+OcrNothing = Nimic de recunoscut: aceste pagini conțin deja text.
+OcrStopped = Recunoaștere oprită
+TextChangedScan = Textul scanării a fost rescris cu fontul cel mai asemănător
+ActRecognize = Recunoaște textul paginilor scanate
 """

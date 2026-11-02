@@ -102,6 +102,12 @@ class DocumentSession(
     /** Le PDF est un formulaire : les champs sont mis en evidence en mode Lire. */
     var hasForm by mutableStateOf(false)
 
+    /** Pages scannees dont le texte n'est pas encore reconnu (bandeau « Reconnaitre le texte »). */
+    var ocrPages by mutableStateOf(0)
+
+    /** Le bandeau de l'OCR a ete ferme pour ce document. */
+    var ocrBannerClosed by mutableStateOf(false)
+
     /** Champ en cours de saisie (formulaire). */
     var editingField: FormField? by mutableStateOf(null)
     var editingFieldText by mutableStateOf("")

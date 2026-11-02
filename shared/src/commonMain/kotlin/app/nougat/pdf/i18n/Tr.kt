@@ -267,4 +267,24 @@ ChooseImages = Görsel seç
 RecentNotFound = “{0}” bulunamadı: taşınmış veya silinmiş olabilir.
 ShareTitle = “{0}” paylaş
 CannotReadFile = Bu dosya okunamıyor.\n{0}
+
+RecognizeText = Metni tanı (OCR)
+FeatOcr = Taranmış metin (OCR)
+ScanBanner = Taranmış {0} sayfanın metni henüz tanınmadı.
+ScanBannerButton = Metni tanı
+OcrExplain = Nougat taranmış sayfaların metnini okur ve görüntünün üzerine görünmez olarak yerleştirir: sonra arayabilir, kopyalayabilir, Claude'a okutabilir ve metni değiştirebilirsiniz. Sayfa aynı görünür. Her şey bu bilgisayarda, İnternet olmadan yapılır.
+OcrLanguages = Belgenin dilleri
+OcrPagesAll = Tüm belge
+OcrPagesCurrent = Yalnızca görüntülenen sayfa
+OcrAutoRotate = Yan ya da ters duran sayfaları düzelt
+OcrRedo = Tanınmış sayfaları yeniden yap
+OcrStart = Tanı
+OcrPreparing = Tanıma hazırlanıyor…
+OcrProgress = Metin tanınıyor… sayfa {0} / {1}
+OcrDone = {0} sayfada metin tanındı
+OcrRotated = , {0} sayfa düzeltildi
+OcrNothing = Tanınacak bir şey yok: bu sayfalarda zaten metin var.
+OcrStopped = Tanıma durduruldu
+TextChangedScan = Taranmış metin en benzer yazı tipiyle yeniden yazıldı
+ActRecognize = Taranmış sayfaların metnini tanıyor
 """

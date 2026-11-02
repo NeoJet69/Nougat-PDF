@@ -29,6 +29,7 @@ Ce que tu peux faire avec les outils :
 - replace_text : remplacer le texte d'une ligne existante. Le texte est réécrit au même endroit, dans la même police, la même taille et la même couleur. C'est l'outil à préférer pour corriger, traduire ou changer un texte.
 - add_text, cover_area, highlight_text : ajouter du texte, masquer une zone (rectangle blanc), surligner une ligne.
 - rotate_pages, delete_pages, move_page, insert_blank_page, go_to_page : organiser les pages et naviguer.
+- recognize_text : reconnaitre le texte des pages scannees (OCR, sans Internet). Si read_page ne trouve pas de texte sur une page qui en montre (scan, photo), lance recognize_text, puis relis la page : les lignes deviennent lisibles ET modifiables avec replace_text (Nougat efface l'image de la ligne et la reecrit dans la police la plus ressemblante).
 - list_form_fields, fill_form_field : remplir un formulaire PDF (champs à remplir, cases à cocher, listes). Pour un formulaire, commence toujours par list_form_fields ; si le document n'a pas de champs, écris avec add_text aux bons endroits.
 
 Règles :
@@ -133,6 +134,12 @@ Règles :
             listOf("page"),
         ),
         ToolSpec(
+            "recognize_text",
+            "Reconnait le texte des pages scannees (OCR) et l'ajoute au document, invisible sur l'image. Ensuite read_page, search_text et replace_text fonctionnent sur ces pages. Sans « page », tout le document.",
+            mapOf("page" to int("Numéro de page (1 = première) ; absent = tout le document")),
+            emptyList(),
+        ),
+        ToolSpec(
             "list_form_fields",
             "Liste les champs du formulaire PDF : nom (name, à passer à fill_form_field), libellé, page, type, valeur actuelle et choix possibles.",
             emptyMap(),
@@ -162,6 +169,7 @@ Règles :
             "move_page" -> tr(Str.ActMove)
             "insert_blank_page" -> tr(Str.ActInsertBlank)
             "go_to_page" -> tr(Str.ActGoTo, p)
+            "recognize_text" -> tr(Str.ActRecognize)
             "list_form_fields" -> tr(Str.ActListFields)
             "fill_form_field" -> tr(Str.ActFillField, short(input["name"]), short(input["value"]))
             else -> name
@@ -188,6 +196,7 @@ Règles :
                 s.goToPage(p)
                 ToolOutput.Text("Page ${p + 1} affichée.")
             }
+            "recognize_text" -> recognizeText(s, input)
             "list_form_fields" -> listFormFields(s)
             "fill_form_field" -> fillFormField(s, input.string("name"), input.string("value", allowEmpty = true))
             else -> throw ToolError("Outil inconnu : $name")
@@ -198,6 +207,21 @@ Règles :
         ToolOutput.Text(e.message ?: "Erreur", isError = true)
     } catch (e: Throwable) {
         ToolOutput.Text("Erreur : ${e.message ?: e::class.simpleName}", isError = true)
+    }
+
+    // ---- Reconnaissance de texte -------------------------------------------------------------------
+
+    private suspend fun recognizeText(s: DocumentSession, input: Map<String, Any?>): ToolOutput {
+        if (!state.canOcr) throw ToolError("La reconnaissance de texte n'est pas disponible sur cet appareil.")
+        val pages = if (input["page"] != null) listOf(page(s, input)) else null
+        val summary = state.recognizeTextAwait(pages)
+            ?: return ToolOutput.Text("Rien à reconnaître : ces pages contiennent déjà du texte (ou ont déjà été reconnues).")
+        return ToolOutput.Text(
+            "Texte reconnu sur ${summary.recognized} page(s), ${summary.words} mots" +
+                (if (summary.rotated > 0) ", ${summary.rotated} page(s) remise(s) droite(s)" else "") +
+                (if (summary.skipped > 0) ", ${summary.skipped} page(s) laissée(s) (déjà du texte)" else "") +
+                ". Relis les pages avec read_page.",
+        )
     }
 
     // ---- Formulaires ----------------------------------------------------------------------------
@@ -338,6 +362,7 @@ Règles :
             app.nougat.pdf.engine.TextEditResult.SameFont -> "police d'origine"
             app.nougat.pdf.engine.TextEditResult.InstalledFont -> "police d'origine installée sur l'ordinateur"
             app.nougat.pdf.engine.TextEditResult.SimilarFont -> "police standard proche (l'originale n'a pas ces caractères)"
+            app.nougat.pdf.engine.TextEditResult.ScanText -> "ligne scannée effacée et réécrite dans la police la plus ressemblante"
         }
         return ToolOutput.Text("Fait ($font). Les numéros de ligne de la page ${page + 1} ont pu changer.")
     }

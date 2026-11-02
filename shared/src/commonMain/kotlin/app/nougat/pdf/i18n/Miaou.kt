@@ -271,4 +271,24 @@ ChooseImages = Choisir des images
 RecentNotFound = « {0} » a disparu : déplacé, supprimé… ou caché sous le canapé.
 ShareTitle = Partager « {0} »
 CannotReadFile = Impossible de lire ce fichier.\n{0}
+
+RecognizeText = Renifler le texte (OCR)
+FeatOcr = Lire les scans (OCR)
+ScanBanner = {0} page scannée : son texte n'est pas encore reniflé.|{0} pages scannées : leur texte n'est pas encore reniflé.
+ScanBannerButton = Renifler le texte
+OcrExplain = Nougat lit le texte des pages scannées et le cache, invisible, sous l'image (comme une croquette sous le tapis) : ensuite on peut chercher, copier, le faire lire à Claude et griffer le texte. La page ne change pas d'un poil. Tout se fait ici, sans Internet.
+OcrLanguages = Langues du document
+OcrPagesAll = Tout le document
+OcrPagesCurrent = Juste la page affichée
+OcrAutoRotate = Remettre sur ses pattes les pages couchées ou à l'envers
+OcrRedo = Renifler à nouveau les pages déjà faites
+OcrStart = Renifler
+OcrPreparing = Échauffement des moustaches…
+OcrProgress = Reniflage du texte… page {0} sur {1}
+OcrDone = Texte reniflé sur {0} page|Texte reniflé sur {0} pages
+OcrRotated = , {0} page retombée sur ses pattes|, {0} pages retombées sur leurs pattes
+OcrNothing = Rien à renifler : ces pages ont déjà du texte.
+OcrStopped = Reniflage arrêté (sieste)
+TextChangedScan = Texte du scan regriffé dans la police la plus ressemblante
+ActRecognize = Renifle le texte des pages scannées
 """

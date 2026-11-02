@@ -268,4 +268,24 @@ ChooseImages = Causir d'imatges
 RecentNotFound = « {0} » es introbable : es benlèu estat desplaçat o suprimit.
 ShareTitle = Partejar « {0} »
 CannotReadFile = Impossible de legir aqueste fichièr.\n{0}
+
+RecognizeText = Reconéisser lo tèxte (OCR)
+FeatOcr = Tèxte dels escanatges (OCR)
+ScanBanner = {0} pagina escanada : son tèxte es pas encara reconegut.|{0} paginas escanadas : lor tèxte es pas encara reconegut.
+ScanBannerButton = Reconéisser lo tèxte
+OcrExplain = Nougat legís lo tèxte de las paginas escanadas e lo pausa, invisible, sus l'imatge : puèi podètz cercar, copiar, lo far legir a Claude e modificar lo tèxte. La pagina cambia pas a l'uèlh. Tot se fa sus aqueste ordenador, sens Internet.
+OcrLanguages = Lengas del document
+OcrPagesAll = Tot lo document
+OcrPagesCurrent = Sonque la pagina afichada
+OcrAutoRotate = Adreçar las paginas cotjadas o a l'envèrs
+OcrRedo = Tornar far las paginas ja reconegudas
+OcrStart = Reconéisser
+OcrPreparing = Preparacion de la reconeissença…
+OcrProgress = Reconeissença del tèxte… pagina {0} sus {1}
+OcrDone = Tèxte reconegut sus {0} pagina|Tèxte reconegut sus {0} paginas
+OcrRotated = , {0} pagina adreçada|, {0} paginas adreçadas
+OcrNothing = Pas res de reconéisser : aquelas paginas an ja de tèxte.
+OcrStopped = Reconeissença arrestada
+TextChangedScan = Tèxte de l'escanatge tornat escriure dins la poliça mai semblanta
+ActRecognize = Reconeis lo tèxte de las paginas escanadas
 """

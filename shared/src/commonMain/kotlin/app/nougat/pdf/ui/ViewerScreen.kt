@@ -235,6 +235,18 @@ fun ViewerScreen(
             }
         }
 
+        // Document scanne : proposer la reconnaissance du texte.
+        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing) {
+            ScanBanner(
+                pages = session.ocrPages,
+                compact = compact,
+                onRecognize = { state.ocrDialog = true },
+                onClose = { session.ocrBannerClosed = true },
+                modifier = Modifier.align(Alignment.TopCenter)
+                    .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
+            )
+        }
+
         // Le dock et le plateau d'outils du mode
         ViewerDock(
             state = state,
@@ -370,6 +382,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             item(tr(Str.OrganizePages), NougatIcons.Pages) { state.pagesOpen = true }
             item(tr(Str.AppendPdf), Icons.Filled.Add, state::appendPdf)
             item(tr(Str.AppendImages), NougatIcons.Image, state::appendImages)
+            if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
             if (session.password == null) {
                 item(tr(Str.ProtectWithPassword), Icons.Filled.Lock, onProtect)
             } else {
@@ -541,6 +554,21 @@ private fun PagePill(session: DocumentSession, onAskPage: () -> Unit) {
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
         )
+    }
+}
+
+/** « Document scanne : le texte n'est pas encore reconnu » + bouton. */
+@Composable
+private fun ScanBanner(pages: Int, compact: Boolean, onRecognize: () -> Unit, onClose: () -> Unit, modifier: Modifier) {
+    Island(modifier.widthIn(max = 640.dp), shape = RoundedCornerShape(26.dp), padding = 6.dp) {
+        GradientBadge(NougatIcons.Scan, size = 36.dp, iconSize = 20.dp)
+        Text(
+            trn(Str.ScanBanner, pages),
+            style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
+            modifier = Modifier.weight(1f, fill = false).padding(horizontal = 10.dp),
+        )
+        GradientButton(tr(Str.ScanBannerButton), onClick = onRecognize, height = 40.dp)
+        IslandButton(Icons.Filled.Close, tr(Str.Close), onClick = onClose, size = 40.dp, iconSize = 18.dp)
     }
 }
 

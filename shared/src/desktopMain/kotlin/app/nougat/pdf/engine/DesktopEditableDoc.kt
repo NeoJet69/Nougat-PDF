@@ -115,6 +115,9 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
 
     override fun setFieldValue(name: String, value: String) = setFormFieldValue(doc, name, value)
 
+    override fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary =
+        recognizeDocument(doc, options, ::geometry, ::setRotation, progress)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

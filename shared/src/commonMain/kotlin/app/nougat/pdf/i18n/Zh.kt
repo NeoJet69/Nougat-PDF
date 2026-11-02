@@ -267,4 +267,24 @@ ChooseImages = 选择图片
 RecentNotFound = 找不到“{0}”：它可能已被移动或删除。
 ShareTitle = 分享“{0}”
 CannotReadFile = 无法读取此文件。\n{0}
+
+RecognizeText = 识别文字（OCR）
+FeatOcr = 扫描件文字（OCR）
+ScanBanner = {0} 页扫描页的文字尚未识别。
+ScanBannerButton = 识别文字
+OcrExplain = Nougat 会读取扫描页上的文字，并以不可见的方式覆盖在图像上：之后即可搜索、复制、让 Claude 阅读并修改文字。页面外观完全不变。全部在本机完成，无需联网。
+OcrLanguages = 文档语言
+OcrPagesAll = 整个文档
+OcrPagesCurrent = 仅当前页
+OcrAutoRotate = 摆正横置或倒置的页面
+OcrRedo = 重新识别已识别的页面
+OcrStart = 识别
+OcrPreparing = 正在准备识别…
+OcrProgress = 正在识别文字… 第 {0} / {1} 页
+OcrDone = 已识别 {0} 页的文字
+OcrRotated = ，摆正了 {0} 页
+OcrNothing = 无需识别：这些页面已经包含文字。
+OcrStopped = 识别已停止
+TextChangedScan = 已用最相近的字体重写扫描件文字
+ActRecognize = 识别扫描页的文字
 """

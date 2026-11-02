@@ -268,4 +268,24 @@ ChooseImages = Choisir des images
 RecentNotFound = « {0} » est introuvable : il a peut-être été déplacé ou supprimé.
 ShareTitle = Partager « {0} »
 CannotReadFile = Impossible de lire ce fichier.\n{0}
+
+RecognizeText = Reconnaître le texte (OCR)
+FeatOcr = Texte des numérisations (OCR)
+ScanBanner = {0} page numérisée : son texte est pas encore reconnu.|{0} pages numérisées : leur texte est pas encore reconnu.
+ScanBannerButton = Reconnaître le texte
+OcrExplain = Nougat lit le texte des pages numérisées pis le pose, invisible, sur l'image : après, tu peux chercher, copier, le faire lire à Claude pis modifier le texte. La page change pas d'un poil. Tout se fait sur cet ordi, sans Internet.
+OcrLanguages = Langues du document
+OcrPagesAll = Tout le document
+OcrPagesCurrent = Juste la page affichée
+OcrAutoRotate = Redresser les pages couchées ou à l'envers
+OcrRedo = Refaire les pages déjà reconnues
+OcrStart = Reconnaître
+OcrPreparing = On prépare la reconnaissance…
+OcrProgress = Reconnaissance du texte… page {0} sur {1}
+OcrDone = Texte reconnu sur {0} page|Texte reconnu sur {0} pages
+OcrRotated = , {0} page redressée|, {0} pages redressées
+OcrNothing = Rien à reconnaître : ces pages-là ont déjà du texte.
+OcrStopped = Reconnaissance arrêtée
+TextChangedScan = Texte numérisé réécrit dans la police la plus ressemblante
+ActRecognize = Reconnaît le texte des pages numérisées
 """

@@ -268,4 +268,24 @@ ChooseImages = Tscherner maletgs
 RecentNotFound = «{0}» n'è betg vegnì chattà: el è forsa vegnì spustà u stizzà.
 ShareTitle = Parter «{0}»
 CannotReadFile = Impussibel da leger questa datoteca.\n{0}
+
+RecognizeText = Renconuscher il text (OCR)
+FeatOcr = Text da scans (OCR)
+ScanBanner = {0} pagina scannada: ses text n'è anc betg renconuschì.|{0} paginas scannadas: lur text n'è anc betg renconuschì.
+ScanBannerButton = Renconuscher il text
+OcrExplain = Nougat legia il text da las paginas scannadas e al metta, invisibel, sin il maletg: lura pos ti tschertgar, copiar, laschar leger Claude e midar il text. La pagina resta tuttina. Tut capita sin quest computer, senza internet.
+OcrLanguages = Linguas dal document
+OcrPagesAll = Entir document
+OcrPagesCurrent = Mo la pagina mussada
+OcrAutoRotate = Drizzar paginas storschas u sin il chau
+OcrRedo = Far danovamain las paginas gia renconuschidas
+OcrStart = Renconuscher
+OcrPreparing = Preparar la renconuschientscha…
+OcrProgress = Renconuschientscha dal text… pagina {0} da {1}
+OcrDone = Text renconuschì sin {0} pagina|Text renconuschì sin {0} paginas
+OcrRotated = , {0} pagina drizzada|, {0} paginas drizzadas
+OcrNothing = Nagut da renconuscher: questas paginas han gia text.
+OcrStopped = Renconuschientscha fermada
+TextChangedScan = Text dal scan scrit da nov en la scrittira la pli sumeglianta
+ActRecognize = Renconuscha il text da paginas scannadas
 """

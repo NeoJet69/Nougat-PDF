@@ -133,6 +133,7 @@ fun HomeScreen(
                 FeatureChip(NougatIcons.Pen, tr(Str.FeatAnnotate))
                 FeatureChip(NougatIcons.Signature, tr(Str.FeatSign))
                 FeatureChip(NougatIcons.SelectAll, tr(Str.FeatForms))
+                if (state.canOcr) FeatureChip(NougatIcons.Scan, tr(Str.FeatOcr))
                 FeatureChip(NougatIcons.Pages, tr(Str.FeatOrganize))
                 FeatureChip(NougatIcons.Sparkle, tr(Str.FeatClaude))
             }

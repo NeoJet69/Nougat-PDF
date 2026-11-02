@@ -22,6 +22,9 @@ interface PdfEngine {
 
     /** Cree un nouveau PDF [dst] : document vide, rempli par [block] (pages blanches, images...). */
     suspend fun create(dst: String, block: (EditableDoc) -> Unit)
+
+    /** Langues de reconnaissance de texte (OCR) disponibles ; vide si la plateforme ne sait pas faire. */
+    val ocrLanguages: List<String> get() = emptyList()
 }
 
 interface PdfDocument : AutoCloseable {
@@ -47,6 +50,9 @@ interface PdfDocument : AutoCloseable {
 
     /** Vrai si le PDF contient des champs a remplir. */
     suspend fun hasForm(): Boolean = false
+
+    /** Nombre de pages scannees dont le texte n'est pas encore reconnu. */
+    suspend fun pagesNeedingOcr(): Int = 0
 }
 
 data class PageSize(val width: Float, val height: Float) {

@@ -63,6 +63,10 @@ internal fun replaceTextWithPdfBox(doc: PDDocument, block: TextBlock, newText: S
     val target = groupTextBlocks(block.page, result.analysis, w, h).findMatch(block)
         ?: throw TextEditException(Str.ErrTextNotFound)
     if (!target.editable) throw TextEditException(Str.ErrTextNotEditable)
+    if (target.scanned) {
+        rewriteScannedLine(doc, block.page, result.analysis, target, newText.replace('\n', ' ').replace('\t', ' '))
+        return TextEditResult.ScanText
+    }
 
     val anchorOp = result.analysis.ops[target.glyphs.first().op]
         ?: throw TextEditException(Str.ErrTextOpNotFound)
@@ -194,7 +198,7 @@ private fun standardName(font: StandardFont): Standard14Fonts.FontName = when (f
 }
 
 /** Reecrit le flux de contenu de la page en remplacant les operateurs de [plan]. */
-private fun rewriteContent(doc: PDDocument, page: PDPage, plan: Map<Int, List<ContentOp>>) {
+internal fun rewriteContent(doc: PDDocument, page: PDPage, plan: Map<Int, List<ContentOp>>) {
     val parser = PDFStreamParser(page)
     val tokens = ArrayList<Any>()
     while (true) tokens.add(parser.parseNextToken() ?: break)
@@ -254,6 +258,7 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
     private var glyphIndex = -1
     private var pendingKey: GlyphKey? = null
     private var pendingEditable = false
+    private var pendingInvisible = false
     private var fontResource: String? = null
     private val fontStack = ArrayList<String?>()
 
@@ -309,12 +314,13 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
                     hScale = state.horizontalScaling / 100f,
                     charSpacing = state.characterSpacing,
                     wordSpacing = state.wordSpacing,
-                    usable = font != null && !font.isVertical && state.fontSize * state.horizontalScaling != 0f &&
-                        state.renderingMode != RenderingMode.NEITHER,
+                    // Le texte invisible (OCR) reste modifiable : il passe par la reecriture du scan.
+                    usable = font != null && !font.isVertical && state.fontSize * state.horizontalScaling != 0f,
                 )
             }
             builder.startSegment(segment, string)
             pendingEditable = builder.usable
+            pendingInvisible = state.renderingMode == RenderingMode.NEITHER
         }
         super.showText(string)
     }
@@ -354,6 +360,9 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
                 size = text.fontSizeInPt,
                 editable = key != null && pendingEditable,
                 style = "${text.font?.name}@${(text.fontSizeInPt * 10).toInt()}",
+                invisible = key != null && pendingInvisible,
+                originX = x,
+                originY = y,
             ),
         )
     }

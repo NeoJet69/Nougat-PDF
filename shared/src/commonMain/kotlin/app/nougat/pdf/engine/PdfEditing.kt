@@ -51,6 +51,13 @@ interface EditableDoc {
      * @throws FormFieldException si le champ ne peut pas prendre cette valeur.
      */
     fun setFieldValue(name: String, value: String)
+
+    /**
+     * Reconnait le texte des pages scannees (OCR) et le pose, invisible, sur l'image.
+     * [progress] (pages faites, total) renvoie faux pour arreter.
+     */
+    fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary =
+        throw UnsupportedOperationException("OCR indisponible")
 }
 
 /**

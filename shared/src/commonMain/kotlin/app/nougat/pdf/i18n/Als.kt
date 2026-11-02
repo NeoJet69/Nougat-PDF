@@ -268,4 +268,24 @@ ChooseImages = Bìlder üssüeche
 RecentNotFound = „{0}“ ìsch nìt gfunde wore: villicht verschowe oder glëscht.
 ShareTitle = „{0}“ teile
 CannotReadFile = Die Datei kànn nìt gelese were.\n{0}
+
+RecognizeText = Text erkenne (OCR)
+FeatOcr = Text üs Scans (OCR)
+ScanBanner = {0} gscännti Sitt: de Text ìsch noch nìt erkännt.|{0} gscännti Sitte: de Text ìsch noch nìt erkännt.
+ScanBannerButton = Text erkenne
+OcrExplain = Nougat lest de Text vun gscännte Sitte ün leit ne unsichtbar üf s Bìld: dànn kàsch süeche, kopiere, de Claude lese lonn ün de Text ändere. D Sitt sieht glìch üs. Alles passiert üf dem Computer, ohne Internet.
+OcrLanguages = Sproche vum Dokument
+OcrPagesAll = S gànze Dokument
+OcrPagesCurrent = Nür d àngezeigt Sitt
+OcrAutoRotate = Gedrehjti oder umgekehrti Sitte grad stelle
+OcrRedo = Schun erkännti Sitte nomol mache
+OcrStart = Erkenne
+OcrPreparing = D Erkennung wurd vorbereitet…
+OcrProgress = Text wurd erkännt… Sitt {0} vun {1}
+OcrDone = Text üf {0} Sitt erkännt|Text üf {0} Sitte erkännt
+OcrRotated = , {0} Sitt grad gstellt|, {0} Sitte grad gstellt
+OcrNothing = Nix ze erkenne: die Sitte hàn schun Text.
+OcrStopped = Erkennung ghàlte
+TextChangedScan = Text vum Scan ìn de ähnlichschte Schrìft nej gschriwe
+ActRecognize = Erkennt de Text vun gscännte Sitte
 """

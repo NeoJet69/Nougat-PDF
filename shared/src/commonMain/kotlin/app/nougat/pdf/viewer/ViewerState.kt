@@ -35,6 +35,9 @@ import app.nougat.pdf.i18n.Str
 import app.nougat.pdf.i18n.tr
 import app.nougat.pdf.i18n.trn
 import kotlinx.coroutines.CompletableDeferred
+import app.nougat.pdf.engine.OcrOptions
+import app.nougat.pdf.engine.OcrSummary
+import app.nougat.pdf.engine.defaultOcrLanguages
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -273,6 +276,10 @@ class ViewerState(
                         toast = tr(Str.FormDetected)
                     }
                 }
+                if (canOcr) scope.launch {
+                    val pages = doc.pagesNeedingOcr()
+                    if (session === opened) opened?.ocrPages = pages
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: PasswordRequiredException) {
@@ -401,6 +408,9 @@ class ViewerState(
         } catch (e: FormFieldException) {
             errorMessage = e.message
             false
+        } catch (e: NothingRecognized) {
+            toast = tr(if (e.stopped) Str.OcrStopped else Str.OcrNothing)
+            false
         } catch (e: Throwable) {
             errorMessage = tr(Str.EditFailed, e.message ?: e::class.simpleName)
             false
@@ -419,6 +429,8 @@ class ViewerState(
         fresh.updateZoom(old.zoom)
         fresh.visiblePage = old.visiblePage.coerceAtMost(doc.pageCount - 1)
         fresh.hasForm = old.hasForm
+        fresh.ocrPages = old.ocrPages
+        fresh.ocrBannerClosed = old.ocrBannerClosed
         old.close()
         pageSelection = pageSelection.filter { it < doc.pageCount }.toSet()
         session = fresh
@@ -527,6 +539,7 @@ class ViewerState(
                 toast = when (result) {
                     TextEditResult.SimilarFont -> tr(Str.TextChangedSimilar)
                     TextEditResult.InstalledFont -> tr(Str.TextChangedInstalled)
+                    TextEditResult.ScanText -> tr(Str.TextChangedScan)
                     else -> tr(Str.TextChanged)
                 }
             }
@@ -649,6 +662,89 @@ class ViewerState(
         s.editingBlock = null
         if (text.trim() == block.text.trim()) return true
         return editNow(tr(Str.EditingText), s.password) { it.replaceText(block, text) }
+    }
+
+    // ---- Reconnaissance de texte (OCR) ----------------------------------------------------------
+
+    /** La plateforme sait reconnaitre le texte des scans (ordinateur). */
+    val canOcr: Boolean get() = engine.ocrLanguages.isNotEmpty()
+
+    /** Langues de reconnaissance installees. */
+    val ocrLanguageChoices: List<String> get() = engine.ocrLanguages
+
+    /** Fenetre « Reconnaitre le texte » ouverte. */
+    var ocrDialog by mutableStateOf(false)
+
+    /** Langues choisies pour la reconnaissance (gardees d'une fois a l'autre). */
+    var ocrLanguages by mutableStateOf(
+        runCatching { files.loadSetting(SETTING_OCR_LANGUAGES) }.getOrNull().orEmpty().split(',')
+            .filter { it in engine.ocrLanguages }
+            .ifEmpty { defaultOcrLanguages(I18n.lang.code).filter { it in engine.ocrLanguages } },
+    )
+        private set
+
+    fun setOcrLanguages(languages: List<String>) {
+        ocrLanguages = languages
+        runCatching { files.saveSetting(SETTING_OCR_LANGUAGES, languages.joinToString(",")) }
+    }
+
+    /** Pendant une longue operation : arreter (null si l'operation ne s'arrete pas). */
+    var busyCancel: (() -> Unit)? by mutableStateOf(null)
+        private set
+
+    /** Demande d'arret de l'OCR (lue par le fil de calcul : etat partage de Compose). */
+    private var ocrStop by mutableStateOf(false)
+
+    /** Reconnait le texte des pages scannees, page par page, avec une barre de progression. */
+    fun recognizeText(currentPageOnly: Boolean, autoRotate: Boolean, redo: Boolean) {
+        val s = session ?: return
+        ocrDialog = false
+        val options = OcrOptions(ocrLanguages, if (currentPageOnly) listOf(s.visiblePage) else null, autoRotate, redo)
+        scope.launch {
+            val summary = runOcr(options, report = true) ?: return@launch
+            var message = trn(Str.OcrDone, summary.recognized)
+            if (summary.rotated > 0) message += trn(Str.OcrRotated, summary.rotated)
+            toast = message
+        }
+    }
+
+    /** Pour l'assistant : reconnait le texte et attend la fin (null : rien a reconnaitre). */
+    suspend fun recognizeTextAwait(pages: List<Int>?): OcrSummary? = runOcr(OcrOptions(ocrLanguages, pages), report = false)
+
+    /**
+     * Lance l'OCR dans une modification du document. [report] : les erreurs sont montrees a
+     * l'utilisateur ; sinon elles remontent (l'assistant les recoit).
+     */
+    private suspend fun runOcr(options: OcrOptions, report: Boolean): OcrSummary? {
+        ocrStop = false
+        var summary: OcrSummary? = null
+        val block: (EditableDoc) -> Unit = { doc ->
+            val result = doc.recognizeText(options) { done, total ->
+                busyMessage = tr(Str.OcrProgress, done, total)
+                !ocrStop
+            }
+            summary = result
+            if (result.recognized == 0) throw NothingRecognized(result.cancelled || ocrStop)
+        }
+        busyCancel = { ocrStop = true }
+        val ok = try {
+            if (report) {
+                editNow(tr(Str.OcrPreparing), session?.password, block)
+            } else {
+                try {
+                    performEdit(tr(Str.OcrPreparing), session?.password, block)
+                    true
+                } catch (e: NothingRecognized) {
+                    false
+                }
+            }
+        } finally {
+            busyCancel = null
+        }
+        if (!ok) return null
+        // Recompter : apres un arret ou une seule page, il en reste peut-etre (le bandeau le dit).
+        session?.let { s -> s.ocrPages = runCatching { s.document.pagesNeedingOcr() }.getOrDefault(0) }
+        return summary
     }
 
     // ---- Creer un PDF -----------------------------------------------------------------------------
@@ -785,6 +881,7 @@ class ViewerState(
         const val SETTING_THEME = "theme"
         const val SETTING_RECENTS = "recents"
         const val SETTING_LANGUAGE = "language"
+        const val SETTING_OCR_LANGUAGES = "ocr.languages"
         const val MAX_RECENTS = 8
     }
 }
@@ -814,3 +911,6 @@ enum class SaveChoice { Replace, Copy }
 
 /** « Facture.pdf » -> « Facture_miaou.pdf » : le nom propose pour une copie. */
 fun copyName(name: String): String = name.replace(Regex("(?i)\\.pdf$"), "") + "_miaou.pdf"
+
+/** La reconnaissance n'a rien trouve a faire (ou a ete arretee avant la premiere page). */
+private class NothingRecognized(val stopped: Boolean) : Exception()

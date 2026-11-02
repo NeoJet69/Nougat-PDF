@@ -7,6 +7,9 @@ agp = "9.3.1"
 coroutines = "1.11.0"
 pdfbox = "3.0.8"
 pdfboxAndroid = "2.0.27.0"
+tesseract = "5.5.3-1.5.14"
+leptonica = "1.87.0-1.5.14"
+javacpp = "1.5.14"
 activity = "1.10.0"
 anthropic = "3.3.0"
 desugar = "2.1.5"
@@ -25,6 +28,9 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
 pdfbox-android = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfboxAndroid" }
+tesseract = { module = "org.bytedeco:tesseract", version.ref = "tesseract" }
+leptonica = { module = "org.bytedeco:leptonica", version.ref = "leptonica" }
+javacpp = { module = "org.bytedeco:javacpp", version.ref = "javacpp" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

@@ -267,4 +267,24 @@ ChooseImages = Välj bilder
 RecentNotFound = ”{0}” hittades inte: den kan ha flyttats eller tagits bort.
 ShareTitle = Dela ”{0}”
 CannotReadFile = Kan inte läsa den här filen.\n{0}
+
+RecognizeText = Känn igen text (OCR)
+FeatOcr = Text i skannade sidor (OCR)
+ScanBanner = {0} skannad sida: texten är inte igenkänd än.|{0} skannade sidor: texten är inte igenkänd än.
+ScanBannerButton = Känn igen texten
+OcrExplain = Nougat läser texten på skannade sidor och lägger den, osynlig, över bilden: sedan kan du söka, kopiera, låta Claude läsa och ändra texten. Sidan ser likadan ut. Allt sker på den här datorn, utan internet.
+OcrLanguages = Dokumentets språk
+OcrPagesAll = Hela dokumentet
+OcrPagesCurrent = Bara den visade sidan
+OcrAutoRotate = Räta upp sidor som ligger ner eller är upp och ner
+OcrRedo = Gör om sidor som redan känts igen
+OcrStart = Känn igen
+OcrPreparing = Förbereder igenkänningen…
+OcrProgress = Känner igen text… sida {0} av {1}
+OcrDone = Text igenkänd på {0} sida|Text igenkänd på {0} sidor
+OcrRotated = , {0} sida rätad|, {0} sidor rätade
+OcrNothing = Inget att känna igen: sidorna innehåller redan text.
+OcrStopped = Igenkänningen stoppad
+TextChangedScan = Den skannade texten omskriven i det mest likartade typsnittet
+ActRecognize = Känner igen texten på skannade sidor
 """

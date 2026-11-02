@@ -16,6 +16,17 @@ dependencies {
     implementation(libs.kotlinx.coroutines.swing)
 }
 
+// Les modeles de langue de l'OCR, installes avec l'app (dossier « resources » de l'application).
+val ocrResources = layout.buildDirectory.dir("ocr-resources")
+val copyTessdata = tasks.register<Sync>("copyTessdata") {
+    dependsOn(":shared:downloadTessdata")
+    from(project(":shared").layout.buildDirectory.dir("tessdata"))
+    into(ocrResources.map { it.dir("common/tessdata") })
+}
+tasks.configureEach {
+    if (name == "prepareAppResources") dependsOn(copyTessdata)
+}
+
 compose.desktop {
     application {
         mainClass = "app.nougat.pdf.desktop.MainKt"
@@ -28,7 +39,8 @@ compose.desktop {
             description = "Lecteur et editeur de PDF, gratuit et sans pub"
             vendor = "NeoJet, Nougat et Caramel"
             // Modules Java utilises par PDFBox et l'interface.
-            modules("java.desktop", "java.logging", "java.naming", "java.xml", "jdk.unsupported")
+            modules("java.desktop", "java.logging", "java.management", "java.naming", "java.xml", "jdk.unsupported")
+            appResourcesRootDir.set(ocrResources)
 
             windows {
                 menu = true

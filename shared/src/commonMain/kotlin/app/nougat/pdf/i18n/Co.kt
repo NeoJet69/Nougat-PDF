@@ -268,4 +268,24 @@ ChooseImages = Sceglie fiure
 RecentNotFound = « {0} » ùn si trova micca : forse hè statu spiazzatu o squassatu.
 ShareTitle = Sparte « {0} »
 CannotReadFile = Impussibule di leghje stu schedariu.\n{0}
+
+RecognizeText = Ricunnosce u testu (OCR)
+FeatOcr = Testu di e scansioni (OCR)
+ScanBanner = {0} pagina scansata : u so testu ùn hè ancu ricunnisciutu.|{0} pagine scansate : u so testu ùn hè ancu ricunnisciutu.
+ScanBannerButton = Ricunnosce u testu
+OcrExplain = Nougat leghje u testu di e pagine scansate è u mette, invisibile, nant'à a fiura : dopu pudete circà, cupià, fà lu leghje à Claude è mudificà u testu. A pagina ferma listessa. Tuttu si face nant'à st'urdinatore, senza Internet.
+OcrLanguages = Lingue di u ducumentu
+OcrPagesAll = Tuttu u ducumentu
+OcrPagesCurrent = Solu a pagina affissata
+OcrAutoRotate = Addirizzà e pagine sdraiate o à l'arritrosa
+OcrRedo = Rifà e pagine digià ricunnisciute
+OcrStart = Ricunnosce
+OcrPreparing = Preparazione di a ricunniscenza…
+OcrProgress = Ricunniscenza di u testu… pagina {0} nant'à {1}
+OcrDone = Testu ricunnisciutu nant'à {0} pagina|Testu ricunnisciutu nant'à {0} pagine
+OcrRotated = , {0} pagina addirizzata|, {0} pagine addirizzate
+OcrNothing = Nunda à ricunnosce : ste pagine cuntenenu digià testu.
+OcrStopped = Ricunniscenza piantata
+TextChangedScan = Testu di a scansione riscrittu cù a grafia più sumigliante
+ActRecognize = Ricunnosce u testu di e pagine scansate
 """

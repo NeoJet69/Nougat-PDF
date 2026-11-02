@@ -99,7 +99,7 @@ fun NougatApp(
 
                 Toast(state, Modifier.align(Alignment.TopCenter).padding(top = 92.dp))
 
-                state.busyMessage?.let { LoadingOverlay(it) }
+                state.busyMessage?.let { LoadingOverlay(it, state.busyCancel) }
                 state.passwordPrompt?.let { prompt ->
                     PasswordDialog(
                         fileName = prompt.name,
@@ -114,6 +114,7 @@ fun NougatApp(
                 state.savePrompt?.let { name -> SaveChoiceDialog(name, state::answerSave) }
                 if (state.languageOpen) LanguageDialog(I18n.lang, state::setLanguage) { state.languageOpen = false }
                 if (state.aboutOpen) AboutDialog(platform.version) { state.aboutOpen = false }
+                if (state.ocrDialog && session != null) OcrDialog(state) { state.ocrDialog = false }
                 state.errorMessage?.let { message ->
                     AlertDialog(
                         onDismissRequest = state::dismissError,
@@ -156,7 +157,7 @@ private fun Toast(state: ViewerState, modifier: Modifier) {
 }
 
 @Composable
-private fun LoadingOverlay(text: String) {
+private fun LoadingOverlay(text: String, onCancel: (() -> Unit)?) {
     // Une operation rapide (cocher une case, tourner une page) ne fait pas clignoter l'ecran :
     // les clics sont bloques tout de suite, mais le voile n'apparait qu'apres un court instant.
     var visible by remember { mutableStateOf(false) }
@@ -178,6 +179,10 @@ private fun LoadingOverlay(text: String) {
                 CircularProgressIndicator(Modifier.size(28.dp), strokeWidth = 3.dp, color = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.height(12.dp))
                 Text(text, textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+                if (onCancel != null) {
+                    Spacer(Modifier.height(8.dp))
+                    TextButton(onClick = onCancel) { Text(tr(Str.Stop)) }
+                }
             }
         }
     }

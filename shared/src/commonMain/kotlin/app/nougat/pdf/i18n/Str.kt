@@ -44,4 +44,8 @@ enum class Str {
     ActReadPage, ActViewPage, ActSearch, ActReplace, ActAddText, ActCover,
     ActHighlight, ActRotate, ActDelete, ActMove, ActInsertBlank, ActGoTo,
     ActListFields, ActFillField, ChooseImages, RecentNotFound, ShareTitle, CannotReadFile,
+    RecognizeText, FeatOcr, ScanBanner, ScanBannerButton, OcrExplain, OcrLanguages,
+    OcrPagesAll, OcrPagesCurrent, OcrAutoRotate, OcrRedo, OcrStart, OcrPreparing,
+    OcrProgress, OcrDone, OcrRotated, OcrNothing, OcrStopped, TextChangedScan,
+    ActRecognize,
 }

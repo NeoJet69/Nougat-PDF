@@ -34,6 +34,17 @@ import app.nougat.pdf.i18n.Str
 import app.nougat.pdf.i18n.tr
 import app.nougat.pdf.viewer.SaveChoice
 import app.nougat.pdf.viewer.copyName
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.RadioButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import app.nougat.pdf.engine.OCR_LANGUAGES
 
 /**
  * Premier enregistrement d'un document : remplacer le fichier d'origine, ou enregistrer une
@@ -152,5 +163,69 @@ private fun Credit(name: String, role: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(name, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
         Text(role, style = MaterialTheme.typography.bodyMedium, color = LocalNougatPalette.current.muted, textAlign = TextAlign.Center)
+    }
+}
+
+/** Reconnaitre le texte (OCR) : langues du document, pages, redressement. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
+    var languages by remember { mutableStateOf(state.ocrLanguages) }
+    var currentOnly by remember { mutableStateOf(false) }
+    var autoRotate by remember { mutableStateOf(true) }
+    var redo by remember { mutableStateOf(false) }
+    val p = LocalNougatPalette.current
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(NougatIcons.Scan, contentDescription = null) },
+        title = { Text(tr(Str.RecognizeText)) },
+        text = {
+            Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(tr(Str.OcrExplain), style = MaterialTheme.typography.bodyMedium, color = p.muted)
+                Text(tr(Str.OcrLanguages), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    for ((code, name) in OCR_LANGUAGES) {
+                        if (code !in state.ocrLanguageChoices) continue
+                        FilterChip(
+                            selected = code in languages,
+                            onClick = { languages = if (code in languages) languages - code else languages + code },
+                            label = { Text(name) },
+                        )
+                    }
+                }
+                Column {
+                    ChoiceRow(tr(Str.OcrPagesAll), !currentOnly) { currentOnly = false }
+                    ChoiceRow(tr(Str.OcrPagesCurrent), currentOnly) { currentOnly = true }
+                }
+                CheckRow(tr(Str.OcrAutoRotate), autoRotate) { autoRotate = it }
+                CheckRow(tr(Str.OcrRedo), redo) { redo = it }
+            }
+        },
+        confirmButton = {
+            Button(
+                enabled = languages.isNotEmpty(),
+                onClick = {
+                    state.setOcrLanguages(languages)
+                    state.recognizeText(currentOnly, autoRotate, redo)
+                },
+            ) { Text(tr(Str.OcrStart)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
+    )
+}
+
+@Composable
+private fun ChoiceRow(label: String, selected: Boolean, onClick: () -> Unit) {
+    Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick), verticalAlignment = Alignment.CenterVertically) {
+        RadioButton(selected = selected, onClick = onClick)
+        Text(label, style = MaterialTheme.typography.bodyLarge)
+    }
+}
+
+@Composable
+private fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+    Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { onChange(!checked) }, verticalAlignment = Alignment.CenterVertically) {
+        Checkbox(checked = checked, onCheckedChange = onChange)
+        Text(label, style = MaterialTheme.typography.bodyMedium)
     }
 }

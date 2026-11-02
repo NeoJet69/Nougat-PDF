@@ -20,6 +20,8 @@ import kotlin.concurrent.thread
 /** Moteur PDF de la version ordinateur, base sur Apache PDFBox. */
 class DesktopPdfEngine : PdfEngine {
 
+    override val ocrLanguages: List<String> by lazy { TessData.languages() }
+
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val doc = try {
             Loader.loadPDF(File(path), password ?: "")
@@ -90,6 +92,10 @@ private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {
 
     override suspend fun formFields(index: Int): List<FormField> = withContext(Dispatchers.IO) {
         mutex.withLock { runCatching { pageFormFields(doc, index) }.getOrDefault(emptyList()) }
+    }
+
+    override suspend fun pagesNeedingOcr(): Int = withContext(Dispatchers.IO) {
+        mutex.withLock { runCatching { countPagesNeedingOcr(doc) }.getOrDefault(0) }
     }
 
     override suspend fun hasForm(): Boolean = withContext(Dispatchers.IO) {

@@ -12,6 +12,7 @@ import app.nougat.pdf.engine.DesktopPdfEngine
 import app.nougat.pdf.engine.InkMark
 import app.nougat.pdf.engine.NPoint
 import app.nougat.pdf.engine.makeSampleForm
+import app.nougat.pdf.engine.makeSampleScan
 import app.nougat.pdf.viewer.DockMode
 import app.nougat.pdf.viewer.PlatformFiles
 import app.nougat.pdf.viewer.SavedFile
@@ -45,6 +46,7 @@ class CaptureTest {
 
     private val sample: String by lazy { invoice() }
     private val formSample: String by lazy { makeSampleForm(File(dir, "inscription.pdf")) }
+    private val scanSample: String by lazy { makeSampleScan(File(dir, "devis-scanne.pdf")) }
 
     @Test
     fun captures() {
@@ -86,6 +88,38 @@ class CaptureTest {
         shot("16-telephone-miaou", 412, 892, 2f, phone, language = "miaou")
         shot("17-enregistrer", 1440, 900, 1f, desktop, withDocument = true) { it.annotateDemo(); it.save() }
         shot("18-a-propos", 412, 892, 2f, phone) { it.aboutOpen = true }
+        // OCR : un devis scanne (penche, papier jauni, page 2 a l'envers).
+        shot("19-scan-bandeau", 1440, 900, 1f, desktop, scan = true) { it.waitForScanBanner() }
+        shot("20-ocr", 1440, 900, 1f, desktop, scan = true) { it.waitForScanBanner(); it.ocrDialog = true }
+        shot("21-scan-editer", 1440, 900, 1f, desktop, scan = true) { state ->
+            state.recognizeDemo()
+            state.tools.enter(DockMode.Edit)
+            val session = state.session ?: error("Pas de document")
+            val block = runBlocking { session.textBlocks(0) }.first { it.text.startsWith("Madame") }
+            session.startEditing(block)
+            session.editingText = "Monsieur Nougat Lechat"
+        }
+        shot("22-scan-modifie", 1440, 900, 1f, desktop, scan = true) { state ->
+            state.recognizeDemo()
+            val session = state.session ?: error("Pas de document")
+            val block = runBlocking { session.textBlocks(0) }.first { it.text.startsWith("Madame") }
+            runBlocking { state.replaceTextAwait(block, "Monsieur Nougat Lechat") }
+        }
+        shot("23-telephone-scan", 412, 892, 2f, phone, scan = true) { it.waitForScanBanner() }
+    }
+
+    /** L'analyse des pages scannees se fait apres l'ouverture : attendre le bandeau. */
+    private fun ViewerState.waitForScanBanner() {
+        val deadline = System.currentTimeMillis() + 30_000
+        while ((session?.ocrPages ?: 0) == 0 && System.currentTimeMillis() < deadline) Thread.sleep(50)
+        check((session?.ocrPages ?: 0) > 0) { "Le scan n'a pas ete detecte" }
+    }
+
+    /** Reconnaitre le texte du scan (comme le bouton du bandeau). */
+    private fun ViewerState.recognizeDemo() {
+        check(canOcr) { "Pas de modeles de langue (nougat.tessdata)" }
+        val summary = runBlocking { recognizeTextAwait(null) }
+        check(summary != null && summary.recognized == 2) { "OCR : $summary" }
     }
 
     /** Formulaire : un champ en cours de saisie. */
@@ -131,6 +165,8 @@ class CaptureTest {
         withDocument: Boolean = false,
         /** Ouvrir le formulaire d'exemple a la place de la facture. */
         form: Boolean = false,
+        /** Ouvrir le devis scanne (image sans texte) a la place de la facture. */
+        scan: Boolean = false,
         /** Langue de l'interface (code, voir Lang). */
         language: String = "fr",
         setup: (ViewerState) -> Unit = {},
@@ -154,9 +190,13 @@ class CaptureTest {
                 time += 50_000_000L
                 Thread.sleep(60)
             }
-            if (withDocument || form) {
+            if (withDocument || form || scan) {
                 // L'ouverture remet l'ecran a zero (pages, Claude…) : on attend qu'elle soit finie.
-                if (form) state.open(formSample, "Inscription-club.pdf") else state.open(sample, "Facture-2023-042.pdf")
+                when {
+                    form -> state.open(formSample, "Inscription-club.pdf")
+                    scan -> state.open(scanSample, "Devis-scanne.pdf")
+                    else -> state.open(sample, "Facture-2023-042.pdf")
+                }
                 val deadline = System.currentTimeMillis() + 30_000
                 while ((state.session == null || state.busyMessage != null) && System.currentTimeMillis() < deadline) frame()
                 check(state.session != null && state.busyMessage == null) { "La facture d'exemple ne s'est pas ouverte" }

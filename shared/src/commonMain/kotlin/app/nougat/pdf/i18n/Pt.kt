@@ -267,4 +267,24 @@ ChooseImages = Escolher imagens
 RecentNotFound = “{0}” não foi encontrado: pode ter sido movido ou eliminado.
 ShareTitle = Partilhar “{0}”
 CannotReadFile = Não é possível ler este ficheiro.\n{0}
+
+RecognizeText = Reconhecer o texto (OCR)
+FeatOcr = Texto de digitalizações (OCR)
+ScanBanner = {0} página digitalizada: o texto ainda não foi reconhecido.|{0} páginas digitalizadas: o texto ainda não foi reconhecido.
+ScanBannerButton = Reconhecer o texto
+OcrExplain = O Nougat lê o texto das páginas digitalizadas e coloca-o, invisível, sobre a imagem: depois pode pesquisar, copiar, pedir ao Claude para o ler e modificar o texto. A página fica igual. Tudo acontece neste computador, sem Internet.
+OcrLanguages = Idiomas do documento
+OcrPagesAll = Todo o documento
+OcrPagesCurrent = Só a página apresentada
+OcrAutoRotate = Endireitar páginas deitadas ou ao contrário
+OcrRedo = Refazer as páginas já reconhecidas
+OcrStart = Reconhecer
+OcrPreparing = A preparar o reconhecimento…
+OcrProgress = A reconhecer o texto… página {0} de {1}
+OcrDone = Texto reconhecido em {0} página|Texto reconhecido em {0} páginas
+OcrRotated = , {0} página endireitada|, {0} páginas endireitadas
+OcrNothing = Nada a reconhecer: estas páginas já contêm texto.
+OcrStopped = Reconhecimento parado
+TextChangedScan = Texto da digitalização reescrito no tipo de letra mais parecido
+ActRecognize = Reconhece o texto das páginas digitalizadas
 """

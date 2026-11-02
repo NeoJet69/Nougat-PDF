@@ -268,4 +268,24 @@ ChooseImages = Dibab skeudennoù
 RecentNotFound = N'eo ket bet kavet « {0} » : dilec'hiet pe dilamet eo bet marteze.
 ShareTitle = Rannañ « {0} »
 CannotReadFile = Dibosupl lenn ar restr-mañ.\n{0}
+
+RecognizeText = Anaout an destenn (OCR)
+FeatOcr = Testenn ar skeudennoù (OCR)
+ScanBanner = {0} bajenn skanet : n'eo ket bet anavezet he zestenn c'hoazh.|{0} pajenn skanet : n'eo ket bet anavezet o zestenn c'hoazh.
+ScanBannerButton = Anaout an destenn
+OcrExplain = Lenn a ra Nougat testenn ar pajennoù skanet hag he lakaat, diwelus, war ar skeudenn : goude e c'hallit klask, eilañ, he lakaat da lenn gant Claude ha kemmañ an destenn. Ar bajenn a chom heñvel. Pep tra a vez graet war an urzhiataer-mañ, hep Internet.
+OcrLanguages = Yezhoù an teul
+OcrPagesAll = An teul a-bezh
+OcrPagesCurrent = Ar bajenn diskouezet hepken
+OcrAutoRotate = Sevel ar pajennoù a-c'hourvez pe tu-ouzh-tu
+OcrRedo = Adober ar pajennoù anavezet dija
+OcrStart = Anaout
+OcrPreparing = O prientiñ an anaoudegezh…
+OcrProgress = Oc'h anaout an destenn… pajenn {0} war {1}
+OcrDone = Testenn anavezet war {0} pajenn|Testenn anavezet war {0} pajenn
+OcrRotated = , {0} pajenn adsavet|, {0} pajenn adsavet
+OcrNothing = Netra da anaout : testenn zo dija er pajennoù-se.
+OcrStopped = Paouezet an anaoudegezh
+TextChangedScan = Adskrivet testenn ar skeudenn gant an nodrezh tostañ
+ActRecognize = Oc'h anaout testenn ar pajennoù skanet
 """

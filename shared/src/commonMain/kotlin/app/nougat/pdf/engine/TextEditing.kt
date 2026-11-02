@@ -29,9 +29,11 @@ data class TextBlock(
     val rect: NormRect,
     /** Taille du texte, en points. */
     val fontSize: Float,
-    /** Faux pour un texte qu'on ne sait pas modifier (dans un formulaire, invisible...). */
+    /** Faux pour un texte qu'on ne sait pas modifier (dans un formulaire...). */
     val editable: Boolean,
     val glyphs: List<GlyphKey>,
+    /** Texte invisible pose sur une image (OCR) : le modifier, c'est reecrire l'image. */
+    val scanned: Boolean = false,
 )
 
 /** Resultat d'une modification de texte. */
@@ -44,6 +46,9 @@ enum class TextEditResult {
 
     /** La police d'origine ne contenait pas ces caracteres : une police standard proche a ete utilisee. */
     SimilarFont,
+
+    /** Texte d'un scan : l'image a ete effacee et le texte reecrit dans la police la plus ressemblante. */
+    ScanText,
 }
 
 /** Une ligne qu'on ne sait pas modifier. Le message est dans la langue choisie au moment ou on le lit. */
@@ -64,6 +69,11 @@ class AnalyzedGlyph(
     val editable: Boolean,
     /** Police et taille : deux lettres de style different ne vont pas dans la meme ligne. */
     val style: String,
+    /** Texte invisible (calque d'OCR). */
+    val invisible: Boolean = false,
+    /** Origine de la lettre sur la ligne de base, en points de la page affichee (y depuis le haut). */
+    val originX: Float = 0f,
+    val originY: Float = 0f,
 )
 
 /** Un element du tableau d'un operateur de texte : une chaine de lettres ou un decalage. */
@@ -141,7 +151,7 @@ fun groupTextBlocks(page: Int, analysis: PageTextAnalysis, pageWidth: Float, pag
 }
 
 private fun continuesLine(a: AnalyzedGlyph, b: AnalyzedGlyph, w: Float, h: Float): Boolean {
-    if (a.style != b.style || a.editable != b.editable) return false
+    if (a.style != b.style || a.editable != b.editable || a.invisible != b.invisible) return false
     val lineHeight = max((a.box.bottom - a.box.top) * h, (b.box.bottom - b.box.top) * h).coerceAtLeast(1f)
     if (abs(a.box.bottom - b.box.bottom) * h > lineHeight * 0.4f) return false // autre ligne
     val gap = (b.box.left - a.box.right) * w
@@ -182,6 +192,7 @@ private fun makeBlock(page: Int, glyphs: List<AnalyzedGlyph>, w: Float, h: Float
         fontSize = glyphs.maxOf { it.size },
         editable = glyphs.all { it.editable } && keys.size == glyphs.size,
         glyphs = keys,
+        scanned = glyphs.all { it.invisible },
     )
 }
 
