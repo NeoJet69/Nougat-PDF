@@ -11,14 +11,20 @@
 
 **Windows** : lancez le fichier `.exe`. Si un écran bleu « Windows a protégé votre ordinateur » apparaît, cliquez sur **Informations complémentaires**, puis **Exécuter quand même** (l'installateur n'est pas signé par un certificat payant).
 
-## Nouveau : reconnaître le texte des scans (OCR) — Windows
+## Nouveau : la reconnaissance de texte (OCR) arrive sur Android
 
-Ouvrez un PDF scanné ou une photo de document : Nougat propose **Reconnaître le texte**. Tout se fait sur l'ordinateur, sans Internet, en 16 langues. Le texte devient cherchable, copiable et lisible par Claude ; les pages à l'envers sont remises droites, les ombres des photos corrigées. Et on peut ensuite **modifier une ligne scannée** : Nougat efface la ligne de l'image et la réécrit dans la police la plus ressemblante.
+Ouvrez un PDF scanné ou une photo de document : Nougat propose **Reconnaître le texte**, sur Windows comme sur Android. Tout se fait sur l'appareil, en 16 langues (sur Android, le français et l'anglais sont inclus, les autres se téléchargent une fois). Le texte devient cherchable, copiable et lisible par Claude ; les pages à l'envers sont remises droites, les ombres des photos corrigées.
+
+Sur les téléphones compatibles (Pixel 9 et suivants, Galaxy S26…), **Gemini Nano**, l'IA de Google intégrée au téléphone, relit les lignes douteuses : il corrige les erreurs de lecture et sait même lire l'écriture manuscrite, sans Internet.
+
+Sur Windows, on peut aussi **modifier une ligne scannée** : Nougat efface la ligne de l'image et la réécrit dans la police la plus ressemblante.
+
+Nougat PDF est désormais un logiciel libre sous **licence MIT** (À propos → Licences).
 
 ## Au menu
 
 - Modifier le texte d'un PDF au même endroit, dans la même police
-- Reconnaître le texte des scans et des photos (OCR, Windows), puis le modifier
+- Reconnaître le texte des scans et des photos (OCR), avec Gemini Nano sur les téléphones compatibles
 - Annoter, surligner, signer, masquer
 - Remplir les formulaires PDF
 - Créer un PDF à partir de photos, ou un document vierge
