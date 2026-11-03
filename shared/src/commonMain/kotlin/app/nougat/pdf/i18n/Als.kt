@@ -311,7 +311,7 @@ LegalPrivacy = Dàteschutz
 LegalImpressum = Impressum
 
 ScanDocument = Dokument scanne
-ScanDocumentHint = Kamera: Sitte wäre erkännt, züegschnìtte ün grad gstellt
+ScanDocumentHint = Sitte erkännt ün grad gstellt
 ScanPdfName = Gscännts Dokument
 ScanAppend = Sitte scanne
 ScanAdded = Gscännti Sitte àm End àghängt

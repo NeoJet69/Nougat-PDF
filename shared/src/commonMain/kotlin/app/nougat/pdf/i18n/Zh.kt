@@ -310,7 +310,7 @@ LegalPrivacy = 隐私
 LegalImpressum = 法律声明
 
 ScanDocument = 扫描文档
-ScanDocumentHint = 相机：自动识别、裁剪并摆正页面
+ScanDocumentHint = 自动识别并摆正页面
 ScanPdfName = 扫描的文档
 ScanAppend = 扫描页面
 ScanAdded = 已在末尾添加扫描的页面

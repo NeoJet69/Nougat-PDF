@@ -311,7 +311,7 @@ LegalPrivacy = الخصوصية
 LegalImpressum = إشعار قانوني
 
 ScanDocument = مسح مستند ضوئيًا
-ScanDocumentHint = الكاميرا: تُكتشف الصفحات وتُقصّ وتُعدَّل
+ScanDocumentHint = تُكتشف الصفحات وتُعدَّل
 ScanPdfName = مستند ممسوح
 ScanAppend = مسح صفحات
 ScanAdded = أُضيفت الصفحات الممسوحة في النهاية

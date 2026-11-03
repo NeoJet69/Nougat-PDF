@@ -310,7 +310,7 @@ LegalPrivacy = Privacy
 LegalImpressum = Note legali
 
 ScanDocument = Scansiona un documento
-ScanDocumentHint = Fotocamera: pagine rilevate, ritagliate e raddrizzate
+ScanDocumentHint = Pagine rilevate e raddrizzate
 ScanPdfName = Documento scansionato
 ScanAppend = Scansiona pagine
 ScanAdded = Pagine scansionate aggiunte alla fine

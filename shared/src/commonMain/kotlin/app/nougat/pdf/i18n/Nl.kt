@@ -310,7 +310,7 @@ LegalPrivacy = Privacy
 LegalImpressum = Colofon
 
 ScanDocument = Document scannen
-ScanDocumentHint = Camera: pagina's herkend, bijgesneden en rechtgezet
+ScanDocumentHint = Pagina's herkend en rechtgezet
 ScanPdfName = Gescand document
 ScanAppend = Pagina's scannen
 ScanAdded = Gescande pagina's achteraan toegevoegd

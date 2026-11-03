@@ -314,7 +314,7 @@ LegalPrivacy = Confidentialité
 LegalImpressum = Mentions légales
 
 ScanDocument = Scanner un document
-ScanDocumentHint = Appareil photo : pages détectées, recadrées et redressées
+ScanDocumentHint = Pages détectées et redressées
 ScanPdfName = Document scanné
 ScanAppend = Scanner des pages
 ScanAdded = Pages scannées ajoutées à la fin

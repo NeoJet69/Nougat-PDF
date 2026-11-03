@@ -310,7 +310,7 @@ LegalPrivacy = Privacy
 LegalImpressum = Legal notice
 
 ScanDocument = Scan a document
-ScanDocumentHint = Camera: pages detected, cropped and straightened
+ScanDocumentHint = Pages detected and straightened
 ScanPdfName = Scanned document
 ScanAppend = Scan pages
 ScanAdded = Scanned pages added at the end

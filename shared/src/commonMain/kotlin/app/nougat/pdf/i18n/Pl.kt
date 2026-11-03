@@ -310,7 +310,7 @@ LegalPrivacy = Prywatność
 LegalImpressum = Nota prawna
 
 ScanDocument = Zeskanuj dokument
-ScanDocumentHint = Aparat: strony wykrywane, przycinane i prostowane
+ScanDocumentHint = Strony wykryte i wyprostowane
 ScanPdfName = Zeskanowany dokument
 ScanAppend = Skanuj strony
 ScanAdded = Zeskanowane strony dodano na końcu

@@ -311,7 +311,7 @@ LegalPrivacy = Cunfidenzialità
 LegalImpressum = Menzioni legali
 
 ScanDocument = Scansà un ducumentu
-ScanDocumentHint = Fotocamera : pagine scuperte, tagliate è addirizzate
+ScanDocumentHint = Pagine scuperte è addirizzate
 ScanPdfName = Ducumentu scansatu
 ScanAppend = Scansà pagine
 ScanAdded = Pagine scansate aghjunte à a fine

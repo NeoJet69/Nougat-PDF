@@ -311,7 +311,7 @@ LegalPrivacy = Confidentialité
 LegalImpressum = Mentions légales
 
 ScanDocument = Numériser un document
-ScanDocumentHint = Caméra : pages détectées, recadrées pis redressées
+ScanDocumentHint = Pages détectées pis redressées
 ScanPdfName = Document numérisé
 ScanAppend = Numériser des pages
 ScanAdded = Pages numérisées ajoutées à la fin

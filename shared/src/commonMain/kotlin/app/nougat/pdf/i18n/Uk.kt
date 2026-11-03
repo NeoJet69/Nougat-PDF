@@ -310,7 +310,7 @@ LegalPrivacy = Конфіденційність
 LegalImpressum = Правова інформація
 
 ScanDocument = Сканувати документ
-ScanDocumentHint = Камера: сторінки знаходяться, обрізаються й вирівнюються
+ScanDocumentHint = Сторінки знаходяться й вирівнюються
 ScanPdfName = Відсканований документ
 ScanAppend = Сканувати сторінки
 ScanAdded = Відскановані сторінки додано в кінець

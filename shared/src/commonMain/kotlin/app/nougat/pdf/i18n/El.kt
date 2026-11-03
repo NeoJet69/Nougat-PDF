@@ -310,7 +310,7 @@ LegalPrivacy = Απόρρητο
 LegalImpressum = Νομική σημείωση
 
 ScanDocument = Σάρωση εγγράφου
-ScanDocumentHint = Κάμερα: οι σελίδες εντοπίζονται, περικόπτονται και ισιώνουν
+ScanDocumentHint = Οι σελίδες εντοπίζονται και ισιώνουν
 ScanPdfName = Σαρωμένο έγγραφο
 ScanAppend = Σάρωση σελίδων
 ScanAdded = Οι σαρωμένες σελίδες προστέθηκαν στο τέλος

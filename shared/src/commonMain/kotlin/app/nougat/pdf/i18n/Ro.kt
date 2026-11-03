@@ -311,7 +311,7 @@ LegalPrivacy = Confidențialitate
 LegalImpressum = Mențiuni legale
 
 ScanDocument = Scanează un document
-ScanDocumentHint = Cameră: paginile sunt detectate, decupate și îndreptate
+ScanDocumentHint = Pagini detectate și îndreptate
 ScanPdfName = Document scanat
 ScanAppend = Scanează pagini
 ScanAdded = Paginile scanate au fost adăugate la final

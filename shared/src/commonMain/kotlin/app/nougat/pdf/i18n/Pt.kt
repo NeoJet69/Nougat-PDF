@@ -310,7 +310,7 @@ LegalPrivacy = Privacidade
 LegalImpressum = Informação legal
 
 ScanDocument = Digitalizar um documento
-ScanDocumentHint = Câmara: páginas detetadas, recortadas e endireitadas
+ScanDocumentHint = Páginas detetadas e endireitadas
 ScanPdfName = Documento digitalizado
 ScanAppend = Digitalizar páginas
 ScanAdded = Páginas digitalizadas adicionadas no fim

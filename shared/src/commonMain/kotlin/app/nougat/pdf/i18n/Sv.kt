@@ -310,7 +310,7 @@ LegalPrivacy = Integritet
 LegalImpressum = Juridisk information
 
 ScanDocument = Skanna ett dokument
-ScanDocumentHint = Kamera: sidor upptäcks, beskärs och rätas upp
+ScanDocumentHint = Sidor upptäcks och rätas upp
 ScanPdfName = Skannat dokument
 ScanAppend = Skanna sidor
 ScanAdded = Skannade sidor lades till i slutet

@@ -310,7 +310,7 @@ LegalPrivacy = Gizlilik
 LegalImpressum = Yasal bilgiler
 
 ScanDocument = Belge tara
-ScanDocumentHint = Kamera: sayfalar algılanır, kırpılır ve düzeltilir
+ScanDocumentHint = Sayfalar algılanır ve düzeltilir
 ScanPdfName = Taranmış belge
 ScanAppend = Sayfa tara
 ScanAdded = Taranan sayfalar sona eklendi

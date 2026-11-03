@@ -310,7 +310,7 @@ LegalPrivacy = Datenschutz
 LegalImpressum = Impressum
 
 ScanDocument = Dokument scannen
-ScanDocumentHint = Kamera: Seiten werden erkannt, zugeschnitten und begradigt
+ScanDocumentHint = Seiten erkannt und begradigt
 ScanPdfName = Gescanntes Dokument
 ScanAppend = Seiten scannen
 ScanAdded = Gescannte Seiten am Ende hinzugefügt

@@ -311,7 +311,7 @@ LegalPrivacy = Confidencialitat
 LegalImpressum = Mencions legalas
 
 ScanDocument = Escanar un document
-ScanDocumentHint = Aparelh fòto : paginas detectadas, retalhadas e adreçadas
+ScanDocumentHint = Paginas detectadas e adreçadas
 ScanPdfName = Document escanat
 ScanAppend = Escanar de paginas
 ScanAdded = Paginas escanadas apondudas a la fin

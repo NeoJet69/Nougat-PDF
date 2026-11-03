@@ -311,7 +311,7 @@ LegalPrivacy = Protecziun da datas
 LegalImpressum = Impressum
 
 ScanDocument = Scannar in document
-ScanDocumentHint = Camera: paginas renconuschidas, taglidas e drizzadas
+ScanDocumentHint = Paginas renconuschidas e drizzadas
 ScanPdfName = Document scannà
 ScanAppend = Scannar paginas
 ScanAdded = Paginas scannadas agiuntadas a la fin

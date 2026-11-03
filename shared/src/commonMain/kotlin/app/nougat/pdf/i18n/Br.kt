@@ -311,7 +311,7 @@ LegalPrivacy = Prevezded
 LegalImpressum = Titouroù lezennel
 
 ScanDocument = Skanañ un teul
-ScanDocumentHint = Benveg luc'hskeudenniñ : pajennoù kavet, troc'het hag adsavet
+ScanDocumentHint = Pajennoù kavet hag adsavet
 ScanPdfName = Teul skanet
 ScanAppend = Skanañ pajennoù
 ScanAdded = Pajennoù skanet ouzhpennet en dibenn
