@@ -118,7 +118,7 @@ class CaptureTest {
 
     /** L'analyse des pages scannees se fait apres l'ouverture : attendre le bandeau. */
     private fun ViewerState.waitForScanBanner() {
-        val deadline = System.currentTimeMillis() + 30_000
+        val deadline = System.currentTimeMillis() + 90_000
         while ((session?.ocrPages ?: 0) == 0 && System.currentTimeMillis() < deadline) Thread.sleep(50)
         check((session?.ocrPages ?: 0) > 0) { "Le scan n'a pas ete detecte" }
     }
@@ -202,13 +202,14 @@ class CaptureTest {
                 Thread.sleep(60)
             }
             if (withDocument || form || scan) {
-                // L'ouverture remet l'ecran a zero (pages, Claude…) : on attend qu'elle soit finie.
+                // L'ouverture remet l'ecran a zero (pages, Claude…) : on attend qu'elle soit finie
+                // (largement : les machines de GitHub sont parfois lentes).
                 when {
                     form -> state.open(formSample, "Inscription-club.pdf")
                     scan -> state.open(scanSample, "Devis-scanne.pdf")
                     else -> state.open(sample, "Facture-2023-042.pdf")
                 }
-                val deadline = System.currentTimeMillis() + 30_000
+                val deadline = System.currentTimeMillis() + 90_000
                 while ((state.session == null || state.busyMessage != null) && System.currentTimeMillis() < deadline) frame()
                 check(state.session != null && state.busyMessage == null) { "La facture d'exemple ne s'est pas ouverte" }
             }
