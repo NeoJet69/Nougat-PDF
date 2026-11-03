@@ -112,7 +112,9 @@ class TranslationState(
     private var worker: Job? = null
     private val wanted = mutableStateListOf<Int>()
     private var lastSource: String? = null
-    private var aiReady = false
+
+    /** Gemini Nano, verifie une fois par traduction (null : pas encore). */
+    private var aiStatus: DeviceAiStatus? = null
 
     fun start(s: DocumentSession, wantedSettings: TranslationSettings) {
         target = wantedSettings.target
@@ -126,7 +128,7 @@ class TranslationState(
         dialogOpen = false
         showOriginal = false
         lastSource = null
-        aiReady = false
+        aiStatus = null
         settings = wantedSettings
         reset(s)
         if (wantedSettings.engine == TranslationEngine.Device && wantedSettings.polish) {
@@ -134,7 +136,7 @@ class TranslationState(
                 // On n'attend jamais Gemini Nano : s'il n'est pas pret, Android le telecharge et il
                 // servira la prochaine fois.
                 val status = runCatching { engine.deviceAiStatus() }.getOrDefault(DeviceAiStatus.Unavailable)
-                aiReady = status == DeviceAiStatus.Available
+                aiStatus = status
                 if (status == DeviceAiStatus.Downloadable) scope.launch { runCatching { engine.prepareDeviceAi {} } }
                 if (status == DeviceAiStatus.Downloadable || status == DeviceAiStatus.Downloading) showMessage(tr(Str.TranslateAiLater))
             }
@@ -277,7 +279,12 @@ class TranslationState(
         val results = todo.zip(drafts).filter { (i, t) -> t.isNotBlank() && t.trim() != texts[i].trim() }
             .map { (i, t) -> i to t.trim() }.toMutableList()
         if (results.isEmpty()) return PageTranslation.Same
-        if (!(current.polish && aiReady)) return PageTranslation.Done(results.map { (i, t) -> TranslatedParagraph(paragraphs[i], t) })
+        val ai = if (current.polish) {
+            aiStatus ?: runCatching { engine.deviceAiStatus() }.getOrDefault(DeviceAiStatus.Unavailable).also { aiStatus = it }
+        } else {
+            DeviceAiStatus.Unavailable
+        }
+        if (ai != DeviceAiStatus.Available) return PageTranslation.Done(results.map { (i, t) -> TranslatedParagraph(paragraphs[i], t) })
 
         // Gemini Nano relit : la traduction de ML Kit s'affiche tout de suite, puis s'ameliore.
         onStep(PageTranslation.Done(results.map { (i, t) -> TranslatedParagraph(paragraphs[i], t) }))
