@@ -44,6 +44,21 @@ jobs:
           NOUGAT_KEY_ALIAS: ${{ secrets.NOUGAT_KEY_ALIAS }}
           NOUGAT_KEY_PASSWORD: ${{ secrets.NOUGAT_KEY_PASSWORD }}
         run: ./gradlew :androidApp:assembleRelease --console=plain
+      # Google Play : l'AAB est signe avec la cle d'envoi (upload key), seulement si elle est
+      # dans les secrets (NOUGAT_UPLOAD_KEYSTORE, ..._PASSWORD, NOUGAT_UPLOAD_KEY_ALIAS, ..._PASSWORD).
+      - name: AAB Google Play (si la clé d'envoi est présente)
+        env:
+          NOUGAT_UPLOAD_KEYSTORE: ${{ secrets.NOUGAT_UPLOAD_KEYSTORE }}
+          NOUGAT_KEYSTORE_PASSWORD: ${{ secrets.NOUGAT_UPLOAD_KEYSTORE_PASSWORD }}
+          NOUGAT_KEY_ALIAS: ${{ secrets.NOUGAT_UPLOAD_KEY_ALIAS }}
+          NOUGAT_KEY_PASSWORD: ${{ secrets.NOUGAT_UPLOAD_KEY_PASSWORD }}
+        run: |
+          if [ -z "$NOUGAT_UPLOAD_KEYSTORE" ]; then
+            echo "Pas de clé d'envoi Google Play (NOUGAT_UPLOAD_KEYSTORE) : pas d'AAB."
+            exit 0
+          fi
+          echo "$NOUGAT_UPLOAD_KEYSTORE" | base64 --decode > "$RUNNER_TEMP/upload.jks"
+          NOUGAT_KEYSTORE_FILE="$RUNNER_TEMP/upload.jks" ./gradlew :androidApp:bundleRelease --console=plain
       - name: Police chinoise pour les captures (中文)
         if: always()
         run: sudo apt-get install -y --no-install-recommends fonts-noto-cjk || echo "Police chinoise non installée"
@@ -69,6 +84,12 @@ jobs:
         with:
           name: nougat-pdf-android
           path: androidApp/build/outputs/apk/release/*.apk
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nougat-pdf-play
+          path: androidApp/build/outputs/bundle/release/*.aab
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -114,6 +135,8 @@ jobs:
         run: |
           mkdir sortie
           cp fichiers/nougat-pdf-android/*.apk "sortie/Nougat-PDF-$VERSION.apk"
+          # AAB pour Google Play : seulement si la cle d'envoi etait presente.
+          cp fichiers/nougat-pdf-play/*.aab "sortie/Nougat-PDF-$VERSION.aab" 2>/dev/null || echo "Pas d'AAB"
           cp fichiers/nougat-pdf-windows/exe/*.exe "sortie/Nougat-PDF-$VERSION.exe" 2>/dev/null || cp fichiers/nougat-pdf-windows/*.exe "sortie/Nougat-PDF-$VERSION.exe"
           cp fichiers/nougat-pdf-windows/msi/*.msi "sortie/Nougat-PDF-$VERSION.msi" 2>/dev/null || cp fichiers/nougat-pdf-windows/*.msi "sortie/Nougat-PDF-$VERSION.msi"
           ls -la sortie
