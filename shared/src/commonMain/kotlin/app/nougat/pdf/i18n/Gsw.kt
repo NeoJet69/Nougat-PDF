@@ -294,4 +294,14 @@ LicensesIntro = Nougat PDF isch freii Software under de MIT-Lizänz: jede dörf 
 LicensesComponents = Enthalteni Komponänte
 LicensesFullTexts = Vollständigi Lizänztext
 AboutFreeSoftware = Freii Software, under de MIT-Lizänz
+
+OcrExplainPhone = Nougat list de Text vo gscannte Siite und leit en unsichtbar uf s Bild: dänn chasch sueche, kopiere und de Claude läse laa. D Siite gseht gliich us. Alles passiert uf dem Telefon.
+OcrDownloadNote = ↓: Sprach wird eimal abeglade (2 bis 6 MB), nachher ohni Internet bruuchbar.
+OcrAi = Gemini Nano, d KI vo dem Telefon, list nomal: korrigiert unsicheri Wörter und list Handschrift
+OcrAiDownload = (Android ladt si zerscht abe)
+OcrDownloading = Sprach {0} wird abeglade… {1} %
+OcrDownloadFailed = D Sprach {0} het nöd chöne abeglade werde. Lueg d Internetverbindig aa und probier nomal.
+OcrAiPreparing = Gemini Nano wird vorbereitet…
+OcrAiLines = , {0} Ziile vom Gemini Nano korrigiert|, {0} Ziile vom Gemini Nano korrigiert
+OcrAiUnavailable = Gemini Nano isch nöd parat: erkännt ohni Korrektur
 """

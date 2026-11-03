@@ -294,4 +294,14 @@ LicensesIntro = Nougat PDF برنامج حر بترخيص MIT: يمكن لأي �
 LicensesComponents = المكوّنات المضمّنة
 LicensesFullTexts = النصوص الكاملة للتراخيص
 AboutFreeSoftware = برنامج حر بترخيص MIT
+
+OcrExplainPhone = يقرأ Nougat نص الصفحات الممسوحة ويضعه، غير مرئي، فوق الصورة: بعدها يمكنك البحث والنسخ وجعل Claude يقرؤه. تبقى الصفحة كما هي. كل شيء يجري على هذا الهاتف.
+OcrDownloadNote = ↓: لغة تُنزَّل مرة واحدة (من 2 إلى 6 ميغابايت)، ثم تعمل دون إنترنت.
+OcrAi = مراجعة بواسطة Gemini Nano، الذكاء الاصطناعي في هذا الهاتف: يصحّح الكلمات المشكوك فيها ويقرأ الخط اليدوي
+OcrAiDownload = (سيُنزّله Android أولًا)
+OcrDownloading = جارٍ تنزيل لغة {0}… {1} %
+OcrDownloadFailed = تعذّر تنزيل لغة {0}. تحقّق من الاتصال بالإنترنت وحاول مجددًا.
+OcrAiPreparing = جارٍ تحضير Gemini Nano…
+OcrAiLines = ، وراجع Gemini Nano سطرًا واحدًا|، وراجع Gemini Nano سطرين|، وراجع Gemini Nano {0} أسطر|، وراجع Gemini Nano {0} سطرًا
+OcrAiUnavailable = Gemini Nano غير جاهز: تم التعرّف دون مراجعة
 """

@@ -38,6 +38,8 @@ import kotlinx.coroutines.CompletableDeferred
 import app.nougat.pdf.engine.OcrOptions
 import app.nougat.pdf.engine.OcrSummary
 import app.nougat.pdf.engine.defaultOcrLanguages
+import app.nougat.pdf.engine.DeviceAiStatus
+import app.nougat.pdf.engine.OCR_LANGUAGES
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -669,11 +671,17 @@ class ViewerState(
 
     // ---- Reconnaissance de texte (OCR) ----------------------------------------------------------
 
-    /** La plateforme sait reconnaitre le texte des scans (ordinateur). */
+    /** La plateforme sait reconnaitre le texte des scans. */
     val canOcr: Boolean get() = engine.ocrLanguages.isNotEmpty()
 
-    /** Langues de reconnaissance installees. */
+    /** Langues de reconnaissance proposees. */
     val ocrLanguageChoices: List<String> get() = engine.ocrLanguages
+
+    /** Faux si la langue doit d'abord etre telechargee (Android). */
+    fun ocrLanguageReady(code: String): Boolean = engine.ocrLanguageReady(code)
+
+    /** Telephone : les langues se telechargent, tout se passe sur l'appareil. */
+    val ocrOnPhone: Boolean get() = engine.isPhone
 
     /** Fenetre « Reconnaitre le texte » ouverte. */
     var ocrDialog by mutableStateOf(false)
@@ -691,6 +699,23 @@ class ViewerState(
         runCatching { files.saveSetting(SETTING_OCR_LANGUAGES, languages.joinToString(",")) }
     }
 
+    /** L'IA de l'appareil (Gemini Nano) : verifiee a l'ouverture de la fenetre de l'OCR. */
+    var deviceAi by mutableStateOf(DeviceAiStatus.Unavailable)
+        private set
+
+    /** Relecture par l'IA de l'appareil demandee (gardee d'une fois a l'autre). */
+    var ocrAi by mutableStateOf(runCatching { files.loadSetting(SETTING_OCR_AI) }.getOrNull() != "false")
+        private set
+
+    fun chooseOcrAi(enabled: Boolean) {
+        ocrAi = enabled
+        runCatching { files.saveSetting(SETTING_OCR_AI, enabled.toString()) }
+    }
+
+    fun refreshDeviceAi() {
+        scope.launch { deviceAi = runCatching { engine.deviceAiStatus() }.getOrDefault(DeviceAiStatus.Unavailable) }
+    }
+
     /** Pendant une longue operation : arreter (null si l'operation ne s'arrete pas). */
     var busyCancel: (() -> Unit)? by mutableStateOf(null)
         private set
@@ -699,39 +724,93 @@ class ViewerState(
     private var ocrStop by mutableStateOf(false)
 
     /** Reconnait le texte des pages scannees, page par page, avec une barre de progression. */
-    fun recognizeText(currentPageOnly: Boolean, autoRotate: Boolean, redo: Boolean) {
+    fun recognizeText(currentPageOnly: Boolean, autoRotate: Boolean, redo: Boolean, ai: Boolean = false) {
         val s = session ?: return
         ocrDialog = false
-        val options = OcrOptions(ocrLanguages, if (currentPageOnly) listOf(s.visiblePage) else null, autoRotate, redo)
+        val options = OcrOptions(ocrLanguages, if (currentPageOnly) listOf(s.visiblePage) else null, autoRotate, redo, ai)
         scope.launch {
             val summary = runOcr(options, report = true) ?: return@launch
             var message = trn(Str.OcrDone, summary.recognized)
             if (summary.rotated > 0) message += trn(Str.OcrRotated, summary.rotated)
+            if (summary.aiLines > 0) message += trn(Str.OcrAiLines, summary.aiLines)
             toast = message
         }
     }
 
     /** Pour l'assistant : reconnait le texte et attend la fin (null : rien a reconnaitre). */
-    suspend fun recognizeTextAwait(pages: List<Int>?): OcrSummary? = runOcr(OcrOptions(ocrLanguages, pages), report = false)
+    suspend fun recognizeTextAwait(pages: List<Int>?): OcrSummary? =
+        runOcr(OcrOptions(ocrLanguages, pages, aiProofread = ocrAi && deviceAi == DeviceAiStatus.Available), report = false)
+
+    /**
+     * Prepare l'OCR : telecharge les langues qui manquent et, si la relecture est demandee,
+     * l'IA de l'appareil. Renvoie les options a utiliser, ou null (erreur deja montree).
+     */
+    private suspend fun prepareOcr(options: OcrOptions, report: Boolean): OcrOptions? {
+        var result = options
+        val missing = options.languages.filter { !engine.ocrLanguageReady(it) }
+        if (missing.isNotEmpty()) {
+            busyMessage = tr(Str.OcrDownloading, ocrLanguageName(missing.first()), 0)
+            try {
+                engine.prepareOcrLanguages(missing) { code, percent -> busyMessage = tr(Str.OcrDownloading, ocrLanguageName(code), percent) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                val names = missing.filter { !engine.ocrLanguageReady(it) }.joinToString(", ") { ocrLanguageName(it) }
+                if (!report) throw IllegalStateException(tr(Str.OcrDownloadFailed, names), e)
+                errorMessage = tr(Str.OcrDownloadFailed, names)
+                return null
+            } finally {
+                busyMessage = null
+            }
+        }
+        if (options.aiProofread) {
+            val status = runCatching { engine.deviceAiStatus() }.getOrDefault(DeviceAiStatus.Unavailable)
+            val ready = when (status) {
+                DeviceAiStatus.Available -> true
+                DeviceAiStatus.Unavailable -> false
+                DeviceAiStatus.Downloadable, DeviceAiStatus.Downloading -> {
+                    busyMessage = tr(Str.OcrAiPreparing)
+                    try {
+                        engine.prepareDeviceAi { bytes -> busyMessage = tr(Str.OcrAiPreparing) + " " + (bytes / 1_000_000) + " Mo" }
+                    } finally {
+                        busyMessage = null
+                    }
+                }
+            }
+            deviceAi = if (ready) DeviceAiStatus.Available else status
+            if (!ready) {
+                result = result.copy(aiProofread = false)
+                if (report) toast = tr(Str.OcrAiUnavailable)
+            }
+        }
+        return result
+    }
+
+    private fun ocrLanguageName(code: String): String = OCR_LANGUAGES.firstOrNull { it.first == code }?.second ?: code
 
     /**
      * Lance l'OCR dans une modification du document. [report] : les erreurs sont montrees a
      * l'utilisateur ; sinon elles remontent (l'assistant les recoit).
      */
-    private suspend fun runOcr(options: OcrOptions, report: Boolean): OcrSummary? {
+    private suspend fun runOcr(requested: OcrOptions, report: Boolean): OcrSummary? {
         ocrStop = false
-        var summary: OcrSummary? = null
-        val block: (EditableDoc) -> Unit = { doc ->
-            val result = doc.recognizeText(options) { done, total ->
-                busyMessage = tr(Str.OcrProgress, done, total)
-                !ocrStop
-            }
-            summary = result
-            if (result.recognized == 0) throw NothingRecognized(result.cancelled || ocrStop)
-        }
         busyCancel = { ocrStop = true }
-        val ok = try {
-            if (report) {
+        try {
+            val options = prepareOcr(requested, report) ?: return null
+            if (ocrStop) {
+                if (report) toast = tr(Str.OcrStopped)
+                return null
+            }
+            var summary: OcrSummary? = null
+            val block: (EditableDoc) -> Unit = { doc ->
+                val result = doc.recognizeText(options) { done, total ->
+                    busyMessage = tr(Str.OcrProgress, done, total)
+                    !ocrStop
+                }
+                summary = result
+                if (result.recognized == 0) throw NothingRecognized(result.cancelled || ocrStop)
+            }
+            val ok = if (report) {
                 editNow(tr(Str.OcrPreparing), session?.password, block)
             } else {
                 try {
@@ -741,13 +820,13 @@ class ViewerState(
                     false
                 }
             }
+            if (!ok) return null
+            // Recompter : apres un arret ou une seule page, il en reste peut-etre (le bandeau le dit).
+            session?.let { s -> s.ocrPages = runCatching { s.document.pagesNeedingOcr() }.getOrDefault(0) }
+            return summary
         } finally {
             busyCancel = null
         }
-        if (!ok) return null
-        // Recompter : apres un arret ou une seule page, il en reste peut-etre (le bandeau le dit).
-        session?.let { s -> s.ocrPages = runCatching { s.document.pagesNeedingOcr() }.getOrDefault(0) }
-        return summary
     }
 
     // ---- Creer un PDF -----------------------------------------------------------------------------
@@ -885,6 +964,7 @@ class ViewerState(
         const val SETTING_RECENTS = "recents"
         const val SETTING_LANGUAGE = "language"
         const val SETTING_OCR_LANGUAGES = "ocr.languages"
+        const val SETTING_OCR_AI = "ocr.ai"
         const val MAX_RECENTS = 8
     }
 }

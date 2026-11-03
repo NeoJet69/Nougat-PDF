@@ -293,4 +293,14 @@ LicensesIntro = Nougat PDF 是采用 MIT 许可证的自由软件：任何人都
 LicensesComponents = 包含的组件
 LicensesFullTexts = 许可证全文
 AboutFreeSoftware = 自由软件，采用 MIT 许可证
+
+OcrExplainPhone = Nougat 会读取扫描页上的文字，并以不可见的方式覆盖在图像上：之后即可搜索、复制并让 Claude 阅读。页面外观完全不变。全部在这部手机上完成。
+OcrDownloadNote = ↓：该语言只需下载一次（2–6 MB），之后无需联网即可使用。
+OcrAi = 由本机 AI Gemini Nano 校对：纠正可疑的字词并识别手写文字
+OcrAiDownload = （Android 会先下载它）
+OcrDownloading = 正在下载 {0}… {1}%
+OcrDownloadFailed = 无法下载 {0}。请检查网络连接后重试。
+OcrAiPreparing = 正在准备 Gemini Nano…
+OcrAiLines = ，Gemini Nano 校对了 {0} 行
+OcrAiUnavailable = Gemini Nano 尚未就绪：已在不校对的情况下完成识别
 """

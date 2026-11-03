@@ -294,4 +294,14 @@ LicensesIntro = Nougat PDF hè un prugramma liberu sottu licenza MIT : ognunu u 
 LicensesComponents = Cumpunenti inclusi
 LicensesFullTexts = Testi cumpleti di e licenze
 AboutFreeSoftware = Prugramma liberu, sottu licenza MIT
+
+OcrExplainPhone = Nougat leghje u testu di e pagine scansate è u mette, invisibile, nant'à a fiura : dopu pudete circà, cupià è fà lu leghje à Claude. A pagina ferma listessa. Tuttu si face nant'à stu telefonu.
+OcrDownloadNote = ↓ : lingua scaricata una volta sola (da 2 à 6 Mo), dopu aduprevule senza Internet.
+OcrAi = Rilettura da Gemini Nano, l'IA di stu telefonu : currege e parolle dubbiose è leghje a scrittura à manu
+OcrAiDownload = (Android a scaricherà prima)
+OcrDownloading = Scaricamentu di a lingua {0}… {1} %
+OcrDownloadFailed = Impussibule di scaricà a lingua {0}. Verificate a cunnessione Internet è pruvate torna.
+OcrAiPreparing = Preparazione di Gemini Nano…
+OcrAiLines = , {0} linea riletta da Gemini Nano|, {0} linee rilette da Gemini Nano
+OcrAiUnavailable = Gemini Nano ùn hè micca prontu : ricunniscenza senza rilettura
 """

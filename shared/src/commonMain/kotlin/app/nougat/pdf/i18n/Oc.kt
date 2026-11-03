@@ -294,4 +294,14 @@ LicensesIntro = Nougat PDF es un logicial liure jos licéncia MIT : cadun lo pò
 LicensesComponents = Compausants enclauses
 LicensesFullTexts = Tèxtes complets de las licéncias
 AboutFreeSoftware = Logicial liure, jos licéncia MIT
+
+OcrExplainPhone = Nougat legís lo tèxte de las paginas escanadas e lo pausa, invisible, sus l'imatge : puèi podètz cercar, copiar e lo far legir a Claude. La pagina cambia pas a l'uèlh. Tot se fa sus aqueste telefòn.
+OcrDownloadNote = ↓ : lenga telecargada un sol còp (de 2 a 6 Mo), puèi utilizabla sens Internet.
+OcrAi = Relectura per Gemini Nano, l'IA d'aqueste telefòn : corregís los mots dobtoses e legís l'escritura a la man
+OcrAiDownload = (Android la telecargarà d'en primièr)
+OcrDownloading = Telecargament de la lenga {0}… {1} %
+OcrDownloadFailed = Impossible de telecargar la lenga {0}. Verificatz la connexion Internet e tornatz ensajar.
+OcrAiPreparing = Preparacion de Gemini Nano…
+OcrAiLines = , {0} linha relegida per Gemini Nano|, {0} linhas relegidas per Gemini Nano
+OcrAiUnavailable = Gemini Nano es pas prèst : reconeissença sens relectura
 """

@@ -48,4 +48,6 @@ enum class Str {
     OcrPagesAll, OcrPagesCurrent, OcrAutoRotate, OcrRedo, OcrStart, OcrPreparing,
     OcrProgress, OcrDone, OcrRotated, OcrNothing, OcrStopped, TextChangedScan,
     ActRecognize, Licenses, LicensesIntro, LicensesComponents, LicensesFullTexts, AboutFreeSoftware,
+    OcrExplainPhone, OcrDownloadNote, OcrAi, OcrAiDownload, OcrDownloading, OcrDownloadFailed,
+    OcrAiPreparing, OcrAiLines, OcrAiUnavailable,
 }

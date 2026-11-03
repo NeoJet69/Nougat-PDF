@@ -125,6 +125,9 @@ if (!desktopOnly) {
                 implementation(libs.pdfbox.android)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.anthropic.java)
+                // OCR : Tesseract 5 pour Android, et Gemini Nano (IA de l'appareil) pour relire.
+                implementation(libs.tesseract4android)
+                implementation(libs.mlkit.genai.prompt)
             }
         }
     }

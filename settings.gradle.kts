@@ -28,6 +28,10 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        // Tesseract pour Android (Tesseract4Android) n'est publie que sur JitPack.
+        maven("https://jitpack.io") {
+            content { includeGroup("cz.adaptech.tesseract4android") }
+        }
     }
 }
 

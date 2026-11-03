@@ -294,4 +294,14 @@ LicensesIntro = Nougat PDF è software liber sut la licenza MIT: mintgin al po u
 LicensesComponents = Components inclus
 LicensesFullTexts = Texts cumplets da las licenzas
 AboutFreeSoftware = Software liber, sut la licenza MIT
+
+OcrExplainPhone = Nougat legia il text da las paginas scannadas e al metta, invisibel, sin il maletg: lura pos ti tschertgar, copiar e laschar leger Claude. La pagina resta tuttina. Tut capita sin quest telefon.
+OcrDownloadNote = ↓: lingua chargiada giu ina giada (2 fin 6 MB), lura utilisabla senza internet.
+OcrAi = Correctura tras Gemini Nano, la IA da quest telefon: curregia pleds dubitaivels e legia scrittira a maun
+OcrAiDownload = (Android al chargia giu l'emprim)
+OcrDownloading = Chargiar giu la lingua {0}… {1} %
+OcrDownloadFailed = Impussibel da chargiar giu la lingua {0}. Controllescha la connexiun cun l'internet e emprova anc ina giada.
+OcrAiPreparing = Preparar Gemini Nano…
+OcrAiLines = , {0} lingia curregida da Gemini Nano|, {0} lingias curregidas da Gemini Nano
+OcrAiUnavailable = Gemini Nano n'è betg pront: renconuschientscha senza correctura
 """

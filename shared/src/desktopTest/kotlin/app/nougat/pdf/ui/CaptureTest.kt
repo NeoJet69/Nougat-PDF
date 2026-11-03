@@ -9,6 +9,8 @@ import app.nougat.pdf.assistant.AssistantSettings
 import app.nougat.pdf.assistant.AssistantToolbox
 import app.nougat.pdf.assistant.ChatItem
 import app.nougat.pdf.engine.DesktopPdfEngine
+import app.nougat.pdf.engine.DeviceAiStatus
+import app.nougat.pdf.engine.PdfEngine
 import app.nougat.pdf.engine.InkMark
 import app.nougat.pdf.engine.NPoint
 import app.nougat.pdf.engine.makeSampleForm
@@ -107,6 +109,11 @@ class CaptureTest {
         }
         shot("23-telephone-scan", 412, 892, 2f, phone, scan = true) { it.waitForScanBanner() }
         shot("24-licences", 412, 892, 2f, phone) { it.licensesOpen = true }
+        // Android : langues a telecharger (↓) et relecture par Gemini Nano (telephone compatible simule).
+        shot("25-telephone-ocr", 412, 892, 2f, phone, scan = true, engine = PhoneLikeEngine()) { state ->
+            state.waitForScanBanner()
+            state.ocrDialog = true
+        }
     }
 
     /** L'analyse des pages scannees se fait apres l'ouverture : attendre le bandeau. */
@@ -170,10 +177,12 @@ class CaptureTest {
         scan: Boolean = false,
         /** Langue de l'interface (code, voir Lang). */
         language: String = "fr",
+        /** Moteur PDF (par defaut celui de l'ordinateur). */
+        engine: PdfEngine = DesktopPdfEngine(),
         setup: (ViewerState) -> Unit = {},
     ) {
         val files = FakeFiles(dir, language)
-        val state = ViewerState(DesktopPdfEngine(), CoroutineScope(SupervisorJob() + Dispatchers.Default), files, NoAssistant)
+        val state = ViewerState(engine, CoroutineScope(SupervisorJob() + Dispatchers.Default), files, NoAssistant)
         // Auto -> Clair -> Sombre
         state.cycleTheme()
         if (dark) state.cycleTheme()
@@ -211,6 +220,13 @@ class CaptureTest {
         } finally {
             scene.close()
         }
+    }
+
+    /** Le moteur de l'ordinateur, presente comme un telephone avec Gemini Nano (pour la capture). */
+    private class PhoneLikeEngine(private val desktop: DesktopPdfEngine = DesktopPdfEngine()) : PdfEngine by desktop {
+        override val isPhone: Boolean get() = true
+        override fun ocrLanguageReady(code: String): Boolean = code == "fra" || code == "eng"
+        override suspend fun deviceAiStatus(): DeviceAiStatus = DeviceAiStatus.Available
     }
 
     private object NoAssistant : AssistantEngine {

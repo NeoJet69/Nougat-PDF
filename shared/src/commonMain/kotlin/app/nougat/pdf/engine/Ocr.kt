@@ -16,6 +16,8 @@ data class OcrOptions(
     val autoRotate: Boolean = true,
     /** Refaire aussi les pages deja reconnues par Nougat (autre langue...). */
     val redo: Boolean = false,
+    /** Faire relire les lignes douteuses par l'IA de l'appareil (Gemini Nano, Android). */
+    val aiProofread: Boolean = false,
 )
 
 /** Le bilan d'une reconnaissance. */
@@ -29,7 +31,24 @@ data class OcrSummary(
     val words: Int,
     /** L'utilisateur a arrete en cours de route (les pages deja faites sont gardees). */
     val cancelled: Boolean = false,
+    /** Lignes corrigees par l'IA de l'appareil. */
+    val aiLines: Int = 0,
 )
+
+/** L'IA qui tourne sur l'appareil (Gemini Nano sur les telephones Android compatibles). */
+enum class DeviceAiStatus {
+    /** Pas sur cet appareil. */
+    Unavailable,
+
+    /** Possible, mais le modele doit d'abord etre telecharge par Android. */
+    Downloadable,
+
+    /** En cours de telechargement par Android. */
+    Downloading,
+
+    /** Prete. */
+    Available,
+}
 
 /** Langues de reconnaissance proposees : code Tesseract et nom dans la langue. */
 val OCR_LANGUAGES: List<Pair<String, String>> = listOf(

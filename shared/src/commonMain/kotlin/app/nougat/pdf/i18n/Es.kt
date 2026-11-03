@@ -293,4 +293,14 @@ LicensesIntro = Nougat PDF es software libre con licencia MIT: cualquiera puede 
 LicensesComponents = Componentes incluidos
 LicensesFullTexts = Textos completos de las licencias
 AboutFreeSoftware = Software libre, con licencia MIT
+
+OcrExplainPhone = Nougat lee el texto de las páginas escaneadas y lo coloca, invisible, sobre la imagen: después puedes buscar, copiar y hacer que Claude lo lea. La página se ve igual. Todo ocurre en este teléfono.
+OcrDownloadNote = ↓: idioma que se descarga una sola vez (de 2 a 6 MB) y luego funciona sin Internet.
+OcrAi = Revisión con Gemini Nano, la IA de este teléfono: corrige las palabras dudosas y lee la escritura a mano
+OcrAiDownload = (Android la descargará primero)
+OcrDownloading = Descargando el idioma {0}… {1} %
+OcrDownloadFailed = No se pudo descargar el idioma {0}. Comprueba la conexión a Internet y vuelve a intentarlo.
+OcrAiPreparing = Preparando Gemini Nano…
+OcrAiLines = , {0} línea revisada por Gemini Nano|, {0} líneas revisadas por Gemini Nano
+OcrAiUnavailable = Gemini Nano no está listo: reconocimiento sin revisión
 """

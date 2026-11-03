@@ -27,10 +27,24 @@ import kotlin.math.roundToInt
  */
 class AndroidPdfEngine(context: Context) : PdfEngine {
     private val appContext = context.applicationContext
+    private val ocrModels = AndroidOcrModels(appContext)
 
     init {
         PDFBoxResourceLoader.init(appContext)
     }
+
+    override val isPhone: Boolean get() = true
+
+    override val ocrLanguages: List<String> get() = ocrModels.languages
+
+    override fun ocrLanguageReady(code: String): Boolean = ocrModels.ready(code)
+
+    override suspend fun prepareOcrLanguages(codes: List<String>, onProgress: (String, Int) -> Unit) =
+        withContext(Dispatchers.IO) { ocrModels.prepare(codes, onProgress) }
+
+    override suspend fun deviceAiStatus(): DeviceAiStatus = GeminiNano.status()
+
+    override suspend fun prepareDeviceAi(onBytes: (Long) -> Unit): Boolean = GeminiNano.download(onBytes)
 
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val file = File(path)
@@ -45,7 +59,7 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
     override suspend fun edit(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit) =
         withContext(Dispatchers.IO) {
             try {
-                editWithPdfBoxAndroid(src, password, dst, block)
+                editWithPdfBoxAndroid(src, password, dst, ocrModels, block)
             } catch (_: InvalidPasswordException) {
                 throw PasswordRequiredException(wrongPassword = password != null)
             }
@@ -154,6 +168,15 @@ private class AndroidPdfDocument(
                 val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }
                 pageFormFieldsAndroid(doc, index)
             }.getOrDefault(emptyList())
+        }
+    }
+
+    override suspend fun pagesNeedingOcr(): Int = withContext(Dispatchers.IO) {
+        textMutex.withLock {
+            runCatching {
+                val doc = textDoc ?: PDDocument.load(textFile).also { textDoc = it }
+                countPagesNeedingOcrAndroid(doc)
+            }.getOrDefault(0)
         }
     }
 

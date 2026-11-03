@@ -25,29 +25,38 @@ Le **dock** en bas de l'écran choisit le mode : **Lire**, **Éditer**, **Annote
 - **Annuler** (Ctrl+Z) : annule la dernière annotation ou la dernière opération
 - Zoom : pincer avec deux doigts (téléphone), Ctrl + molette ou Ctrl +/− (ordinateur)
 
-## Reconnaître le texte d'un scan (OCR) — Windows
+## Reconnaître le texte d'un scan (OCR) — Windows et Android
 
 Un PDF scanné ou photographié n'est qu'une image : on ne peut ni y chercher un mot, ni le copier,
 ni le modifier. Nougat le détecte à l'ouverture et propose **Reconnaître le texte** (aussi dans
-le menu ⋮). Tout se fait **sur l'ordinateur, sans Internet** (moteur Tesseract 5, modèles les plus
-précis, 16 langues : choisir celles du document, plusieurs à la fois si besoin).
+le menu ⋮). Tout se fait **sur l'appareil** (moteur Tesseract 5, modèles les plus précis,
+16 langues : choisir celles du document, plusieurs à la fois si besoin).
 
 - **Invisible** : le texte reconnu est posé mot par mot exactement sur l'image, en texte invisible
   (comme Acrobat). La page ne change pas à l'œil, mais on peut **chercher**, **sélectionner**,
   **copier** et demander à **Claude** de lire ou résumer le scan.
 - **Pages redressées** : une page couchée ou à l'envers est remise droite automatiquement ; les
   pages un peu penchées sont suivies ligne par ligne.
+- **Photos** : l'éclairage est corrigé avant la lecture (ombre de la main, coin sombre, papier
+  jauni).
 - **Rapide** : plusieurs pages reconnues en parallèle, avec une barre de progression et un
   bouton **Arrêter** (les pages déjà faites sont gardées).
 - **Sans doublon** : les pages qui contiennent déjà du texte sont laissées telles quelles ;
   « Refaire » remplace l'ancienne reconnaissance (autre langue…) au lieu d'en ajouter une.
-- **Modifier un scan** : après la reconnaissance, le mode **Éditer** fonctionne sur les lignes
-  scannées. Nougat efface la ligne de l'image en reconstituant le papier (sa teinte, son grain),
-  puis écrit le nouveau texte **dans la police la plus ressemblante** (comparée lettre à lettre
-  avec l'image : Arial, Times, Calibri, Georgia, Courier… en gras ou italique), à la même taille,
-  la même couleur d'encre et la même inclinaison.
+- **Modifier un scan** (Windows) : après la reconnaissance, le mode **Éditer** fonctionne sur les
+  lignes scannées. Nougat efface la ligne de l'image en reconstituant le papier (sa teinte, son
+  grain), puis écrit le nouveau texte **dans la police la plus ressemblante** (comparée lettre à
+  lettre avec l'image : Arial, Times, Calibri, Georgia, Courier… en gras ou italique), à la même
+  taille, la même couleur d'encre et la même inclinaison. Sur Android, ce sera pour une prochaine
+  version.
 
-Sur Android, l'OCR viendra dans une prochaine version.
+**Sur Android** : le français et l'anglais sont livrés dans l'app ; les autres langues (marquées ↓)
+se téléchargent une seule fois (2 à 6 Mo), ensuite tout fonctionne sans Internet. Sur les
+téléphones compatibles avec **Gemini Nano**, l'IA de Google intégrée au téléphone (Pixel 9 et
+suivants, Galaxy S26…), l'option **Relecture par Gemini Nano** fait relire les lignes où Tesseract
+doute : Gemini Nano voit l'image de la ligne et corrige la lecture (taches, plis, photo floue), et
+sait même lire une **écriture manuscrite**. Tesseract garde la place exacte de chaque mot ; une
+correction n'est gardée que si elle est vraisemblable. Tout reste sur le téléphone.
 
 **Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
 blanche, un autre PDF ou des images à la fin.
@@ -121,7 +130,7 @@ L'assistant est la seule partie de Nougat qui utilise Internet.
 ## Prochaines idées
 
 - Compresser un PDF
-- OCR sur Android
+- Modifier les lignes scannées sur Android
 - Déplacer / redimensionner une annotation après l'avoir posée
 
 ## Installer
@@ -168,8 +177,11 @@ version (signée avec la clé de test), puis les mises à jour s'installeront no
 Kotlin + Compose Multiplatform. Le moteur PDF est [Apache PDFBox](https://pdfbox.apache.org/) sur
 ordinateur, `PdfRenderer` d'Android + [PdfBox-Android](https://github.com/TomRoush/PdfBox-Android)
 sur téléphone. L'OCR utilise [Tesseract](https://github.com/tesseract-ocr/tesseract) 5 (via
-[JavaCPP Presets](https://github.com/bytedeco/javacpp-presets)) avec les modèles `tessdata_best`,
-téléchargés à la construction (tâche `downloadTessdata`) et livrés avec l'installateur Windows.
+[JavaCPP Presets](https://github.com/bytedeco/javacpp-presets) sur ordinateur,
+[Tesseract4Android](https://github.com/adaptech-cz/Tesseract4Android) sur Android) avec les modèles
+`tessdata_best`, téléchargés à la construction (tâche `downloadTessdata`). La logique de l'OCR est
+commune aux deux (`shared/src/jvmShared/.../engine/OcrCore.kt`). La relecture sur Android passe par
+l'[API Prompt de ML Kit](https://developer.android.com/ai/gemini-nano) (Gemini Nano).
 
 ```
 shared/       le cœur commun : interface, recherche, moteurs PDF

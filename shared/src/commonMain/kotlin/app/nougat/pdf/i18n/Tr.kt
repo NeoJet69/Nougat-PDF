@@ -293,4 +293,14 @@ LicensesIntro = Nougat PDF, MIT lisansı altında özgür bir yazılımdır: her
 LicensesComponents = Dahil edilen bileşenler
 LicensesFullTexts = Lisansların tam metinleri
 AboutFreeSoftware = Özgür yazılım, MIT lisansıyla
+
+OcrExplainPhone = Nougat taranmış sayfaların metnini okur ve görüntünün üzerine görünmez olarak yerleştirir: sonra arayabilir, kopyalayabilir ve Claude'a okutabilirsiniz. Sayfa aynı görünür. Her şey bu telefonda yapılır.
+OcrDownloadNote = ↓: dil yalnızca bir kez indirilir (2-6 MB), sonra İnternet olmadan kullanılır.
+OcrAi = Bu telefonun yapay zekâsı Gemini Nano ile düzeltme: şüpheli sözcükleri düzeltir ve el yazısını okur
+OcrAiDownload = (Android önce indirecek)
+OcrDownloading = {0} dili indiriliyor… %{1}
+OcrDownloadFailed = {0} dili indirilemedi. İnternet bağlantısını kontrol edip yeniden deneyin.
+OcrAiPreparing = Gemini Nano hazırlanıyor…
+OcrAiLines = , Gemini Nano {0} satırı düzeltti
+OcrAiUnavailable = Gemini Nano hazır değil: düzeltme olmadan tanındı
 """

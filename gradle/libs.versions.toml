@@ -10,6 +10,8 @@ pdfboxAndroid = "2.0.27.0"
 tesseract = "5.5.3-1.5.14"
 leptonica = "1.87.0-1.5.14"
 javacpp = "1.5.14"
+tesseract4android = "4.9.0"
+mlkitGenaiPrompt = "1.0.0-beta4"
 activity = "1.10.0"
 anthropic = "3.3.0"
 desugar = "2.1.5"
@@ -31,6 +33,8 @@ pdfbox-android = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfbo
 tesseract = { module = "org.bytedeco:tesseract", version.ref = "tesseract" }
 leptonica = { module = "org.bytedeco:leptonica", version.ref = "leptonica" }
 javacpp = { module = "org.bytedeco:javacpp", version.ref = "javacpp" }
+tesseract4android = { module = "cz.adaptech.tesseract4android:tesseract4android", version.ref = "tesseract4android" }
+mlkit-genai-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkitGenaiPrompt" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

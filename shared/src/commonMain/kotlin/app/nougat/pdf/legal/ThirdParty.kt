@@ -107,18 +107,20 @@ object Licenses {
             texts = listOf(LicenseTexts.SLF4J),
         ),
         ThirdParty(
-            "Tesseract OCR 5.5.3", "Apache-2.0", "Tesseract OCR contributors (Google Inc. and others)",
-            "https://github.com/tesseract-ocr/tesseract", Shipped.Windows,
+            "Tesseract OCR (5.5.3 on Windows, 5.5.1 on Android)", "Apache-2.0",
+            "Tesseract OCR contributors (Google Inc. and others)",
+            "https://github.com/tesseract-ocr/tesseract",
             details = "The invisible text layer uses a font adapted from Tesseract's glyphless font (pdf.ttf).",
         ),
         ThirdParty(
             "Tesseract language models (tessdata_best, 16 languages)", "Apache-2.0",
             "Tesseract OCR contributors (Google Inc. and others)",
-            "https://github.com/tesseract-ocr/tessdata_best", Shipped.Windows,
-            details = "Integer versions published by the tesseract.js-data project (https://github.com/naptha/tessdata).",
+            "https://github.com/tesseract-ocr/tessdata_best",
+            details = "Integer versions published by the tesseract.js-data project (https://github.com/naptha/tessdata). " +
+                "On Android, French and English are included and the other languages are downloaded on demand.",
         ),
         ThirdParty(
-            "Leptonica 1.87.0", "BSD-2-Clause", "Leptonica", "http://www.leptonica.org", Shipped.Windows,
+            "Leptonica (1.87.0 on Windows, 1.85.0 on Android)", "BSD-2-Clause", "Leptonica", "http://www.leptonica.org",
             texts = listOf(LicenseTexts.LEPTONICA),
         ),
         ThirdParty(
@@ -126,8 +128,8 @@ object Licenses {
             Shipped.Windows, texts = listOf(LicenseTexts.ZLIB),
         ),
         ThirdParty(
-            "libpng 1.6.53 (inside Leptonica)", "libpng-2.0", "The PNG Reference Library Authors; Cosmin Truta; Glenn Randers-Pehrson",
-            "http://www.libpng.org", Shipped.Windows, texts = listOf(LicenseTexts.LIBPNG),
+            "libpng (1.6.53 on Windows, 1.6.48 on Android)", "libpng-2.0", "The PNG Reference Library Authors; Cosmin Truta; Glenn Randers-Pehrson",
+            "http://www.libpng.org", texts = listOf(LicenseTexts.LIBPNG),
         ),
         ThirdParty(
             "libjpeg-turbo 3.0.1 (inside Leptonica)", "IJG AND BSD-3-Clause AND Zlib",
@@ -198,6 +200,24 @@ object Licenses {
         ThirdParty(
             "Bouncy Castle", "MIT", "The Legion of the Bouncy Castle Inc.", "https://www.bouncycastle.org",
             Shipped.Android, texts = listOf(LicenseTexts.BOUNCY_CASTLE),
+        ),
+        ThirdParty(
+            "Tesseract4Android 4.9.0", "Apache-2.0", "Adaptech s.r.o., Robert Pösel; Robert Theis; Google Inc.",
+            "https://github.com/adaptech-cz/Tesseract4Android", Shipped.Android,
+            details = "Builds Tesseract, Leptonica, libjpeg and libpng for Android.",
+        ),
+        ThirdParty(
+            "libjpeg 9f (inside Tesseract4Android)", "IJG", "Thomas G. Lane, Guido Vollbeding (Independent JPEG Group)",
+            "https://ijg.org", Shipped.Android,
+            details = "This software is based in part on the work of the Independent JPEG Group.",
+            texts = listOf(LicenseTexts.IJG),
+        ),
+        ThirdParty(
+            "Google ML Kit GenAI Prompt API (Gemini Nano)", "ML Kit Terms of Service (not open source)", "Google LLC",
+            "https://developers.google.com/ml-kit/terms", Shipped.Android,
+            details = "Closed-source library from Google, used only to ask Gemini Nano (the AI built into compatible " +
+                "phones, provided by Android's AICore) to proofread doubtful OCR lines. The Gemini Nano model is not " +
+                "part of this app. Subject to Google's terms and Generative AI Prohibited Use Policy, not to the MIT license.",
         ),
     )
 

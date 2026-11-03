@@ -19,9 +19,9 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 /** Ouvre, modifie et enregistre un PDF avec PDFBox (version Android, PdfBox-Android). */
-internal fun editWithPdfBoxAndroid(src: String, password: String?, dst: String, block: (EditableDoc) -> Unit) {
+internal fun editWithPdfBoxAndroid(src: String, password: String?, dst: String, models: AndroidOcrModels?, block: (EditableDoc) -> Unit) {
     PDDocument.load(File(src), password ?: "").use { doc ->
-        val editable = AndroidEditableDoc(doc, password)
+        val editable = AndroidEditableDoc(doc, password, File(src), models)
         try {
             block(editable)
             editable.applySecurity()
@@ -35,7 +35,7 @@ internal fun editWithPdfBoxAndroid(src: String, password: String?, dst: String, 
 /** Cree un nouveau PDF avec PdfBox-Android. */
 internal fun createWithPdfBoxAndroid(dst: String, block: (EditableDoc) -> Unit) {
     PDDocument().use { doc ->
-        val editable = AndroidEditableDoc(doc, null)
+        val editable = AndroidEditableDoc(doc, null, null, null)
         try {
             block(editable)
             if (doc.numberOfPages == 0) doc.addPage(PDPage(PDRectangle(A4_WIDTH, A4_HEIGHT)))
@@ -86,7 +86,13 @@ private fun loadUprightBitmap(path: String, maxSide: Int = 2400): Pair<Bitmap, B
     return rotated to lossless
 }
 
-private class AndroidEditableDoc(private val doc: PDDocument, private var password: String?) : EditableDoc {
+private class AndroidEditableDoc(
+    private val doc: PDDocument,
+    private var password: String?,
+    /** Le fichier d'origine (rendu des pages pour l'OCR) ; null pour un nouveau document. */
+    private val src: File?,
+    private val ocrModels: AndroidOcrModels?,
+) : EditableDoc {
     private val sources = ArrayList<PDDocument>()
     private val font by lazy { PDType1Font.HELVETICA }
 
@@ -161,6 +167,12 @@ private class AndroidEditableDoc(private val doc: PDDocument, private var passwo
         replaceTextWithPdfBoxAndroid(doc, block, newText)
 
     override fun setFieldValue(name: String, value: String) = setFormFieldValueAndroid(doc, name, value)
+
+    override fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary {
+        val models = ocrModels ?: throw UnsupportedOperationException("OCR indisponible")
+        val reader = if (options.aiProofread) GeminiNano.lineReader(options.languages) else null
+        return recognizeDocumentAndroid(doc, src, models, options, reader, ::geometry, ::setRotation, progress)
+    }
 
     fun applySecurity() {
         val pwd = password

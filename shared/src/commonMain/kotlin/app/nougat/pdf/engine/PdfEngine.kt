@@ -23,8 +23,26 @@ interface PdfEngine {
     /** Cree un nouveau PDF [dst] : document vide, rempli par [block] (pages blanches, images...). */
     suspend fun create(dst: String, block: (EditableDoc) -> Unit)
 
+    /** Telephone ou tablette (et non ordinateur) : change quelques textes. */
+    val isPhone: Boolean get() = false
+
     /** Langues de reconnaissance de texte (OCR) disponibles ; vide si la plateforme ne sait pas faire. */
     val ocrLanguages: List<String> get() = emptyList()
+
+    /** Faux si la langue d'OCR [code] doit d'abord etre telechargee (une seule fois). */
+    fun ocrLanguageReady(code: String): Boolean = true
+
+    /**
+     * Telecharge les langues d'OCR [codes] qui manquent ([onProgress] : langue, pourcentage).
+     * Leve une exception si une langue ne peut pas etre obtenue.
+     */
+    suspend fun prepareOcrLanguages(codes: List<String>, onProgress: (String, Int) -> Unit) {}
+
+    /** L'IA de l'appareil (Gemini Nano sur Android) pour relire l'OCR. */
+    suspend fun deviceAiStatus(): DeviceAiStatus = DeviceAiStatus.Unavailable
+
+    /** Fait telecharger l'IA de l'appareil par le systeme ([onBytes] : progression). Vrai si elle est prete. */
+    suspend fun prepareDeviceAi(onBytes: (Long) -> Unit): Boolean = false
 }
 
 interface PdfDocument : AutoCloseable {

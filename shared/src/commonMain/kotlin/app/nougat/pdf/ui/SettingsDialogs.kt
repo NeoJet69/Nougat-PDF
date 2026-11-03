@@ -46,6 +46,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import app.nougat.pdf.engine.OCR_LANGUAGES
+import app.nougat.pdf.engine.DeviceAiStatus
+import androidx.compose.runtime.LaunchedEffect
 
 /**
  * Premier enregistrement d'un document : remplacer le fichier d'origine, ou enregistrer une
@@ -177,6 +179,8 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
     var currentOnly by remember { mutableStateOf(false) }
     var autoRotate by remember { mutableStateOf(true) }
     var redo by remember { mutableStateOf(false) }
+    var ai by remember { mutableStateOf(state.ocrAi) }
+    LaunchedEffect(Unit) { state.refreshDeviceAi() }
     val p = LocalNougatPalette.current
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -184,7 +188,7 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
         title = { Text(tr(Str.RecognizeText)) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(tr(Str.OcrExplain), style = MaterialTheme.typography.bodyMedium, color = p.muted)
+                Text(tr(if (state.ocrOnPhone) Str.OcrExplainPhone else Str.OcrExplain), style = MaterialTheme.typography.bodyMedium, color = p.muted)
                 Text(tr(Str.OcrLanguages), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     for ((code, name) in OCR_LANGUAGES) {
@@ -193,7 +197,7 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
                         FilterChip(
                             selected = selected,
                             onClick = { languages = if (selected) languages - code else languages + code },
-                            label = { Text(name) },
+                            label = { Text(if (state.ocrLanguageReady(code)) name else "$name ↓") },
                             leadingIcon = if (selected) {
                                 { Icon(Icons.Filled.Check, contentDescription = null, Modifier.size(18.dp)) }
                             } else {
@@ -207,12 +211,19 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
                         )
                     }
                 }
+                if (state.ocrLanguageChoices.any { !state.ocrLanguageReady(it) }) {
+                    Text(tr(Str.OcrDownloadNote), style = MaterialTheme.typography.bodySmall, color = p.muted)
+                }
                 Column {
                     ChoiceRow(tr(Str.OcrPagesAll), !currentOnly) { currentOnly = false }
                     ChoiceRow(tr(Str.OcrPagesCurrent), currentOnly) { currentOnly = true }
                 }
                 CheckRow(tr(Str.OcrAutoRotate), autoRotate) { autoRotate = it }
                 CheckRow(tr(Str.OcrRedo), redo) { redo = it }
+                if (state.deviceAi != DeviceAiStatus.Unavailable) {
+                    val label = tr(Str.OcrAi) + if (state.deviceAi == DeviceAiStatus.Available) "" else " " + tr(Str.OcrAiDownload)
+                    CheckRow(label, ai) { ai = it }
+                }
             }
         },
         confirmButton = {
@@ -220,7 +231,9 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
                 enabled = languages.isNotEmpty(),
                 onClick = {
                     state.chooseOcrLanguages(languages)
-                    state.recognizeText(currentOnly, autoRotate, redo)
+                    val withAi = ai && state.deviceAi != DeviceAiStatus.Unavailable
+                    if (state.deviceAi != DeviceAiStatus.Unavailable) state.chooseOcrAi(ai)
+                    state.recognizeText(currentOnly, autoRotate, redo, withAi)
                 },
             ) { Text(tr(Str.OcrStart)) }
         },

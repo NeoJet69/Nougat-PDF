@@ -294,4 +294,14 @@ LicensesIntro = Ur meziant frank dindan an aotre MIT eo Nougat PDF : pep hini a 
 LicensesComponents = Elfennoù enlakaet
 LicensesFullTexts = Testennoù klok an aotreoù
 AboutFreeSoftware = Meziant frank, dindan an aotre MIT
+
+OcrExplainPhone = Lenn a ra Nougat testenn ar pajennoù skanet hag he lakaat, diwelus, war ar skeudenn : goude e c'hallit klask, eilañ hag he lakaat da lenn gant Claude. Ar bajenn a chom heñvel. Pep tra a vez graet war ar pellgomzer-mañ.
+OcrDownloadNote = ↓ : yezh pellgarget ur wech hepken (2 da 6 Mo), goude e c'haller implijout anezhi hep Internet.
+OcrAi = Adlenn gant Gemini Nano, IA ar pellgomzer-mañ : reizhañ a ra ar gerioù arvarus ha lenn ar skrid dorn
+OcrAiDownload = (Android a bellgargo anezhañ da gentañ)
+OcrDownloading = O pellgargañ ar yezh {0}… {1} %
+OcrDownloadFailed = N'eus ket bet gallet pellgargañ ar yezh {0}. Gwiriit ar c'hennask Internet hag adklaskit.
+OcrAiPreparing = O prientiñ Gemini Nano…
+OcrAiLines = , {0} linenn adlennet gant Gemini Nano|, {0} linenn adlennet gant Gemini Nano
+OcrAiUnavailable = N'eo ket prest Gemini Nano : anavezet hep adlenn
 """

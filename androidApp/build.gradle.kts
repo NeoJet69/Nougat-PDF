@@ -68,6 +68,36 @@ android {
     }
 }
 
+// OCR : le francais et l'anglais sont livres dans l'app (les autres langues se telechargent).
+abstract class CopyOcrAssets : DefaultTask() {
+    @get:InputDirectory
+    abstract val models: DirectoryProperty
+
+    @get:OutputDirectory
+    abstract val output: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        val dir = output.get().asFile.resolve("tessdata")
+        dir.deleteRecursively()
+        dir.mkdirs()
+        for (lang in listOf("fra", "eng")) {
+            models.get().asFile.resolve("$lang.traineddata").copyTo(dir.resolve("$lang.traineddata"), overwrite = true)
+        }
+    }
+}
+
+val copyOcrAssets = tasks.register<CopyOcrAssets>("copyOcrAssets") {
+    dependsOn(":shared:downloadTessdata")
+    models.set(project(":shared").layout.buildDirectory.dir("tessdata"))
+}
+
+androidComponents {
+    onVariants { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(copyOcrAssets, CopyOcrAssets::output)
+    }
+}
+
 dependencies {
     implementation(project(":shared"))
     implementation(libs.androidx.activity.compose)
