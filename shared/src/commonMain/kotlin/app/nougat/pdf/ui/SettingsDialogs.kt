@@ -189,6 +189,10 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(tr(if (state.ocrOnPhone) Str.OcrExplainPhone else Str.OcrExplain), style = MaterialTheme.typography.bodyMedium, color = p.muted)
+                if (state.deviceAi != DeviceAiStatus.Unavailable) {
+                    val label = tr(Str.OcrAi) + if (state.deviceAi == DeviceAiStatus.Available) "" else " " + tr(Str.OcrAiDownload)
+                    CheckRow(label, ai) { ai = it }
+                }
                 Text(tr(Str.OcrLanguages), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     for ((code, name) in OCR_LANGUAGES) {
@@ -220,10 +224,6 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
                 }
                 CheckRow(tr(Str.OcrAutoRotate), autoRotate) { autoRotate = it }
                 CheckRow(tr(Str.OcrRedo), redo) { redo = it }
-                if (state.deviceAi != DeviceAiStatus.Unavailable) {
-                    val label = tr(Str.OcrAi) + if (state.deviceAi == DeviceAiStatus.Available) "" else " " + tr(Str.OcrAiDownload)
-                    CheckRow(label, ai) { ai = it }
-                }
             }
         },
         confirmButton = {
