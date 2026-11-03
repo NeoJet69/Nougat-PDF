@@ -170,7 +170,6 @@ ordinateur, `PdfRenderer` d'Android + [PdfBox-Android](https://github.com/TomRou
 sur téléphone. L'OCR utilise [Tesseract](https://github.com/tesseract-ocr/tesseract) 5 (via
 [JavaCPP Presets](https://github.com/bytedeco/javacpp-presets)) avec les modèles `tessdata_best`,
 téléchargés à la construction (tâche `downloadTessdata`) et livrés avec l'installateur Windows.
-Tout est sous licence Apache 2.0.
 
 ```
 shared/       le cœur commun : interface, recherche, moteurs PDF
@@ -191,6 +190,16 @@ Commandes utiles :
 ```
 
 Sans SDK Android, ajouter `-Pnougat.desktopOnly=true` pour ne construire que la version ordinateur.
+
+## Licence
+
+Nougat PDF est un logiciel libre sous **licence MIT** (voir le fichier [LICENSE](LICENSE)) :
+chacun peut l'utiliser, le copier, le modifier et le redistribuer, y compris dans un autre
+projet, à condition de garder la mention de copyright et le texte de la licence.
+
+Les bibliothèques tierces livrées avec l'app (PDFBox, Tesseract, Compose…) gardent **leurs
+propres licences** (Apache 2.0, BSD, MIT…). La liste complète, avec leurs avis obligatoires
+(fichiers NOTICE), est dans l'app : menu ⋮ → **À propos** → **Licences**.
 
 ## Auteurs
 
