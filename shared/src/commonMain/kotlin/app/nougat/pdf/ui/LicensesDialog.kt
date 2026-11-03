@@ -116,7 +116,7 @@ private fun LicenseRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
-            Text(name, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+            Text(name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface)
             if (license != null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(license, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
