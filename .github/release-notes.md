@@ -19,7 +19,9 @@ Sur les téléphones compatibles (Pixel 9 et suivants, Galaxy S26…), **Gemini 
 
 Sur Windows, on peut aussi **modifier une ligne scannée** : Nougat efface la ligne de l'image et la réécrit dans la police la plus ressemblante.
 
-Nougat PDF est désormais un logiciel libre sous **licence MIT** (À propos → Licences).
+Nougat PDF est désormais un logiciel libre sous **licence MIT** (À propos, Licences).
+
+Aussi dans cette version : sur Android, le bouton Retour revient en arrière au lieu de fermer l'app (deux appuis sur l'accueil pour quitter), la reconnaissance ne reste plus bloquée en attendant Gemini Nano, l'APK est plus léger, et « À propos » présente notre partenaire ArtisanGo avec les conditions d'utilisation, la confidentialité et les mentions légales.
 
 ## Au menu
 

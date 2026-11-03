@@ -21,6 +21,11 @@ android {
         targetSdk = 36
         versionCode = buildNumber
         versionName = "1.0.$buildNumber"
+        // Seulement les processeurs des telephones (ARM) : les versions x86 (emulateurs, rares
+        // Chromebooks) alourdiraient l'APK d'environ 15 Mo pour presque personne.
+        ndk {
+            abiFilters += setOf("arm64-v8a", "armeabi-v7a")
+        }
     }
 
     buildFeatures {
