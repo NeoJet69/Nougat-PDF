@@ -37,7 +37,7 @@ SaveChoiceText = Remplacer le fichier d'origine, ou enregistrer une copie à l'e
 ReplaceOriginal = Remplacer l'original
 SaveCopy = Enregistrer une copie…
 
-Tagline = Lisez, éditez, signez et transformez vos PDF.\nGratuit et sans pub — avec Claude intégré.
+Tagline = Lisez, éditez, signez et transformez vos PDF.\nGratuit et sans pub, avec Claude intégré.
 OpenPdf = Ouvrir un PDF
 DropHintDesktop = Glissez un fichier ici, ou choisissez-le  ·  Ctrl+O
 DropHintPhone = Choisissez un fichier sur votre téléphone
@@ -114,7 +114,7 @@ PreviousResult = Résultat précédent
 NextResult = Résultat suivant
 CloseSearch = Fermer la recherche
 HintEditingCompact = Validez : le style d'origine est gardé
-HintEditing = Modifiez puis validez — le style d'origine est conservé
+HintEditing = Modifiez puis validez : le style d'origine est conservé
 HintTapLineCompact = Touchez une ligne encadrée
 HintTapLine = Touchez une ligne encadrée pour modifier son texte
 DockRead = Lire
@@ -301,10 +301,15 @@ AboutFreeSoftware = Logiciel libre, sous licence MIT
 OcrExplainPhone = Nougat lit le texte des pages scannées et le pose, invisible, sur l'image : vous pouvez ensuite chercher, copier et le faire lire à Claude. La page ne change pas à l'œil. Tout se fait sur ce téléphone.
 OcrDownloadNote = ↓ : langue téléchargée une seule fois (2 à 6 Mo), puis utilisable sans Internet.
 OcrAi = Relecture par Gemini Nano, l'IA de ce téléphone : corrige les mots douteux et lit l'écriture manuscrite
-OcrAiDownload = (Android le téléchargera d'abord)
+OcrAiDownload = (pas encore prêt : Android le télécharge, il servira dès qu'il sera là)
 OcrDownloading = Téléchargement de la langue {0}… {1} %
 OcrDownloadFailed = Impossible de télécharger la langue {0}. Vérifiez la connexion Internet et réessayez.
-OcrAiPreparing = Préparation de Gemini Nano…
 OcrAiLines = , {0} ligne relue par Gemini Nano|, {0} lignes relues par Gemini Nano
-OcrAiUnavailable = Gemini Nano n'est pas prêt : reconnaissance sans relecture
+
+OcrAiLater = Gemini Nano n'est pas encore prêt : Android le télécharge en arrière-plan. Reconnaissance sans relecture cette fois.
+ExitAgain = Appuyez encore sur Retour pour quitter
+AboutPartner = Partenaire : ArtisanGo
+LegalTerms = Conditions d'utilisation
+LegalPrivacy = Confidentialité
+LegalImpressum = Mentions légales
 """

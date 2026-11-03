@@ -33,7 +33,7 @@ SaveChoiceText = Replace the original file, or save a copy wherever you like?
 ReplaceOriginal = Replace the original
 SaveCopy = Save a copy…
 
-Tagline = Read, edit, sign and transform your PDFs.\nFree and ad-free — with Claude built in.
+Tagline = Read, edit, sign and transform your PDFs.\nFree and ad-free, with Claude built in.
 OpenPdf = Open a PDF
 DropHintDesktop = Drop a file here, or choose one  ·  Ctrl+O
 DropHintPhone = Choose a file on your phone
@@ -110,7 +110,7 @@ PreviousResult = Previous result
 NextResult = Next result
 CloseSearch = Close search
 HintEditingCompact = Confirm: the original style is kept
-HintEditing = Edit, then confirm — the original style is kept
+HintEditing = Edit, then confirm: the original style is kept
 HintTapLineCompact = Tap a framed line
 HintTapLine = Tap a framed line to edit its text
 DockRead = Read
@@ -297,10 +297,15 @@ AboutFreeSoftware = Free software, under the MIT license
 OcrExplainPhone = Nougat reads the text of scanned pages and lays it, invisible, over the image: you can then search, copy and have Claude read it. The page looks exactly the same. Everything happens on this phone.
 OcrDownloadNote = ↓: language downloaded once (2 to 6 MB), then usable without Internet.
 OcrAi = Proofreading by Gemini Nano, this phone's AI: fixes doubtful words and reads handwriting
-OcrAiDownload = (Android will download it first)
+OcrAiDownload = (not ready yet: Android is downloading it, it will be used once it's there)
 OcrDownloading = Downloading {0}… {1} %
 OcrDownloadFailed = Couldn't download {0}. Check the Internet connection and try again.
-OcrAiPreparing = Preparing Gemini Nano…
 OcrAiLines = , {0} line proofread by Gemini Nano|, {0} lines proofread by Gemini Nano
-OcrAiUnavailable = Gemini Nano isn't ready: recognized without proofreading
+
+OcrAiLater = Gemini Nano isn't ready yet: Android is downloading it in the background. Recognized without proofreading this time.
+ExitAgain = Press Back again to exit
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Terms of use
+LegalPrivacy = Privacy
+LegalImpressum = Legal notice
 """

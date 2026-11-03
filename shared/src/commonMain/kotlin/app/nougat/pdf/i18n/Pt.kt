@@ -33,7 +33,7 @@ SaveChoiceText = Substituir o ficheiro original ou guardar uma cópia onde prefe
 ReplaceOriginal = Substituir o original
 SaveCopy = Guardar uma cópia…
 
-Tagline = Leia, edite, assine e transforme os seus PDF.\nGrátis e sem anúncios — com o Claude integrado.
+Tagline = Leia, edite, assine e transforme os seus PDF.\nGrátis e sem anúncios, com o Claude integrado.
 OpenPdf = Abrir um PDF
 DropHintDesktop = Arraste um ficheiro para aqui ou escolha-o  ·  Ctrl+O
 DropHintPhone = Escolha um ficheiro no seu telemóvel
@@ -110,7 +110,7 @@ PreviousResult = Resultado anterior
 NextResult = Resultado seguinte
 CloseSearch = Fechar a pesquisa
 HintEditingCompact = Confirme: o estilo original mantém-se
-HintEditing = Edite e confirme — o estilo original mantém-se
+HintEditing = Edite e confirme: o estilo original mantém-se
 HintTapLineCompact = Toque numa linha emoldurada
 HintTapLine = Toque numa linha emoldurada para alterar o texto
 DockRead = Ler
@@ -297,10 +297,15 @@ AboutFreeSoftware = Software livre, com licença MIT
 OcrExplainPhone = O Nougat lê o texto das páginas digitalizadas e coloca-o, invisível, sobre a imagem: depois pode pesquisar, copiar e pedir ao Claude para o ler. A página fica igual. Tudo acontece neste telemóvel.
 OcrDownloadNote = ↓: idioma descarregado uma só vez (2 a 6 MB), depois utilizável sem Internet.
 OcrAi = Revisão pelo Gemini Nano, a IA deste telemóvel: corrige as palavras duvidosas e lê a escrita à mão
-OcrAiDownload = (o Android vai descarregá-lo primeiro)
+OcrAiDownload = (ainda não está pronto: o Android está a descarregá-lo, será usado assim que estiver disponível)
 OcrDownloading = A descarregar o idioma {0}… {1} %
 OcrDownloadFailed = Não foi possível descarregar o idioma {0}. Verifique a ligação à Internet e tente de novo.
-OcrAiPreparing = A preparar o Gemini Nano…
 OcrAiLines = , {0} linha revista pelo Gemini Nano|, {0} linhas revistas pelo Gemini Nano
-OcrAiUnavailable = O Gemini Nano não está pronto: reconhecimento sem revisão
+
+OcrAiLater = O Gemini Nano ainda não está pronto: o Android está a descarregá-lo em segundo plano. Desta vez, reconhecimento sem revisão.
+ExitAgain = Prima Voltar outra vez para sair
+AboutPartner = Parceiro: ArtisanGo
+LegalTerms = Condições de utilização
+LegalPrivacy = Privacidade
+LegalImpressum = Informação legal
 """

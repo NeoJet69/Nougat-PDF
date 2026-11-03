@@ -34,7 +34,7 @@ SaveChoiceText = Erlec'hiañ ar restr orin, pe enrollañ un eilskouerenn el lec'
 ReplaceOriginal = Erlec'hiañ an orin
 SaveCopy = Enrollañ un eilskouerenn…
 
-Tagline = Lennit, embannit, sinit ha treuzfurmit ho PDF.\nDigoust ha hep bruderezh — gant Claude enframmet.
+Tagline = Lennit, embannit, sinit ha treuzfurmit ho PDF.\nDigoust ha hep bruderezh, gant Claude enframmet.
 OpenPdf = Digeriñ ur PDF
 DropHintDesktop = Riklit ur restr amañ, pe dibabit anezhi  ·  Ctrl+O
 DropHintPhone = Dibabit ur restr war ho pellgomzer
@@ -111,7 +111,7 @@ PreviousResult = Disoc'h a-raok
 NextResult = Disoc'h war-lerc'h
 CloseSearch = Serriñ ar c'hlask
 HintEditingCompact = Kadarnait : chom a ra ar stil orin
-HintEditing = Kemmit ha kadarnait — miret e vez ar stil orin
+HintEditing = Kemmit ha kadarnait : miret e vez ar stil orin
 HintTapLineCompact = Stokit ul linenn gant ur stern
 HintTapLine = Stokit ul linenn gant ur stern evit kemmañ he zestenn
 DockRead = Lenn
@@ -298,10 +298,15 @@ AboutFreeSoftware = Meziant frank, dindan an aotre MIT
 OcrExplainPhone = Lenn a ra Nougat testenn ar pajennoù skanet hag he lakaat, diwelus, war ar skeudenn : goude e c'hallit klask, eilañ hag he lakaat da lenn gant Claude. Ar bajenn a chom heñvel. Pep tra a vez graet war ar pellgomzer-mañ.
 OcrDownloadNote = ↓ : yezh pellgarget ur wech hepken (2 da 6 Mo), goude e c'haller implijout anezhi hep Internet.
 OcrAi = Adlenn gant Gemini Nano, IA ar pellgomzer-mañ : reizhañ a ra ar gerioù arvarus ha lenn ar skrid dorn
-OcrAiDownload = (Android a bellgargo anezhañ da gentañ)
+OcrAiDownload = (n'eo ket prest c'hoazh : Android a bellgarg anezhañ, implijet e vo kerkent hag e vo aze)
 OcrDownloading = O pellgargañ ar yezh {0}… {1} %
 OcrDownloadFailed = N'eus ket bet gallet pellgargañ ar yezh {0}. Gwiriit ar c'hennask Internet hag adklaskit.
-OcrAiPreparing = O prientiñ Gemini Nano…
 OcrAiLines = , {0} linenn adlennet gant Gemini Nano|, {0} linenn adlennet gant Gemini Nano
-OcrAiUnavailable = N'eo ket prest Gemini Nano : anavezet hep adlenn
+
+OcrAiLater = N'eo ket prest Gemini Nano c'hoazh : Android a bellgarg anezhañ en drekleur. Ar wech-mañ, anaoudegezh hep adlenn.
+ExitAgain = Pouezit adarre war Distreiñ evit kuitaat
+AboutPartner = Kevelour : ArtisanGo
+LegalTerms = Divizoù implijout
+LegalPrivacy = Prevezded
+LegalImpressum = Titouroù lezennel
 """

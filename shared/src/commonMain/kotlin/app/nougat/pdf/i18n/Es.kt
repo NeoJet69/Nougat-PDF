@@ -33,7 +33,7 @@ SaveChoiceText = ¿Reemplazar el archivo original o guardar una copia donde pref
 ReplaceOriginal = Reemplazar el original
 SaveCopy = Guardar una copia…
 
-Tagline = Lee, edita, firma y transforma tus PDF.\nGratis y sin anuncios — con Claude integrado.
+Tagline = Lee, edita, firma y transforma tus PDF.\nGratis y sin anuncios, con Claude integrado.
 OpenPdf = Abrir un PDF
 DropHintDesktop = Arrastra un archivo aquí o elígelo  ·  Ctrl+O
 DropHintPhone = Elige un archivo de tu teléfono
@@ -110,7 +110,7 @@ PreviousResult = Resultado anterior
 NextResult = Resultado siguiente
 CloseSearch = Cerrar la búsqueda
 HintEditingCompact = Confirma: se mantiene el estilo original
-HintEditing = Edita y confirma — se mantiene el estilo original
+HintEditing = Edita y confirma: se mantiene el estilo original
 HintTapLineCompact = Toca una línea enmarcada
 HintTapLine = Toca una línea enmarcada para cambiar su texto
 DockRead = Leer
@@ -297,10 +297,15 @@ AboutFreeSoftware = Software libre, con licencia MIT
 OcrExplainPhone = Nougat lee el texto de las páginas escaneadas y lo coloca, invisible, sobre la imagen: después puedes buscar, copiar y hacer que Claude lo lea. La página se ve igual. Todo ocurre en este teléfono.
 OcrDownloadNote = ↓: idioma que se descarga una sola vez (de 2 a 6 MB) y luego funciona sin Internet.
 OcrAi = Revisión con Gemini Nano, la IA de este teléfono: corrige las palabras dudosas y lee la escritura a mano
-OcrAiDownload = (Android la descargará primero)
+OcrAiDownload = (aún no está listo: Android lo está descargando, se usará en cuanto esté)
 OcrDownloading = Descargando el idioma {0}… {1} %
 OcrDownloadFailed = No se pudo descargar el idioma {0}. Comprueba la conexión a Internet y vuelve a intentarlo.
-OcrAiPreparing = Preparando Gemini Nano…
 OcrAiLines = , {0} línea revisada por Gemini Nano|, {0} líneas revisadas por Gemini Nano
-OcrAiUnavailable = Gemini Nano no está listo: reconocimiento sin revisión
+
+OcrAiLater = Gemini Nano aún no está listo: Android lo está descargando en segundo plano. Esta vez, reconocimiento sin revisión.
+ExitAgain = Pulsa Atrás otra vez para salir
+AboutPartner = Socio: ArtisanGo
+LegalTerms = Condiciones de uso
+LegalPrivacy = Privacidad
+LegalImpressum = Aviso legal
 """

@@ -34,7 +34,7 @@ SaveChoiceText = Rimpiazzà u schedariu d'urigine, o arregistrà una copia induv
 ReplaceOriginal = Rimpiazzà l'uriginale
 SaveCopy = Arregistrà una copia…
 
-Tagline = Leghjite, mudificate, firmate è trasfurmate i vostri PDF.\nGratisi è senza publicità — cù Claude integratu.
+Tagline = Leghjite, mudificate, firmate è trasfurmate i vostri PDF.\nGratisi è senza publicità, cù Claude integratu.
 OpenPdf = Apre un PDF
 DropHintDesktop = Fate sguillà quì un schedariu, o sceglitelu  ·  Ctrl+O
 DropHintPhone = Sceglite un schedariu nant'à u vostru telefuninu
@@ -111,7 +111,7 @@ PreviousResult = Risultatu precedente
 NextResult = Risultatu seguente
 CloseSearch = Chjode a ricerca
 HintEditingCompact = Cunfirmate : u stilu d'urigine ferma
-HintEditing = Mudificate è cunfirmate — u stilu d'urigine hè mantenutu
+HintEditing = Mudificate è cunfirmate : u stilu d'urigine hè mantenutu
 HintTapLineCompact = Toccate una linea incurnisciata
 HintTapLine = Toccate una linea incurnisciata per mudificà u so testu
 DockRead = Leghje
@@ -298,10 +298,15 @@ AboutFreeSoftware = Prugramma liberu, sottu licenza MIT
 OcrExplainPhone = Nougat leghje u testu di e pagine scansate è u mette, invisibile, nant'à a fiura : dopu pudete circà, cupià è fà lu leghje à Claude. A pagina ferma listessa. Tuttu si face nant'à stu telefonu.
 OcrDownloadNote = ↓ : lingua scaricata una volta sola (da 2 à 6 Mo), dopu aduprevule senza Internet.
 OcrAi = Rilettura da Gemini Nano, l'IA di stu telefonu : currege e parolle dubbiose è leghje a scrittura à manu
-OcrAiDownload = (Android a scaricherà prima)
+OcrAiDownload = (ùn hè ancu prontu : Android u scarica, serà adupratu appena ch'ellu ci serà)
 OcrDownloading = Scaricamentu di a lingua {0}… {1} %
 OcrDownloadFailed = Impussibule di scaricà a lingua {0}. Verificate a cunnessione Internet è pruvate torna.
-OcrAiPreparing = Preparazione di Gemini Nano…
 OcrAiLines = , {0} linea riletta da Gemini Nano|, {0} linee rilette da Gemini Nano
-OcrAiUnavailable = Gemini Nano ùn hè micca prontu : ricunniscenza senza rilettura
+
+OcrAiLater = Gemini Nano ùn hè ancu prontu : Android u scarica in fondu. Sta volta, ricunniscenza senza rilettura.
+ExitAgain = Appughjate torna nant'à Ritornu per esce
+AboutPartner = Partenariu : ArtisanGo
+LegalTerms = Cundizioni d'usu
+LegalPrivacy = Cunfidenzialità
+LegalImpressum = Menzioni legali
 """

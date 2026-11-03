@@ -34,7 +34,7 @@ SaveChoiceText = Remplaçar lo fichièr d'origina, o enregistrar una còpia ont 
 ReplaceOriginal = Remplaçar l'original
 SaveCopy = Enregistrar una còpia…
 
-Tagline = Legissètz, modificatz, signatz e transformatz vòstres PDF.\nGratuit e sens publicitat — amb Claude integrat.
+Tagline = Legissètz, modificatz, signatz e transformatz vòstres PDF.\nGratuit e sens publicitat, amb Claude integrat.
 OpenPdf = Dobrir un PDF
 DropHintDesktop = Fasètz lisar un fichièr aquí, o causissètz-lo  ·  Ctrl+O
 DropHintPhone = Causissètz un fichièr sus vòstre telefòn
@@ -111,7 +111,7 @@ PreviousResult = Resultat precedent
 NextResult = Resultat seguent
 CloseSearch = Tampar la recèrca
 HintEditingCompact = Validatz : l'estil d'origina demòra
-HintEditing = Modificatz e validatz — l'estil d'origina es gardat
+HintEditing = Modificatz e validatz : l'estil d'origina es gardat
 HintTapLineCompact = Tocatz una linha encadrada
 HintTapLine = Tocatz una linha encadrada per modificar son tèxte
 DockRead = Legir
@@ -298,10 +298,15 @@ AboutFreeSoftware = Logicial liure, jos licéncia MIT
 OcrExplainPhone = Nougat legís lo tèxte de las paginas escanadas e lo pausa, invisible, sus l'imatge : puèi podètz cercar, copiar e lo far legir a Claude. La pagina cambia pas a l'uèlh. Tot se fa sus aqueste telefòn.
 OcrDownloadNote = ↓ : lenga telecargada un sol còp (de 2 a 6 Mo), puèi utilizabla sens Internet.
 OcrAi = Relectura per Gemini Nano, l'IA d'aqueste telefòn : corregís los mots dobtoses e legís l'escritura a la man
-OcrAiDownload = (Android la telecargarà d'en primièr)
+OcrAiDownload = (pas encara prèst : Android lo telecarga, servirà tre que serà aquí)
 OcrDownloading = Telecargament de la lenga {0}… {1} %
 OcrDownloadFailed = Impossible de telecargar la lenga {0}. Verificatz la connexion Internet e tornatz ensajar.
-OcrAiPreparing = Preparacion de Gemini Nano…
 OcrAiLines = , {0} linha relegida per Gemini Nano|, {0} linhas relegidas per Gemini Nano
-OcrAiUnavailable = Gemini Nano es pas prèst : reconeissença sens relectura
+
+OcrAiLater = Gemini Nano es pas encara prèst : Android lo telecarga en rèire-plan. Aqueste còp, reconeissença sens relectura.
+ExitAgain = Quichatz tornamai sus Retorn per quitar
+AboutPartner = Partenari : ArtisanGo
+LegalTerms = Condicions d'utilizacion
+LegalPrivacy = Confidencialitat
+LegalImpressum = Mencions legalas
 """

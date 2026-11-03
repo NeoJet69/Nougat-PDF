@@ -34,7 +34,7 @@ SaveChoiceText = Remplazzar la datoteca originala u memorisar ina copia nua che 
 ReplaceOriginal = Remplazzar l'original
 SaveCopy = Memorisar ina copia…
 
-Tagline = Legia, elavura, suttascriva e transfurma tes PDFs.\nGratuit e senza reclama — cun Claude integrà.
+Tagline = Legia, elavura, suttascriva e transfurma tes PDFs.\nGratuit e senza reclama, cun Claude integrà.
 OpenPdf = Avrir in PDF
 DropHintDesktop = Tira ina datoteca qua u tscherna ina  ·  Ctrl+O
 DropHintPhone = Tscherna ina datoteca sin tes telefonin
@@ -111,7 +111,7 @@ PreviousResult = Resultat precedent
 NextResult = Proxim resultat
 CloseSearch = Serrar la tschertga
 HintEditingCompact = Conferma: il stil original resta
-HintEditing = Mida e conferma — il stil original resta
+HintEditing = Mida e conferma: il stil original resta
 HintTapLineCompact = Tutga ina lingia en rom
 HintTapLine = Tutga ina lingia en rom per midar ses text
 DockRead = Leger
@@ -298,10 +298,15 @@ AboutFreeSoftware = Software liber, sut la licenza MIT
 OcrExplainPhone = Nougat legia il text da las paginas scannadas e al metta, invisibel, sin il maletg: lura pos ti tschertgar, copiar e laschar leger Claude. La pagina resta tuttina. Tut capita sin quest telefon.
 OcrDownloadNote = ↓: lingua chargiada giu ina giada (2 fin 6 MB), lura utilisabla senza internet.
 OcrAi = Correctura tras Gemini Nano, la IA da quest telefon: curregia pleds dubitaivels e legia scrittira a maun
-OcrAiDownload = (Android al chargia giu l'emprim)
+OcrAiDownload = (anc betg pront: Android al chargia giu, el vegn duvrà uschespert ch'el è qua)
 OcrDownloading = Chargiar giu la lingua {0}… {1} %
 OcrDownloadFailed = Impussibel da chargiar giu la lingua {0}. Controllescha la connexiun cun l'internet e emprova anc ina giada.
-OcrAiPreparing = Preparar Gemini Nano…
 OcrAiLines = , {0} lingia curregida da Gemini Nano|, {0} lingias curregidas da Gemini Nano
-OcrAiUnavailable = Gemini Nano n'è betg pront: renconuschientscha senza correctura
+
+OcrAiLater = Gemini Nano n'è anc betg pront: Android al chargia giu en il fund. Questa giada renconuschientscha senza correctura.
+ExitAgain = Smatga anc ina giada Enavos per sortir
+AboutPartner = Partenari: ArtisanGo
+LegalTerms = Cundiziuns d'utilisaziun
+LegalPrivacy = Protecziun da datas
+LegalImpressum = Impressum
 """

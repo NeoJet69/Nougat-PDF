@@ -35,6 +35,8 @@ import app.nougat.pdf.i18n.Str
 import app.nougat.pdf.i18n.tr
 import app.nougat.pdf.i18n.trn
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.selects.select
 import app.nougat.pdf.engine.OcrOptions
 import app.nougat.pdf.engine.OcrSummary
 import app.nougat.pdf.engine.defaultOcrLanguages
@@ -321,6 +323,31 @@ class ViewerState(
 
     fun dismissToast() {
         toast = null
+    }
+
+    /** Montre un petit message (plateforme : « appuyez encore pour quitter »...). */
+    fun showMessage(message: String) {
+        toast = message
+    }
+
+    /**
+     * Bouton Retour d'Android : ferme ce qui est ouvert, du plus recent au plus ancien (saisie,
+     * Claude, pages, recherche, outils), puis le document. Faux sur l'accueil : rien a fermer.
+     */
+    fun handleBack(): Boolean {
+        val s = session
+        when {
+            busyMessage != null -> busyCancel?.invoke()
+            s?.editingBlock != null -> s.editingBlock = null
+            s?.editingField != null -> s.editingField = null
+            assistant.open -> assistant.open = false
+            pagesOpen -> pagesOpen = false
+            s?.searchOpen == true -> s.closeSearch()
+            tools.editing -> tools.enter(DockMode.Read)
+            s != null -> runAfterConfirm(::closeDocument)
+            else -> return false
+        }
+        return true
     }
 
     /**
@@ -764,23 +791,14 @@ class ViewerState(
             }
         }
         if (options.aiProofread) {
+            // On n'attend jamais Gemini Nano : s'il n'est pas pret, Android le telecharge en
+            // arriere-plan (parfois seulement en Wi-Fi ou en charge) et il servira la prochaine fois.
             val status = runCatching { engine.deviceAiStatus() }.getOrDefault(DeviceAiStatus.Unavailable)
-            val ready = when (status) {
-                DeviceAiStatus.Available -> true
-                DeviceAiStatus.Unavailable -> false
-                DeviceAiStatus.Downloadable, DeviceAiStatus.Downloading -> {
-                    busyMessage = tr(Str.OcrAiPreparing)
-                    try {
-                        engine.prepareDeviceAi { bytes -> busyMessage = tr(Str.OcrAiPreparing) + " " + (bytes / 1_000_000) + " Mo" }
-                    } finally {
-                        busyMessage = null
-                    }
-                }
-            }
-            deviceAi = if (ready) DeviceAiStatus.Available else status
-            if (!ready) {
+            deviceAi = status
+            if (status != DeviceAiStatus.Available) {
                 result = result.copy(aiProofread = false)
-                if (report) toast = tr(Str.OcrAiUnavailable)
+                if (status == DeviceAiStatus.Downloadable) scope.launch { runCatching { engine.prepareDeviceAi {} } }
+                if (report && status != DeviceAiStatus.Unavailable) toast = tr(Str.OcrAiLater)
             }
         }
         return result
@@ -794,11 +812,22 @@ class ViewerState(
      */
     private suspend fun runOcr(requested: OcrOptions, report: Boolean): OcrSummary? {
         ocrStop = false
-        busyCancel = { ocrStop = true }
+        // La preparation (telechargement d'une langue) s'arrete tout de suite avec « Arreter ».
+        val stopped = CompletableDeferred<OcrOptions?>()
+        busyCancel = {
+            ocrStop = true
+            stopped.complete(null)
+        }
         try {
-            val options = prepareOcr(requested, report) ?: return null
-            if (ocrStop) {
-                if (report) toast = tr(Str.OcrStopped)
+            // runCatching : une erreur reste ici (elle ne doit pas annuler le reste de l'app).
+            val prep = scope.async { runCatching { prepareOcr(requested, report) } }
+            val options = select {
+                prep.onAwait { it.getOrThrow() }
+                stopped.onAwait { it }
+            }
+            if (options == null || ocrStop) {
+                prep.cancel()
+                if (ocrStop && report) toast = tr(Str.OcrStopped)
                 return null
             }
             var summary: OcrSummary? = null

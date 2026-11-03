@@ -34,7 +34,7 @@ SaveChoiceText = هل تريد استبدال الملف الأصلي، أم ح�
 ReplaceOriginal = استبدال الأصل
 SaveCopy = حفظ نسخة…
 
-Tagline = اقرأ ملفات PDF وعدّلها ووقّعها وحوّلها.\nمجاني ودون إعلانات — مع Claude مدمجًا.
+Tagline = اقرأ ملفات PDF وعدّلها ووقّعها وحوّلها.\nمجاني ودون إعلانات، مع Claude مدمجًا.
 OpenPdf = فتح ملف PDF
 DropHintDesktop = اسحب ملفًا إلى هنا أو اختره  ·  Ctrl+O
 DropHintPhone = اختر ملفًا من هاتفك
@@ -111,7 +111,7 @@ PreviousResult = النتيجة السابقة
 NextResult = النتيجة التالية
 CloseSearch = إغلاق البحث
 HintEditingCompact = أكّد: يبقى النمط الأصلي
-HintEditing = عدّل ثم أكّد — يبقى النمط الأصلي كما هو
+HintEditing = عدّل ثم أكّد: يبقى النمط الأصلي كما هو
 HintTapLineCompact = المس سطرًا داخل إطار
 HintTapLine = المس سطرًا داخل إطار لتعديل نصه
 DockRead = قراءة
@@ -298,10 +298,15 @@ AboutFreeSoftware = برنامج حر بترخيص MIT
 OcrExplainPhone = يقرأ Nougat نص الصفحات الممسوحة ويضعه، غير مرئي، فوق الصورة: بعدها يمكنك البحث والنسخ وجعل Claude يقرؤه. تبقى الصفحة كما هي. كل شيء يجري على هذا الهاتف.
 OcrDownloadNote = ↓: لغة تُنزَّل مرة واحدة (من 2 إلى 6 ميغابايت)، ثم تعمل دون إنترنت.
 OcrAi = مراجعة بواسطة Gemini Nano، الذكاء الاصطناعي في هذا الهاتف: يصحّح الكلمات المشكوك فيها ويقرأ الخط اليدوي
-OcrAiDownload = (سيُنزّله Android أولًا)
+OcrAiDownload = (غير جاهز بعد: يقوم Android بتنزيله، وسيُستخدم فور توفّره)
 OcrDownloading = جارٍ تنزيل لغة {0}… {1} %
 OcrDownloadFailed = تعذّر تنزيل لغة {0}. تحقّق من الاتصال بالإنترنت وحاول مجددًا.
-OcrAiPreparing = جارٍ تحضير Gemini Nano…
 OcrAiLines = ، وراجع Gemini Nano سطرًا واحدًا|، وراجع Gemini Nano سطرين|، وراجع Gemini Nano {0} أسطر|، وراجع Gemini Nano {0} سطرًا
-OcrAiUnavailable = Gemini Nano غير جاهز: تم التعرّف دون مراجعة
+
+OcrAiLater = Gemini Nano غير جاهز بعد: يقوم Android بتنزيله في الخلفية. هذه المرة تم التعرّف دون مراجعة.
+ExitAgain = اضغط رجوع مرة أخرى للخروج
+AboutPartner = شريك: ArtisanGo
+LegalTerms = شروط الاستخدام
+LegalPrivacy = الخصوصية
+LegalImpressum = إشعار قانوني
 """

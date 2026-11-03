@@ -33,7 +33,7 @@ SaveChoiceText = Sostituire il file originale o salvare una copia nella posizion
 ReplaceOriginal = Sostituisci l'originale
 SaveCopy = Salva una copia…
 
-Tagline = Leggi, modifica, firma e trasforma i tuoi PDF.\nGratis e senza pubblicità — con Claude integrato.
+Tagline = Leggi, modifica, firma e trasforma i tuoi PDF.\nGratis e senza pubblicità, con Claude integrato.
 OpenPdf = Apri un PDF
 DropHintDesktop = Trascina qui un file o sceglilo  ·  Ctrl+O
 DropHintPhone = Scegli un file sul tuo telefono
@@ -110,7 +110,7 @@ PreviousResult = Risultato precedente
 NextResult = Risultato successivo
 CloseSearch = Chiudi la ricerca
 HintEditingCompact = Conferma: lo stile originale resta
-HintEditing = Modifica e conferma — lo stile originale viene mantenuto
+HintEditing = Modifica e conferma: lo stile originale viene mantenuto
 HintTapLineCompact = Tocca una riga incorniciata
 HintTapLine = Tocca una riga incorniciata per modificarne il testo
 DockRead = Leggi
@@ -297,10 +297,15 @@ AboutFreeSoftware = Software libero, con licenza MIT
 OcrExplainPhone = Nougat legge il testo delle pagine scansionate e lo posa, invisibile, sull'immagine: poi puoi cercare, copiare e farlo leggere a Claude. La pagina resta identica. Tutto avviene su questo telefono.
 OcrDownloadNote = ↓: lingua scaricata una sola volta (da 2 a 6 MB), poi usabile senza Internet.
 OcrAi = Rilettura con Gemini Nano, l'IA di questo telefono: corregge le parole dubbie e legge la scrittura a mano
-OcrAiDownload = (Android la scaricherà prima)
+OcrAiDownload = (non ancora pronto: Android lo sta scaricando, verrà usato appena disponibile)
 OcrDownloading = Download della lingua {0}… {1} %
 OcrDownloadFailed = Impossibile scaricare la lingua {0}. Controlla la connessione Internet e riprova.
-OcrAiPreparing = Preparazione di Gemini Nano…
 OcrAiLines = , {0} riga riletta da Gemini Nano|, {0} righe rilette da Gemini Nano
-OcrAiUnavailable = Gemini Nano non è pronto: riconoscimento senza rilettura
+
+OcrAiLater = Gemini Nano non è ancora pronto: Android lo sta scaricando in background. Questa volta riconoscimento senza rilettura.
+ExitAgain = Premi di nuovo Indietro per uscire
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Condizioni d'uso
+LegalPrivacy = Privacy
+LegalImpressum = Note legali
 """

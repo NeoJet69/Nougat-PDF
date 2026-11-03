@@ -33,7 +33,7 @@ SaveChoiceText = Zastąpić oryginalny plik czy zapisać kopię w wybranym miejs
 ReplaceOriginal = Zastąp oryginał
 SaveCopy = Zapisz kopię…
 
-Tagline = Czytaj, edytuj, podpisuj i przekształcaj swoje pliki PDF.\nZa darmo i bez reklam — z wbudowanym Claude.
+Tagline = Czytaj, edytuj, podpisuj i przekształcaj swoje pliki PDF.\nZa darmo i bez reklam, z wbudowanym Claude.
 OpenPdf = Otwórz PDF
 DropHintDesktop = Przeciągnij tu plik lub wybierz go  ·  Ctrl+O
 DropHintPhone = Wybierz plik na telefonie
@@ -110,7 +110,7 @@ PreviousResult = Poprzedni wynik
 NextResult = Następny wynik
 CloseSearch = Zamknij wyszukiwanie
 HintEditingCompact = Potwierdź: oryginalny styl zostaje
-HintEditing = Zmień i potwierdź — oryginalny styl zostaje zachowany
+HintEditing = Zmień i potwierdź: oryginalny styl zostaje zachowany
 HintTapLineCompact = Dotknij wiersza w ramce
 HintTapLine = Dotknij wiersza w ramce, aby zmienić jego tekst
 DockRead = Czytaj
@@ -297,10 +297,15 @@ AboutFreeSoftware = Wolne oprogramowanie na licencji MIT
 OcrExplainPhone = Nougat odczytuje tekst zeskanowanych stron i nakłada go, niewidoczny, na obraz: potem można wyszukiwać, kopiować i poprosić Claude o przeczytanie. Strona wygląda tak samo. Wszystko dzieje się na tym telefonie.
 OcrDownloadNote = ↓: język pobierany tylko raz (od 2 do 6 MB), potem działa bez internetu.
 OcrAi = Korekta przez Gemini Nano, AI tego telefonu: poprawia niepewne słowa i czyta pismo odręczne
-OcrAiDownload = (Android najpierw ją pobierze)
+OcrAiDownload = (jeszcze niegotowe: Android je pobiera, zostanie użyte, gdy będzie dostępne)
 OcrDownloading = Pobieranie języka {0}… {1} %
 OcrDownloadFailed = Nie udało się pobrać języka {0}. Sprawdź połączenie z internetem i spróbuj ponownie.
-OcrAiPreparing = Przygotowanie Gemini Nano…
 OcrAiLines = , {0} wiersz poprawiony przez Gemini Nano|, {0} wiersze poprawione przez Gemini Nano|, {0} wierszy poprawionych przez Gemini Nano
-OcrAiUnavailable = Gemini Nano nie jest gotowe: rozpoznawanie bez korekty
+
+OcrAiLater = Gemini Nano nie jest jeszcze gotowe: Android pobiera je w tle. Tym razem rozpoznawanie bez korekty.
+ExitAgain = Naciśnij ponownie Wstecz, aby wyjść
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Warunki korzystania
+LegalPrivacy = Prywatność
+LegalImpressum = Nota prawna
 """

@@ -34,7 +34,7 @@ SaveChoiceText = Înlocuiești fișierul original sau salvezi o copie unde vrei?
 ReplaceOriginal = Înlocuiește originalul
 SaveCopy = Salvează o copie…
 
-Tagline = Citește, editează, semnează și transformă-ți PDF-urile.\nGratuit și fără reclame — cu Claude integrat.
+Tagline = Citește, editează, semnează și transformă-ți PDF-urile.\nGratuit și fără reclame, cu Claude integrat.
 OpenPdf = Deschide un PDF
 DropHintDesktop = Trage un fișier aici sau alege-l  ·  Ctrl+O
 DropHintPhone = Alege un fișier de pe telefon
@@ -111,7 +111,7 @@ PreviousResult = Rezultatul anterior
 NextResult = Rezultatul următor
 CloseSearch = Închide căutarea
 HintEditingCompact = Confirmă: stilul original rămâne
-HintEditing = Modifică și confirmă — stilul original se păstrează
+HintEditing = Modifică și confirmă: stilul original se păstrează
 HintTapLineCompact = Atinge un rând încadrat
 HintTapLine = Atinge un rând încadrat ca să-i schimbi textul
 DockRead = Citește
@@ -296,12 +296,17 @@ LicensesFullTexts = Textele complete ale licențelor
 AboutFreeSoftware = Software liber, sub licența MIT
 
 OcrExplainPhone = Nougat citește textul paginilor scanate și îl așază, invizibil, peste imagine: apoi poți căuta, copia și i-l poți da lui Claude să-l citească. Pagina arată la fel. Totul se face pe acest telefon.
-OcrDownloadNote = ↓: limbă descărcată o singură dată (2–6 MB), apoi folosită fără internet.
+OcrDownloadNote = ↓: limbă descărcată o singură dată (2-6 MB), apoi folosită fără internet.
 OcrAi = Corectură cu Gemini Nano, IA acestui telefon: corectează cuvintele îndoielnice și citește scrisul de mână
-OcrAiDownload = (Android îl va descărca mai întâi)
+OcrAiDownload = (încă nu e pregătit: Android îl descarcă, va fi folosit imediat ce e gata)
 OcrDownloading = Se descarcă limba {0}… {1} %
 OcrDownloadFailed = Limba {0} nu a putut fi descărcată. Verifică conexiunea la internet și încearcă din nou.
-OcrAiPreparing = Se pregătește Gemini Nano…
 OcrAiLines = , {0} rând corectat de Gemini Nano|, {0} rânduri corectate de Gemini Nano|, {0} de rânduri corectate de Gemini Nano
-OcrAiUnavailable = Gemini Nano nu e pregătit: recunoaștere fără corectură
+
+OcrAiLater = Gemini Nano nu e încă pregătit: Android îl descarcă în fundal. De data aceasta, recunoaștere fără corectură.
+ExitAgain = Apasă din nou Înapoi pentru a ieși
+AboutPartner = Partener: ArtisanGo
+LegalTerms = Condiții de utilizare
+LegalPrivacy = Confidențialitate
+LegalImpressum = Mențiuni legale
 """

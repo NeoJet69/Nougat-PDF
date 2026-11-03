@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.CancellationSignal
+import android.os.SystemClock
 import android.os.ParcelFileDescriptor
 import android.print.PageRange
 import android.print.PrintAttributes
@@ -11,11 +12,16 @@ import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.content.FileProvider
 import app.nougat.pdf.ui.NougatApp
 import app.nougat.pdf.ui.PlatformInfo
@@ -52,6 +58,19 @@ class MainActivity : ComponentActivity(), ActivityHost {
         if (savedInstanceState == null) handleIntent(intent)
 
         setContent {
+            // Retour : ferme ce qui est ouvert, puis le document ; sur l'accueil, deux fois pour quitter.
+            var lastBack by remember { mutableLongStateOf(0L) }
+            BackHandler {
+                if (!viewModel.state.handleBack()) {
+                    val now = SystemClock.elapsedRealtime()
+                    if (now - lastBack < 2_000) {
+                        finish()
+                    } else {
+                        lastBack = now
+                        viewModel.state.showMessage(tr(Str.ExitAgain))
+                    }
+                }
+            }
             NougatApp(
                 state = viewModel.state,
                 platform = PlatformInfo(isDesktop = false, version = runCatching { packageManager.getPackageInfo(packageName, 0).versionName }.getOrNull()),

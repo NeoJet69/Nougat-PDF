@@ -34,7 +34,7 @@ SaveChoiceText = S Original ersetze oder e Kopi spichere, wo dü witt?
 ReplaceOriginal = S Original ersetze
 SaveCopy = E Kopi spichere…
 
-Tagline = Les, bearbeit, ünterschrib ün verwandel dini PDFs.\nUmsunscht ün ohne Reklame — mìt Claude drbi.
+Tagline = Les, bearbeit, ünterschrib ün verwandel dini PDFs.\nUmsunscht ün ohne Reklame, mìt Claude drbi.
 OpenPdf = E PDF ufmache
 DropHintDesktop = Zieh e Datei do ànne oder wähl se üs  ·  Ctrl+O
 DropHintPhone = Wähl e Datei üf dim Telefon
@@ -111,7 +111,7 @@ PreviousResult = Vorderi Resultat
 NextResult = Nächscht's Resultat
 CloseSearch = S Süeche züemache
 HintEditingCompact = Bstätig: de Originalstil blibt
-HintEditing = Änder ün bstätig — de Originalstil blibt
+HintEditing = Änder ün bstätig: de Originalstil blibt
 HintTapLineCompact = Tipp üf e igrahmti Zill
 HintTapLine = Tipp üf e igrahmti Zill fer de Text z'ändere
 DockRead = Lese
@@ -298,10 +298,15 @@ AboutFreeSoftware = Freiji Software, unter de MIT-Lizanz
 OcrExplainPhone = Nougat lest de Text vun gscännte Sitte ün leit ne unsichtbar üf s Bìld: dànn kàsch süeche, kopiere ün de Claude lese lonn. D Sitt sieht glìch üs. Alles passiert üf dem Telefon.
 OcrDownloadNote = ↓: Sproch wurd eimol rùntergelade (2 bis 6 MB), nooch ohne Internet z bruche.
 OcrAi = Gemini Nano, d KI vum Telefon, lest nomol: verbessert ùnsìcheri Wärter ün lest Handschrìft
-OcrAiDownload = (Android ladt sie zerscht rùnter)
+OcrAiDownload = (noch nìt parat: Android ladt ne rùnter, er wurd bruucht, sobàld er do ìsch)
 OcrDownloading = Sproch {0} wurd rùntergelade… {1} %
 OcrDownloadFailed = D Sproch {0} hàt nìt kenne rùntergelade wäre. Lüej d Internetverbìndung àà ün probier nomol.
-OcrAiPreparing = Gemini Nano wurd vorbereitet…
 OcrAiLines = , {0} Zeil vum Gemini Nano verbessert|, {0} Zeile vum Gemini Nano verbessert
-OcrAiUnavailable = Gemini Nano ìsch nìt parat: erkännt ohne Korrektür
+
+OcrAiLater = Gemini Nano ìsch noch nìt parat: Android ladt ne ìm Hìntergrund rùnter. Diesmol erkännt ohne Korrektür.
+ExitAgain = Nomol üf Zruck drucke fer z beände
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Nutzungsbedingunge
+LegalPrivacy = Dàteschutz
+LegalImpressum = Impressum
 """

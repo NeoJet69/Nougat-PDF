@@ -25,7 +25,8 @@ internal object GeminiNano {
 
     /** Ce que permet l'appareil. */
     suspend fun status(): DeviceAiStatus = runCatching {
-        when (client().checkStatus()) {
+        // Quelques secondes au plus : sans reponse d'AICore, on fait sans Gemini Nano.
+        when (withTimeoutOrNull(5_000) { client().checkStatus() }) {
             FeatureStatus.AVAILABLE -> DeviceAiStatus.Available
             FeatureStatus.DOWNLOADABLE -> DeviceAiStatus.Downloadable
             FeatureStatus.DOWNLOADING -> DeviceAiStatus.Downloading
@@ -33,8 +34,14 @@ internal object GeminiNano {
         }
     }.getOrDefault(DeviceAiStatus.Unavailable)
 
+    /** Telechargement deja demande (Android le poursuit seul, meme si l'app est fermee). */
+    @Volatile
+    private var downloading = false
+
     /** Telecharge le modele (Android le garde ensuite pour toutes les apps). [onBytes] : progression. */
     suspend fun download(onBytes: (Long) -> Unit): Boolean {
+        if (downloading) return false
+        downloading = true
         var ok = false
         runCatching {
             client().download().collect { s ->
@@ -46,6 +53,7 @@ internal object GeminiNano {
                 }
             }
         }
+        downloading = false
         return ok || status() == DeviceAiStatus.Available
     }
 

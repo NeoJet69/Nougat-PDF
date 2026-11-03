@@ -33,7 +33,7 @@ SaveChoiceText = Orijinal dosya değiştirilsin mi, yoksa istediğiniz yere bir 
 ReplaceOriginal = Orijinalin yerine yaz
 SaveCopy = Kopya kaydet…
 
-Tagline = PDF'lerinizi okuyun, düzenleyin, imzalayın ve dönüştürün.\nÜcretsiz ve reklamsız — Claude yerleşik.
+Tagline = PDF'lerinizi okuyun, düzenleyin, imzalayın ve dönüştürün.\nÜcretsiz ve reklamsız, Claude yerleşik.
 OpenPdf = PDF aç
 DropHintDesktop = Dosyayı buraya sürükleyin veya seçin  ·  Ctrl+O
 DropHintPhone = Telefonunuzdan bir dosya seçin
@@ -110,7 +110,7 @@ PreviousResult = Önceki sonuç
 NextResult = Sonraki sonuç
 CloseSearch = Aramayı kapat
 HintEditingCompact = Onaylayın: orijinal stil korunur
-HintEditing = Değiştirin ve onaylayın — orijinal stil korunur
+HintEditing = Değiştirin ve onaylayın: orijinal stil korunur
 HintTapLineCompact = Çerçeveli bir satıra dokunun
 HintTapLine = Metnini değiştirmek için çerçeveli bir satıra dokunun
 DockRead = Oku
@@ -297,10 +297,15 @@ AboutFreeSoftware = Özgür yazılım, MIT lisansıyla
 OcrExplainPhone = Nougat taranmış sayfaların metnini okur ve görüntünün üzerine görünmez olarak yerleştirir: sonra arayabilir, kopyalayabilir ve Claude'a okutabilirsiniz. Sayfa aynı görünür. Her şey bu telefonda yapılır.
 OcrDownloadNote = ↓: dil yalnızca bir kez indirilir (2-6 MB), sonra İnternet olmadan kullanılır.
 OcrAi = Bu telefonun yapay zekâsı Gemini Nano ile düzeltme: şüpheli sözcükleri düzeltir ve el yazısını okur
-OcrAiDownload = (Android önce indirecek)
+OcrAiDownload = (henüz hazır değil: Android indiriyor, hazır olunca kullanılacak)
 OcrDownloading = {0} dili indiriliyor… %{1}
 OcrDownloadFailed = {0} dili indirilemedi. İnternet bağlantısını kontrol edip yeniden deneyin.
-OcrAiPreparing = Gemini Nano hazırlanıyor…
 OcrAiLines = , Gemini Nano {0} satırı düzeltti
-OcrAiUnavailable = Gemini Nano hazır değil: düzeltme olmadan tanındı
+
+OcrAiLater = Gemini Nano henüz hazır değil: Android onu arka planda indiriyor. Bu sefer düzeltme olmadan tanındı.
+ExitAgain = Çıkmak için tekrar Geri'ye basın
+AboutPartner = İş ortağı: ArtisanGo
+LegalTerms = Kullanım koşulları
+LegalPrivacy = Gizlilik
+LegalImpressum = Yasal bilgiler
 """

@@ -33,7 +33,7 @@ SaveChoiceText = Die Originaldatei ersetzen oder eine Kopie an einem Ort Ihrer W
 ReplaceOriginal = Original ersetzen
 SaveCopy = Kopie speichern…
 
-Tagline = Lesen, bearbeiten, unterschreiben und verwandeln Sie Ihre PDFs.\nKostenlos und werbefrei — mit Claude an Bord.
+Tagline = Lesen, bearbeiten, unterschreiben und verwandeln Sie Ihre PDFs.\nKostenlos und werbefrei, mit Claude an Bord.
 OpenPdf = PDF öffnen
 DropHintDesktop = Datei hierher ziehen oder auswählen  ·  Strg+O
 DropHintPhone = Wählen Sie eine Datei auf Ihrem Telefon
@@ -110,7 +110,7 @@ PreviousResult = Vorheriges Ergebnis
 NextResult = Nächstes Ergebnis
 CloseSearch = Suche schließen
 HintEditingCompact = Bestätigen: der Originalstil bleibt erhalten
-HintEditing = Ändern und bestätigen — der Originalstil bleibt erhalten
+HintEditing = Ändern und bestätigen: der Originalstil bleibt erhalten
 HintTapLineCompact = Tippen Sie auf eine umrahmte Zeile
 HintTapLine = Tippen Sie auf eine umrahmte Zeile, um ihren Text zu ändern
 DockRead = Lesen
@@ -297,10 +297,15 @@ AboutFreeSoftware = Freie Software, unter der MIT-Lizenz
 OcrExplainPhone = Nougat liest den Text gescannter Seiten und legt ihn unsichtbar über das Bild: Danach können Sie suchen, kopieren und Claude lesen lassen. Die Seite sieht genauso aus. Alles geschieht auf diesem Telefon.
 OcrDownloadNote = ↓: Sprache wird einmal heruntergeladen (2 bis 6 MB), danach ohne Internet nutzbar.
 OcrAi = Korrekturlesen durch Gemini Nano, die KI dieses Telefons: korrigiert unsichere Wörter und liest Handschrift
-OcrAiDownload = (Android lädt sie zuerst herunter)
+OcrAiDownload = (noch nicht bereit: Android lädt es herunter, es wird genutzt, sobald es da ist)
 OcrDownloading = Sprache {0} wird heruntergeladen… {1} %
 OcrDownloadFailed = Die Sprache {0} konnte nicht heruntergeladen werden. Prüfen Sie die Internetverbindung und versuchen Sie es erneut.
-OcrAiPreparing = Gemini Nano wird vorbereitet…
 OcrAiLines = , {0} Zeile von Gemini Nano korrigiert|, {0} Zeilen von Gemini Nano korrigiert
-OcrAiUnavailable = Gemini Nano ist nicht bereit: Erkennung ohne Korrekturlesen
+
+OcrAiLater = Gemini Nano ist noch nicht bereit: Android lädt es im Hintergrund herunter. Diesmal Erkennung ohne Korrekturlesen.
+ExitAgain = Zum Beenden erneut auf Zurück tippen
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Nutzungsbedingungen
+LegalPrivacy = Datenschutz
+LegalImpressum = Impressum
 """

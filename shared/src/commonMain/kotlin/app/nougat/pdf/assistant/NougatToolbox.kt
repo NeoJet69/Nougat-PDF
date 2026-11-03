@@ -306,7 +306,7 @@ Règles :
             return ToolOutput.Text("La page ${page + 1} ne contient pas de texte lisible (page vide, ou scannée : utilise view_page).")
         }
         val text = buildString {
-            appendLine("Page ${page + 1} — ${blocks.size} lignes :")
+            appendLine("Page ${page + 1}, ${blocks.size} lignes :")
             blocks.take(MAX_LINES).forEachIndexed { i, b -> appendLine(describe(i, b)) }
             if (blocks.size > MAX_LINES) appendLine("… (${blocks.size - MAX_LINES} lignes de plus non affichées)")
         }

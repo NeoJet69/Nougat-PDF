@@ -49,5 +49,6 @@ enum class Str {
     OcrProgress, OcrDone, OcrRotated, OcrNothing, OcrStopped, TextChangedScan,
     ActRecognize, Licenses, LicensesIntro, LicensesComponents, LicensesFullTexts, AboutFreeSoftware,
     OcrExplainPhone, OcrDownloadNote, OcrAi, OcrAiDownload, OcrDownloading, OcrDownloadFailed,
-    OcrAiPreparing, OcrAiLines, OcrAiUnavailable,
+    OcrAiLines, OcrAiLater, ExitAgain, AboutPartner, LegalTerms, LegalPrivacy,
+    LegalImpressum,
 }

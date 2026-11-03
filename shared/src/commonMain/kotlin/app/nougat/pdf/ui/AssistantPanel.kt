@@ -99,7 +99,10 @@ fun AssistantPanel(state: ViewerState, modifier: Modifier) {
                     Text(AssistantModels.label(state.assistantModel), style = MaterialTheme.typography.labelMedium, color = p.muted)
                 }
                 IslandButton(Icons.Filled.Refresh, tr(Str.NewConversation), onClick = state::resetAssistant, enabled = a.items.isNotEmpty() && !a.running, size = 42.dp, iconSize = 22.dp)
-                IslandButton(Icons.Filled.Settings, tr(Str.AssistantSettings), onClick = { a.showSettings = !a.showSettings }, active = a.showSettings, size = 42.dp, iconSize = 22.dp)
+                // Sans cle, les reglages sont deja affiches : le bouton n'aurait aucun effet.
+                if (state.apiKey.isNotBlank()) {
+                    IslandButton(Icons.Filled.Settings, tr(Str.AssistantSettings), onClick = { a.showSettings = !a.showSettings }, active = a.showSettings, size = 42.dp, iconSize = 22.dp)
+                }
                 IslandButton(Icons.Filled.Close, tr(Str.CloseAssistant), onClick = { a.open = false }, size = 42.dp, iconSize = 22.dp)
             }
             HorizontalDivider(color = p.islandBorder)

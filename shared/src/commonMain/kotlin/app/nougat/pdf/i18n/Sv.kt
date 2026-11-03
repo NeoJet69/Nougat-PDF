@@ -33,7 +33,7 @@ SaveChoiceText = Ersätta originalfilen, eller spara en kopia var du vill?
 ReplaceOriginal = Ersätt originalet
 SaveCopy = Spara en kopia…
 
-Tagline = Läs, redigera, signera och förvandla dina PDF-filer.\nGratis och utan reklam — med Claude inbyggt.
+Tagline = Läs, redigera, signera och förvandla dina PDF-filer.\nGratis och utan reklam, med Claude inbyggt.
 OpenPdf = Öppna en PDF
 DropHintDesktop = Dra hit en fil eller välj en  ·  Ctrl+O
 DropHintPhone = Välj en fil på telefonen
@@ -110,7 +110,7 @@ PreviousResult = Föregående träff
 NextResult = Nästa träff
 CloseSearch = Stäng sökningen
 HintEditingCompact = Bekräfta: originalstilen behålls
-HintEditing = Ändra och bekräfta — originalstilen behålls
+HintEditing = Ändra och bekräfta: originalstilen behålls
 HintTapLineCompact = Tryck på en inramad rad
 HintTapLine = Tryck på en inramad rad för att ändra texten
 DockRead = Läs
@@ -297,10 +297,15 @@ AboutFreeSoftware = Fri programvara, under MIT-licensen
 OcrExplainPhone = Nougat läser texten på skannade sidor och lägger den, osynlig, över bilden: sedan kan du söka, kopiera och låta Claude läsa den. Sidan ser likadan ut. Allt sker på den här telefonen.
 OcrDownloadNote = ↓: språket laddas ner en gång (2 till 6 MB) och fungerar sedan utan internet.
 OcrAi = Korrekturläsning av Gemini Nano, telefonens AI: rättar osäkra ord och läser handskrift
-OcrAiDownload = (Android laddar ner den först)
+OcrAiDownload = (inte redo än: Android laddar ner den, den används så fort den finns)
 OcrDownloading = Laddar ner {0}… {1} %
 OcrDownloadFailed = Det gick inte att ladda ner {0}. Kontrollera internetanslutningen och försök igen.
-OcrAiPreparing = Förbereder Gemini Nano…
 OcrAiLines = , {0} rad korrekturläst av Gemini Nano|, {0} rader korrekturlästa av Gemini Nano
-OcrAiUnavailable = Gemini Nano är inte redo: igenkänd utan korrekturläsning
+
+OcrAiLater = Gemini Nano är inte redo än: Android laddar ner den i bakgrunden. Den här gången utan korrekturläsning.
+ExitAgain = Tryck på Tillbaka igen för att avsluta
+AboutPartner = Partner: ArtisanGo
+LegalTerms = Användarvillkor
+LegalPrivacy = Integritet
+LegalImpressum = Juridisk information
 """

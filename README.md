@@ -25,7 +25,7 @@ Le **dock** en bas de l'écran choisit le mode : **Lire**, **Éditer**, **Annote
 - **Annuler** (Ctrl+Z) : annule la dernière annotation ou la dernière opération
 - Zoom : pincer avec deux doigts (téléphone), Ctrl + molette ou Ctrl +/− (ordinateur)
 
-## Reconnaître le texte d'un scan (OCR) — Windows et Android
+## Reconnaître le texte d'un scan (OCR), sur Windows et Android
 
 Un PDF scanné ou photographié n'est qu'une image : on ne peut ni y chercher un mot, ni le copier,
 ni le modifier. Nougat le détecte à l'ouverture et propose **Reconnaître le texte** (aussi dans
@@ -218,3 +218,8 @@ propres licences** (Apache 2.0, BSD, MIT…). La liste complète, avec leurs avi
 - **NeoJet** : idée, direction et tests
 - **Nougat** 🐱 : mascotte et testeur en chef
 - **Caramel** ✨ : code et design (Claude, une IA d'Anthropic)
+
+Partenaire : [ArtisanGo](https://artisango.ch).
+[Conditions d'utilisation](https://artisango.ch/nougatpdf/terms-conditions) ·
+[Confidentialité](https://artisango.ch/nougatpdf/privacy-policy) ·
+[Mentions légales](https://artisango.ch/nougatpdf/impressum)

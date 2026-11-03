@@ -33,7 +33,7 @@ SaveChoiceText = 替换原始文件，还是把副本保存到你选择的位置
 ReplaceOriginal = 替换原文件
 SaveCopy = 保存副本…
 
-Tagline = 阅读、编辑、签署和转换你的 PDF。\n免费、无广告——内置 Claude。
+Tagline = 阅读、编辑、签署和转换你的 PDF。\n免费、无广告，内置 Claude。
 OpenPdf = 打开 PDF
 DropHintDesktop = 把文件拖到这里，或选择文件  ·  Ctrl+O
 DropHintPhone = 从手机中选择文件
@@ -110,7 +110,7 @@ PreviousResult = 上一个结果
 NextResult = 下一个结果
 CloseSearch = 关闭搜索
 HintEditingCompact = 确认：保留原有样式
-HintEditing = 修改后确认——保留原有样式
+HintEditing = 修改后确认，保留原有样式
 HintTapLineCompact = 点按带框的行
 HintTapLine = 点按带框的行即可修改文字
 DockRead = 阅读
@@ -295,12 +295,17 @@ LicensesFullTexts = 许可证全文
 AboutFreeSoftware = 自由软件，采用 MIT 许可证
 
 OcrExplainPhone = Nougat 会读取扫描页上的文字，并以不可见的方式覆盖在图像上：之后即可搜索、复制并让 Claude 阅读。页面外观完全不变。全部在这部手机上完成。
-OcrDownloadNote = ↓：该语言只需下载一次（2–6 MB），之后无需联网即可使用。
+OcrDownloadNote = ↓：该语言只需下载一次（2-6 MB），之后无需联网即可使用。
 OcrAi = 由本机 AI Gemini Nano 校对：纠正可疑的字词并识别手写文字
-OcrAiDownload = （Android 会先下载它）
+OcrAiDownload = （尚未就绪：Android 正在下载，下载完成后即可使用）
 OcrDownloading = 正在下载 {0}… {1}%
 OcrDownloadFailed = 无法下载 {0}。请检查网络连接后重试。
-OcrAiPreparing = 正在准备 Gemini Nano…
 OcrAiLines = ，Gemini Nano 校对了 {0} 行
-OcrAiUnavailable = Gemini Nano 尚未就绪：已在不校对的情况下完成识别
+
+OcrAiLater = Gemini Nano 尚未就绪：Android 正在后台下载。本次识别未经校对。
+ExitAgain = 再按一次返回键退出
+AboutPartner = 合作伙伴：ArtisanGo
+LegalTerms = 使用条款
+LegalPrivacy = 隐私
+LegalImpressum = 法律声明
 """

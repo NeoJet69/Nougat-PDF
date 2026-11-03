@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import app.nougat.pdf.engine.OCR_LANGUAGES
 import app.nougat.pdf.engine.DeviceAiStatus
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalUriHandler
 
 /**
  * Premier enregistrement d'un document : remplacer le fichier d'origine, ou enregistrer une
@@ -135,6 +136,7 @@ private fun LanguageRow(lang: Lang, selected: Boolean, onClick: () -> Unit) {
 }
 
 /** Les auteurs : NeoJet, Nougat le chat et Caramel (Claude). */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutDialog(version: String?, onLicenses: () -> Unit, onDismiss: () -> Unit) {
     val p = LocalNougatPalette.current
@@ -156,10 +158,35 @@ fun AboutDialog(version: String?, onLicenses: () -> Unit, onDismiss: () -> Unit)
                 Credit("Nougat 🐱", tr(Str.AboutNougat))
                 Credit("Caramel ✨", tr(Str.AboutCaramel))
                 Text(tr(Str.AboutFreeSoftware), style = MaterialTheme.typography.labelMedium, color = p.muted, textAlign = TextAlign.Center)
+                // Partenaire, et pages juridiques (sur le site d'ArtisanGo).
+                val uri = LocalUriHandler.current
+                LinkText(tr(Str.AboutPartner)) { runCatching { uri.openUri(ARTISANGO_URL) } }
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.CenterHorizontally), modifier = Modifier.fillMaxWidth()) {
+                    LinkText(tr(Str.LegalTerms)) { runCatching { uri.openUri(TERMS_URL) } }
+                    LinkText(tr(Str.LegalPrivacy)) { runCatching { uri.openUri(PRIVACY_URL) } }
+                    LinkText(tr(Str.LegalImpressum)) { runCatching { uri.openUri(IMPRESSUM_URL) } }
+                }
             }
         },
         dismissButton = { TextButton(onClick = onLicenses) { Text(tr(Str.Licenses)) } },
         confirmButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Close)) } },
+    )
+}
+
+/** Le site d'ArtisanGo, partenaire de Nougat PDF, et les pages juridiques de l'app. */
+const val ARTISANGO_URL = "https://artisango.ch"
+const val TERMS_URL = "https://artisango.ch/nougatpdf/terms-conditions"
+const val PRIVACY_URL = "https://artisango.ch/nougatpdf/privacy-policy"
+const val IMPRESSUM_URL = "https://artisango.ch/nougatpdf/impressum"
+
+@Composable
+private fun LinkText(text: String, onClick: () -> Unit) {
+    Text(
+        text,
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.clip(RoundedCornerShape(8.dp)).clickable(onClick = onClick).padding(horizontal = 4.dp, vertical = 2.dp),
     )
 }
 
