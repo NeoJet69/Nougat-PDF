@@ -11,22 +11,21 @@
 
 **Windows** : lancez le fichier `.exe`. Si un écran bleu « Windows a protégé votre ordinateur » apparaît, cliquez sur **Informations complémentaires**, puis **Exécuter quand même** (l'installateur n'est pas signé par un certificat payant).
 
-## Nouveau : la reconnaissance de texte (OCR) arrive sur Android
+## Nouveau
 
-Ouvrez un PDF scanné ou une photo de document : Nougat propose **Reconnaître le texte**, sur Windows comme sur Android. Tout se fait sur l'appareil, en 16 langues (sur Android, le français et l'anglais sont inclus, les autres se téléchargent une fois). Le texte devient cherchable, copiable et lisible par Claude ; les pages à l'envers sont remises droites, les ombres des photos corrigées.
+- **Scanner un document** (Android) : l'appareil photo détecte la page, la prend toute seule, la recadre, la redresse et nettoie les ombres. Plusieurs pages, ou des photos de la galerie.
+- **Modifier un scan, aussi sur Android** : après la reconnaissance du texte, touchez une ligne scannée en mode Éditer. Nougat efface la ligne de l'image en recréant le papier et la réécrit dans la police la plus ressemblante.
+- **Couleur libre pour annoter** : sous les pastilles, un curseur de teinte, un curseur de profondeur (du pastel au profond) et le code #RRGGBB.
+- **Reconnaissance de texte (OCR)** sur Windows et Android, en 16 langues, sur l'appareil. Sur les téléphones compatibles (Pixel 9 et suivants, Galaxy S26…), **Gemini Nano** relit les lignes douteuses et lit même l'écriture manuscrite.
+- Sur Android, le bouton Retour revient en arrière (deux appuis sur l'accueil pour quitter), et l'APK est plus léger.
 
-Sur les téléphones compatibles (Pixel 9 et suivants, Galaxy S26…), **Gemini Nano**, l'IA de Google intégrée au téléphone, relit les lignes douteuses : il corrige les erreurs de lecture et sait même lire l'écriture manuscrite, sans Internet.
-
-Sur Windows, on peut aussi **modifier une ligne scannée** : Nougat efface la ligne de l'image et la réécrit dans la police la plus ressemblante.
-
-Nougat PDF est désormais un logiciel libre sous **licence MIT** (À propos, Licences).
-
-Aussi dans cette version : sur Android, le bouton Retour revient en arrière au lieu de fermer l'app (deux appuis sur l'accueil pour quitter), la reconnaissance ne reste plus bloquée en attendant Gemini Nano, l'APK est plus léger, et « À propos » présente notre partenaire ArtisanGo avec les conditions d'utilisation, la confidentialité et les mentions légales.
+Nougat PDF est un logiciel libre sous **licence MIT**, en partenariat avec ArtisanGo (À propos).
 
 ## Au menu
 
 - Modifier le texte d'un PDF au même endroit, dans la même police
-- Reconnaître le texte des scans et des photos (OCR), avec Gemini Nano sur les téléphones compatibles
+- Scanner un document avec l'appareil photo (Android)
+- Reconnaître le texte des scans et des photos (OCR), puis le modifier, avec Gemini Nano sur les téléphones compatibles
 - Annoter, surligner, signer, masquer
 - Remplir les formulaires PDF
 - Créer un PDF à partir de photos, ou un document vierge
