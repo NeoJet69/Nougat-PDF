@@ -308,4 +308,11 @@ AboutPartner = Partner: ArtisanGo
 LegalTerms = Terms of use
 LegalPrivacy = Privacy
 LegalImpressum = Legal notice
+
+ScanDocument = Scan a document
+ScanDocumentHint = Camera: pages detected, cropped and straightened
+ScanPdfName = Scanned document
+ScanAppend = Scan pages
+ScanAdded = Scanned pages added at the end
+ScannerUnavailable = The scanner isn't available on this phone: it needs up-to-date Google Play services.
 """

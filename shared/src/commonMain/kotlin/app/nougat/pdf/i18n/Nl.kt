@@ -308,4 +308,11 @@ AboutPartner = Partner: ArtisanGo
 LegalTerms = Gebruiksvoorwaarden
 LegalPrivacy = Privacy
 LegalImpressum = Colofon
+
+ScanDocument = Document scannen
+ScanDocumentHint = Camera: pagina's herkend, bijgesneden en rechtgezet
+ScanPdfName = Gescand document
+ScanAppend = Pagina's scannen
+ScanAdded = Gescande pagina's achteraan toegevoegd
+ScannerUnavailable = De scanner is niet beschikbaar op deze telefoon: hij heeft bijgewerkte Google Play-services nodig.
 """

@@ -885,6 +885,42 @@ class ViewerState(
         }
     }
 
+    /** Le telephone sait scanner un document avec l'appareil photo. */
+    val canScan: Boolean get() = files.canScan
+
+    /** Nouveau PDF a partir d'un document scanne avec l'appareil photo. */
+    fun createPdfFromScan() = runAfterConfirm {
+        scope.launch {
+            val scan = scanOrReport() ?: return@launch
+            createNow(tr(Str.ScanPdfName) + ".pdf", tr(Str.CreatingPdf)) { it.appendPdf(scan) }
+        }
+    }
+
+    /** Scanne des pages et les ajoute a la fin du document ouvert. */
+    fun appendScan() {
+        scope.launch {
+            val scan = scanOrReport() ?: return@launch
+            val s = session ?: return@launch
+            if (editNow(tr(Str.AddingImages), s.password) { it.appendPdf(scan) }) {
+                toast = tr(Str.ScanAdded)
+                // Le document a ete rouvert : le bandeau « reconnaitre le texte » compte les nouvelles pages.
+                session?.let { fresh ->
+                    fresh.ocrBannerClosed = false
+                    fresh.ocrPages = runCatching { fresh.document.pagesNeedingOcr() }.getOrDefault(0)
+                }
+            }
+        }
+    }
+
+    private suspend fun scanOrReport(): String? = try {
+        files.scanDocument()
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Throwable) {
+        errorMessage = tr(Str.ScannerUnavailable)
+        null
+    }
+
     private suspend fun pickImagesOrReport(): List<String>? {
         val images = try {
             files.pickImages()

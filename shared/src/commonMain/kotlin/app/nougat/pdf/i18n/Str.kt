@@ -50,5 +50,6 @@ enum class Str {
     ActRecognize, Licenses, LicensesIntro, LicensesComponents, LicensesFullTexts, AboutFreeSoftware,
     OcrExplainPhone, OcrDownloadNote, OcrAi, OcrAiDownload, OcrDownloading, OcrDownloadFailed,
     OcrAiLines, OcrAiLater, ExitAgain, AboutPartner, LegalTerms, LegalPrivacy,
-    LegalImpressum,
+    LegalImpressum, ScanDocument, ScanDocumentHint, ScanPdfName, ScanAppend, ScanAdded,
+    ScannerUnavailable,
 }

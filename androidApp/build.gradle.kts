@@ -105,6 +105,8 @@ androidComponents {
 
 dependencies {
     implementation(project(":shared"))
+    // Scanner de documents de Google (le meme que dans ArtisanGo), fourni par Google Play services.
+    implementation(libs.mlkit.document.scanner)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodel)
     coreLibraryDesugaring(libs.desugar.jdk.libs)

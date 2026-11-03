@@ -308,4 +308,11 @@ AboutPartner = Συνεργάτης: ArtisanGo
 LegalTerms = Όροι χρήσης
 LegalPrivacy = Απόρρητο
 LegalImpressum = Νομική σημείωση
+
+ScanDocument = Σάρωση εγγράφου
+ScanDocumentHint = Κάμερα: οι σελίδες εντοπίζονται, περικόπτονται και ισιώνουν
+ScanPdfName = Σαρωμένο έγγραφο
+ScanAppend = Σάρωση σελίδων
+ScanAdded = Οι σαρωμένες σελίδες προστέθηκαν στο τέλος
+ScannerUnavailable = Ο σαρωτής δεν είναι διαθέσιμος σε αυτό το τηλέφωνο: χρειάζεται ενημερωμένες υπηρεσίες Google Play.
 """

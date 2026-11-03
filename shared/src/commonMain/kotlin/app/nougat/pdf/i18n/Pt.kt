@@ -308,4 +308,11 @@ AboutPartner = Parceiro: ArtisanGo
 LegalTerms = Condições de utilização
 LegalPrivacy = Privacidade
 LegalImpressum = Informação legal
+
+ScanDocument = Digitalizar um documento
+ScanDocumentHint = Câmara: páginas detetadas, recortadas e endireitadas
+ScanPdfName = Documento digitalizado
+ScanAppend = Digitalizar páginas
+ScanAdded = Páginas digitalizadas adicionadas no fim
+ScannerUnavailable = O digitalizador não está disponível neste telemóvel: precisa dos serviços Google Play atualizados.
 """

@@ -309,4 +309,11 @@ AboutPartner = Partenaire : ArtisanGo
 LegalTerms = Conditions d'utilisation
 LegalPrivacy = Confidentialité
 LegalImpressum = Mentions légales
+
+ScanDocument = Numériser un document
+ScanDocumentHint = Caméra : pages détectées, recadrées pis redressées
+ScanPdfName = Document numérisé
+ScanAppend = Numériser des pages
+ScanAdded = Pages numérisées ajoutées à la fin
+ScannerUnavailable = Le numériseur est pas disponible sur ce téléphone-là : il a besoin des services Google Play à jour.
 """

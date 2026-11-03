@@ -382,6 +382,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             item(tr(Str.OrganizePages), NougatIcons.Pages) { state.pagesOpen = true }
             item(tr(Str.AppendPdf), Icons.Filled.Add, state::appendPdf)
             item(tr(Str.AppendImages), NougatIcons.Image, state::appendImages)
+            if (state.canScan) item(tr(Str.ScanAppend), NougatIcons.Camera, state::appendScan)
             if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
             if (session.password == null) {
                 item(tr(Str.ProtectWithPassword), Icons.Filled.Lock, onProtect)

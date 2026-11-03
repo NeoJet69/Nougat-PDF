@@ -15,6 +15,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -24,6 +25,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.FileProvider
 import app.nougat.pdf.ui.NougatApp
+import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanning
+import com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult
 import app.nougat.pdf.ui.PlatformInfo
 import java.io.File
 import java.io.FileOutputStream
@@ -43,6 +47,21 @@ class MainActivity : ComponentActivity(), ActivityHost {
     private val openLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         openCallback?.invoke(it)
         openCallback = null
+    }
+    private var scanCallback: ((Uri?, Throwable?) -> Unit)? = null
+
+    /**
+     * Le scanner de documents de Google (ML Kit, le meme que dans ArtisanGo) : il detecte la
+     * page, la prend tout seul, la recadre, la redresse et nettoie les ombres ; plusieurs pages.
+     */
+    private val scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        val uri = if (result.resultCode == RESULT_OK) {
+            GmsDocumentScanningResult.fromActivityResultIntent(result.data)?.pdf?.uri
+        } else {
+            null
+        }
+        scanCallback?.invoke(uri, null)
+        scanCallback = null
     }
     private var imagesCallback: ((List<Uri>) -> Unit)? = null
     private val imagesLauncher = registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
@@ -125,6 +144,20 @@ class MainActivity : ComponentActivity(), ActivityHost {
     override fun pickImages(onResult: (List<Uri>) -> Unit) {
         imagesCallback = onResult
         imagesLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    override fun scanDocument(onResult: (Uri?, Throwable?) -> Unit) {
+        val options = GmsDocumentScannerOptions.Builder()
+            .setGalleryImportAllowed(true)
+            .setResultFormats(GmsDocumentScannerOptions.RESULT_FORMAT_PDF)
+            .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
+            .build()
+        GmsDocumentScanning.getClient(options).getStartScanIntent(this)
+            .addOnSuccessListener { sender ->
+                scanCallback = onResult
+                scannerLauncher.launch(IntentSenderRequest.Builder(sender).build())
+            }
+            .addOnFailureListener { e -> onResult(null, e) }
     }
 
     override fun share(file: File, name: String) {

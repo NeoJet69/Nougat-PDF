@@ -309,4 +309,11 @@ AboutPartner = Partener: ArtisanGo
 LegalTerms = Condiții de utilizare
 LegalPrivacy = Confidențialitate
 LegalImpressum = Mențiuni legale
+
+ScanDocument = Scanează un document
+ScanDocumentHint = Cameră: paginile sunt detectate, decupate și îndreptate
+ScanPdfName = Document scanat
+ScanAppend = Scanează pagini
+ScanAdded = Paginile scanate au fost adăugate la final
+ScannerUnavailable = Scanerul nu e disponibil pe acest telefon: are nevoie de serviciile Google Play actualizate.
 """

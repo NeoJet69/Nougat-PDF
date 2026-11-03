@@ -27,6 +27,15 @@ interface PlatformFiles {
      */
     suspend fun pickImages(): List<String> = emptyList()
 
+    /** Le telephone sait scanner un document avec l'appareil photo (pages detectees et redressees). */
+    val canScan: Boolean get() = false
+
+    /**
+     * Scanne un document avec l'appareil photo ; renvoie le PDF obtenu (copie privee), ou null si
+     * l'utilisateur a annule. Leve une exception si le scanner n'est pas disponible.
+     */
+    suspend fun scanDocument(): String? = null
+
     /** Imprimer, si la plateforme sait le faire. */
     val canPrint: Boolean
     suspend fun print(path: String, password: String?, name: String)

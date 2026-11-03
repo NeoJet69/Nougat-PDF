@@ -308,4 +308,11 @@ AboutPartner = İş ortağı: ArtisanGo
 LegalTerms = Kullanım koşulları
 LegalPrivacy = Gizlilik
 LegalImpressum = Yasal bilgiler
+
+ScanDocument = Belge tara
+ScanDocumentHint = Kamera: sayfalar algılanır, kırpılır ve düzeltilir
+ScanPdfName = Taranmış belge
+ScanAppend = Sayfa tara
+ScanAdded = Taranan sayfalar sona eklendi
+ScannerUnavailable = Tarayıcı bu telefonda kullanılamıyor: güncel Google Play hizmetleri gerekir.
 """

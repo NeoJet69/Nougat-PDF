@@ -309,4 +309,11 @@ AboutPartner = Partenariu : ArtisanGo
 LegalTerms = Cundizioni d'usu
 LegalPrivacy = Cunfidenzialità
 LegalImpressum = Menzioni legali
+
+ScanDocument = Scansà un ducumentu
+ScanDocumentHint = Fotocamera : pagine scuperte, tagliate è addirizzate
+ScanPdfName = Ducumentu scansatu
+ScanAppend = Scansà pagine
+ScanAdded = Pagine scansate aghjunte à a fine
+ScannerUnavailable = U scanner ùn hè micca dispunibule nant'à stu telefonu : li ci volenu i servizii Google Play à ghjornu.
 """

@@ -309,4 +309,11 @@ AboutPartner = شريك: ArtisanGo
 LegalTerms = شروط الاستخدام
 LegalPrivacy = الخصوصية
 LegalImpressum = إشعار قانوني
+
+ScanDocument = مسح مستند ضوئيًا
+ScanDocumentHint = الكاميرا: تُكتشف الصفحات وتُقصّ وتُعدَّل
+ScanPdfName = مستند ممسوح
+ScanAppend = مسح صفحات
+ScanAdded = أُضيفت الصفحات الممسوحة في النهاية
+ScannerUnavailable = الماسح غير متاح على هذا الهاتف: يحتاج إلى خدمات Google Play محدّثة.
 """

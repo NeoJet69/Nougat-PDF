@@ -181,7 +181,8 @@ class CaptureTest {
         engine: PdfEngine = DesktopPdfEngine(),
         setup: (ViewerState) -> Unit = {},
     ) {
-        val files = FakeFiles(dir, language)
+        // Telephone : le scanner de documents existe (carte « Scanner un document » sur l'accueil).
+        val files = FakeFiles(dir, language, canScan = !platform.isDesktop)
         val state = ViewerState(engine, CoroutineScope(SupervisorJob() + Dispatchers.Default), files, NoAssistant)
         // Auto -> Clair -> Sombre
         state.cycleTheme()
@@ -234,7 +235,7 @@ class CaptureTest {
         override fun reset() = Unit
     }
 
-    private class FakeFiles(dir: File, language: String) : PlatformFiles {
+    private class FakeFiles(dir: File, language: String, override val canScan: Boolean = false) : PlatformFiles {
         private val settings = mutableMapOf(
             "language" to language,
             "recents" to "C:/Users/moi/Documents/Facture-2024-007.pdf\tFacture-2024-007.pdf\n" +

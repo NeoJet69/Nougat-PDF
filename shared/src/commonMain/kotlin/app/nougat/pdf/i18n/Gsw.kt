@@ -309,4 +309,11 @@ AboutPartner = Partner: ArtisanGo
 LegalTerms = Nutzigsbedingige
 LegalPrivacy = Dateschutz
 LegalImpressum = Impressum
+
+ScanDocument = Dokumänt scanne
+ScanDocumentHint = Kamera: Siite wärde erkännt, zuegschnitte und grad gstellt
+ScanPdfName = Gscannts Dokumänt
+ScanAppend = Siite scanne
+ScanAdded = Gscannti Siite am Schluss aaghänkt
+ScannerUnavailable = De Scanner gaht uf dem Telefon nöd: er bruucht aktuelli Google-Play-Dienscht.
 """

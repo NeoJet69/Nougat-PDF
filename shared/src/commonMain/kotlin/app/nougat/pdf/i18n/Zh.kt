@@ -308,4 +308,11 @@ AboutPartner = 合作伙伴：ArtisanGo
 LegalTerms = 使用条款
 LegalPrivacy = 隐私
 LegalImpressum = 法律声明
+
+ScanDocument = 扫描文档
+ScanDocumentHint = 相机：自动识别、裁剪并摆正页面
+ScanPdfName = 扫描的文档
+ScanAppend = 扫描页面
+ScanAdded = 已在末尾添加扫描的页面
+ScannerUnavailable = 此手机无法使用扫描仪：需要最新的 Google Play 服务。
 """

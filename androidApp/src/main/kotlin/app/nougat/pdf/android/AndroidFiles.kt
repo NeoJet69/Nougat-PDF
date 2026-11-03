@@ -16,6 +16,9 @@ interface ActivityHost {
     fun createDocument(suggestedName: String, onResult: (Uri?) -> Unit)
     fun openDocument(onResult: (Uri?) -> Unit)
     fun pickImages(onResult: (List<Uri>) -> Unit)
+
+    /** Scanner de documents de Google (ML Kit) ; [onResult] recoit le PDF, null si annule ou erreur. */
+    fun scanDocument(onResult: (Uri?, Throwable?) -> Unit)
     fun print(path: String, name: String)
     fun share(file: File, name: String)
 }
@@ -79,6 +82,23 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
                     target.absolutePath
                 }.getOrNull()
             }
+        }
+    }
+
+    override val canScan: Boolean = true
+
+    private val scansDir = File(app.cacheDir, "scans").apply { mkdirs() }
+
+    override suspend fun scanDocument(): String? {
+        val h = host ?: return null
+        val uri = suspendCancellableCoroutine<Uri?> { cont ->
+            h.scanDocument { uri, error -> if (error != null) cont.resumeWith(Result.failure(error)) else cont.resume(uri) }
+        } ?: return null
+        return withContext(Dispatchers.IO) {
+            scansDir.listFiles()?.forEach { it.delete() }
+            val target = File(scansDir, "scan-${System.nanoTime()}.pdf")
+            app.contentResolver.openInputStream(uri)!!.use { src -> target.outputStream().use { src.copyTo(it) } }
+            target.absolutePath
         }
     }
 

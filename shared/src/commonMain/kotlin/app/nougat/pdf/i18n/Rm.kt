@@ -309,4 +309,11 @@ AboutPartner = Partenari: ArtisanGo
 LegalTerms = Cundiziuns d'utilisaziun
 LegalPrivacy = Protecziun da datas
 LegalImpressum = Impressum
+
+ScanDocument = Scannar in document
+ScanDocumentHint = Camera: paginas renconuschidas, taglidas e drizzadas
+ScanPdfName = Document scannà
+ScanAppend = Scannar paginas
+ScanAdded = Paginas scannadas agiuntadas a la fin
+ScannerUnavailable = Il scanner n'è betg disponibel sin quest telefon: el dovra ils servetschs Google Play actuals.
 """

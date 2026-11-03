@@ -309,4 +309,11 @@ AboutPartner = Kevelour : ArtisanGo
 LegalTerms = Divizoù implijout
 LegalPrivacy = Prevezded
 LegalImpressum = Titouroù lezennel
+
+ScanDocument = Skanañ un teul
+ScanDocumentHint = Benveg luc'hskeudenniñ : pajennoù kavet, troc'het hag adsavet
+ScanPdfName = Teul skanet
+ScanAppend = Skanañ pajennoù
+ScanAdded = Pajennoù skanet ouzhpennet en dibenn
+ScannerUnavailable = N'eo ket hegerz ar skanner war ar pellgomzer-mañ : ezhomm en deus eus servijoù Google Play hizivaet.
 """
