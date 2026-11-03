@@ -149,7 +149,7 @@ PasswordWarning = Ci vulerà sta parolla d'intesa per apre u PDF. Ùn la scurdat
 PasswordsDiffer = E duie parolle d'intesa sò sfarente
 Protect = Prutege
 EditTextHint = U testu hè riscrittu à u listessu locu, cù a listessa grafia, dimensione è culore.
-TextNotEditableHint = Stu testu ùn si pò micca mudificà direttamente : impiegate « Piattà » è dopu « Testu ».
+TextNotEditableHint = Stu testu ùn si pò micca mudificà direttamente : toccate « Annutà » in fondu, dopu « Piattà » per cupre lu è « Testu » per scrive ci sopra.
 
 FieldReadOnly = Stu campu hè in lettura sola.
 NextField = Campu seguente
@@ -316,4 +316,8 @@ ScanPdfName = Ducumentu scansatu
 ScanAppend = Scansà pagine
 ScanAdded = Pagine scansate aghjunte à a fine
 ScannerUnavailable = U scanner ùn hè micca dispunibule nant'à stu telefonu : li ci volenu i servizii Google Play à ghjornu.
+
+ColorHue = Tinta
+ColorDepth = Prufundità
+ColorHex = Codice di culore
 """

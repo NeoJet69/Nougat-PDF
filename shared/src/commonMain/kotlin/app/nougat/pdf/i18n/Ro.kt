@@ -149,7 +149,7 @@ PasswordWarning = Parola va fi necesară pentru a deschide PDF-ul. N-o uita: nu 
 PasswordsDiffer = Cele două parole sunt diferite
 Protect = Protejează
 EditTextHint = Textul este rescris în același loc, cu același font, aceeași mărime și culoare.
-TextNotEditableHint = Acest text nu poate fi modificat direct: folosește „Ascunde”, apoi „Text”.
+TextNotEditableHint = Acest text nu poate fi modificat direct: atinge „Adnotează” jos, apoi „Ascunde” ca să-l acoperi și „Text” ca să scrii peste.
 
 FieldReadOnly = Acest câmp este doar pentru citire.
 NextField = Câmpul următor
@@ -316,4 +316,8 @@ ScanPdfName = Document scanat
 ScanAppend = Scanează pagini
 ScanAdded = Paginile scanate au fost adăugate la final
 ScannerUnavailable = Scanerul nu e disponibil pe acest telefon: are nevoie de serviciile Google Play actualizate.
+
+ColorHue = Nuanță
+ColorDepth = Profunzime
+ColorHex = Cod culoare
 """

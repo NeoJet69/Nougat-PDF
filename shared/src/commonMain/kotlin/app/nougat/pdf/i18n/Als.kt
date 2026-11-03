@@ -149,7 +149,7 @@ PasswordWarning = Des Passwort bràuchsch fer s PDF ufzemache. Vergess's nìt: m
 PasswordsDiffer = D zwei Passwörter sìn nìt glich
 Protect = Schìtze
 EditTextHint = De Text wurd àm glìche Platz nej gschriwe, mìt de glìche Schrìft, Gröss ün Farb.
-TextNotEditableHint = De Text kàsch nìt direkt ändere: nìmm „Züedecke“ ün dànn „Text“.
+TextNotEditableHint = De Text kàsch nìt direkt ändere: tipp unte üf „Notize“, dànn üf „Züedecke“ ün üf „Text“ fer drìwer ze schriwe.
 
 FieldReadOnly = Des Fäld ìsch nür züem Lese.
 NextField = Nächscht's Fäld
@@ -316,4 +316,8 @@ ScanPdfName = Gscännts Dokument
 ScanAppend = Sitte scanne
 ScanAdded = Gscännti Sitte àm End àghängt
 ScannerUnavailable = De Scanner geht üf dem Telefon nìt: er bruucht aktuelli Google-Play-Dienscht.
+
+ColorHue = Farbton
+ColorDepth = Tiefi
+ColorHex = Farbcode
 """

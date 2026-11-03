@@ -148,7 +148,7 @@ PasswordWarning = Questa password servirà per aprire il PDF. Non dimenticarla: 
 PasswordsDiffer = Le due password sono diverse
 Protect = Proteggi
 EditTextHint = Il testo viene riscritto nello stesso punto, con lo stesso carattere, dimensione e colore.
-TextNotEditableHint = Questo testo non si può modificare direttamente: usa «Copri» e poi «Testo».
+TextNotEditableHint = Questo testo non si può modificare direttamente: tocca «Annota» in basso, poi «Copri» per coprirlo e «Testo» per scriverci sopra.
 
 FieldReadOnly = Questo campo è di sola lettura.
 NextField = Campo successivo
@@ -315,4 +315,8 @@ ScanPdfName = Documento scansionato
 ScanAppend = Scansiona pagine
 ScanAdded = Pagine scansionate aggiunte alla fine
 ScannerUnavailable = Lo scanner non è disponibile su questo telefono: servono i servizi Google Play aggiornati.
+
+ColorHue = Tinta
+ColorDepth = Profondità
+ColorHex = Codice colore
 """

@@ -148,7 +148,7 @@ PasswordWarning = Dit wachtwoord is nodig om de pdf te openen. Vergeet het niet:
 PasswordsDiffer = De twee wachtwoorden zijn verschillend
 Protect = Beveiligen
 EditTextHint = De tekst wordt op dezelfde plek herschreven, in hetzelfde lettertype, dezelfde grootte en kleur.
-TextNotEditableHint = Deze tekst kan niet rechtstreeks worden gewijzigd: gebruik ‘Afdekken’ en daarna ‘Tekst’.
+TextNotEditableHint = Deze tekst kan niet rechtstreeks worden gewijzigd: tik onderaan op ‘Aantekenen’, dan op ‘Afdekken’ en op ‘Tekst’ om erover te schrijven.
 
 FieldReadOnly = Dit veld is alleen-lezen.
 NextField = Volgend veld
@@ -315,4 +315,8 @@ ScanPdfName = Gescand document
 ScanAppend = Pagina's scannen
 ScanAdded = Gescande pagina's achteraan toegevoegd
 ScannerUnavailable = De scanner is niet beschikbaar op deze telefoon: hij heeft bijgewerkte Google Play-services nodig.
+
+ColorHue = Tint
+ColorDepth = Diepte
+ColorHex = Kleurcode
 """

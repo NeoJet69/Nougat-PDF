@@ -48,8 +48,8 @@ internal fun pageTextBlocksAndroid(doc: PDDocument, pageIndex: Int): List<TextBl
     return groupTextBlocks(pageIndex, analyzePageTextAndroid(doc, pageIndex, w, h).analysis, w, h)
 }
 
-/** Remplace le texte d'une ligne de la page (voir [EditableDoc.replaceText]). */
-internal fun replaceTextWithPdfBoxAndroid(doc: PDDocument, block: TextBlock, newText: String): TextEditResult {
+/** Remplace le texte d'une ligne de la page (voir [EditableDoc.replaceText]). [src] : le fichier ouvert. */
+internal fun replaceTextWithPdfBoxAndroid(doc: PDDocument, src: java.io.File?, block: TextBlock, newText: String): TextEditResult {
     val page = doc.getPage(block.page)
     val box = page.cropBox
     val rotated = page.rotation % 180 != 0
@@ -60,6 +60,10 @@ internal fun replaceTextWithPdfBoxAndroid(doc: PDDocument, block: TextBlock, new
     val target = groupTextBlocks(block.page, result.analysis, w, h).findMatch(block)
         ?: throw TextEditException(Str.ErrTextNotFound)
     if (!target.editable) throw TextEditException(Str.ErrTextNotEditable)
+    if (target.scanned) {
+        rewriteScannedLineAndroid(doc, src, block.page, result.analysis, target, newText.replace('\n', ' ').replace('\t', ' '))
+        return TextEditResult.ScanText
+    }
 
     val anchorOp = result.analysis.ops[target.glyphs.first().op]
         ?: throw TextEditException(Str.ErrTextOpNotFound)
@@ -154,7 +158,7 @@ private fun standardFont(font: StandardFont): PDType1Font = when (font) {
 }
 
 /** Reecrit le flux de contenu de la page en remplacant les operateurs de [plan]. */
-private fun rewriteContent(doc: PDDocument, page: PDPage, plan: Map<Int, List<ContentOp>>) {
+internal fun rewriteContent(doc: PDDocument, page: PDPage, plan: Map<Int, List<ContentOp>>) {
     val parser = PDFStreamParser(page)
     val tokens = ArrayList<Any>()
     while (true) tokens.add(parser.parseNextToken() ?: break)
@@ -214,6 +218,7 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
     private var glyphIndex = -1
     private var pendingKey: GlyphKey? = null
     private var pendingEditable = false
+    private var pendingInvisible = false
     private var fontResource: String? = null
     private val fontStack = ArrayList<String?>()
 
@@ -225,7 +230,11 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
             if (op == null) broken.add(index) else ops[index] = op
         }
         val finalGlyphs = if (broken.isEmpty()) glyphs else glyphs.map { g ->
-            if (g.key != null && g.key.op in broken) AnalyzedGlyph(g.key, g.unicode, g.box, g.size, false, g.style) else g
+            if (g.key != null && g.key.op in broken) {
+                AnalyzedGlyph(g.key, g.unicode, g.box, g.size, false, g.style, g.invisible, g.originX, g.originY)
+            } else {
+                g
+            }
         }
         return AndroidPageAnalysis(PageTextAnalysis(finalGlyphs, ops), fonts)
     }
@@ -269,12 +278,13 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
                     hScale = state.horizontalScaling / 100f,
                     charSpacing = state.characterSpacing,
                     wordSpacing = state.wordSpacing,
-                    usable = font != null && !font.isVertical && state.fontSize * state.horizontalScaling != 0f &&
-                        state.renderingMode != RenderingMode.NEITHER,
+                    // Le texte invisible (OCR) reste modifiable : il passe par la reecriture du scan.
+                    usable = font != null && !font.isVertical && state.fontSize * state.horizontalScaling != 0f,
                 )
             }
             builder.startSegment(segment, string)
             pendingEditable = builder.usable
+            pendingInvisible = state.renderingMode == RenderingMode.NEITHER
         }
         super.showText(string)
     }
@@ -314,6 +324,9 @@ private class CaptureStripper(private val pageWidth: Float, private val pageHeig
                 size = text.fontSizeInPt,
                 editable = key != null && pendingEditable,
                 style = "${text.font?.name}@${(text.fontSizeInPt * 10).toInt()}",
+                invisible = key != null && pendingInvisible,
+                originX = x,
+                originY = y,
             ),
         )
     }

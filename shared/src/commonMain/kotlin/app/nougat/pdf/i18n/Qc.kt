@@ -149,7 +149,7 @@ PasswordWarning = Ce mot de passe va être nécessaire pour ouvrir le PDF. Oubli
 PasswordsDiffer = Les deux mots de passe sont pas pareils
 Protect = Protéger
 EditTextHint = Le texte est réécrit à la même place, dans la même police, grosseur pis couleur.
-TextNotEditableHint = Ce texte-là se modifie pas directement : utilise « Cacher » pis « Texte ».
+TextNotEditableHint = Ce texte-là se modifie pas directement : touche « Annoter » en bas, pis « Cacher » pour le couvrir et « Texte » pour écrire par-dessus.
 
 FieldReadOnly = Ce champ-là est en lecture seulement.
 NextField = Champ suivant
@@ -316,4 +316,8 @@ ScanPdfName = Document numérisé
 ScanAppend = Numériser des pages
 ScanAdded = Pages numérisées ajoutées à la fin
 ScannerUnavailable = Le numériseur est pas disponible sur ce téléphone-là : il a besoin des services Google Play à jour.
+
+ColorHue = Teinte
+ColorDepth = Profondeur
+ColorHex = Code couleur
 """

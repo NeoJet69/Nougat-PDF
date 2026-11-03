@@ -148,7 +148,7 @@ PasswordWarning = Esta palavra-passe será necessária para abrir o PDF. Não a 
 PasswordsDiffer = As duas palavras-passe são diferentes
 Protect = Proteger
 EditTextHint = O texto é reescrito no mesmo sítio, com o mesmo tipo de letra, tamanho e cor.
-TextNotEditableHint = Este texto não pode ser editado diretamente: use “Ocultar” e depois “Texto”.
+TextNotEditableHint = Este texto não pode ser editado diretamente: toque em “Anotar” em baixo, depois em “Ocultar” para o tapar e em “Texto” para escrever por cima.
 
 FieldReadOnly = Este campo é só de leitura.
 NextField = Campo seguinte
@@ -315,4 +315,8 @@ ScanPdfName = Documento digitalizado
 ScanAppend = Digitalizar páginas
 ScanAdded = Páginas digitalizadas adicionadas no fim
 ScannerUnavailable = O digitalizador não está disponível neste telemóvel: precisa dos serviços Google Play atualizados.
+
+ColorHue = Tom
+ColorDepth = Profundidade
+ColorHex = Código de cor
 """

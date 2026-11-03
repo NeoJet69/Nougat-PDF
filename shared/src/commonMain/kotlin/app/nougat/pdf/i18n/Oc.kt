@@ -149,7 +149,7 @@ PasswordWarning = Caldrà aqueste senhal per dobrir lo PDF. L'oblidetz pas : es 
 PasswordsDiffer = Los dos senhals son diferents
 Protect = Protegir
 EditTextHint = Lo tèxte es tornat escriure al meteis endrech, amb la meteissa poliça, talha e color.
-TextNotEditableHint = Aqueste tèxte se pòt pas modificar dirèctament : utilizatz « Amagar » puèi « Tèxte ».
+TextNotEditableHint = Aqueste tèxte se pòt pas modificar dirèctament : tocatz « Anotar » en bas, puèi « Amagar » per lo cobrir e « Tèxte » per escriure dessús.
 
 FieldReadOnly = Aqueste camp es en lectura sola.
 NextField = Camp seguent
@@ -316,4 +316,8 @@ ScanPdfName = Document escanat
 ScanAppend = Escanar de paginas
 ScanAdded = Paginas escanadas apondudas a la fin
 ScannerUnavailable = L'escaner es pas disponible sus aqueste telefòn : li cal los servicis Google Play a jorn.
+
+ColorHue = Tinta
+ColorDepth = Prigondor
+ColorHex = Còdi color
 """

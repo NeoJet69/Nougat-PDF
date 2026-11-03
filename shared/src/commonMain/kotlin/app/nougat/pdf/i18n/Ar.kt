@@ -149,7 +149,7 @@ PasswordWarning = ستحتاج إلى كلمة المرور هذه لفتح مل
 PasswordsDiffer = كلمتا المرور مختلفتان
 Protect = حماية
 EditTextHint = يُعاد كتابة النص في المكان نفسه، بالخط والحجم واللون نفسها.
-TextNotEditableHint = لا يمكن تعديل هذا النص مباشرة: استخدم «إخفاء» ثم «نص».
+TextNotEditableHint = لا يمكن تعديل هذا النص مباشرة: المس «تعليق» في الأسفل، ثم «إخفاء» لتغطيته و«نص» للكتابة فوقه.
 
 FieldReadOnly = هذا الحقل للقراءة فقط.
 NextField = الحقل التالي
@@ -316,4 +316,8 @@ ScanPdfName = مستند ممسوح
 ScanAppend = مسح صفحات
 ScanAdded = أُضيفت الصفحات الممسوحة في النهاية
 ScannerUnavailable = الماسح غير متاح على هذا الهاتف: يحتاج إلى خدمات Google Play محدّثة.
+
+ColorHue = التدرّج
+ColorDepth = العمق
+ColorHex = رمز اللون
 """

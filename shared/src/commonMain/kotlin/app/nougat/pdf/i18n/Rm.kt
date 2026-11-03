@@ -149,7 +149,7 @@ PasswordWarning = Quest pled-clav vegn duvrà per avrir il PDF. N'al emblida bet
 PasswordsDiffer = Ils dus pleds-clav èn differents
 Protect = Proteger
 EditTextHint = Il text vegn scrit da nov al medem lieu, cun la medema scrittira, grondezza e colur.
-TextNotEditableHint = Quest text na po betg vegnir midà directamain: utilisescha «Cuvrir» e lura «Text».
+TextNotEditableHint = Quest text na po betg vegnir midà directamain: tutga sutvart «Annotar», lura «Cuvrir» per al cuvrir e «Text» per scriver survart.
 
 FieldReadOnly = Quest champ è mo da leger.
 NextField = Proxim champ
@@ -316,4 +316,8 @@ ScanPdfName = Document scannà
 ScanAppend = Scannar paginas
 ScanAdded = Paginas scannadas agiuntadas a la fin
 ScannerUnavailable = Il scanner n'è betg disponibel sin quest telefon: el dovra ils servetschs Google Play actuals.
+
+ColorHue = Tun
+ColorDepth = Profunditad
+ColorHex = Code da colur
 """

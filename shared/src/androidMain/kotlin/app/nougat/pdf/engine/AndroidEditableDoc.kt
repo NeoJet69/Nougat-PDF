@@ -164,7 +164,7 @@ private class AndroidEditableDoc(
     }
 
     override fun replaceText(block: TextBlock, newText: String): TextEditResult =
-        replaceTextWithPdfBoxAndroid(doc, block, newText)
+        replaceTextWithPdfBoxAndroid(doc, src, block, newText)
 
     override fun setFieldValue(name: String, value: String) = setFormFieldValueAndroid(doc, name, value)
 

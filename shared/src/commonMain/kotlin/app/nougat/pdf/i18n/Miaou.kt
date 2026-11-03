@@ -152,7 +152,7 @@ PasswordWarning = Ce mot de passe ouvrira le PDF. Ne l'oublie pas : même Nougat
 PasswordsDiffer = Les deux mots de passe ne se reniflent pas pareil
 Protect = Cadenasser
 EditTextHint = Le texte est regriffé au même endroit, même police, même taille, même couleur.
-TextNotEditableHint = Ce texte résiste aux griffes : utilise « Cacher sous le tapis » puis « Miaou-texte ».
+TextNotEditableHint = Ce texte résiste aux griffes : touche « Gribouiller » en bas, puis « Cacher sous le tapis » pour le couvrir et « Miaou-texte » pour écrire par-dessus.
 
 FieldReadOnly = Ce champ est en lecture seule. On regarde, on ne touche pas.
 NextField = Champ suivant
@@ -319,4 +319,8 @@ ScanPdfName = Document scanné
 ScanAppend = Scanner des pages
 ScanAdded = Pages scannées ajoutées au bout de la queue
 ScannerUnavailable = Le scanner fait la sieste sur ce téléphone : il lui faut les services Google Play à jour.
+
+ColorHue = Teinte du pelage
+ColorDepth = Profondeur
+ColorHex = Code couleur
 """

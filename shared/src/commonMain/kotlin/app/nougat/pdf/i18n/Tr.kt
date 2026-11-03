@@ -148,7 +148,7 @@ PasswordWarning = PDF'yi açmak için bu parola gerekecek. Unutmayın: kurtarıl
 PasswordsDiffer = İki parola birbirinden farklı
 Protect = Koru
 EditTextHint = Metin aynı yere, aynı yazı tipi, boyut ve renkle yeniden yazılır.
-TextNotEditableHint = Bu metin doğrudan değiştirilemez: önce “Gizle”, sonra “Metin” kullanın.
+TextNotEditableHint = Bu metin doğrudan değiştirilemez: alttaki “Not ekle”ye, sonra örtmek için “Gizle”ye ve üzerine yazmak için “Metin”e dokunun.
 
 FieldReadOnly = Bu alan salt okunur.
 NextField = Sonraki alan
@@ -315,4 +315,8 @@ ScanPdfName = Taranmış belge
 ScanAppend = Sayfa tara
 ScanAdded = Taranan sayfalar sona eklendi
 ScannerUnavailable = Tarayıcı bu telefonda kullanılamıyor: güncel Google Play hizmetleri gerekir.
+
+ColorHue = Renk tonu
+ColorDepth = Derinlik
+ColorHex = Renk kodu
 """

@@ -148,7 +148,7 @@ PasswordWarning = 打开此 PDF 需要这个密码。请务必记住：密码无
 PasswordsDiffer = 两次输入的密码不一致
 Protect = 保护
 EditTextHint = 文字会在原位置重写，字体、大小和颜色保持不变。
-TextNotEditableHint = 这段文字无法直接修改：请先用“遮盖”，再用“文字”。
+TextNotEditableHint = 这段文字无法直接修改：请点底部的“批注”，用“遮盖”盖住它，再用“文字”在上面书写。
 
 FieldReadOnly = 此字段为只读。
 NextField = 下一个字段
@@ -315,4 +315,8 @@ ScanPdfName = 扫描的文档
 ScanAppend = 扫描页面
 ScanAdded = 已在末尾添加扫描的页面
 ScannerUnavailable = 此手机无法使用扫描仪：需要最新的 Google Play 服务。
+
+ColorHue = 色相
+ColorDepth = 深浅
+ColorHex = 颜色代码
 """

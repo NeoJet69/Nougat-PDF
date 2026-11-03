@@ -149,7 +149,7 @@ PasswordWarning = Ezhomm e vo eus ar ger-tremen-mañ evit digeriñ ar PDF. N'hen
 PasswordsDiffer = Disheñvel eo an daou c'her-tremen
 Protect = Gwareziñ
 EditTextHint = Adskrivet e vez an destenn en hevelep lec'h, gant an hevelep nodrezh, ment ha liv.
-TextNotEditableHint = N'eus ket tu da gemmañ an destenn-mañ war-eeun : implijit « Kuzhat » ha goude « Testenn ».
+TextNotEditableHint = N'eus ket tu da gemmañ an destenn-mañ war-eeun : stokit « Notennañ » en traoñ, goude « Kuzhat » evit he golo ha « Testenn » evit skrivañ warni.
 
 FieldReadOnly = Er mod lenn hepken emañ ar vaezienn-mañ.
 NextField = Maezienn war-lerc'h
@@ -316,4 +316,8 @@ ScanPdfName = Teul skanet
 ScanAppend = Skanañ pajennoù
 ScanAdded = Pajennoù skanet ouzhpennet en dibenn
 ScannerUnavailable = N'eo ket hegerz ar skanner war ar pellgomzer-mañ : ezhomm en deus eus servijoù Google Play hizivaet.
+
+ColorHue = Arliv
+ColorDepth = Donder
+ColorHex = Kod liv
 """

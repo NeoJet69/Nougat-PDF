@@ -51,5 +51,5 @@ enum class Str {
     OcrExplainPhone, OcrDownloadNote, OcrAi, OcrAiDownload, OcrDownloading, OcrDownloadFailed,
     OcrAiLines, OcrAiLater, ExitAgain, AboutPartner, LegalTerms, LegalPrivacy,
     LegalImpressum, ScanDocument, ScanDocumentHint, ScanPdfName, ScanAppend, ScanAdded,
-    ScannerUnavailable,
+    ScannerUnavailable, ColorHue, ColorDepth, ColorHex,
 }

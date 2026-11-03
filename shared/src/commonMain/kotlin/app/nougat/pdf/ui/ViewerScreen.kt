@@ -618,20 +618,33 @@ private fun AnnotateTray(state: ViewerState, compact: Boolean) {
     val tools = state.tools
     val withColors = tools.tool in setOf(Tool.Pen, Tool.Highlighter, Tool.Text)
     if (compact) {
-        // Telephone : les couleurs dans un petit ilot au-dessus des outils, rien n'est coupe.
+        // Telephone : les couleurs dans un petit ilot au-dessus des outils, rien n'est coupe ;
+        // juste dessous, la couleur libre (teinte, profondeur, code).
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             if (withColors) {
                 Island(shape = RoundedCornerShape(50), padding = 6.dp, scrollable = true) { ColorDots(state) }
+                Spacer(Modifier.height(6.dp))
+                Island(Modifier.widthIn(max = 360.dp), shape = RoundedCornerShape(22.dp), padding = 4.dp) {
+                    FreeColorPicker(tools.color, tools::setColor, Modifier.weight(1f))
+                }
                 Spacer(Modifier.height(8.dp))
             }
             Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) { TrayTools(state, withPan = true) }
         }
     } else {
-        Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) {
-            TrayTools(state, withPan = false)
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Island(shape = RoundedCornerShape(26.dp), padding = 4.dp, scrollable = true) {
+                TrayTools(state, withPan = false)
+                if (withColors) {
+                    IslandDivider()
+                    ColorDots(state)
+                }
+            }
             if (withColors) {
-                IslandDivider()
-                ColorDots(state)
+                Spacer(Modifier.height(6.dp))
+                Island(Modifier.width(420.dp), shape = RoundedCornerShape(22.dp), padding = 4.dp) {
+                    FreeColorPicker(tools.color, tools::setColor, Modifier.weight(1f))
+                }
             }
         }
     }
