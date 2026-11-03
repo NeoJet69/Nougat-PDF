@@ -163,7 +163,9 @@ internal fun writeTranslationAndroid(doc: PDDocument, src: File?, pageIndex: Int
             val p = plan.item.paragraph
             val pad = p.fontSize * 0.12f
             fill.color = plan.paper or (0xFF shl 24)
-            for (r in plan.covers) canvas.drawRect(RectF(r.left * w - pad, r.top * h - pad, r.right * w + pad, r.bottom * h + pad), fill)
+            // Plus de marge en haut : les accents des majuscules (É, À) depassent du cadre de la ligne.
+            val padTop = p.fontSize * 0.32f
+            for (r in plan.covers) canvas.drawRect(RectF(r.left * w - pad, r.top * h - padTop, r.right * w + pad, r.bottom * h + pad), fill)
             drawParagraph(canvas, plan.item, plan.ink, w, h)
         }
         layer.finishPage(layerPage)

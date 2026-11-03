@@ -134,8 +134,10 @@ internal fun writeTranslationWithPdfBox(doc: PDDocument, pageIndex: Int, items: 
             val pad = p.fontSize * 0.12f
             if (plan.covers.isNotEmpty()) {
                 cs.setNonStrokingColor(red(plan.paper), green(plan.paper), blue(plan.paper))
+                // Plus de marge en haut : les accents des majuscules (É, À) depassent du cadre de la ligne.
+                val padTop = p.fontSize * 0.32f
                 for (r in plan.covers) {
-                    cs.addRect(r.left * w - pad, h - (r.bottom * h + pad), (r.right - r.left) * w + 2 * pad, (r.bottom - r.top) * h + 2 * pad)
+                    cs.addRect(r.left * w - pad, h - (r.bottom * h + pad), (r.right - r.left) * w + 2 * pad, (r.bottom - r.top) * h + pad + padTop)
                 }
                 cs.fill()
             }

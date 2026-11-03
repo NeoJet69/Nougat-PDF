@@ -173,7 +173,8 @@ fun ViewerScreen(
         val pageCenter = railWidth + (maxWidth - railWidth - assistantWidth) / 2
         val rightEdge = maxWidth - 12.dp - assistantWidth
         val centerHalf = if (session.searchOpen) 280.dp else 180.dp
-        val baseActions = 12.dp + 48.dp + if (state.canUndo) 48.dp else 0.dp
+        // Telephone : « Traduire » est en haut, a cote de la loupe (le dock n'a plus de place).
+        val baseActions = 12.dp + 48.dp + (if (state.canUndo) 48.dp else 0.dp) + if (compact) 48.dp else 0.dp
         val fullActions = baseActions + if (state.modified) 194.dp else 0.dp
         val iconActions = baseActions + if (state.modified) 48.dp else 0.dp
         fun centerFits(actions: Dp) = !compact &&
@@ -223,7 +224,7 @@ fun ViewerScreen(
                 modifier = Modifier.weight(1f, fill = false).widthIn(max = documentMax.coerceAtLeast(MinDocumentIsland)),
             )
             Spacer(Modifier.width(12.dp))
-            ActionsIsland(state, session, compactActions, modifier = Modifier)
+            ActionsIsland(state, session, compactActions, translateHere = compact, modifier = Modifier)
         }
         Box(
             Modifier.fillMaxWidth()
@@ -441,9 +442,16 @@ private fun NavigationIsland(session: DocumentSession, onAskPage: () -> Unit, mo
 
 /** En haut a droite : chercher, enregistrer. */
 @Composable
-private fun ActionsIsland(state: ViewerState, session: DocumentSession, compact: Boolean, modifier: Modifier) {
+private fun ActionsIsland(state: ViewerState, session: DocumentSession, compact: Boolean, translateHere: Boolean, modifier: Modifier) {
     Island(modifier) {
         IslandButton(Icons.Filled.Search, tr(Str.Search), onClick = session::openSearch, active = session.searchOpen)
+        if (translateHere) {
+            IslandButton(
+                NougatIcons.Translate, tr(Str.Translate),
+                onClick = { if (state.translation.active) state.translation.stop() else state.translation.dialogOpen = true },
+                active = state.translation.active,
+            )
+        }
         if (state.canUndo) IslandButton(NougatIcons.Undo, tr(Str.Undo), onClick = state::undo)
         if (state.modified) {
             if (compact) {
@@ -552,11 +560,13 @@ private fun ViewerDock(
             DockItem(NougatIcons.Pen, tr(Str.DockAnnotate), mode == DockMode.Annotate, { tools.enter(DockMode.Annotate) }, compact)
             DockItem(NougatIcons.Signature, tr(Str.DockSign), mode == DockMode.Sign, { tools.enter(DockMode.Sign) }, compact)
             DockItem(NougatIcons.Pages, tr(Str.DockPages), false, { state.pagesOpen = true }, compact)
-            DockItem(
-                NougatIcons.Translate, tr(Str.Translate), state.translation.active,
-                { if (state.translation.active) state.translation.stop() else state.translation.dialogOpen = true },
-                compact,
-            )
+            if (!compact) {
+                DockItem(
+                    NougatIcons.Translate, tr(Str.Translate), state.translation.active,
+                    { if (state.translation.active) state.translation.stop() else state.translation.dialogOpen = true },
+                    compact,
+                )
+            }
             if (state.assistantAvailable) {
                 IslandDivider()
                 DockItem(NougatIcons.Sparkle, "Claude", state.assistant.open, { state.assistant.open = !state.assistant.open }, compact)

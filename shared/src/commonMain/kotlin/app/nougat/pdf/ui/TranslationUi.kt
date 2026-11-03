@@ -78,6 +78,9 @@ import app.nougat.pdf.viewer.ViewerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.max
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 
 /*
  * Traduire : la fenetre de depart (langue, moteur), le bandeau (original ou traduction, enregistrer
@@ -103,9 +106,11 @@ fun TranslateDialog(state: ViewerState, onDismiss: () -> Unit) {
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(tr(Str.TranslateExplain), style = MaterialTheme.typography.bodyMedium, color = p.muted)
-                if (t.canDevice && t.canClaude) {
-                    Column {
+                Column {
+                    if (t.canDevice) {
                         EngineRow(tr(Str.TranslateDevice), tr(Str.TranslateDeviceDesc), engine == TranslationEngine.Device) { engine = TranslationEngine.Device }
+                    }
+                    if (t.canClaude) {
                         EngineRow(tr(Str.TranslateClaude), tr(Str.TranslateClaudeDesc), engine == TranslationEngine.Claude) { engine = TranslationEngine.Claude }
                     }
                 }
@@ -197,15 +202,21 @@ fun TranslationBar(state: ViewerState, compact: Boolean, phone: Boolean, modifie
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OriginalToggle(t.showOriginal, { t.showOriginal = it }, Modifier.weight(1f))
                     Spacer(Modifier.width(8.dp))
-                    GradientButton(tr(Str.Save), onClick = state::saveTranslation, icon = NougatIcons.Save, height = 38.dp)
+                    val label = tr(Str.TranslateSave)
+                    GradientBadge(
+                        NougatIcons.Save,
+                        Modifier.clip(CircleShape).clickable(onClick = state::saveTranslation).semantics { contentDescription = label },
+                        size = 40.dp,
+                        iconSize = 21.dp,
+                    )
                 }
             }
         }
         return
     }
-    Island(modifier.widthIn(max = 820.dp), shape = RoundedCornerShape(26.dp), padding = 6.dp) {
+    Island(modifier.widthIn(max = 980.dp), shape = RoundedCornerShape(26.dp), padding = 6.dp) {
         GradientBadge(NougatIcons.Translate, size = 36.dp, iconSize = 20.dp)
-        Column(Modifier.weight(1f, fill = false).widthIn(max = 260.dp).padding(horizontal = 10.dp).clip(RoundedCornerShape(10.dp)).clickable { t.dialogOpen = true }) {
+        Column(Modifier.weight(1f, fill = false).widthIn(max = 340.dp).padding(horizontal = 10.dp).clip(RoundedCornerShape(10.dp)).clickable { t.dialogOpen = true }) {
             Text("→ $language", style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(hint, style = MaterialTheme.typography.labelSmall, color = p.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
@@ -308,10 +319,12 @@ private fun TranslatedBlock(
     val p = para.item.paragraph
     val r = p.rect
     val pad = p.fontSize * 0.12f * dpPerPoint
+    // Les accents des majuscules (É, À) montent au-dessus du cadre de la ligne : plus de marge en haut.
+    val padTop = p.fontSize * 0.32f * dpPerPoint
     val boxHeight = max((r.bottom - r.top) * pageHeightDp, p.fontSize * (1f + (p.lines.size - 1) * p.lineSpacing) * dpPerPoint)
     val modifier = Modifier
-        .offset(x = (r.left * pageWidthDp - pad).dp, y = (r.top * pageHeightDp - pad).dp)
-        .size(width = (p.layoutWidth * pageWidthDp + 2 * pad).dp, height = (boxHeight + 2 * pad).dp)
+        .offset(x = (r.left * pageWidthDp - pad).dp, y = (r.top * pageHeightDp - padTop).dp)
+        .size(width = (p.layoutWidth * pageWidthDp + 2 * pad).dp, height = (boxHeight + padTop + pad).dp)
         .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null, onClick = onToggle)
     if (peeked) {
         // L'original est visible : un fin cadre rappelle qu'il y a une traduction.
@@ -325,7 +338,7 @@ private fun TranslatedBlock(
         StandardFont.Courier, StandardFont.CourierBold, StandardFont.CourierOblique, StandardFont.CourierBoldOblique -> FontFamily.Monospace
         else -> FontFamily.SansSerif
     }
-    Box(modifier.background(para.paper).padding(pad.dp)) {
+    Box(modifier.background(para.paper).padding(start = pad.dp, top = padTop.dp, end = pad.dp, bottom = pad.dp)) {
         BasicText(
             text = para.item.text,
             modifier = Modifier.fillMaxSize(),
