@@ -291,4 +291,10 @@ OcrNothing = Rien à renifler : ces pages ont déjà du texte.
 OcrStopped = Reniflage arrêté (sieste)
 TextChangedScan = Texte du scan regriffé dans la police la plus ressemblante
 ActRecognize = Renifle le texte des pages scannées
+
+Licenses = Licences (les papiers du chat)
+LicensesIntro = Nougat PDF est un logiciel libre sous licence MIT : tout le monde peut l'utiliser, le copier, le modifier et le partager, comme une pelote. Il est tricoté avec les composants ci-dessous, chacun sous sa propre licence. Touchez un élément pour lire ses mentions ; les textes juridiques restent en anglais (même les chats ne les traduisent pas).
+LicensesComponents = Composants dans le panier
+LicensesFullTexts = Textes complets des licences
+AboutFreeSoftware = Logiciel libre, sous licence MIT 🐾
 """

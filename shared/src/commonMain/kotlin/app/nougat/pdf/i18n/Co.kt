@@ -288,4 +288,10 @@ OcrNothing = Nunda à ricunnosce : ste pagine cuntenenu digià testu.
 OcrStopped = Ricunniscenza piantata
 TextChangedScan = Testu di a scansione riscrittu cù a grafia più sumigliante
 ActRecognize = Ricunnosce u testu di e pagine scansate
+
+Licenses = Licenze
+LicensesIntro = Nougat PDF hè un prugramma liberu sottu licenza MIT : ognunu u pò aduprà, cupià, mudificà è sparte. S'appoghja nant'à i cumpunenti quì sottu, ognunu cù a so propia licenza. Toccate un elementu per leghje e so menzioni ; i testi ghjuridichi fermanu in inglese, a so lingua ufficiale.
+LicensesComponents = Cumpunenti inclusi
+LicensesFullTexts = Testi cumpleti di e licenze
+AboutFreeSoftware = Prugramma liberu, sottu licenza MIT
 """

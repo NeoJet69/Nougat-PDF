@@ -85,6 +85,9 @@ class ViewerState(
     /** Fenetre « A propos » ouverte. */
     var aboutOpen by mutableStateOf(false)
 
+    /** Fenetre « Licences » (depuis « A propos »). */
+    var licensesOpen by mutableStateOf(false)
+
     fun setLanguage(lang: Lang) {
         I18n.lang = lang
         languageOpen = false

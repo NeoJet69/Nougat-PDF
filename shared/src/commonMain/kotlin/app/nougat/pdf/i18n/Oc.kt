@@ -288,4 +288,10 @@ OcrNothing = Pas res de reconéisser : aquelas paginas an ja de tèxte.
 OcrStopped = Reconeissença arrestada
 TextChangedScan = Tèxte de l'escanatge tornat escriure dins la poliça mai semblanta
 ActRecognize = Reconeis lo tèxte de las paginas escanadas
+
+Licenses = Licéncias
+LicensesIntro = Nougat PDF es un logicial liure jos licéncia MIT : cadun lo pòt utilizar, copiar, modificar e partejar. S'apièja suls compausants çai-jos, cadun jos sa pròpria licéncia. Tocatz un element per legir sas mencions ; los tèxtes juridics demòran en anglés, lor lenga oficiala.
+LicensesComponents = Compausants enclauses
+LicensesFullTexts = Tèxtes complets de las licéncias
+AboutFreeSoftware = Logicial liure, jos licéncia MIT
 """

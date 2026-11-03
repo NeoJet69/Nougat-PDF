@@ -287,4 +287,10 @@ OcrNothing = Tanınacak bir şey yok: bu sayfalarda zaten metin var.
 OcrStopped = Tanıma durduruldu
 TextChangedScan = Taranmış metin en benzer yazı tipiyle yeniden yazıldı
 ActRecognize = Taranmış sayfaların metnini tanıyor
+
+Licenses = Lisanslar
+LicensesIntro = Nougat PDF, MIT lisansı altında özgür bir yazılımdır: herkes onu kullanabilir, kopyalayabilir, değiştirebilir ve paylaşabilir. Aşağıdaki bileşenlere dayanır; her birinin kendi lisansı vardır. Bildirimlerini okumak için bir öğeye dokunun; hukuki metinler resmi dilleri olan İngilizce kalır.
+LicensesComponents = Dahil edilen bileşenler
+LicensesFullTexts = Lisansların tam metinleri
+AboutFreeSoftware = Özgür yazılım, MIT lisansıyla
 """

@@ -47,5 +47,5 @@ enum class Str {
     RecognizeText, FeatOcr, ScanBanner, ScanBannerButton, OcrExplain, OcrLanguages,
     OcrPagesAll, OcrPagesCurrent, OcrAutoRotate, OcrRedo, OcrStart, OcrPreparing,
     OcrProgress, OcrDone, OcrRotated, OcrNothing, OcrStopped, TextChangedScan,
-    ActRecognize,
+    ActRecognize, Licenses, LicensesIntro, LicensesComponents, LicensesFullTexts, AboutFreeSoftware,
 }

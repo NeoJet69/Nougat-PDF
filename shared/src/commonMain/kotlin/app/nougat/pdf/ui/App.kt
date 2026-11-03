@@ -113,7 +113,10 @@ fun NougatApp(
                 }
                 state.savePrompt?.let { name -> SaveChoiceDialog(name, state::answerSave) }
                 if (state.languageOpen) LanguageDialog(I18n.lang, state::setLanguage) { state.languageOpen = false }
-                if (state.aboutOpen) AboutDialog(platform.version) { state.aboutOpen = false }
+                if (state.aboutOpen) {
+                    AboutDialog(platform.version, onLicenses = { state.aboutOpen = false; state.licensesOpen = true }) { state.aboutOpen = false }
+                }
+                if (state.licensesOpen) LicensesDialog(platform.isDesktop) { state.licensesOpen = false }
                 if (state.ocrDialog && session != null) OcrDialog(state) { state.ocrDialog = false }
                 state.errorMessage?.let { message ->
                     AlertDialog(

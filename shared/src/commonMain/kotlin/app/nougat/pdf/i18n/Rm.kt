@@ -288,4 +288,10 @@ OcrNothing = Nagut da renconuscher: questas paginas han gia text.
 OcrStopped = Renconuschientscha fermada
 TextChangedScan = Text dal scan scrit da nov en la scrittira la pli sumeglianta
 ActRecognize = Renconuscha il text da paginas scannadas
+
+Licenses = Licenzas
+LicensesIntro = Nougat PDF è software liber sut la licenza MIT: mintgin al po utilisar, copiar, midar e parter. El sa basa sin ils components sutvart, mintgin cun sia atgna licenza. Tutga in element per leger sias remartgas; ils texts giuridics restan per englais, lur lingua uffiziala.
+LicensesComponents = Components inclus
+LicensesFullTexts = Texts cumplets da las licenzas
+AboutFreeSoftware = Software liber, sut la licenza MIT
 """

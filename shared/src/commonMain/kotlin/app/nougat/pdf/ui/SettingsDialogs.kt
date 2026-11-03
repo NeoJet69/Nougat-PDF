@@ -134,7 +134,7 @@ private fun LanguageRow(lang: Lang, selected: Boolean, onClick: () -> Unit) {
 
 /** Les auteurs : NeoJet, Nougat le chat et Caramel (Claude). */
 @Composable
-fun AboutDialog(version: String?, onDismiss: () -> Unit) {
+fun AboutDialog(version: String?, onLicenses: () -> Unit, onDismiss: () -> Unit) {
     val p = LocalNougatPalette.current
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -153,8 +153,10 @@ fun AboutDialog(version: String?, onDismiss: () -> Unit) {
                 Credit("NeoJet", tr(Str.AboutNeoJet))
                 Credit("Nougat 🐱", tr(Str.AboutNougat))
                 Credit("Caramel ✨", tr(Str.AboutCaramel))
+                Text(tr(Str.AboutFreeSoftware), style = MaterialTheme.typography.labelMedium, color = p.muted, textAlign = TextAlign.Center)
             }
         },
+        dismissButton = { TextButton(onClick = onLicenses) { Text(tr(Str.Licenses)) } },
         confirmButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Close)) } },
     )
 }

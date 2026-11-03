@@ -287,4 +287,10 @@ OcrNothing = Nic do rozpoznania: te strony zawierają już tekst.
 OcrStopped = Rozpoznawanie zatrzymane
 TextChangedScan = Tekst ze skanu napisany na nowo najbardziej podobną czcionką
 ActRecognize = Rozpoznaje tekst zeskanowanych stron
+
+Licenses = Licencje
+LicensesIntro = Nougat PDF to wolne oprogramowanie na licencji MIT: każdy może go używać, kopiować, zmieniać i udostępniać. Korzysta z poniższych komponentów, z których każdy ma własną licencję. Dotknij pozycji, aby przeczytać jej informacje; teksty prawne pozostają po angielsku, w ich oficjalnym języku.
+LicensesComponents = Dołączone komponenty
+LicensesFullTexts = Pełne teksty licencji
+AboutFreeSoftware = Wolne oprogramowanie na licencji MIT
 """

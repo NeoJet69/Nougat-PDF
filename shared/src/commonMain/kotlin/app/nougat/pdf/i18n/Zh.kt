@@ -287,4 +287,10 @@ OcrNothing = 无需识别：这些页面已经包含文字。
 OcrStopped = 识别已停止
 TextChangedScan = 已用最相近的字体重写扫描件文字
 ActRecognize = 识别扫描页的文字
+
+Licenses = 许可证
+LicensesIntro = Nougat PDF 是采用 MIT 许可证的自由软件：任何人都可以使用、复制、修改和分享。它基于以下组件构建，每个组件都有自己的许可证。点按某一项即可查看其声明；法律文本保留其官方语言英文。
+LicensesComponents = 包含的组件
+LicensesFullTexts = 许可证全文
+AboutFreeSoftware = 自由软件，采用 MIT 许可证
 """

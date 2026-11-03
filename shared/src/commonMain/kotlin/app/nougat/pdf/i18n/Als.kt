@@ -288,4 +288,10 @@ OcrNothing = Nix ze erkenne: die Sitte hàn schun Text.
 OcrStopped = Erkennung ghàlte
 TextChangedScan = Text vum Scan ìn de ähnlichschte Schrìft nej gschriwe
 ActRecognize = Erkennt de Text vun gscännte Sitte
+
+Licenses = Lizanze
+LicensesIntro = Nougat PDF ìsch freiji Software unter de MIT-Lizanz: jeder dàrf sie bruche, kopiere, ändere ün witergänn. Sie baut üf de Komponente do unte üf, jedi mìt ìhrer eigene Lizanz. Tipp üf e Iitrag, fer sini Hìnwies ze lese; d Rachtstexte bliewe ùf Änglisch, ìhrer offizielle Sproch.
+LicensesComponents = Enthàlteni Komponente
+LicensesFullTexts = Vollständigi Lizanztexte
+AboutFreeSoftware = Freiji Software, unter de MIT-Lizanz
 """

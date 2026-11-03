@@ -288,4 +288,10 @@ OcrNothing = Netra da anaout : testenn zo dija er pajennoù-se.
 OcrStopped = Paouezet an anaoudegezh
 TextChangedScan = Adskrivet testenn ar skeudenn gant an nodrezh tostañ
 ActRecognize = Oc'h anaout testenn ar pajennoù skanet
+
+Licenses = Aotreoù
+LicensesIntro = Ur meziant frank dindan an aotre MIT eo Nougat PDF : pep hini a c'hall e implijout, e eilañ, e gemmañ hag e rannañ. Diazezet eo war an elfennoù amañ dindan, pep hini gant e aotre dezhañ. Stokit un elfenn evit lenn e evezhiadennoù ; e saozneg e chom an testennoù lezennel, o yezh ofisiel.
+LicensesComponents = Elfennoù enlakaet
+LicensesFullTexts = Testennoù klok an aotreoù
+AboutFreeSoftware = Meziant frank, dindan an aotre MIT
 """

@@ -106,6 +106,7 @@ class CaptureTest {
             runBlocking { state.replaceTextAwait(block, "Monsieur Nougat Lechat") }
         }
         shot("23-telephone-scan", 412, 892, 2f, phone, scan = true) { it.waitForScanBanner() }
+        shot("24-licences", 412, 892, 2f, phone) { it.licensesOpen = true }
     }
 
     /** L'analyse des pages scannees se fait apres l'ouverture : attendre le bandeau. */
