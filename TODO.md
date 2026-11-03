@@ -23,18 +23,25 @@
 - [ ] Page de confidentialité (artisango.ch) : ajouter la traduction (modèles ML Kit
       téléchargés depuis Google, texte envoyé à Anthropic avec Claude).
 
-## Idées
+## Prochaines fonctions (choisies, pas encore commencées)
 
 - [ ] QR-facture suisse : la lire (montant, IBAN, référence, copier pour l'e-banking) et en
       ajouter une à un devis ou une facture.
 - [ ] Métré sur plan : étalonner l'échelle, mesurer longueurs et surfaces au doigt.
 - [ ] « Ce que je dois faire » : résumé simple d'une lettre et échéances vers le calendrier
       (Gemini Nano, sur le téléphone).
+- [ ] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
+- [ ] Lecture à voix haute, aussi dans la langue traduite.
+
+## Autres idées
+
 - [ ] Caviardage automatique : IBAN, AVS, téléphones, e-mails, adresses, texte vraiment retiré.
 - [ ] Comparer deux versions d'un document.
-- [ ] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
 - [ ] Envoyer un PDF du téléphone au PC par le Wi-Fi local (QR code, sans cloud).
 - [ ] Notes de frais : tickets scannés, montant, date et TVA vers un PDF et un tableau.
-- [ ] Lecture à voix haute, aussi dans la langue traduite.
 - [ ] Traduire sur Windows sans Internet.
 - [ ] Compresser un PDF.
+
+## Release
+
+- [ ] Fusionner le traducteur dans main et publier une release (plus tard).
