@@ -128,6 +128,9 @@ if (!desktopOnly) {
                 // OCR : Tesseract 5 pour Android, et Gemini Nano (IA de l'appareil) pour relire.
                 implementation(libs.tesseract4android)
                 implementation(libs.mlkit.genai.prompt)
+                // Traduction sur le telephone, et reconnaissance de la langue du document.
+                implementation(libs.mlkit.translate)
+                implementation(libs.mlkit.language.id)
             }
         }
     }

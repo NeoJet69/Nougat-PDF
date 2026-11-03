@@ -51,5 +51,11 @@ enum class Str {
     OcrExplainPhone, OcrDownloadNote, OcrAi, OcrAiDownload, OcrDownloading, OcrDownloadFailed,
     OcrAiLines, OcrAiLater, ExitAgain, AboutPartner, LegalTerms, LegalPrivacy,
     LegalImpressum, ScanDocument, ScanDocumentHint, ScanPdfName, ScanAppend, ScanAdded,
-    ScannerUnavailable, ColorHue, ColorDepth, ColorHex,
+    ScannerUnavailable, ColorHue, ColorDepth, ColorHex, Translate, TranslateTitle,
+    TranslateExplain, TranslateInto, TranslateDevice, TranslateDeviceDesc, TranslateClaude, TranslateClaudeDesc,
+    TranslateNeedKey, TranslateAddKey, TranslateGemini, TranslateDownloadNote, TranslateStart, TranslateOriginal,
+    TranslateTranslated, TranslateSave, TranslateStop, TranslateWorking, TranslateDownloading, TranslateFailed,
+    TranslateRetry, TranslateSame, TranslateUnknown, TranslateScanned, TranslateHintTap, TranslateHintClick,
+    TranslatePages, TranslateWriting, TranslateSaved, TranslateNothing, TranslateNoFont, TranslateSaveFailed,
+    TranslateAiLater, TranslateLanguageFailed, TranslateStopped,
 }

@@ -195,6 +195,83 @@ class ViewerState(
         assistantJob?.cancel()
     }
 
+    // ---- Traduction ------------------------------------------------------------------------------
+
+    /** La traduction du document affiche (par-dessus les pages ; le document ne change pas). */
+    val translation = TranslationState(
+        engine, assistantEngine, scope, files,
+        claude = { apiKey.takeIf { it.isNotBlank() }?.let { AssistantSettings(it, assistantModel) } },
+        showMessage = { toast = it },
+    )
+
+    fun startTranslation(settings: TranslationSettings) {
+        val s = session ?: return
+        translation.start(s, settings)
+    }
+
+    /** Sans cle : la fenetre de Claude s'ouvre sur ses reglages. */
+    fun askApiKey() {
+        translation.dialogOpen = false
+        assistant.open = true
+        assistant.showSettings = true
+    }
+
+    /**
+     * Enregistre une copie traduite du document (« Facture_DE.pdf ») a l'endroit choisi, puis
+     * l'ouvre. Le document affiche ne change pas.
+     */
+    fun saveTranslation() {
+        val s = session ?: return
+        val current = translation.settings ?: return
+        scope.launch {
+            var stop = false
+            busyCancel = { stop = true }
+            busyMessage = tr(Str.TranslatePages, 1, s.pageCount)
+            try {
+                val all = translation.translateAll(s) { done, total ->
+                    busyMessage = tr(Str.TranslatePages, (done + 1).coerceAtMost(total), total)
+                    !stop
+                }
+                if (all == null) {
+                    toast = tr(Str.TranslateStopped)
+                    return@launch
+                }
+                if (all.values.all { it.isEmpty() }) {
+                    toast = tr(Str.TranslateNothing)
+                    return@launch
+                }
+                busyCancel = null
+                busyMessage = tr(Str.TranslateWriting)
+                val dst = "${files.tempDir}/traduction-${kotlin.random.Random.nextInt(1_000_000_000)}.pdf"
+                val marks = s.marks.toList()
+                engine.edit(s.path, s.password, dst) { doc ->
+                    doc.burn(marks)
+                    for (page in all.keys.sorted()) {
+                        val items = all.getValue(page)
+                        if (items.isNotEmpty()) doc.writeTranslation(page, items, current.target)
+                    }
+                }
+                busyMessage = null
+                val saved = files.saveAs(dst, translatedName(s.name, current.target))
+                if (saved == null) {
+                    files.delete(dst)
+                    return@launch
+                }
+                toast = tr(Str.TranslateSaved, saved.name)
+                runAfterConfirm { open(dst, saved.name, s.password, sourceRef = saved.ref, temporary = true) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: TextEditException) {
+                errorMessage = e.message
+            } catch (e: Throwable) {
+                errorMessage = tr(Str.TranslateSaveFailed, e.message ?: e::class.simpleName)
+            } finally {
+                busyMessage = null
+                busyCancel = null
+            }
+        }
+    }
+
     /** Nouvelle conversation. */
     fun resetAssistant() {
         stopAssistant()
@@ -259,6 +336,8 @@ class ViewerState(
         sourceRef: String = path,
         /** Document cree dans l'app : pas encore enregistre nulle part (« Enregistrer » demande ou). */
         isNew: Boolean = false,
+        /** [path] est une copie de travail de l'app, a effacer a la fermeture. */
+        temporary: Boolean = isNew,
     ) {
         openJob?.cancel()
         passwordPrompt = null
@@ -270,7 +349,8 @@ class ViewerState(
                 closeCurrent()
                 session = DocumentSession(name, path, sourceRef, password, doc, scope)
                 savedPath = if (isNew) null else path
-                if (isNew) temps.add(path)
+                if (temporary) temps.add(path)
+                translation.stop()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -344,6 +424,7 @@ class ViewerState(
             pagesOpen -> pagesOpen = false
             s?.searchOpen == true -> s.closeSearch()
             tools.editing -> tools.enter(DockMode.Read)
+            translation.active -> translation.stop()
             s != null -> runAfterConfirm(::closeDocument)
             else -> return false
         }
@@ -374,6 +455,7 @@ class ViewerState(
         closeCurrent()
         session = null
         pagesOpen = false
+        translation.stop()
     }
 
     private fun closeCurrent() {
@@ -466,6 +548,7 @@ class ViewerState(
         old.close()
         pageSelection = pageSelection.filter { it < doc.pageCount }.toSet()
         session = fresh
+        translation.documentChanged(fresh)
     }
 
     /** Annule la derniere annotation, ou sinon la derniere modification du document. */
@@ -1056,6 +1139,10 @@ data class PasswordPrompt(val path: String, val name: String, val sourceRef: Str
 
 /** Reponse a « Remplacer l'original ou enregistrer une copie ? ». */
 enum class SaveChoice { Replace, Copy }
+
+/** « Facture.pdf » -> « Facture_DE.pdf » : le nom propose pour une copie traduite. */
+fun translatedName(name: String, language: String): String =
+    name.replace(Regex("(?i)\\.pdf$"), "") + "_" + language.uppercase() + ".pdf"
 
 /** « Facture.pdf » -> « Facture_miaou.pdf » : le nom propose pour une copie. */
 fun copyName(name: String): String = name.replace(Regex("(?i)\\.pdf$"), "") + "_miaou.pdf"

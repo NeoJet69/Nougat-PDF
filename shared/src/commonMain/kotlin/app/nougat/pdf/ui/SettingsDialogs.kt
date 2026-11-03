@@ -269,7 +269,7 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
 }
 
 @Composable
-private fun ChoiceRow(label: String, selected: Boolean, onClick: () -> Unit) {
+internal fun ChoiceRow(label: String, selected: Boolean, onClick: () -> Unit) {
     Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick), verticalAlignment = Alignment.CenterVertically) {
         RadioButton(selected = selected, onClick = onClick)
         Text(label, style = MaterialTheme.typography.bodyLarge)
@@ -277,7 +277,7 @@ private fun ChoiceRow(label: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
+internal fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable { onChange(!checked) }, verticalAlignment = Alignment.CenterVertically) {
         Checkbox(checked = checked, onCheckedChange = onChange)
         Text(label, style = MaterialTheme.typography.bodyMedium)

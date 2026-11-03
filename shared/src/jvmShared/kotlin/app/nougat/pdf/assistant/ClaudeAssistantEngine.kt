@@ -102,6 +102,61 @@ class ClaudeAssistantEngine : AssistantEngine {
         }
     }
 
+    override suspend fun translate(texts: List<String>, language: String, settings: AssistantSettings): List<String> {
+        val client = clientFor(settings.apiKey)
+        val result = ArrayList<String>(texts.size)
+        // Par paquets d'environ 6000 caracteres : une reponse ne doit jamais etre coupee.
+        var start = 0
+        while (start < texts.size) {
+            var end = start
+            var chars = 0
+            while (end < texts.size && (end == start || chars + texts[end].length <= 6000)) {
+                chars += texts[end].length
+                end++
+            }
+            result.addAll(translateBatch(client, texts.subList(start, end), language, settings.model))
+            start = end
+        }
+        return result
+    }
+
+    private suspend fun translateBatch(client: AnthropicClient, texts: List<String>, language: String, model: String): List<String> {
+        val input = buildString {
+            texts.forEachIndexed { i, t -> append("<p id=\"").append(i + 1).append("\">").append(escapeXml(t)).append("</p>\n") }
+        }
+        val system = "You translate documents. The user sends the paragraphs of one PDF page, each in <p id=\"N\">...</p>. " +
+            "Translate every paragraph into " + language + ". Answer with the same <p id=\"N\">...</p> elements, in the same order, " +
+            "one translation per paragraph, and nothing else. Keep the meaning, the tone and the register of the original. " +
+            "Keep names, brands, numbers, amounts, dates, codes, e-mail and web addresses exactly as they are. " +
+            "A paragraph that is already in " + language + ", or that has nothing to translate, is returned unchanged. " +
+            "Escape <, > and & as &lt;, &gt; and &amp;."
+        val params = MessageCreateParams.builder()
+            .model(model)
+            .maxTokens(16000L)
+            .system(system)
+            .addUserMessage(input)
+            .outputConfig(OutputConfig.builder().effort(OutputConfig.Effort.LOW).build())
+            .build()
+        val response = try {
+            withContext(Dispatchers.IO) { client.messages().create(params) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            throw IllegalStateException(friendlyMessage(e), e)
+        }
+        if (response.stopReason().orElse(null) == StopReason.REFUSAL) throw IllegalStateException(tr(Str.ClaudeRefused))
+        val answer = response.content().mapNotNull { it.text().orElse(null)?.text() }.joinToString("")
+        val found = HashMap<Int, String>()
+        for (m in Regex("<p id=\"(\\d+)\">(.*?)</p>", RegexOption.DOT_MATCHES_ALL).findAll(answer)) {
+            found[m.groupValues[1].toInt()] = unescapeXml(m.groupValues[2]).trim()
+        }
+        return texts.mapIndexed { i, t -> found[i + 1]?.takeIf { it.isNotBlank() } ?: t }
+    }
+
+    private fun escapeXml(s: String) = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    private fun unescapeXml(s: String) = s.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&amp;", "&")
+
     private fun request(settings: AssistantSettings, system: String, tools: List<Tool>): MessageCreateParams {
         val builder = MessageCreateParams.builder()
             .model(settings.model)

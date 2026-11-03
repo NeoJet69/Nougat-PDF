@@ -76,4 +76,11 @@ interface AssistantEngine {
 
     /** Oublie la conversation en cours. */
     fun reset()
+
+    /**
+     * Traduit chaque texte de [texts] en [language] (nom anglais de la langue), hors conversation.
+     * Une traduction par texte, dans le meme ordre ; un texte deja dans cette langue revient tel quel.
+     */
+    suspend fun translate(texts: List<String>, language: String, settings: AssistantSettings): List<String> =
+        throw UnsupportedOperationException("Traduction indisponible")
 }

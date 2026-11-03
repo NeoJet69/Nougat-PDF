@@ -193,7 +193,8 @@ fun ViewerScreen(
                     session = session,
                     state = state,
                     inlineEditor = platform.isDesktop,
-                    topPadding = topSpace + if (searchBelow) 64.dp else 0.dp,
+                    topPadding = topSpace + (if (searchBelow) 64.dp else 0.dp) +
+                        if (state.translation.active) (if (compact) 116.dp else 58.dp) else 0.dp,
                     bottomPadding = 170.dp,
                     onTextRequest = { textRequest = it },
                     onSignatureNeeded = { page, at ->
@@ -235,8 +236,19 @@ fun ViewerScreen(
             }
         }
 
+        // Traduction affichee : le bandeau (original ou traduction, enregistrer la copie traduite).
+        if (state.translation.active) {
+            TranslationBar(
+                state = state,
+                compact = compact,
+                phone = state.ocrOnPhone,
+                modifier = Modifier.align(Alignment.TopCenter)
+                    .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
+            )
+        }
+
         // Document scanne : proposer la reconnaissance du texte.
-        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing) {
+        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active) {
             ScanBanner(
                 pages = session.ocrPages,
                 compact = compact,
@@ -384,6 +396,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             item(tr(Str.AppendImages), NougatIcons.Image, state::appendImages)
             if (state.canScan) item(tr(Str.ScanAppend), NougatIcons.Camera, state::appendScan)
             if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
+            item(tr(Str.TranslateTitle), NougatIcons.Translate) { state.translation.dialogOpen = true }
             if (session.password == null) {
                 item(tr(Str.ProtectWithPassword), Icons.Filled.Lock, onProtect)
             } else {
@@ -539,6 +552,11 @@ private fun ViewerDock(
             DockItem(NougatIcons.Pen, tr(Str.DockAnnotate), mode == DockMode.Annotate, { tools.enter(DockMode.Annotate) }, compact)
             DockItem(NougatIcons.Signature, tr(Str.DockSign), mode == DockMode.Sign, { tools.enter(DockMode.Sign) }, compact)
             DockItem(NougatIcons.Pages, tr(Str.DockPages), false, { state.pagesOpen = true }, compact)
+            DockItem(
+                NougatIcons.Translate, tr(Str.Translate), state.translation.active,
+                { if (state.translation.active) state.translation.stop() else state.translation.dialogOpen = true },
+                compact,
+            )
             if (state.assistantAvailable) {
                 IslandDivider()
                 DockItem(NougatIcons.Sparkle, "Claude", state.assistant.open, { state.assistant.open = !state.assistant.open }, compact)
@@ -917,6 +935,12 @@ private fun PageView(
                 onCommitPending = state::commitPendingFieldEditLater,
                 onMessage = state::showToast,
             )
+        }
+
+        // Traduction : posee sur la page (en mode Lire), la page s'affiche donc on la traduit.
+        if (state.translation.active && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
+            LaunchedEffect(session, state.translation.settings) { state.translation.want(session, index) }
+            TranslationOverlay(state, session, index, pageSize, image)
         }
     }
 }

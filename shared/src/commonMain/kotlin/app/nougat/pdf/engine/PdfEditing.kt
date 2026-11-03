@@ -58,6 +58,16 @@ interface EditableDoc {
      */
     fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary =
         throw UnsupportedOperationException("OCR indisponible")
+
+    /**
+     * Copie traduite : chaque paragraphe de [paragraphs] (trouve par une analyse precedente de la
+     * page [index]) est remplace par sa traduction, au meme endroit et dans un style proche. Le texte
+     * d'origine est retire (ou recouvert de la couleur du papier sur un scan). [language] : code de
+     * la langue de la traduction (police, sens d'ecriture).
+     * @throws TextEditException si aucune police ne contient les lettres de la traduction.
+     */
+    fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String): Unit =
+        throw UnsupportedOperationException("Traduction indisponible")
 }
 
 /**

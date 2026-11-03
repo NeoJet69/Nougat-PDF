@@ -174,6 +174,10 @@ private class AndroidEditableDoc(
         return recognizeDocumentAndroid(doc, src, models, options, reader, ::geometry, ::setRotation, progress)
     }
 
+    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String) {
+        writeTranslationAndroid(doc, src, index, paragraphs, language)?.let(sources::add)
+    }
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

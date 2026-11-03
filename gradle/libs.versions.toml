@@ -13,6 +13,8 @@ javacpp = "1.5.14"
 tesseract4android = "4.9.0"
 mlkitGenaiPrompt = "1.0.0-beta4"
 mlkitDocumentScanner = "16.0.0"
+mlkitTranslate = "17.0.3"
+mlkitLanguageId = "17.0.6"
 activity = "1.10.0"
 anthropic = "3.3.0"
 desugar = "2.1.5"
@@ -37,6 +39,8 @@ javacpp = { module = "org.bytedeco:javacpp", version.ref = "javacpp" }
 tesseract4android = { module = "cz.adaptech.tesseract4android:tesseract4android", version.ref = "tesseract4android" }
 mlkit-genai-prompt = { module = "com.google.mlkit:genai-prompt", version.ref = "mlkitGenaiPrompt" }
 mlkit-document-scanner = { module = "com.google.android.gms:play-services-mlkit-document-scanner", version.ref = "mlkitDocumentScanner" }
+mlkit-translate = { module = "com.google.mlkit:translate", version.ref = "mlkitTranslate" }
+mlkit-language-id = { module = "com.google.mlkit:language-id", version.ref = "mlkitLanguageId" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }

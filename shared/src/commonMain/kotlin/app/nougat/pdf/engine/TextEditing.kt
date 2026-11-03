@@ -34,6 +34,8 @@ data class TextBlock(
     val glyphs: List<GlyphKey>,
     /** Texte invisible pose sur une image (OCR) : le modifier, c'est reecrire l'image. */
     val scanned: Boolean = false,
+    /** Nom de la police (gras, avec empattements... : pour ecrire une traduction dans le meme style). */
+    val fontName: String? = null,
 )
 
 /** Resultat d'une modification de texte. */
@@ -193,6 +195,7 @@ private fun makeBlock(page: Int, glyphs: List<AnalyzedGlyph>, w: Float, h: Float
         editable = glyphs.all { it.editable } && keys.size == glyphs.size,
         glyphs = keys,
         scanned = glyphs.all { it.invisible },
+        fontName = glyphs.first().style.substringBeforeLast('@').takeIf { it.isNotBlank() && it != "null" },
     )
 }
 
@@ -266,6 +269,23 @@ object TextEditPlanner {
         for (index in touched) {
             val op = analysis.ops[index] ?: throw TextEditException(Str.ErrTextOpNotFound)
             result[index] = rewriteOp(op, removed, anchor, replacement)
+        }
+        return result
+    }
+
+    /**
+     * Retire toutes les lettres des lignes [blocks] (une traduction prend leur place), en gardant
+     * le reste de la page immobile. Chaque operateur touche n'est reecrit qu'une fois.
+     */
+    fun planRemoval(analysis: PageTextAnalysis, blocks: List<TextBlock>): Map<Int, List<ContentOp>> {
+        val removed = HashSet<GlyphKey>()
+        for (b in blocks) removed += removedGlyphs(analysis, b.glyphs)
+        val none = GlyphKey(-1, -1, -1)
+        val nothing = Replacement.SameFont(emptyList(), 0f)
+        val result = LinkedHashMap<Int, List<ContentOp>>()
+        for (index in removed.map { it.op }.distinct().sorted()) {
+            val op = analysis.ops[index] ?: continue
+            result[index] = rewriteOp(op, removed, none, nothing)
         }
         return result
     }

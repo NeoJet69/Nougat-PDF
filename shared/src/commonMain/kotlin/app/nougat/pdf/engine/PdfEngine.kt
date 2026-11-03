@@ -43,6 +43,9 @@ interface PdfEngine {
 
     /** Fait telecharger l'IA de l'appareil par le systeme ([onBytes] : progression). Vrai si elle est prete. */
     suspend fun prepareDeviceAi(onBytes: (Long) -> Unit): Boolean = false
+
+    /** Le traducteur de l'appareil (ML Kit sur Android), ou null : la traduction passe alors par Claude. */
+    val deviceTranslator: DeviceTranslator? get() = null
 }
 
 interface PdfDocument : AutoCloseable {

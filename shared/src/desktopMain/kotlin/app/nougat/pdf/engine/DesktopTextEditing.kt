@@ -182,7 +182,7 @@ private fun otherFontReplacement(page: PDPage, original: PDFont, text: String, o
     return Replacement.OtherFont(name, bytes, width)
 }
 
-private fun standardName(font: StandardFont): Standard14Fonts.FontName = when (font) {
+internal fun standardName(font: StandardFont): Standard14Fonts.FontName = when (font) {
     StandardFont.Helvetica -> Standard14Fonts.FontName.HELVETICA
     StandardFont.HelveticaBold -> Standard14Fonts.FontName.HELVETICA_BOLD
     StandardFont.HelveticaOblique -> Standard14Fonts.FontName.HELVETICA_OBLIQUE

@@ -48,6 +48,7 @@ internal fun createWithPdfBox(dst: String, block: (EditableDoc) -> Unit) {
 private class DesktopEditableDoc(private val doc: PDDocument, private var password: String?) : EditableDoc {
     private val sources = ArrayList<PDDocument>()
     private val font by lazy { PDType1Font(Standard14Fonts.FontName.HELVETICA) }
+    private val translationFonts by lazy { TranslationFonts(doc) }
 
     override val pageCount: Int get() = doc.numberOfPages
 
@@ -117,6 +118,9 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
 
     override fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary =
         recognizeDocument(doc, options, ::geometry, ::setRotation, progress)
+
+    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String) =
+        writeTranslationWithPdfBox(doc, index, paragraphs, language, translationFonts)
 
     fun applySecurity() {
         val pwd = password

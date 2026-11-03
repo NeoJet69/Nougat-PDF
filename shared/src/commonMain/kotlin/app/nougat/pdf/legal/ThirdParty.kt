@@ -213,12 +213,14 @@ object Licenses {
             texts = listOf(LicenseTexts.IJG),
         ),
         ThirdParty(
-            "Google ML Kit (GenAI Prompt API, Document Scanner)", "ML Kit Terms of Service (not open source)", "Google LLC",
+            "Google ML Kit (GenAI Prompt API, Document Scanner, Translation, Language ID)", "ML Kit Terms of Service (not open source)", "Google LLC",
             "https://developers.google.com/ml-kit/terms", Shipped.Android,
             details = "Closed-source libraries from Google. The Prompt API asks Gemini Nano (the AI built into compatible " +
-                "phones, provided by Android's AICore) to proofread doubtful OCR lines; the Document Scanner (Google Play " +
-                "services) scans pages with the camera. The Gemini Nano model and the scanner itself are provided by the " +
-                "system, not by this app. Subject to Google's terms and Generative AI Prohibited Use Policy, not to the MIT license.",
+                "phones, provided by Android's AICore) to proofread doubtful OCR lines and to polish translations; the " +
+                "Document Scanner (Google Play services) scans pages with the camera; Translation and Language ID translate " +
+                "documents on the phone and recognize their language (each translation model, about 30 MB, is downloaded " +
+                "from Google once). The Gemini Nano model and the scanner itself are provided by the system, not by this app. " +
+                "Subject to Google's terms and Generative AI Prohibited Use Policy, not to the MIT license.",
         ),
     )
 

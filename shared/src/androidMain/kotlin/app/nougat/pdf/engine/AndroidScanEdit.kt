@@ -89,7 +89,7 @@ private fun RgbImage.toBitmap(): Bitmap {
  * La page a [dpi], en couleurs. PdfRenderer (PDFium) sur le fichier ouvert, qui lit tous les
  * formats d'image des scans ; PdfBox-Android en secours (PDF protege par mot de passe).
  */
-private fun renderPageForScanEdit(doc: PDDocument, src: File?, pageIndex: Int, dpi: Float): Bitmap {
+internal fun renderPageForScanEdit(doc: PDDocument, src: File?, pageIndex: Int, dpi: Float): Bitmap {
     if (src != null) {
         val viaPdfium = runCatching {
             ParcelFileDescriptor.open(src, ParcelFileDescriptor.MODE_READ_ONLY).use { fd ->

@@ -46,6 +46,8 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
 
     override suspend fun prepareDeviceAi(onBytes: (Long) -> Unit): Boolean = GeminiNano.download(onBytes)
 
+    override val deviceTranslator: DeviceTranslator by lazy { MlKitTranslator() }
+
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val file = File(path)
         try {

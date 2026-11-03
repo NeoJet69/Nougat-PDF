@@ -36,6 +36,11 @@ import java.io.File
 import kotlin.io.path.createTempDirectory
 import kotlin.math.sin
 import kotlin.test.Test
+import app.nougat.pdf.engine.DeviceTranslator
+import app.nougat.pdf.engine.TRANSLATION_LANGUAGES
+import app.nougat.pdf.viewer.PageTranslation
+import app.nougat.pdf.viewer.TranslationEngine
+import app.nougat.pdf.viewer.TranslationSettings
 
 /**
  * Captures d'ecran de l'interface (sans fenetre), deposees dans build/captures.
@@ -114,7 +119,25 @@ class CaptureTest {
             state.waitForScanBanner()
             state.ocrDialog = true
         }
+        // Traduction : la fenetre (ordinateur : Claude ; telephone : sur l'appareil ou Claude), puis la
+        // traduction posee sur la page, en anglais (traducteurs simules).
+        shot("26-traduire", 1440, 900, 1f, desktop, withDocument = true) {
+            it.saveAssistantSettings("sk-ant-demo", AssistantModels.DEFAULT)
+            it.translation.dialogOpen = true
+        }
+        shot("27-traduction", 1440, 900, 1f, desktop, withDocument = true, until = { it.translated(0) }) {
+            it.saveAssistantSettings("sk-ant-demo", AssistantModels.DEFAULT)
+            it.startTranslation(TranslationSettings("en", TranslationEngine.Claude, polish = false))
+        }
+        shot("28-telephone-traduire", 412, 892, 2f, phone, withDocument = true, engine = PhoneLikeEngine()) {
+            it.translation.dialogOpen = true
+        }
+        shot("29-telephone-traduction", 412, 892, 2f, phone, withDocument = true, engine = PhoneLikeEngine(), until = { it.translated(0) }) {
+            it.startTranslation(TranslationSettings("en", TranslationEngine.Device, polish = false))
+        }
     }
+
+    private fun ViewerState.translated(page: Int) = translation.pages[page] is PageTranslation.Done
 
     /** L'analyse des pages scannees se fait apres l'ouverture : attendre le bandeau. */
     private fun ViewerState.waitForScanBanner() {
@@ -179,6 +202,8 @@ class CaptureTest {
         language: String = "fr",
         /** Moteur PDF (par defaut celui de l'ordinateur). */
         engine: PdfEngine = DesktopPdfEngine(),
+        /** Attendre (en dessinant) que l'ecran soit pret : une traduction, par exemple. */
+        until: ((ViewerState) -> Boolean)? = null,
         setup: (ViewerState) -> Unit = {},
     ) {
         // Telephone : le scanner de documents existe (carte « Scanner un document » sur l'accueil).
@@ -214,6 +239,11 @@ class CaptureTest {
                 check(state.session != null && state.busyMessage == null) { "La facture d'exemple ne s'est pas ouverte" }
             }
             setup(state)
+            if (until != null) {
+                val deadline = System.currentTimeMillis() + 60_000
+                while (!until(state) && System.currentTimeMillis() < deadline) frame()
+                check(until(state)) { "$name : l'ecran n'est pas pret" }
+            }
             // Laisser le temps de dessiner les pages, les miniatures et finir les animations.
             repeat(40) { frame() }
             val image = scene.render(time)
@@ -229,11 +259,41 @@ class CaptureTest {
         override val isPhone: Boolean get() = true
         override fun ocrLanguageReady(code: String): Boolean = code == "fra" || code == "eng"
         override suspend fun deviceAiStatus(): DeviceAiStatus = DeviceAiStatus.Available
+        override val deviceTranslator: DeviceTranslator = FakeTranslator
+    }
+
+    /** La facture d'exemple en anglais, comme la traduirait le telephone (ou Claude). */
+    private object FakeTranslator : DeviceTranslator {
+        val english = mapOf(
+            "FACTURE N° 2023-042" to "INVOICE No. 2023-042",
+            "CONDITIONS GÉNÉRALES" to "GENERAL TERMS",
+            "Client : Jean Dupont" to "Customer: Jean Dupont",
+            "Adresse : 12 rue des Lilas, Lausanne" to "Address: 12 rue des Lilas, Lausanne",
+            "Date : 15 mars 2023" to "Date: March 15, 2023",
+            "Désignation" to "Description",
+            "Montant" to "Amount",
+            "Pose de carrelage (salle de bain)" to "Tiling (bathroom)",
+            "Fourniture joints 30 m" to "Grout supply, 30 m",
+            "Déplacement" to "Travel",
+            "Total TTC :" to "Total incl. VAT:",
+            "Merci de votre confiance. Paiement à 30 jours." to "Thank you for your trust. Payment within 30 days.",
+            "1. Les travaux sont garantis deux ans." to "1. The work is guaranteed for two years.",
+            "2. Le paiement est dû à 30 jours." to "2. Payment is due within 30 days.",
+            "3. Tout retard entraîne des pénalités." to "3. Any delay leads to penalties.",
+            "4. Les fournitures restent notre propriété jusqu'au paiement." to "4. Supplies remain our property until payment.",
+        )
+        override val languages: Set<String> = TRANSLATION_LANGUAGES.map { it.code }.toSet()
+        override suspend fun detect(text: String): String = "fr"
+        override suspend fun ready(code: String): Boolean = true
+        override suspend fun prepare(codes: List<String>) = Unit
+        override suspend fun translate(texts: List<String>, source: String, target: String): List<String> = texts.map { english[it] ?: it }
     }
 
     private object NoAssistant : AssistantEngine {
         override suspend fun send(userText: String, settings: AssistantSettings, toolbox: AssistantToolbox, onItem: (ChatItem) -> Unit) = Unit
         override fun reset() = Unit
+        override suspend fun translate(texts: List<String>, language: String, settings: AssistantSettings): List<String> =
+            texts.map { FakeTranslator.english[it] ?: it }
     }
 
     private class FakeFiles(dir: File, language: String, override val canScan: Boolean = false) : PlatformFiles {

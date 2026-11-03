@@ -91,6 +91,43 @@ internal object GeminiNano {
         }
     }
 
+    /**
+     * Relit la traduction automatique [draft] de [original] (langues [from] et [to], en anglais)
+     * pour un texte plus naturel. Null si la reponse est douteuse : chiffres changes, longueur
+     * tres differente, refus, commentaire... La traduction de ML Kit est alors gardee.
+     */
+    suspend fun polishTranslation(original: String, draft: String, from: String, to: String): String? {
+        if (original.length < 12 || draft.length > 600) return null
+        val prompt = buildString {
+            append("Here is a text in ").append(from).append(" and its machine translation into ").append(to).append(".\n\n")
+            append("Original:\n").append(original).append("\n\n")
+            append("Translation:\n").append(draft).append("\n\n")
+            append("Rewrite the translation so that it is accurate, natural and fluent ").append(to)
+            append(", faithful to the meaning of the original. Keep names, numbers, amounts, dates, codes, e-mail and web addresses exactly as they are. ")
+            append("Do not add notes or explanations. Answer with the improved ").append(to).append(" translation only.")
+        }
+        val answer = runCatching {
+            withTimeoutOrNull(15_000) {
+                client().generateContent(
+                    generateContentRequest(TextPart(prompt)) {
+                        temperature = 0.2f
+                        topK = 8
+                        maxOutputTokens = 256
+                    },
+                ).candidates.firstOrNull()?.text
+            }
+        }.getOrNull()?.trim()?.removeSurrounding("\"")?.trim() ?: return null
+        if (answer.isEmpty() || '\n' in answer.trimEnd()) return null
+        val ratio = answer.length.toFloat() / draft.length
+        if (ratio < 0.6f || ratio > 1.6f) return null
+        val lower = answer.lowercase()
+        if (listOf("i can't", "i cannot", "sorry", "as an ai", "translation:", "original:").any { lower.startsWith(it) || it in lower.take(40) }) return null
+        // Les montants, les dates, les numeros ne doivent pas bouger.
+        fun numbers(s: String) = Regex("\\d+").findAll(s).map { it.value }.sorted().toList()
+        if (numbers(answer) != numbers(draft)) return null
+        return answer
+    }
+
     private val LANGUAGE_NAMES = mapOf(
         "fra" to "French", "eng" to "English", "deu" to "German", "ita" to "Italian", "spa" to "Spanish",
         "por" to "Portuguese", "nld" to "Dutch", "pol" to "Polish", "tur" to "Turkish", "rus" to "Russian",

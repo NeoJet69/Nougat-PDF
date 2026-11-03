@@ -43,12 +43,11 @@ le menu ⋮). Tout se fait **sur l'appareil** (moteur Tesseract 5, modèles les 
   bouton **Arrêter** (les pages déjà faites sont gardées).
 - **Sans doublon** : les pages qui contiennent déjà du texte sont laissées telles quelles ;
   « Refaire » remplace l'ancienne reconnaissance (autre langue…) au lieu d'en ajouter une.
-- **Modifier un scan** (Windows) : après la reconnaissance, le mode **Éditer** fonctionne sur les
+- **Modifier un scan** : après la reconnaissance, le mode **Éditer** fonctionne sur les
   lignes scannées. Nougat efface la ligne de l'image en reconstituant le papier (sa teinte, son
   grain), puis écrit le nouveau texte **dans la police la plus ressemblante** (comparée lettre à
   lettre avec l'image : Arial, Times, Calibri, Georgia, Courier… en gras ou italique), à la même
-  taille, la même couleur d'encre et la même inclinaison. Sur Android, ce sera pour une prochaine
-  version.
+  taille, la même couleur d'encre et la même inclinaison.
 
 **Sur Android** : le français et l'anglais sont livrés dans l'app ; les autres langues (marquées ↓)
 se téléchargent une seule fois (2 à 6 Mo), ensuite tout fonctionne sans Internet. Sur les
@@ -57,6 +56,32 @@ suivants, Galaxy S26…), l'option **Relecture par Gemini Nano** fait relire les
 doute : Gemini Nano voit l'image de la ligne et corrige la lecture (taches, plis, photo floue), et
 sait même lire une **écriture manuscrite**. Tesseract garde la place exacte de chaque mot ; une
 correction n'est gardée que si elle est vraisemblable. Tout reste sur le téléphone.
+
+## Traduire un document
+
+Bouton **Traduire** (barre du bas, et menu ⋮) : Nougat traduit le document **en gardant sa mise en
+page**, comme DeepL ou Google Traduction pour les documents. Le fichier d'origine n'est jamais
+modifié.
+
+- **Lire traduit** : la traduction s'affiche par-dessus chaque page, à la place du texte, dans le
+  même cadre, la même couleur d'encre et un style proche (un peu plus petite si elle est plus
+  longue). L'interrupteur **Original / Traduction** permet de comparer, et toucher un paragraphe
+  montre son original. La page affichée est traduite en premier.
+- **Par paragraphe** : les lignes sont d'abord regroupées en paragraphes (un mot coupé en fin de
+  ligne est recollé), pour traduire des phrases entières. Les adresses et les lignes « Date : »
+  restent ligne par ligne ; les montants, dates et numéros ne bougent pas.
+- **Enregistrer la traduction** : une copie traduite (`Facture_DE.pdf`), où le texte d'origine
+  est retiré et la traduction écrite à sa place ; elle reste cherchable et copiable. Les scans se
+  traduisent aussi, après la reconnaissance du texte.
+- **31 langues**, dont l'arabe (écrit de droite à gauche, lettres liées), le chinois, le japonais
+  et le coréen.
+
+**Sur Android** : la traduction se fait **sur le téléphone** (ML Kit de Google), gratuitement et
+sans envoyer le texte ; chaque langue se télécharge une seule fois (environ 30 Mo). Sur les
+téléphones compatibles, **Gemini Nano** relit la traduction pour la rendre plus naturelle (une
+relecture qui change un chiffre est refusée). On peut aussi choisir **Claude** pour la meilleure
+qualité. **Sur Windows** : la traduction passe par **Claude**, avec votre clé API Anthropic (le
+texte est alors envoyé à Anthropic).
 
 **Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
 blanche, un autre PDF ou des images à la fin.
@@ -130,7 +155,7 @@ L'assistant est la seule partie de Nougat qui utilise Internet.
 ## Prochaines idées
 
 - Compresser un PDF
-- Modifier les lignes scannées sur Android
+- Traduire sur Windows sans Internet
 - Déplacer / redimensionner une annotation après l'avoir posée
 
 ## Installer
@@ -181,7 +206,11 @@ sur téléphone. L'OCR utilise [Tesseract](https://github.com/tesseract-ocr/tess
 [Tesseract4Android](https://github.com/adaptech-cz/Tesseract4Android) sur Android) avec les modèles
 `tessdata_best`, téléchargés à la construction (tâche `downloadTessdata`). La logique de l'OCR est
 commune aux deux (`shared/src/jvmShared/.../engine/OcrCore.kt`). La relecture sur Android passe par
-l'[API Prompt de ML Kit](https://developer.android.com/ai/gemini-nano) (Gemini Nano).
+l'[API Prompt de ML Kit](https://developer.android.com/ai/gemini-nano) (Gemini Nano). La traduction
+regroupe les lignes en paragraphes et calcule la mise en page dans le code commun
+(`shared/src/commonMain/.../engine/Translation.kt`) ; elle traduit avec ML Kit Translation sur
+Android, ou avec Claude ; la copie traduite est écrite par PDFBox sur Windows et dessinée par
+Android lui-même sur téléphone (toutes les écritures).
 
 ```
 shared/       le cœur commun : interface, recherche, moteurs PDF

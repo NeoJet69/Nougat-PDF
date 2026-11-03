@@ -13,11 +13,10 @@
 
 ## Nouveau
 
-- **Scanner un document** (Android) : l'appareil photo détecte la page, la prend toute seule, la recadre, la redresse et nettoie les ombres. Plusieurs pages, ou des photos de la galerie.
-- **Modifier un scan, aussi sur Android** : après la reconnaissance du texte, touchez une ligne scannée en mode Éditer. Nougat efface la ligne de l'image en recréant le papier et la réécrit dans la police la plus ressemblante.
-- **Couleur libre pour annoter** : sous les pastilles, un curseur de teinte, un curseur de profondeur (du pastel au profond) et le code #RRGGBB.
-- **Reconnaissance de texte (OCR)** sur Windows et Android, en 16 langues, sur l'appareil. Sur les téléphones compatibles (Pixel 9 et suivants, Galaxy S26…), **Gemini Nano** relit les lignes douteuses et lit même l'écriture manuscrite.
-- Sur Android, le bouton Retour revient en arrière (deux appuis sur l'accueil pour quitter), et l'APK est plus léger.
+- **Traduire un document** en gardant sa mise en page : la traduction s'affiche par-dessus les pages, à la place du texte, dans le même cadre et la même couleur. Un interrupteur **Original / Traduction** pour comparer, et toucher un paragraphe montre son original.
+- **Enregistrer la traduction** : une copie traduite (`Facture_DE.pdf`) où le texte est vraiment remplacé, cherchable et copiable. Les scans se traduisent aussi, après la reconnaissance du texte.
+- **Sur Android**, la traduction se fait sur le téléphone, gratuitement et sans envoyer le texte (chaque langue se télécharge une fois, environ 30 Mo). **Gemini Nano** relit la traduction sur les téléphones compatibles. **Sur Windows**, elle passe par Claude, avec votre clé API.
+- 31 langues, dont l'arabe (de droite à gauche), le chinois, le japonais et le coréen.
 
 Nougat PDF est un logiciel libre sous **licence MIT**, en partenariat avec ArtisanGo (À propos).
 
@@ -26,6 +25,7 @@ Nougat PDF est un logiciel libre sous **licence MIT**, en partenariat avec Artis
 - Modifier le texte d'un PDF au même endroit, dans la même police
 - Scanner un document avec l'appareil photo (Android)
 - Reconnaître le texte des scans et des photos (OCR), puis le modifier, avec Gemini Nano sur les téléphones compatibles
+- Traduire un document en gardant sa mise en page, et en enregistrer une copie traduite
 - Annoter, surligner, signer, masquer
 - Remplir les formulaires PDF
 - Créer un PDF à partir de photos, ou un document vierge
