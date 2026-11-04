@@ -135,6 +135,21 @@ class CaptureTest {
         shot("29-telephone-traduction", 412, 892, 2f, phone, withDocument = true, engine = PhoneLikeEngine(), until = { it.translated(0) }) {
             it.startTranslation(TranslationSettings("en", TranslationEngine.Device, polish = false))
         }
+        // Fiche Google Play en anglais : les memes ecrans, l'app en anglais.
+        shot("30-en-phone-home", 412, 892, 2f, phone, language = "en")
+        shot("31-en-phone-edit", 412, 892, 2f, phone, withDocument = true, language = "en") { state ->
+            state.tools.enter(DockMode.Edit)
+            val session = state.session ?: error("Pas de document")
+            val block = runBlocking { session.textBlocks(0) }.first { it.text.startsWith("Client") }
+            session.startEditing(block)
+            session.editingText = "Client : Marie Nougat"
+        }
+        shot("32-en-phone-annotate-dark", 412, 892, 2f, phone, dark = true, withDocument = true, language = "en") { it.annotateDemo() }
+        shot("33-en-phone-form", 412, 892, 2f, phone, form = true, language = "en") { it.editFieldDemo("nom", "Marie Nougat") }
+        shot("34-en-phone-scan", 412, 892, 2f, phone, scan = true, language = "en") { it.waitForScanBanner() }
+        shot("35-en-phone-translation", 412, 892, 2f, phone, withDocument = true, engine = PhoneLikeEngine(), language = "en", until = { it.translated(0) }) {
+            it.startTranslation(TranslationSettings("en", TranslationEngine.Device, polish = false))
+        }
     }
 
     private fun ViewerState.translated(page: Int) = translation.pages[page] is PageTranslation.Done
