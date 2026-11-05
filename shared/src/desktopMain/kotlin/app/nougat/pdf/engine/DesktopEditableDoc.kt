@@ -119,8 +119,8 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
     override fun recognizeText(options: OcrOptions, progress: (Int, Int) -> Boolean): OcrSummary =
         recognizeDocument(doc, options, ::geometry, ::setRotation, progress)
 
-    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String) =
-        writeTranslationWithPdfBox(doc, index, paragraphs, language, translationFonts)
+    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String, eraseImages: Boolean) =
+        writeTranslationWithPdfBox(doc, index, paragraphs, language, translationFonts, eraseImages)
 
     fun applySecurity() {
         val pwd = password

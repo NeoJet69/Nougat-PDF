@@ -87,7 +87,14 @@ internal class TranslationFonts(private val doc: PDDocument) {
 }
 
 /** Ecrit la traduction des paragraphes de la page [pageIndex] (voir [EditableDoc.writeTranslation]). */
-internal fun writeTranslationWithPdfBox(doc: PDDocument, pageIndex: Int, items: List<TranslatedParagraph>, language: String, fonts: TranslationFonts) {
+internal fun writeTranslationWithPdfBox(
+    doc: PDDocument,
+    pageIndex: Int,
+    items: List<TranslatedParagraph>,
+    language: String,
+    fonts: TranslationFonts,
+    eraseImages: Boolean = false,
+) {
     if (items.isEmpty()) return
     val page = doc.getPage(pageIndex)
     val box = page.cropBox
@@ -116,16 +123,28 @@ internal fun writeTranslationWithPdfBox(doc: PDDocument, pageIndex: Int, items: 
         val covers = ArrayList<NormRect>()
         for (line in p.blocks) {
             val match = current.findMatch(line)
-            if (match != null && match.editable && !match.scanned) removable.add(match) else covers.add(line.rect)
+            // Le texte (y compris le texte invisible d'un scan) est retire ; l'encre d'un scan, ou un
+            // texte qu'on ne sait pas retirer, est en plus recouverte.
+            if (match != null && match.editable) removable.add(match)
+            if (match == null || !match.editable || match.scanned) covers.add(line.rect)
         }
         val (paper, ink) = colors(p.rect)
         // Un scan : tout le cadre du paragraphe prend la couleur du papier (un seul aplat, plus propre).
         Plan(item, paper, ink, if (p.scanned && covers.isNotEmpty()) listOf(p.rect) else covers)
     }
     if (removable.isNotEmpty()) rewriteContent(doc, page, TextEditPlanner.planRemoval(analysis, removable))
+    val geometry = PageGeometry(box.lowerLeftX, box.lowerLeftY, box.width, box.height, normalizeRotation(page.rotation))
+
+    // Effacement : sur un scan, les pixels de l'image sous les lignes sont repeints (pas seulement caches).
+    if (eraseImages) {
+        val areas = plans.flatMap { plan ->
+            val p = plan.item.paragraph
+            plan.covers.map { scrubArea(geometry, it, p.fontSize * 0.12f, p.fontSize * 0.32f, plan.paper) }
+        }
+        if (areas.isNotEmpty()) scrubPageImages(doc, page, areas)
+    }
 
     // 3. La traduction.
-    val geometry = PageGeometry(box.lowerLeftX, box.lowerLeftY, box.width, box.height, normalizeRotation(page.rotation))
     val m = geometry.displayToPdfMatrix()
     PDPageContentStream(doc, page, PDPageContentStream.AppendMode.APPEND, true, true).use { cs ->
         cs.transform(Matrix(m[0], m[1], m[2], m[3], m[4], m[5]))
@@ -204,3 +223,56 @@ private fun drawParagraph(
 private fun red(rgb: Int) = ((rgb shr 16) and 0xFF) / 255f
 private fun green(rgb: Int) = ((rgb shr 8) and 0xFF) / 255f
 private fun blue(rgb: Int) = (rgb and 0xFF) / 255f
+
+/** Les images posees directement par la page, avec leur matrice (a, b, c, d, e, f). */
+private class PageImageFinder : org.apache.pdfbox.contentstream.PDFStreamEngine() {
+    val found = ArrayList<Pair<org.apache.pdfbox.cos.COSName, FloatArray>>()
+
+    init {
+        addOperator(org.apache.pdfbox.contentstream.operator.state.Concatenate(this))
+        addOperator(org.apache.pdfbox.contentstream.operator.state.Save(this))
+        addOperator(org.apache.pdfbox.contentstream.operator.state.Restore(this))
+        addOperator(org.apache.pdfbox.contentstream.operator.state.SetMatrix(this))
+    }
+
+    override fun processOperator(operator: org.apache.pdfbox.contentstream.operator.Operator, operands: List<org.apache.pdfbox.cos.COSBase>) {
+        if (operator.name == "Do") {
+            val name = operands.firstOrNull() as? org.apache.pdfbox.cos.COSName ?: return
+            val xobject = runCatching { resources.getXObject(name) }.getOrNull()
+            if (xobject is org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject) {
+                val m = graphicsState.currentTransformationMatrix
+                found.add(name to floatArrayOf(m.scaleX, m.shearY, m.shearX, m.scaleY, m.translateX, m.translateY))
+            }
+            return
+        }
+        super.processOperator(operator, operands)
+    }
+}
+
+/** Repeint les zones [areas] dans les images de la page (scan) et remplace ces images. */
+private fun scrubPageImages(doc: PDDocument, page: org.apache.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
+    val finder = PageImageFinder()
+    finder.processPage(page)
+    val resources = page.resources ?: return
+    for ((name, ctm) in finder.found.distinctBy { it.first }) {
+        val image = resources.getXObject(name) as? org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject ?: continue
+        val rects = areas.mapNotNull { a -> pixelRect(ctm, image.width, image.height, a)?.let { it to a.rgb } }
+        if (rects.isEmpty()) continue
+        val original = runCatching { image.image }.getOrNull() ?: continue
+        val gray = original.type == java.awt.image.BufferedImage.TYPE_BYTE_GRAY || original.type == java.awt.image.BufferedImage.TYPE_BYTE_BINARY
+        val copy = java.awt.image.BufferedImage(original.width, original.height, if (gray) java.awt.image.BufferedImage.TYPE_BYTE_GRAY else java.awt.image.BufferedImage.TYPE_INT_RGB)
+        val g = copy.createGraphics()
+        g.drawImage(original, 0, 0, null)
+        for ((r, rgb) in rects) {
+            g.color = java.awt.Color(rgb)
+            g.fillRect(r[0], r[1], r[2] - r[0], r[3] - r[1])
+        }
+        g.dispose()
+        val replacement = if (image.suffix == "jpg") {
+            org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory.createFromImage(doc, copy, 0.9f)
+        } else {
+            org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(doc, copy)
+        }
+        resources.put(name, replacement)
+    }
+}

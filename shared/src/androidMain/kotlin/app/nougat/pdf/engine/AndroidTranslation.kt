@@ -114,7 +114,14 @@ private const val COLOR_DPI = 110f
  * Ecrit la traduction des paragraphes de la page [pageIndex] (voir [EditableDoc.writeTranslation]).
  * Renvoie le petit PDF du calque de texte, a fermer apres l'enregistrement du document.
  */
-internal fun writeTranslationAndroid(doc: PDDocument, src: File?, pageIndex: Int, items: List<TranslatedParagraph>, language: String): PDDocument? {
+internal fun writeTranslationAndroid(
+    doc: PDDocument,
+    src: File?,
+    pageIndex: Int,
+    items: List<TranslatedParagraph>,
+    language: String,
+    eraseImages: Boolean = false,
+): PDDocument? {
     if (items.isEmpty()) return null
     val page = doc.getPage(pageIndex)
     val box = page.cropBox
@@ -144,12 +151,25 @@ internal fun writeTranslationAndroid(doc: PDDocument, src: File?, pageIndex: Int
         val covers = ArrayList<NormRect>()
         for (line in p.blocks) {
             val match = current.findMatch(line)
-            if (match != null && match.editable && !match.scanned) removable.add(match) else covers.add(line.rect)
+            // Le texte (y compris le texte invisible d'un scan) est retire ; l'encre d'un scan, ou un
+            // texte qu'on ne sait pas retirer, est en plus recouverte.
+            if (match != null && match.editable) removable.add(match)
+            if (match == null || !match.editable || match.scanned) covers.add(line.rect)
         }
         val (paper, ink) = colors(p.rect)
         Plan(item, paper, ink, if (p.scanned && covers.isNotEmpty()) listOf(p.rect) else covers)
     }
     if (removable.isNotEmpty()) rewriteContent(doc, page, TextEditPlanner.planRemoval(analysis, removable))
+
+    // Effacement : sur un scan, les pixels de l'image sous les lignes sont repeints (pas seulement caches).
+    if (eraseImages) {
+        val g = PageGeometry(box.lowerLeftX, box.lowerLeftY, box.width, box.height, normalizeRotation(page.rotation))
+        val areas = plans.flatMap { plan ->
+            val p = plan.item.paragraph
+            plan.covers.map { scrubArea(g, it, p.fontSize * 0.12f, p.fontSize * 0.32f, plan.paper) }
+        }
+        if (areas.isNotEmpty()) scrubPageImagesAndroid(doc, page, areas)
+    }
 
     // 3. Le calque : papier et traduction dessines par Android dans une page PDF de la meme taille.
     val pw = ceil(w).toInt().coerceAtLeast(1)
@@ -239,4 +259,60 @@ private fun drawParagraph(canvas: android.graphics.Canvas, item: TranslatedParag
     canvas.translate(p.rect.left * w, baseline - layout.getLineBaseline(0))
     layout.draw(canvas)
     canvas.restore()
+}
+
+/** Les images posees directement par la page, avec leur matrice (a, b, c, d, e, f). */
+private class PageImageFinder : com.tom_roush.pdfbox.contentstream.PDFStreamEngine() {
+    val found = ArrayList<Pair<com.tom_roush.pdfbox.cos.COSName, FloatArray>>()
+
+    init {
+        addOperator(com.tom_roush.pdfbox.contentstream.operator.state.Concatenate())
+        addOperator(com.tom_roush.pdfbox.contentstream.operator.state.Save())
+        addOperator(com.tom_roush.pdfbox.contentstream.operator.state.Restore())
+        addOperator(com.tom_roush.pdfbox.contentstream.operator.state.SetMatrix())
+    }
+
+    override fun processOperator(operator: com.tom_roush.pdfbox.contentstream.operator.Operator, operands: List<com.tom_roush.pdfbox.cos.COSBase>) {
+        if (operator.name == "Do") {
+            val name = operands.firstOrNull() as? com.tom_roush.pdfbox.cos.COSName ?: return
+            val xobject = runCatching { resources.getXObject(name) }.getOrNull()
+            if (xobject is com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject) {
+                val m = graphicsState.currentTransformationMatrix
+                found.add(name to floatArrayOf(m.scaleX, m.shearY, m.shearX, m.scaleY, m.translateX, m.translateY))
+            }
+            return
+        }
+        super.processOperator(operator, operands)
+    }
+}
+
+/** Repeint les zones [areas] dans les images de la page (scan) et remplace ces images. */
+private fun scrubPageImagesAndroid(doc: PDDocument, page: com.tom_roush.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
+    val finder = PageImageFinder()
+    finder.processPage(page)
+    val resources = page.resources ?: return
+    for ((name, ctm) in finder.found.distinctBy { it.first }) {
+        val image = resources.getXObject(name) as? com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject ?: continue
+        val rects = areas.mapNotNull { a -> pixelRect(ctm, image.width, image.height, a)?.let { it to a.rgb } }
+        if (rects.isEmpty()) continue
+        val original = runCatching { image.image }.getOrNull() ?: continue
+        val copy = original.copy(android.graphics.Bitmap.Config.ARGB_8888, true)
+        // L'image d'origine peut etre gardee en cache par PdfBox : on ne la libere pas.
+        val canvas = android.graphics.Canvas(copy)
+        val paint = Paint().apply { style = Paint.Style.FILL }
+        for ((r, rgb) in rects) {
+            paint.color = rgb or (0xFF shl 24)
+            canvas.drawRect(r[0].toFloat(), r[1].toFloat(), r[2].toFloat(), r[3].toFloat(), paint)
+        }
+        val replacement = try {
+            if (image.suffix == "jpg") {
+                com.tom_roush.pdfbox.pdmodel.graphics.image.JPEGFactory.createFromImage(doc, copy, 0.9f)
+            } else {
+                com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(doc, copy)
+            }
+        } finally {
+            copy.recycle()
+        }
+        resources.put(name, replacement)
+    }
 }

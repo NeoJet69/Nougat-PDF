@@ -159,6 +159,47 @@ class DesktopTranslationTest {
     }
 
     @Test
+    fun erasingAScannedLineRepaintsTheImage() = runTest {
+        // Un « scan » : une image avec une ligne d'encre, et le texte reconnu, invisible, par-dessus.
+        val file = File(dir, "scan-prix.pdf")
+        PDDocument().use { doc ->
+            val page = PDPage(PDRectangle.A4)
+            doc.addPage(page)
+            val scan = java.awt.image.BufferedImage(595, 842, java.awt.image.BufferedImage.TYPE_INT_RGB)
+            val g = scan.createGraphics()
+            g.color = java.awt.Color(0xF4, 0xEE, 0xE0)
+            g.fillRect(0, 0, 595, 842)
+            g.color = java.awt.Color.BLACK
+            g.fillRect(72, 842 - 712, 120, 10) // l'encre du prix
+            g.dispose()
+            val image = org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory.createFromImage(doc, scan)
+            PDPageContentStream(doc, page).use { cs ->
+                cs.drawImage(image, 0f, 0f, 595f, 842f)
+                cs.beginText()
+                cs.setRenderingMode(org.apache.pdfbox.pdmodel.graphics.state.RenderingMode.NEITHER)
+                cs.setFont(helvetica, 12f)
+                cs.newLineAtOffset(72f, 703f)
+                cs.showText("CHF 1250.00")
+                cs.endText()
+            }
+            doc.save(file)
+        }
+        val price = engine.open(file.path).use { it.textBlocks(0) }.single { it.text.startsWith("CHF") }
+        assertTrue(price.scanned)
+        val out = File(dir, "scan-sans-prix.pdf").path
+        engine.edit(file.path, null, out) { it.deleteTextBlocks(0, listOf(price)) }
+        assertFalse("1250" in text(out))
+        // L'image elle-meme ne contient plus l'encre : ses pixels sont ceux du papier.
+        Loader.loadPDF(File(out)).use { doc ->
+            val resources = doc.getPage(0).resources
+            val images = resources.xObjectNames.mapNotNull { resources.getXObject(it) as? org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject }
+            assertEquals(1, images.size)
+            val pixel = images[0].image.getRGB(130, 842 - 707) and 0xFFFFFF
+            assertTrue(PageColors.luminance(pixel) > 200, "encre encore dans l'image : ${Integer.toHexString(pixel)}")
+        }
+    }
+
+    @Test
     fun bidiPutsArabicInDisplayOrder() {
         // Deux mots arabes et un nombre : les mots s'affichent de droite a gauche, le nombre reste lisible.
         val visual = BidiText.visual("\u0628\u0627\u0628 12", rtl = true)

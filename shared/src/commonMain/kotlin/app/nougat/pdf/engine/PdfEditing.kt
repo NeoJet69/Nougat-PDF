@@ -63,21 +63,22 @@ interface EditableDoc {
      * Copie traduite : chaque paragraphe de [paragraphs] (trouve par une analyse precedente de la
      * page [index]) est remplace par sa traduction, au meme endroit et dans un style proche. Le texte
      * d'origine est retire (ou recouvert de la couleur du papier sur un scan). [language] : code de
-     * la langue de la traduction (police, sens d'ecriture).
+     * la langue de la traduction (police, sens d'ecriture). [eraseImages] : sur un scan, repeindre
+     * aussi les pixels de l'image sous les lignes (effacement), au lieu de seulement les recouvrir.
      * @throws TextEditException si aucune police ne contient les lettres de la traduction.
      */
-    fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String): Unit =
+    fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String, eraseImages: Boolean = false): Unit =
         throw UnsupportedOperationException("Traduction indisponible")
 }
 
 /**
  * Efface vraiment les lignes [blocks] de la page [index] (des prix avant d'envoyer un document) :
- * leur texte est retire du PDF, il ne se retrouve plus en cherchant ni en copiant. Une ligne de
- * scan, ou qu'on ne sait pas retirer, est recouverte de la couleur du papier.
+ * leur texte est retire du PDF, il ne se retrouve plus en cherchant ni en copiant. Sur un scan, les
+ * pixels de l'image sous la ligne sont repeints de la couleur du papier.
  */
 fun EditableDoc.deleteTextBlocks(index: Int, blocks: List<TextBlock>) {
     if (blocks.isEmpty()) return
-    writeTranslation(index, blocks.map { TranslatedParagraph(TextParagraph.of(it), "") }, "fr")
+    writeTranslation(index, blocks.map { TranslatedParagraph(TextParagraph.of(it), "") }, "fr", eraseImages = true)
 }
 
 /**

@@ -174,8 +174,8 @@ private class AndroidEditableDoc(
         return recognizeDocumentAndroid(doc, src, models, options, reader, ::geometry, ::setRotation, progress)
     }
 
-    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String) {
-        writeTranslationAndroid(doc, src, index, paragraphs, language)?.let(sources::add)
+    override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String, eraseImages: Boolean) {
+        writeTranslationAndroid(doc, src, index, paragraphs, language, eraseImages)?.let(sources::add)
     }
 
     fun applySecurity() {
