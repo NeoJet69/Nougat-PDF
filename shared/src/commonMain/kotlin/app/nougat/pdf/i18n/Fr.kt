@@ -359,4 +359,12 @@ TranslateSaveFailed = Impossible de créer la copie traduite : {0}
 TranslateAiLater = Gemini Nano n'est pas encore prêt : Android le télécharge en arrière-plan. Traduction sans lui cette fois.
 TranslateLanguageFailed = Impossible de télécharger : {0}. Vérifiez la connexion Internet.
 TranslateStopped = Traduction arrêtée
+
+SelectHintDesktop = Ctrl + clic : plusieurs lignes · Maj + clic : une zone · Suppr : effacer
+SelectHintPhone = Appui long : choisir des lignes à effacer
+SelectedLines = {0} ligne choisie|{0} lignes choisies
+DeleteSelected = Effacer
+DeletingText = Effacement du texte…
+LinesDeleted = {0} ligne effacée|{0} lignes effacées
+ClearSelection = Annuler la sélection
 """

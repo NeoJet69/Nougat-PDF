@@ -62,6 +62,41 @@ class DocumentSession(
         editingText = block.text
     }
 
+    // ---- Plusieurs lignes choisies (Ctrl + clic, Maj + clic, appui long), pour les effacer ----------
+
+    val selectedBlocks = mutableStateListOf<TextBlock>()
+    private var selectionAnchor: TextBlock? = null
+
+    /** Ajoute la ligne a la selection, ou l'en retire. */
+    fun toggleSelection(block: TextBlock) {
+        if (!selectedBlocks.remove(block)) {
+            selectedBlocks.add(block)
+            selectionAnchor = block
+        }
+    }
+
+    /** Maj + clic : toutes les lignes de la zone entre la derniere choisie et [block] (une colonne de prix). */
+    fun selectArea(pageBlocks: List<TextBlock>, block: TextBlock) {
+        val anchor = selectionAnchor?.takeIf { it.page == block.page && it in selectedBlocks }
+        if (anchor == null) {
+            toggleSelection(block)
+            return
+        }
+        val left = minOf(anchor.rect.left, block.rect.left)
+        val top = minOf(anchor.rect.top, block.rect.top)
+        val right = maxOf(anchor.rect.right, block.rect.right)
+        val bottom = maxOf(anchor.rect.bottom, block.rect.bottom)
+        for (b in pageBlocks) {
+            val r = b.rect
+            if (r.left < right && r.right > left && r.top < bottom && r.bottom > top && b !in selectedBlocks) selectedBlocks.add(b)
+        }
+    }
+
+    fun clearSelection() {
+        selectedBlocks.clear()
+        selectionAnchor = null
+    }
+
     private val blocks = HashMap<Int, List<TextBlock>>()
     private val blocksMutex = Mutex()
 

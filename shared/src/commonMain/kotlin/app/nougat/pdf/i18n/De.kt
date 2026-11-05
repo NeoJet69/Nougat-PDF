@@ -355,4 +355,12 @@ TranslateSaveFailed = Die übersetzte Kopie konnte nicht erstellt werden: {0}
 TranslateAiLater = Gemini Nano ist noch nicht bereit: Android lädt es im Hintergrund herunter. Diesmal ohne Gemini Nano übersetzt.
 TranslateLanguageFailed = Download nicht möglich: {0}. Prüfen Sie die Internetverbindung.
 TranslateStopped = Übersetzung angehalten
+
+SelectHintDesktop = Strg + Klick: mehrere Zeilen · Umschalt + Klick: ein Bereich · Entf: löschen
+SelectHintPhone = Lange drücken: Zeilen zum Löschen auswählen
+SelectedLines = {0} Zeile ausgewählt|{0} Zeilen ausgewählt
+DeleteSelected = Löschen
+DeletingText = Text wird gelöscht…
+LinesDeleted = {0} Zeile gelöscht|{0} Zeilen gelöscht
+ClearSelection = Auswahl aufheben
 """

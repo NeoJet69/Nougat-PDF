@@ -355,4 +355,12 @@ TranslateSaveFailed = Не вдалося створити перекладен�
 TranslateAiLater = Gemini Nano ще не готовий: Android завантажує його у фоні. Цього разу переклад без нього.
 TranslateLanguageFailed = Не вдалося завантажити: {0}. Перевірте з'єднання з інтернетом.
 TranslateStopped = Переклад зупинено
+
+SelectHintDesktop = Ctrl + клацання: кілька рядків · Shift + клацання: область · Delete: видалити
+SelectHintPhone = Довге натискання: виберіть рядки для видалення
+SelectedLines = Вибрано {0} рядок|Вибрано {0} рядки|Вибрано {0} рядків
+DeleteSelected = Видалити
+DeletingText = Видалення тексту…
+LinesDeleted = Видалено {0} рядок|Видалено {0} рядки|Видалено {0} рядків
+ClearSelection = Зняти виділення
 """

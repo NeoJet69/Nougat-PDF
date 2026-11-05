@@ -356,4 +356,12 @@ TranslateSaveFailed = D ìwersetzti Kopie hàt nìt kenne gmàcht wäre: {0}
 TranslateAiLater = Gemini Nano ìsch noch nìt parat: Android ladt ne ìm Hìntergrund rùnter. Diesmol ohne ne ìwersetzt.
 TranslateLanguageFailed = Rùnterlade hàt nìt funktioniert: {0}. Lüej d Internetverbìndung àà.
 TranslateStopped = Ìwersetzung àghàlte
+
+SelectHintDesktop = Ctrl + Klìck: mehreri Zille · Umschalt + Klìck: e Bereich · Entf: lösche
+SelectHintPhone = Lang drucke: Zille züm Lösche üssueche
+SelectedLines = {0} Zill üssgsüecht|{0} Zille üssgsüecht
+DeleteSelected = Lösche
+DeletingText = Dr Text wùrd glöscht…
+LinesDeleted = {0} Zill glöscht|{0} Zille glöscht
+ClearSelection = D Üssuech ùffhewe
 """

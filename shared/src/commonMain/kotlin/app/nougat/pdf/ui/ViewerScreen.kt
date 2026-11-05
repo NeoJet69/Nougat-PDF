@@ -541,14 +541,23 @@ private fun ViewerDock(
             Box(Modifier.padding(bottom = 10.dp)) {
                 when (mode) {
                     DockMode.Read -> if (compact) PagePill(session, onAskPage) else NavigationIsland(session, onAskPage, Modifier)
-                    DockMode.Edit -> HintTray(
-                        when {
-                            session.editingBlock != null -> tr(if (compact) Str.HintEditingCompact else Str.HintEditing)
-                            compact -> tr(Str.HintTapLineCompact)
-                            else -> tr(Str.HintTapLine)
-                        },
-                        compact,
-                    )
+                    DockMode.Edit -> if (session.selectedBlocks.isNotEmpty()) {
+                        SelectionTray(
+                            count = session.selectedBlocks.size,
+                            onDelete = state::deleteSelectedText,
+                            onClear = session::clearSelection,
+                        )
+                    } else {
+                        HintTray(
+                            when {
+                                session.editingBlock != null -> tr(if (compact) Str.HintEditingCompact else Str.HintEditing)
+                                compact -> tr(Str.HintTapLineCompact)
+                                else -> tr(Str.HintTapLine)
+                            },
+                            compact,
+                            subtitle = if (session.editingBlock != null) null else tr(if (state.ocrOnPhone) Str.SelectHintPhone else Str.SelectHintDesktop),
+                        )
+                    }
                     DockMode.Sign -> SignTray(hasSignature = tools.signature != null, onChange = onChangeSignature)
                     DockMode.Annotate -> AnnotateTray(state, compact)
                 }
@@ -615,14 +624,30 @@ private fun ScanBanner(pages: Int, compact: Boolean, onRecognize: () -> Unit, on
 }
 
 @Composable
-private fun HintTray(text: String, compact: Boolean) {
-    Island(shape = RoundedCornerShape(50), padding = 4.dp) {
+private fun HintTray(text: String, compact: Boolean, subtitle: String? = null) {
+    Island(shape = RoundedCornerShape(if (subtitle != null) 24.dp else 50.dp), padding = 4.dp) {
         GradientBadge(NougatIcons.EditText, size = 32.dp, iconSize = 18.dp)
-        Text(
-            text,
-            style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge,
-            modifier = Modifier.padding(horizontal = 12.dp),
-        )
+        Column(Modifier.padding(horizontal = 12.dp)) {
+            Text(text, style = if (compact) MaterialTheme.typography.labelMedium else MaterialTheme.typography.labelLarge)
+            if (subtitle != null) {
+                Text(subtitle, style = MaterialTheme.typography.labelSmall, color = LocalNougatPalette.current.muted)
+            }
+        }
+    }
+}
+
+/** Lignes choisies : combien, Effacer, annuler la selection. */
+@Composable
+private fun SelectionTray(count: Int, onDelete: () -> Unit, onClear: () -> Unit) {
+    Island(shape = RoundedCornerShape(50), padding = 4.dp) {
+        IslandButton(Icons.Filled.Close, tr(Str.ClearSelection), onClick = onClear, size = 40.dp, iconSize = 20.dp)
+        Text(trn(Str.SelectedLines, count), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 8.dp))
+        Box(
+            Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFE53935)).clickable(onClick = onDelete)
+                .padding(horizontal = 18.dp, vertical = 10.dp),
+        ) {
+            Text(tr(Str.DeleteSelected), style = MaterialTheme.typography.labelLarge, color = Color.White)
+        }
     }
 }
 

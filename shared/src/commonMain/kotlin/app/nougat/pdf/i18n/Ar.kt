@@ -356,4 +356,12 @@ TranslateSaveFailed = تعذّر إنشاء النسخة المترجمة: {0}
 TranslateAiLater = Gemini Nano غير جاهز بعد: يقوم Android بتنزيله في الخلفية. هذه المرة تمت الترجمة دونه.
 TranslateLanguageFailed = تعذّر التنزيل: {0}. تحقّق من الاتصال بالإنترنت.
 TranslateStopped = توقفت الترجمة
+
+SelectHintDesktop = Ctrl + نقرة: عدة أسطر · Shift + نقرة: منطقة · Delete: مسح
+SelectHintPhone = ضغطة مطوّلة: اختر الأسطر المراد مسحها
+SelectedLines = تم اختيار سطر واحد|تم اختيار سطرين|تم اختيار {0} أسطر|تم اختيار {0} سطرًا
+DeleteSelected = مسح
+DeletingText = جارٍ مسح النص…
+LinesDeleted = تم مسح سطر واحد|تم مسح سطرين|تم مسح {0} أسطر|تم مسح {0} سطرًا
+ClearSelection = إلغاء التحديد
 """

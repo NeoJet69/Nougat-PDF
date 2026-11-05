@@ -81,6 +81,10 @@ import kotlin.math.max
 import kotlin.math.min
 import app.nougat.pdf.i18n.Str
 import app.nougat.pdf.i18n.tr
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.isCtrlPressed
+import androidx.compose.ui.input.pointer.isMetaPressed
+import androidx.compose.ui.input.pointer.isShiftPressed
 
 /** Demande d'ecrire un texte a un endroit de la page (nouveau ou existant). */
 data class TextRequest(val page: Int, val x: Float, val y: Float, val existing: TextMark? = null)
@@ -120,6 +124,8 @@ fun EditOverlay(
 
     val active = tools.editing && tools.tool != Tool.Pan
     val tool = tools.tool
+    // Touches Ctrl / Cmd et Maj au moment du clic (lues avant les gestes, sans les consommer).
+    val keys = remember { BooleanArray(2) }
 
     var modifier = Modifier.fillMaxSize()
     if (active) {
@@ -179,22 +185,45 @@ fun EditOverlay(
                     }
                 }
             }
-            Tool.EditText -> modifier.pointerInput(tool, page) {
-                detectTapGestures { o ->
-                    if (session.editingBlock != null) {
-                        onCommitPending()
-                        return@detectTapGestures
-                    }
-                    // Tolerance pensee pour un doigt : la ligne sous le doigt (a 10 dp pres),
-                    // sinon la plus proche a moins de 28 dp.
-                    val hit = nearestBlock(currentBlocks, o, size.width.toFloat(), size.height.toFloat(), 10.dp.toPx(), 28.dp.toPx())
-                    when {
-                        hit == null -> Unit
-                        !hit.editable -> onMessage(tr(Str.TextNotEditableHint))
-                        else -> session.startEditing(hit)
+            Tool.EditText -> modifier
+                .pointerInput(Unit) {
+                    awaitPointerEventScope {
+                        while (true) {
+                            val e = awaitPointerEvent(PointerEventPass.Initial)
+                            keys[0] = e.keyboardModifiers.isCtrlPressed || e.keyboardModifiers.isMetaPressed
+                            keys[1] = e.keyboardModifiers.isShiftPressed
+                        }
                     }
                 }
-            }
+                .pointerInput(tool, page) {
+                    // Tolerance pensee pour un doigt : la ligne sous le doigt (a 10 dp pres),
+                    // sinon la plus proche a moins de 28 dp.
+                    fun hitAt(o: Offset) = nearestBlock(currentBlocks, o, size.width.toFloat(), size.height.toFloat(), 10.dp.toPx(), 28.dp.toPx())
+                    detectTapGestures(
+                        // Appui long : choisir des lignes a effacer (telephone surtout).
+                        onLongPress = { o ->
+                            if (session.editingBlock == null) hitAt(o)?.let(session::toggleSelection)
+                        },
+                        onTap = { o ->
+                            if (session.editingBlock != null) {
+                                onCommitPending()
+                                return@detectTapGestures
+                            }
+                            val hit = hitAt(o)
+                            when {
+                                hit == null -> if (!keys[0] && !keys[1]) session.clearSelection()
+                                keys[0] -> session.toggleSelection(hit)
+                                keys[1] -> session.selectArea(currentBlocks, hit)
+                                // Telephone : une fois la selection commencee, toucher ajoute ou retire.
+                                session.selectedBlocks.isNotEmpty() && !inlineEditor -> session.toggleSelection(hit)
+                                else -> {
+                                    session.clearSelection()
+                                    if (!hit.editable) onMessage(tr(Str.TextNotEditableHint)) else session.startEditing(hit)
+                                }
+                            }
+                        },
+                    )
+                }
             Tool.Pan -> modifier
         }
     }
@@ -214,13 +243,22 @@ fun EditOverlay(
         // Lignes modifiables (outil « Éditer »)
         if (showBlocks) {
             val editing = session.editingBlock
+            val selected = session.selectedBlocks
             for (b in blocks) {
                 if (b == editing) continue
                 val r = b.rect
+                val topLeft = Offset(r.left * size.width - 2f, r.top * size.height - 1f)
+                val box = Size((r.right - r.left) * size.width + 4f, (r.bottom - r.top) * size.height + 2f)
+                if (b in selected) {
+                    // Ligne choisie pour etre effacee.
+                    drawRect(Color(0xFFE53935).copy(alpha = 0.18f), topLeft, box)
+                    drawRect(Color(0xFFE53935), topLeft, box, style = Stroke(width = 2f))
+                    continue
+                }
                 drawRect(
                     color = if (b.editable) outline.copy(alpha = 0.55f) else Color.Gray.copy(alpha = 0.35f),
-                    topLeft = Offset(r.left * size.width - 2f, r.top * size.height - 1f),
-                    size = Size((r.right - r.left) * size.width + 4f, (r.bottom - r.top) * size.height + 2f),
+                    topLeft = topLeft,
+                    size = box,
                     style = Stroke(width = 1.2f),
                 )
             }

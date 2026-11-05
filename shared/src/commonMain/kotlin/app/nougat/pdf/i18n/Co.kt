@@ -356,4 +356,12 @@ TranslateSaveFailed = Impussibule di creà a copia tradutta : {0}
 TranslateAiLater = Gemini Nano ùn hè ancu prontu : Android u scarica in fondu. Sta volta, traduzzione senza ellu.
 TranslateLanguageFailed = Impussibule di scaricà : {0}. Verificate a cunnessione Internet.
 TranslateStopped = Traduzzione piantata
+
+SelectHintDesktop = Ctrl + clic : parechje linee · Maiusc + clic : una zona · Canc : sguassà
+SelectHintPhone = Pressione longa : sciglite e linee à sguassà
+SelectedLines = {0} linea scelta|{0} linee scelte
+DeleteSelected = Sguassà
+DeletingText = Sguassamentu di u testu…
+LinesDeleted = {0} linea sguassata|{0} linee sguassate
+ClearSelection = Annullà a selezzione
 """

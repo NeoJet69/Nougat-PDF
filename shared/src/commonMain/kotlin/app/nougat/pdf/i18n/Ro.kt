@@ -356,4 +356,12 @@ TranslateSaveFailed = Copia tradusă nu a putut fi creată: {0}
 TranslateAiLater = Gemini Nano nu e încă pregătit: Android îl descarcă în fundal. De data aceasta, traducere fără el.
 TranslateLanguageFailed = Descărcarea nu a reușit: {0}. Verifică conexiunea la internet.
 TranslateStopped = Traducere oprită
+
+SelectHintDesktop = Ctrl + clic: mai multe rânduri · Shift + clic: o zonă · Delete: șterge
+SelectHintPhone = Apăsare lungă: alege rândurile de șters
+SelectedLines = {0} rând selectat|{0} rânduri selectate|{0} de rânduri selectate
+DeleteSelected = Șterge
+DeletingText = Se șterge textul…
+LinesDeleted = {0} rând șters|{0} rânduri șterse|{0} de rânduri șterse
+ClearSelection = Anulează selecția
 """

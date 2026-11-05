@@ -355,4 +355,12 @@ TranslateSaveFailed = Çevrilmiş kopya oluşturulamadı: {0}
 TranslateAiLater = Gemini Nano henüz hazır değil: Android onu arka planda indiriyor. Bu sefer onsuz çevrildi.
 TranslateLanguageFailed = İndirilemedi: {0}. İnternet bağlantısını kontrol edin.
 TranslateStopped = Çeviri durduruldu
+
+SelectHintDesktop = Ctrl + tıklama: birkaç satır · Shift + tıklama: bir alan · Delete: sil
+SelectHintPhone = Uzun basma: silinecek satırları seçin
+SelectedLines = {0} satır seçildi
+DeleteSelected = Sil
+DeletingText = Metin siliniyor…
+LinesDeleted = {0} satır silindi
+ClearSelection = Seçimi kaldır
 """

@@ -356,4 +356,12 @@ TranslateSaveFailed = Impossible de crear la còpia traducha : {0}
 TranslateAiLater = Gemini Nano es pas encara prèst : Android lo telecarga en rèire-plan. Aqueste còp, traduccion sens el.
 TranslateLanguageFailed = Impossible de telecargar : {0}. Verificatz la connexion Internet.
 TranslateStopped = Traduccion arrestada
+
+SelectHintDesktop = Ctrl + clic : mantunas linhas · Maj + clic : una zòna · Supr : escafar
+SelectHintPhone = Quichada longa : causissètz las linhas d'escafar
+SelectedLines = {0} linha causida|{0} linhas causidas
+DeleteSelected = Escafar
+DeletingText = Escafament del tèxte…
+LinesDeleted = {0} linha escafada|{0} linhas escafadas
+ClearSelection = Anullar la seleccion
 """

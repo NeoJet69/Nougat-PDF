@@ -100,6 +100,14 @@ class TextParagraph(
             return if (lines.size == 1) max(width, min(maxRight - rect.left, width * 1.4f)) else width
         }
 
+    companion object {
+        /** Une ligne seule, vue comme un paragraphe (pour l'effacer). */
+        fun of(block: TextBlock) = TextParagraph(
+            block.page, listOf(block), listOf(block.rect), block.rect, block.text, block.fontSize, 1.2f,
+            block.fontName, block.scanned, ParagraphAlign.Start,
+        )
+    }
+
     val bold: Boolean get() = fontName.orEmpty().lowercase().let { n -> listOf("bold", "black", "heavy", "semibold", "demi").any { it in n } }
     val italic: Boolean get() = fontName.orEmpty().lowercase().let { "italic" in it || "oblique" in it }
     val standardFont: StandardFont get() = closestStandardFont(fontName)

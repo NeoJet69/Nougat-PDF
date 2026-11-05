@@ -355,4 +355,12 @@ TranslateSaveFailed = Kan de vertaalde kopie niet maken: {0}
 TranslateAiLater = Gemini Nano is nog niet klaar: Android downloadt hem op de achtergrond. Deze keer vertaald zonder hem.
 TranslateLanguageFailed = Downloaden mislukt: {0}. Controleer de internetverbinding.
 TranslateStopped = Vertalen gestopt
+
+SelectHintDesktop = Ctrl + klik: meerdere regels · Shift + klik: een gebied · Delete: wissen
+SelectHintPhone = Lang drukken: kies regels om te wissen
+SelectedLines = {0} regel geselecteerd|{0} regels geselecteerd
+DeleteSelected = Wissen
+DeletingText = Tekst wissen…
+LinesDeleted = {0} regel gewist|{0} regels gewist
+ClearSelection = Selectie opheffen
 """

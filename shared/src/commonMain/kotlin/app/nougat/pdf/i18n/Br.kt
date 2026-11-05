@@ -356,4 +356,12 @@ TranslateSaveFailed = N'eus ket bet gallet krouiñ an eilskrid troet : {0}
 TranslateAiLater = N'eo ket prest Gemini Nano c'hoazh : Android a bellgarg anezhañ en drekleur. Ar wech-mañ, troidigezh hep anezhañ.
 TranslateLanguageFailed = N'eus ket bet gallet pellgargañ : {0}. Gwiriit ar c'hennask Internet.
 TranslateStopped = Troidigezh paouezet
+
+SelectHintDesktop = Ctrl + klik : meur a linennoù · Shift + klik : ur zonenn · Dilemel : diverkañ
+SelectHintPhone = Pouezañ pell : dibabit al linennoù da ziverkañ
+SelectedLines = {0} linenn dibabet
+DeleteSelected = Diverkañ
+DeletingText = O tiverkañ an destenn…
+LinesDeleted = {0} linenn diverket
+ClearSelection = Nullañ an dibab
 """

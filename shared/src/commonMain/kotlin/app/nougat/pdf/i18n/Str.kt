@@ -57,5 +57,6 @@ enum class Str {
     TranslateTranslated, TranslateSave, TranslateStop, TranslateWorking, TranslateDownloading, TranslateFailed,
     TranslateRetry, TranslateSame, TranslateUnknown, TranslateScanned, TranslateHintTap, TranslateHintClick,
     TranslatePages, TranslateWriting, TranslateSaved, TranslateNothing, TranslateNoFont, TranslateSaveFailed,
-    TranslateAiLater, TranslateLanguageFailed, TranslateStopped,
+    TranslateAiLater, TranslateLanguageFailed, TranslateStopped, SelectHintDesktop, SelectHintPhone, SelectedLines,
+    DeleteSelected, DeletingText, LinesDeleted, ClearSelection,
 }

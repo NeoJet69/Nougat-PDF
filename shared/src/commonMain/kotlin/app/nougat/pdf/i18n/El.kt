@@ -355,4 +355,12 @@ TranslateSaveFailed = Δεν ήταν δυνατή η δημιουργία το�
 TranslateAiLater = Το Gemini Nano δεν είναι ακόμη έτοιμο: το Android το κατεβάζει στο παρασκήνιο. Αυτή τη φορά μετάφραση χωρίς αυτό.
 TranslateLanguageFailed = Δεν ήταν δυνατή η λήψη: {0}. Ελέγξτε τη σύνδεση στο Internet.
 TranslateStopped = Η μετάφραση σταμάτησε
+
+SelectHintDesktop = Ctrl + κλικ: πολλές γραμμές · Shift + κλικ: μια περιοχή · Delete: διαγραφή
+SelectHintPhone = Παρατεταμένο πάτημα: επιλέξτε γραμμές για διαγραφή
+SelectedLines = Επιλέχθηκε {0} γραμμή|Επιλέχθηκαν {0} γραμμές
+DeleteSelected = Διαγραφή
+DeletingText = Διαγραφή κειμένου…
+LinesDeleted = Διαγράφηκε {0} γραμμή|Διαγράφηκαν {0} γραμμές
+ClearSelection = Κατάργηση επιλογής
 """

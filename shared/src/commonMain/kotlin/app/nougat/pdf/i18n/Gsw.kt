@@ -356,4 +356,12 @@ TranslateSaveFailed = Di übersetzti Kopie hät nöd chöne gmacht werde: {0}
 TranslateAiLater = Gemini Nano isch no nöd parat: Android ladt en im Hintergrund abe. Das Mal ohni en übersetzt.
 TranslateLanguageFailed = Abelade hät nöd funktioniert: {0}. Lueg d Internetverbindig aa.
 TranslateStopped = Übersetzig gstoppt
+
+SelectHintDesktop = Ctrl + Klick: mehreri Ziile · Umschalt + Klick: en Bereich · Entf: lösche
+SelectHintPhone = Lang drucke: Ziile zum Lösche uswähle
+SelectedLines = {0} Ziile usgwählt|{0} Ziile usgwählt
+DeleteSelected = Lösche
+DeletingText = Text wird glöscht…
+LinesDeleted = {0} Ziile glöscht|{0} Ziile glöscht
+ClearSelection = Uswahl ufhebe
 """

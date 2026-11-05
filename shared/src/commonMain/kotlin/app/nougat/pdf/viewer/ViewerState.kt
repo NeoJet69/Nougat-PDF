@@ -42,6 +42,7 @@ import app.nougat.pdf.engine.OcrSummary
 import app.nougat.pdf.engine.defaultOcrLanguages
 import app.nougat.pdf.engine.DeviceAiStatus
 import app.nougat.pdf.engine.OCR_LANGUAGES
+import app.nougat.pdf.engine.deleteTextBlocks
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -423,6 +424,7 @@ class ViewerState(
             assistant.open -> assistant.open = false
             pagesOpen -> pagesOpen = false
             s?.searchOpen == true -> s.closeSearch()
+            s?.selectedBlocks?.isNotEmpty() == true -> s.clearSelection()
             tools.editing -> tools.enter(DockMode.Read)
             translation.active -> translation.stop()
             s != null -> runAfterConfirm(::closeDocument)
@@ -658,6 +660,23 @@ class ViewerState(
                     else -> tr(Str.TextChanged)
                 }
             }
+        }
+    }
+
+    /**
+     * Efface vraiment les lignes choisies (Ctrl + clic, Maj + clic, appui long) : leur texte est
+     * retire du PDF. Pour envoyer un document sans les prix, par exemple. « Annuler » les remet.
+     */
+    fun deleteSelectedText() {
+        val s = session ?: return
+        val selected = s.selectedBlocks.toList()
+        if (selected.isEmpty()) return
+        s.clearSelection()
+        scope.launch {
+            val ok = editNow(tr(Str.DeletingText), s.password) { doc ->
+                for ((page, blocks) in selected.groupBy { it.page }) doc.deleteTextBlocks(page, blocks)
+            }
+            if (ok) toast = trn(Str.LinesDeleted, selected.size)
         }
     }
 

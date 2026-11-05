@@ -71,6 +71,16 @@ interface EditableDoc {
 }
 
 /**
+ * Efface vraiment les lignes [blocks] de la page [index] (des prix avant d'envoyer un document) :
+ * leur texte est retire du PDF, il ne se retrouve plus en cherchant ni en copiant. Une ligne de
+ * scan, ou qu'on ne sait pas retirer, est recouverte de la couleur du papier.
+ */
+fun EditableDoc.deleteTextBlocks(index: Int, blocks: List<TextBlock>) {
+    if (blocks.isEmpty()) return
+    writeTranslation(index, blocks.map { TranslatedParagraph(TextParagraph.of(it), "") }, "fr")
+}
+
+/**
  * Surface de dessin d'une page. Coordonnees en points, origine en BAS a gauche de la page
  * telle qu'elle s'affiche (rotation deja prise en compte).
  */

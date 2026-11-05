@@ -143,6 +143,22 @@ class DesktopTranslationTest {
     }
 
     @Test
+    fun selectedPricesAreReallyErased() = runTest {
+        val path = invoice()
+        val prices = engine.open(path).use { it.textBlocks(0) }.filter { it.text.startsWith("CHF") }
+        assertEquals(1, prices.size)
+        val out = File(dir, "sans-prix.pdf").path
+        engine.edit(path, null, out) { it.deleteTextBlocks(0, prices) }
+        val result = text(out)
+        // Le prix a disparu du fichier (ni visible, ni cherchable) ; le reste ne bouge pas.
+        assertFalse("1250" in result, result)
+        assertTrue("Facture" in result && "sans escompte." in result, result)
+        val title = engine.open(out).use { it.textBlocks(0) }.first { it.text == "Facture" }
+        val before = engine.open(path).use { it.textBlocks(0) }.first { it.text == "Facture" }
+        assertEquals(before.rect, title.rect)
+    }
+
+    @Test
     fun bidiPutsArabicInDisplayOrder() {
         // Deux mots arabes et un nombre : les mots s'affichent de droite a gauche, le nombre reste lisible.
         val visual = BidiText.visual("\u0628\u0627\u0628 12", rtl = true)

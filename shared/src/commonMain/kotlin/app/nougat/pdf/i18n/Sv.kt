@@ -355,4 +355,12 @@ TranslateSaveFailed = Det gick inte att skapa den översatta kopian: {0}
 TranslateAiLater = Gemini Nano är inte redo än: Android laddar ner den i bakgrunden. Översatt utan den den här gången.
 TranslateLanguageFailed = Det gick inte att ladda ner: {0}. Kontrollera internetanslutningen.
 TranslateStopped = Översättningen stoppades
+
+SelectHintDesktop = Ctrl + klick: flera rader · Skift + klick: ett område · Delete: radera
+SelectHintPhone = Tryck länge: välj rader att radera
+SelectedLines = {0} rad vald|{0} rader valda
+DeleteSelected = Radera
+DeletingText = Raderar texten…
+LinesDeleted = {0} rad raderad|{0} rader raderade
+ClearSelection = Avmarkera
 """

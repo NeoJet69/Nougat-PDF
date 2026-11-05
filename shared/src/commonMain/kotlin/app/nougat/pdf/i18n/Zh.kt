@@ -355,4 +355,12 @@ TranslateSaveFailed = 无法创建译本：{0}
 TranslateAiLater = Gemini Nano 尚未就绪：Android 正在后台下载。本次翻译未使用它。
 TranslateLanguageFailed = 无法下载：{0}。请检查网络连接。
 TranslateStopped = 翻译已停止
+
+SelectHintDesktop = Ctrl + 单击：多行 · Shift + 单击：一个区域 · Delete：删除
+SelectHintPhone = 长按：选择要删除的行
+SelectedLines = 已选择 {0} 行
+DeleteSelected = 删除
+DeletingText = 正在删除文字…
+LinesDeleted = 已删除 {0} 行
+ClearSelection = 取消选择
 """

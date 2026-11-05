@@ -356,4 +356,12 @@ TranslateSaveFailed = Impussibel da crear la copia translatada: {0}
 TranslateAiLater = Gemini Nano n'è anc betg pront: Android al chargia giu en il fund. Questa giada translaziun senza el.
 TranslateLanguageFailed = Impussibel da chargiar giu: {0}. Controllescha la connexiun cun l'internet.
 TranslateStopped = Translaziun fermada
+
+SelectHintDesktop = Ctrl + clic: pliras lingias · Shift + clic: ina zona · Delete: stizzar
+SelectHintPhone = Smatgar ditg: tscherner lingias da stizzar
+SelectedLines = {0} lingia tschernida|{0} lingias tschernidas
+DeleteSelected = Stizzar
+DeletingText = Stizzar il text…
+LinesDeleted = {0} lingia stizzada|{0} lingias stizzadas
+ClearSelection = Annullar la selecziun
 """

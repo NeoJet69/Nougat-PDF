@@ -108,6 +108,14 @@ private fun handleShortcut(event: KeyEvent, state: ViewerState, openDialog: () -
         return true
     }
     if (session == null) return false
+    // Lignes choisies en mode Éditer (Ctrl + clic, Maj + clic) : Suppr les efface, Echap annule.
+    if (session.selectedBlocks.isNotEmpty() && session.editingBlock == null && !session.searchOpen) {
+        when (event.key) {
+            Key.Delete, Key.Backspace -> { state.deleteSelectedText(); return true }
+            Key.Escape -> { session.clearSelection(); return true }
+            else -> Unit
+        }
+    }
     return when (event.key) {
         Key.F3 -> { if (session.hits.isNotEmpty()) session.nextHit(); true }
         Key.PageDown -> { session.nextPage(); true }
