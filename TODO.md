@@ -33,14 +33,25 @@
 - [ ] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
 - [ ] Lecture à voix haute, aussi dans la langue traduite.
 
+## Outils demandés (prochaine série)
+
+- [ ] Censurer : par mot ou expression (recherche dans le texte), ou censure intelligente qui
+      propose les noms de personnes et d'entreprises, numéros AVS et pièces d'identité, dates de
+      naissance, adresses, téléphones, e-mails, numéros de compte, de police d'assurance et de
+      dossier médical, et demande s'il y a autre chose à cacher. Tout sélectionner / tout
+      désélectionner, Annuler / Confirmer ; barres noires et texte vraiment retiré ; OCR proposé
+      d'abord pour les scans.
+- [ ] Compresser un PDF (images réduites et recompressées, plusieurs niveaux).
+- [ ] Rogner une page, et redresser un scan un peu penché.
+- [ ] Numéros de page et date (position, format, première page ou non).
+- [ ] PDF vers Markdown (titres, listes, tableaux, avec l'OCR pour les scans) et Markdown vers PDF.
+
 ## Autres idées
 
-- [ ] Caviardage automatique : IBAN, AVS, téléphones, e-mails, adresses, texte vraiment retiré.
 - [ ] Comparer deux versions d'un document.
 - [ ] Envoyer un PDF du téléphone au PC par le Wi-Fi local (QR code, sans cloud).
 - [ ] Notes de frais : tickets scannés, montant, date et TVA vers un PDF et un tableau.
 - [ ] Traduire sur Windows sans Internet.
-- [ ] Compresser un PDF.
 
 ## Release
 
