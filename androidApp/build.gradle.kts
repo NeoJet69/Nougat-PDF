@@ -53,6 +53,11 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            // Google Play : les symboles du code natif (Tesseract, ML Kit) vont dans l'AAB, pour
+            // lire les rapports de plantage dans la Play Console.
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
             signingConfig = signingConfigs.findByName("nougat") ?: signingConfigs.getByName("debug")
         }
     }
