@@ -363,4 +363,14 @@ DeleteSelected = Usuń
 DeletingText = Usuwanie tekstu…
 LinesDeleted = Usunięto {0} wiersz|Usunięto {0} wiersze|Usunięto {0} wierszy
 ClearSelection = Anuluj zaznaczenie
+
+Finalize = Sfinalizuj do wysłania
+FinalizeTitle = Sfinalizuj dokument
+FinalizeExplain = Powstaje kopia, w której każda strona staje się obrazem: żadnego tekstu, warstwy, adnotacji ani ukrytej informacji nie da się odzyskać. Idealne po zakryciu lub usunięciu informacji. Otwarty dokument się nie zmienia.
+FinalizeSearchable = Zachowaj możliwość wyszukiwania (rozpoznawane jest tylko to, co widać)
+FinalizeStart = Sfinalizuj
+Finalizing = Finalizowanie dokumentu…
+FinalizedSaved = Zapisano sfinalizowaną kopię: „{0}”
+FinalizeFailed = Nie udało się sfinalizować dokumentu: {0}
+FinalizedSuffix = final
 """

@@ -680,6 +680,58 @@ class ViewerState(
         }
     }
 
+    // ---- Finaliser pour envoyer -------------------------------------------------------------------
+
+    /** Fenetre « Finaliser le document » ouverte. */
+    var finalizeOpen by mutableStateOf(false)
+
+    /** La reconnaissance du texte peut tourner sur la copie finalisee (langues deja la). */
+    val canSearchableFinal: Boolean get() = canOcr && ocrLanguages.isNotEmpty() && ocrLanguages.all(engine::ocrLanguageReady)
+
+    /**
+     * Cree une copie ou chaque page devient une image (« Facture_finalise.pdf ») : plus rien de cache
+     * ne peut etre repris. [searchable] : le texte visible est reconnu de nouveau, pour chercher.
+     * La copie est enregistree a l'endroit choisi puis ouverte ; le document affiche ne change pas.
+     */
+    fun finalizeDocument(searchable: Boolean) {
+        finalizeOpen = false
+        scope.launch {
+            if (!commitMarks()) return@launch
+            val s = session ?: return@launch
+            val dst = "${files.tempDir}/final-${kotlin.random.Random.nextInt(1_000_000_000)}.pdf"
+            busyMessage = tr(Str.Finalizing)
+            try {
+                val languages = ocrLanguages
+                engine.edit(s.path, s.password, dst) { doc ->
+                    doc.flatten(FINAL_DPI)
+                    if (searchable && canSearchableFinal) {
+                        runCatching {
+                            doc.recognizeText(OcrOptions(languages, autoRotate = false)) { done, total ->
+                                busyMessage = tr(Str.OcrProgress, done, total)
+                                true
+                            }
+                        }
+                    }
+                }
+                busyMessage = null
+                val name = s.name.replace(Regex("(?i)\\.pdf$"), "") + "_" + tr(Str.FinalizedSuffix) + ".pdf"
+                val saved = files.saveAs(dst, name)
+                if (saved == null) {
+                    files.delete(dst)
+                    return@launch
+                }
+                toast = tr(Str.FinalizedSaved, saved.name)
+                runAfterConfirm { open(dst, saved.name, s.password, sourceRef = saved.ref, temporary = true) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                errorMessage = tr(Str.FinalizeFailed, e.message ?: e::class.simpleName)
+            } finally {
+                busyMessage = null
+            }
+        }
+    }
+
     /** Protege le PDF par mot de passe, ou retire la protection ([password] null). */
     fun setPassword(password: String?) {
         val label = tr(if (password == null) Str.RemovingPassword else Str.Protecting)
@@ -1133,6 +1185,9 @@ class ViewerState(
         const val SETTING_OCR_LANGUAGES = "ocr.languages"
         const val SETTING_OCR_AI = "ocr.ai"
         const val MAX_RECENTS = 8
+
+        /** Resolution des pages d'une copie finalisee : nette a l'ecran et a l'impression. */
+        const val FINAL_DPI = 200f
     }
 }
 

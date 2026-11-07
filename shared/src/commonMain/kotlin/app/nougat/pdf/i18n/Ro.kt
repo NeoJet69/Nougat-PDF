@@ -364,4 +364,14 @@ DeleteSelected = Șterge
 DeletingText = Se șterge textul…
 LinesDeleted = {0} rând șters|{0} rânduri șterse|{0} de rânduri șterse
 ClearSelection = Anulează selecția
+
+Finalize = Finalizează pentru trimitere
+FinalizeTitle = Finalizează documentul
+FinalizeExplain = Se creează o copie în care fiecare pagină devine o imagine: niciun text, strat, adnotare sau informație ascunsă nu mai poate fi recuperată. Ideal după ce ai acoperit sau șters informații. Documentul deschis nu se schimbă.
+FinalizeSearchable = Păstrează textul căutabil (se recunoaște doar ce se vede)
+FinalizeStart = Finalizează
+Finalizing = Se finalizează documentul…
+FinalizedSaved = Copie finalizată salvată: „{0}”
+FinalizeFailed = Documentul nu a putut fi finalizat: {0}
+FinalizedSuffix = final
 """

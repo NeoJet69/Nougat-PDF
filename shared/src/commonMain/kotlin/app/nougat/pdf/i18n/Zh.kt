@@ -363,4 +363,14 @@ DeleteSelected = 删除
 DeletingText = 正在删除文字…
 LinesDeleted = 已删除 {0} 行
 ClearSelection = 取消选择
+
+Finalize = 定稿以便发送
+FinalizeTitle = 文档定稿
+FinalizeExplain = 将创建一份副本，每页都变成图片：任何文字、图层、批注或隐藏信息都无法恢复。适合在遮盖或删除信息之后使用。打开的文档不会改变。
+FinalizeSearchable = 保留可搜索文字（只识别可见内容）
+FinalizeStart = 定稿
+Finalizing = 正在定稿…
+FinalizedSaved = 定稿副本已保存：“{0}”
+FinalizeFailed = 无法定稿：{0}
+FinalizedSuffix = final
 """

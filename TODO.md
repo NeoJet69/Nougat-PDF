@@ -41,10 +41,10 @@
       dossier médical, et demande s'il y a autre chose à cacher. Tout sélectionner / tout
       désélectionner, Annuler / Confirmer ; barres noires et texte vraiment retiré ; OCR proposé
       d'abord pour les scans.
-- [ ] Outil « Masquer » (rectangle blanc ou noir du mode Annoter) : il pose seulement un rectangle,
+- [x] Outil « Masquer » (rectangle blanc ou noir du mode Annoter) : il pose seulement un rectangle,
       le texte dessous reste copiable (Ctrl + A, copier-coller). Le faire retirer aussi le texte
       et les pixels sous le rectangle, comme « Effacer » du mode Éditer.
-- [ ] Bouton « Finaliser pour envoyer » : transformer les pages en images (PDF aplati), pour être
+- [x] Bouton « Finaliser pour envoyer » : transformer les pages en images (PDF aplati), pour être
       sûr que plus rien ne peut être repris (texte, calques, annotations, métadonnées). En option,
       garder une copie cherchable en refaisant l'OCR sur les images.
 - [ ] Compresser un PDF (images réduites et recompressées, plusieurs niveaux).

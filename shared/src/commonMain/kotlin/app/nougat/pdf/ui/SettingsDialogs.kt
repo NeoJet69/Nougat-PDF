@@ -268,6 +268,25 @@ fun OcrDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
     )
 }
 
+/** Finaliser pour envoyer : une copie dont chaque page est une image. */
+@Composable
+fun FinalizeDialog(state: app.nougat.pdf.viewer.ViewerState, onDismiss: () -> Unit) {
+    var searchable by remember { mutableStateOf(state.canSearchableFinal) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(NougatIcons.Shield, contentDescription = null) },
+        title = { Text(tr(Str.FinalizeTitle)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(tr(Str.FinalizeExplain), style = MaterialTheme.typography.bodyMedium, color = LocalNougatPalette.current.muted)
+                if (state.canSearchableFinal) CheckRow(tr(Str.FinalizeSearchable), searchable) { searchable = it }
+            }
+        },
+        confirmButton = { Button(onClick = { state.finalizeDocument(searchable) }) { Text(tr(Str.FinalizeStart)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
+    )
+}
+
 @Composable
 internal fun ChoiceRow(label: String, selected: Boolean, onClick: () -> Unit) {
     Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick), verticalAlignment = Alignment.CenterVertically) {

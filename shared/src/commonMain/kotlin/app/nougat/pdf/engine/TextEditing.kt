@@ -274,6 +274,22 @@ object TextEditPlanner {
     }
 
     /**
+     * Retire les lettres de la page dont le centre tombe dans l'un des rectangles [areas] (outil
+     * « Masquer ») ; les autres lettres, meme dans la meme ligne, ne bougent pas.
+     */
+    fun planAreaRemoval(analysis: PageTextAnalysis, areas: List<NormRect>): Map<Int, List<ContentOp>> {
+        val keys = analysis.glyphs.mapNotNull { g ->
+            val key = g.key ?: return@mapNotNull null
+            val cx = (g.box.left + g.box.right) / 2f
+            val cy = (g.box.top + g.box.bottom) / 2f
+            key.takeIf { areas.any { r -> cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom } }
+        }
+        if (keys.isEmpty()) return emptyMap()
+        // Une « ligne » par lettre : aucune lettre voisine hors du rectangle n'est emportee.
+        return planRemoval(analysis, keys.map { TextBlock(-1, "", NormRect(0f, 0f, 0f, 0f), 0f, true, listOf(it)) })
+    }
+
+    /**
      * Retire toutes les lettres des lignes [blocks] (une traduction prend leur place), en gardant
      * le reste de la page immobile. Chaque operateur touche n'est reecrit qu'une fois.
      */

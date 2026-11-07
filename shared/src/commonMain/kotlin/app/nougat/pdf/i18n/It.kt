@@ -363,4 +363,14 @@ DeleteSelected = Cancella
 DeletingText = Cancellazione del testo…
 LinesDeleted = {0} riga cancellata|{0} righe cancellate
 ClearSelection = Annulla la selezione
+
+Finalize = Finalizza per l'invio
+FinalizeTitle = Finalizza il documento
+FinalizeExplain = Viene creata una copia in cui ogni pagina diventa un'immagine: nessun testo, livello, annotazione o informazione nascosta può essere recuperato. Ideale dopo aver coperto o cancellato informazioni. Il documento aperto non cambia.
+FinalizeSearchable = Mantieni il testo ricercabile (si riconosce solo ciò che è visibile)
+FinalizeStart = Finalizza
+Finalizing = Finalizzazione del documento…
+FinalizedSaved = Copia finalizzata salvata: «{0}»
+FinalizeFailed = Impossibile finalizzare il documento: {0}
+FinalizedSuffix = finale
 """

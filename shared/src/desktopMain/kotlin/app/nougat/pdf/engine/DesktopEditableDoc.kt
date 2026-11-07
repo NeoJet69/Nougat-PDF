@@ -122,6 +122,10 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
     override fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String, eraseImages: Boolean) =
         writeTranslationWithPdfBox(doc, index, paragraphs, language, translationFonts, eraseImages)
 
+    override fun eraseUnder(index: Int, areas: List<Pair<NormRect, Int>>) = eraseUnderWithPdfBox(doc, index, areas)
+
+    override fun flatten(dpi: Float) = flattenWithPdfBox(doc, dpi)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

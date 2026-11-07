@@ -364,4 +364,14 @@ DeleteSelected = Lösche
 DeletingText = Text wird glöscht…
 LinesDeleted = {0} Ziile glöscht|{0} Ziile glöscht
 ClearSelection = Uswahl ufhebe
+
+Finalize = Zum Verschicke fertig mache
+FinalizeTitle = Dokumänt fertig mache
+FinalizeExplain = Es git e Kopie, wo jedi Siite es Bild wird: kei Text, kei Ebeni, kei Notiz und kei versteckti Information chan me meh usehole. Ideal, wänn mer öppis abdeckt oder glöscht hät. S offene Dokumänt bliibt gliich.
+FinalizeSearchable = Text durchsuechbar laa (nur was me gseht, wird erkännt)
+FinalizeStart = Fertig mache
+Finalizing = Dokumänt wird fertig gmacht…
+FinalizedSaved = Fertigi Kopie gspicheret: „{0}“
+FinalizeFailed = S Dokumänt hät nöd chöne fertig gmacht werde: {0}
+FinalizedSuffix = final
 """

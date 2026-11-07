@@ -69,6 +69,19 @@ interface EditableDoc {
      */
     fun writeTranslation(index: Int, paragraphs: List<TranslatedParagraph>, language: String, eraseImages: Boolean = false): Unit =
         throw UnsupportedOperationException("Traduction indisponible")
+
+    /**
+     * Sous les rectangles « Masquer » ([areas] : zone et couleur) de la page [index], retire vraiment
+     * ce qui est cache : les lettres du texte (elles ne se copient plus) et les pixels des images.
+     * Le rectangle lui-meme est dessine ensuite par [burn].
+     */
+    fun eraseUnder(index: Int, areas: List<Pair<NormRect, Int>>) {}
+
+    /**
+     * Finaliser pour envoyer : chaque page devient une image de [dpi] points par pouce. Plus aucun
+     * texte, calque, annotation, champ de formulaire ni information cachee ne reste dans le fichier.
+     */
+    fun flatten(dpi: Float): Unit = throw UnsupportedOperationException("Finalisation indisponible")
 }
 
 /**
@@ -212,6 +225,9 @@ private fun boundsOf(points: List<NPoint>): NormRect {
 fun EditableDoc.burn(marks: List<Mark>) {
     for ((page, pageMarks) in marks.groupBy { it.page }) {
         if (page !in 0 until pageCount) continue
+        // « Masquer » : ce qui est sous le rectangle est d'abord vraiment retire (texte, pixels).
+        val boxes = pageMarks.filterIsInstance<BoxMark>()
+        if (boxes.isNotEmpty()) eraseUnder(page, boxes.map { it.rect to it.argb })
         val g = geometry(page)
         val w = g.displayWidth
         val h = g.displayHeight

@@ -97,6 +97,11 @@ object NougatIcons {
         svgIcon("Scan", "M7,3H4v3H2V1h5V3zM22,6V1h-5v2h3v3H22zM7,21H4v-3H2v5h5V21zM20,18v3h-3v2h5v-5H20zM17,6H7v12h10V6zM19,18c0,1.1 -0.9,2 -2,2H7c-1.1,0 -2,-0.9 -2,-2V6c0,-1.1 0.9,-2 2,-2h10c1.1,0 2,0.9 2,2V18zM15,8H9v2h6V8zM15,11H9v2h6V11zM15,14H9v2h6V14z")
     }
 
+    /** Un bouclier avec une coche : finaliser pour envoyer. */
+    val Shield by lazy {
+        svgIcon("Shield", "M12,1L3,5v6c0,5.55 3.84,10.74 9,12 5.16,-1.26 9,-6.45 9,-12V5l-9,-4zM10,17l-4,-4 1.41,-1.41L10,14.17l6.59,-6.59L18,9l-8,8z")
+    }
+
     /** Un « A » et un caractere chinois : traduire. */
     val Translate by lazy {
         svgIcon("Translate", "M12.87,15.07l-2.54,-2.51 0.03,-0.03c1.74,-1.94 2.98,-4.17 3.71,-6.53L17,6L17,4h-7L10,2L8,2v2L1,4v1.99h11.17C11.5,7.92 10.44,9.75 9,11.35 8.07,10.32 7.3,9.19 6.69,8h-2c0.73,1.63 1.73,3.17 2.98,4.56l-5.09,5.02L4,19l5,-5 3.11,3.11 0.76,-2.04zM18.5,10h-2L12,22h2l1.12,-3h4.75L21,22h2l-4.5,-12zM15.88,17l1.62,-4.33L19.12,17h-3.24z")

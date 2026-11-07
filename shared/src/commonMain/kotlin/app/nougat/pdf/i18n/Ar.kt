@@ -364,4 +364,14 @@ DeleteSelected = مسح
 DeletingText = جارٍ مسح النص…
 LinesDeleted = تم مسح سطر واحد|تم مسح سطرين|تم مسح {0} أسطر|تم مسح {0} سطرًا
 ClearSelection = إلغاء التحديد
+
+Finalize = إنهاء للإرسال
+FinalizeTitle = إنهاء المستند
+FinalizeExplain = تُنشأ نسخة تتحول فيها كل صفحة إلى صورة: لا يمكن استرجاع أي نص أو طبقة أو تعليق أو معلومة مخفية. مثالي بعد إخفاء معلومات أو مسحها. لا يتغيّر المستند المفتوح.
+FinalizeSearchable = إبقاء النص قابلًا للبحث (يُتعرّف على المرئي فقط)
+FinalizeStart = إنهاء
+Finalizing = جارٍ إنهاء المستند…
+FinalizedSaved = حُفظت النسخة النهائية: «{0}»
+FinalizeFailed = تعذّر إنهاء المستند: {0}
+FinalizedSuffix = final
 """

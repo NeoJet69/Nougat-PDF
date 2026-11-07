@@ -363,4 +363,14 @@ DeleteSelected = Löschen
 DeletingText = Text wird gelöscht…
 LinesDeleted = {0} Zeile gelöscht|{0} Zeilen gelöscht
 ClearSelection = Auswahl aufheben
+
+Finalize = Zum Versenden fertigstellen
+FinalizeTitle = Dokument fertigstellen
+FinalizeExplain = Es wird eine Kopie erstellt, in der jede Seite zu einem Bild wird: Kein Text, keine Ebene, keine Anmerkung und keine versteckte Information lässt sich wiederherstellen. Ideal nach dem Abdecken oder Löschen von Informationen. Das geöffnete Dokument bleibt unverändert.
+FinalizeSearchable = Text durchsuchbar halten (nur Sichtbares wird erkannt)
+FinalizeStart = Fertigstellen
+Finalizing = Dokument wird fertiggestellt…
+FinalizedSaved = Fertige Kopie gespeichert: „{0}“
+FinalizeFailed = Das Dokument konnte nicht fertiggestellt werden: {0}
+FinalizedSuffix = final
 """

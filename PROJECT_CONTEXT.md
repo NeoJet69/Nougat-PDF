@@ -16,8 +16,11 @@ Ce que fait l'app aujourd'hui :
 - **Modifier le texte** d'un PDF au même endroit, dans la même police (mode Éditer).
 - **Effacer vraiment** des lignes choisies (Ctrl + clic, Maj + clic, appui long) : le texte est
   retiré du PDF ; sur un scan, les pixels de l'image sont repeints.
-- **Annoter** (stylo, surligneur, texte, rectangle « Masquer », gomme, couleur libre), **signer**,
+- **Annoter** (stylo, surligneur, texte, rectangle « Masquer » qui retire vraiment ce qu'il couvre,
+  gomme, couleur libre), **signer**,
   **remplir les formulaires** PDF.
+- **Finaliser pour envoyer** : copie dont chaque page est une image (plus rien de caché), avec OCR
+  facultatif pour rester cherchable.
 - **Organiser les pages** : pivoter, déplacer, supprimer, extraire, ajouter une page, un PDF, des
   images. **Créer** un PDF depuis des photos ou un document vierge.
 - **Scanner** un document avec l'appareil photo (Android, ML Kit Document Scanner).
@@ -119,7 +122,5 @@ ce qui permet « Annuler ».
 ## Limites connues
 
 - Sur Windows, la traduction passe par Claude : il faut une clé API, pas de traduction hors ligne.
-- L'outil « Masquer » du mode Annoter ne fait que poser un rectangle : le texte dessous reste
-  copiable (corrigé bientôt, voir `TODO.md`).
 - Les fonctions Android (Gemini Nano, ML Kit, scanner, copie traduite) sont compilées et testées
   par la compilation, mais peu essayées sur de vrais téléphones.

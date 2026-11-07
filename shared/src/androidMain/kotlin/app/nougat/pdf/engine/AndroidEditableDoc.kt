@@ -178,6 +178,10 @@ private class AndroidEditableDoc(
         writeTranslationAndroid(doc, src, index, paragraphs, language, eraseImages)?.let(sources::add)
     }
 
+    override fun eraseUnder(index: Int, areas: List<Pair<NormRect, Int>>) = eraseUnderAndroid(doc, index, areas)
+
+    override fun flatten(dpi: Float) = flattenAndroid(doc, src, dpi)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

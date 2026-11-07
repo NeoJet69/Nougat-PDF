@@ -363,4 +363,14 @@ DeleteSelected = Apagar
 DeletingText = A apagar o texto…
 LinesDeleted = {0} linha apagada|{0} linhas apagadas
 ClearSelection = Anular a seleção
+
+Finalize = Finalizar para enviar
+FinalizeTitle = Finalizar o documento
+FinalizeExplain = É criada uma cópia em que cada página se torna uma imagem: nenhum texto, camada, anotação ou informação oculta pode ser recuperado. Ideal depois de tapar ou apagar informações. O documento aberto não muda.
+FinalizeSearchable = Manter o texto pesquisável (só o que é visível é reconhecido)
+FinalizeStart = Finalizar
+Finalizing = A finalizar o documento…
+FinalizedSaved = Cópia finalizada guardada: “{0}”
+FinalizeFailed = Não foi possível finalizar o documento: {0}
+FinalizedSuffix = final
 """

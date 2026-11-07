@@ -364,4 +364,14 @@ DeleteSelected = Stizzar
 DeletingText = Stizzar il text…
 LinesDeleted = {0} lingia stizzada|{0} lingias stizzadas
 ClearSelection = Annullar la selecziun
+
+Finalize = Finir per trametter
+FinalizeTitle = Finir il document
+FinalizeExplain = I vegn creada ina copia, en la quala mintga pagina daventa in maletg: nagin text, nagin nivel, nagina annotaziun e nagina infurmaziun zuppada na po pli vegnir recuperada. Ideal suenter avair cuvrì u stizzà infurmaziuns. Il document avert na sa mida betg.
+FinalizeSearchable = Tegnair il text tschertgabel (mo quai che sa vesa vegn renconuschì)
+FinalizeStart = Finir
+Finalizing = Il document vegn finì…
+FinalizedSaved = Copia finida memorisada: «{0}»
+FinalizeFailed = Impussibel da finir il document: {0}
+FinalizedSuffix = final
 """

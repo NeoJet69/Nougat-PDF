@@ -364,4 +364,14 @@ DeleteSelected = Escafar
 DeletingText = Escafament del tèxte…
 LinesDeleted = {0} linha escafada|{0} linhas escafadas
 ClearSelection = Anullar la seleccion
+
+Finalize = Finalizar per mandar
+FinalizeTitle = Finalizar lo document
+FinalizeExplain = Una còpia es creada ont cada pagina ven un imatge : pus cap de tèxte, calc, anotacion ni informacion amagada pòt pas èsser represa. Ideal aprèp aver amagat o escafat d'informacions. Lo document dobèrt cambia pas.
+FinalizeSearchable = Gardar lo tèxte recercable (sonque çò que se vei es reconegut)
+FinalizeStart = Finalizar
+Finalizing = Finalizacion del document…
+FinalizedSaved = Còpia finalizada enregistrada : « {0} »
+FinalizeFailed = Impossible de finalizar lo document : {0}
+FinalizedSuffix = final
 """

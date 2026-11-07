@@ -287,7 +287,7 @@ private class PageImageFinder : com.tom_roush.pdfbox.contentstream.PDFStreamEngi
 }
 
 /** Repeint les zones [areas] dans les images de la page (scan) et remplace ces images. */
-private fun scrubPageImagesAndroid(doc: PDDocument, page: com.tom_roush.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
+internal fun scrubPageImagesAndroid(doc: PDDocument, page: com.tom_roush.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
     val finder = PageImageFinder()
     finder.processPage(page)
     val resources = page.resources ?: return

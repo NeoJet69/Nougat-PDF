@@ -364,4 +364,14 @@ DeleteSelected = Diverkañ
 DeletingText = O tiverkañ an destenn…
 LinesDeleted = {0} linenn diverket
 ClearSelection = Nullañ an dibab
+
+Finalize = Echuiñ evit kas
+FinalizeTitle = Echuiñ an teul
+FinalizeExplain = Un eilskrid a vez krouet e-lec'h ma teu pep pajenn da vezañ ur skeudenn : testenn, gwiskad, notenn pe titour kuzh ebet ne c'hallo bezañ adtapet. Mat-tre goude bezañ kuzhet pe diverket titouroù. Ne cheñch ket an teul digor.
+FinalizeSearchable = Mirout an destenn klaskus (ar pezh a weler hepken a vez anavezet)
+FinalizeStart = Echuiñ
+Finalizing = Oc'h echuiñ an teul…
+FinalizedSaved = Enrollet eo an eilskrid echu : « {0} »
+FinalizeFailed = N'eus ket bet gallet echuiñ an teul : {0}
+FinalizedSuffix = echu
 """

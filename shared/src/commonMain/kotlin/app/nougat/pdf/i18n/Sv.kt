@@ -363,4 +363,14 @@ DeleteSelected = Radera
 DeletingText = Raderar texten…
 LinesDeleted = {0} rad raderad|{0} rader raderade
 ClearSelection = Avmarkera
+
+Finalize = Slutför för att skicka
+FinalizeTitle = Slutför dokumentet
+FinalizeExplain = En kopia skapas där varje sida blir en bild: ingen text, inget lager, ingen anteckning och ingen dold information kan återställas. Perfekt efter att ha dolt eller raderat uppgifter. Det öppna dokumentet ändras inte.
+FinalizeSearchable = Behåll sökbar text (bara det som syns känns igen)
+FinalizeStart = Slutför
+Finalizing = Slutför dokumentet…
+FinalizedSaved = Slutförd kopia sparad: ”{0}”
+FinalizeFailed = Det gick inte att slutföra dokumentet: {0}
+FinalizedSuffix = slutlig
 """

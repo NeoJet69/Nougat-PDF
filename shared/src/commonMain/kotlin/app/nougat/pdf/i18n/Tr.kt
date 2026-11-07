@@ -363,4 +363,14 @@ DeleteSelected = Sil
 DeletingText = Metin siliniyor…
 LinesDeleted = {0} satır silindi
 ClearSelection = Seçimi kaldır
+
+Finalize = Göndermek için sonlandır
+FinalizeTitle = Belgeyi sonlandır
+FinalizeExplain = Her sayfanın bir görüntüye dönüştüğü bir kopya oluşturulur: hiçbir metin, katman, not veya gizli bilgi geri alınamaz. Bilgileri gizledikten veya sildikten sonra idealdir. Açık belge değişmez.
+FinalizeSearchable = Metni aranabilir tut (yalnızca görünen kısım tanınır)
+FinalizeStart = Sonlandır
+Finalizing = Belge sonlandırılıyor…
+FinalizedSaved = Sonlandırılmış kopya kaydedildi: “{0}”
+FinalizeFailed = Belge sonlandırılamadı: {0}
+FinalizedSuffix = son
 """

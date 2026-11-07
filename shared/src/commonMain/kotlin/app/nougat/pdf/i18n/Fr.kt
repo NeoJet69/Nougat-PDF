@@ -367,4 +367,14 @@ DeleteSelected = Effacer
 DeletingText = Effacement du texte…
 LinesDeleted = {0} ligne effacée|{0} lignes effacées
 ClearSelection = Annuler la sélection
+
+Finalize = Finaliser pour envoyer
+FinalizeTitle = Finaliser le document
+FinalizeExplain = Une copie est créée où chaque page devient une image : plus aucun texte, calque, annotation ni information cachée ne peut être repris. Idéal après avoir masqué ou effacé des informations. Le document ouvert ne change pas.
+FinalizeSearchable = Garder le texte cherchable (seul ce qui se voit est reconnu)
+FinalizeStart = Finaliser
+Finalizing = Finalisation du document…
+FinalizedSaved = Copie finalisée enregistrée : « {0} »
+FinalizeFailed = Impossible de finaliser le document : {0}
+FinalizedSuffix = finalise
 """

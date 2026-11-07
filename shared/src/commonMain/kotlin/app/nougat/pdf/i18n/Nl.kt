@@ -363,4 +363,14 @@ DeleteSelected = Wissen
 DeletingText = Tekst wissen…
 LinesDeleted = {0} regel gewist|{0} regels gewist
 ClearSelection = Selectie opheffen
+
+Finalize = Afronden om te versturen
+FinalizeTitle = Document afronden
+FinalizeExplain = Er wordt een kopie gemaakt waarin elke pagina een afbeelding wordt: geen tekst, laag, aantekening of verborgen informatie kan worden teruggehaald. Ideaal na het afdekken of wissen van informatie. Het geopende document verandert niet.
+FinalizeSearchable = Tekst doorzoekbaar houden (alleen wat zichtbaar is wordt herkend)
+FinalizeStart = Afronden
+Finalizing = Document afronden…
+FinalizedSaved = Afgeronde kopie opgeslagen: ‘{0}’
+FinalizeFailed = Kan het document niet afronden: {0}
+FinalizedSuffix = definitief
 """

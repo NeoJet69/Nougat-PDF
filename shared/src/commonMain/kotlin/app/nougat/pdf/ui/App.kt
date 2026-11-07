@@ -119,6 +119,7 @@ fun NougatApp(
                 if (state.licensesOpen) LicensesDialog(platform.isDesktop) { state.licensesOpen = false }
                 if (state.ocrDialog && session != null) OcrDialog(state) { state.ocrDialog = false }
                 if (state.translation.dialogOpen && session != null) TranslateDialog(state) { state.translation.dialogOpen = false }
+                if (state.finalizeOpen && session != null) FinalizeDialog(state) { state.finalizeOpen = false }
                 state.errorMessage?.let { message ->
                     AlertDialog(
                         onDismissRequest = state::dismissError,

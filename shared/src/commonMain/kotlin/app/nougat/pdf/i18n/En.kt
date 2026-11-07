@@ -363,4 +363,14 @@ DeleteSelected = Erase
 DeletingText = Erasing text…
 LinesDeleted = {0} line erased|{0} lines erased
 ClearSelection = Clear selection
+
+Finalize = Finalize for sending
+FinalizeTitle = Finalize the document
+FinalizeExplain = A copy is created where every page becomes an image: no text, layer, annotation or hidden information can be recovered. Ideal after hiding or erasing information. The open document doesn't change.
+FinalizeSearchable = Keep the text searchable (only what is visible is recognized)
+FinalizeStart = Finalize
+Finalizing = Finalizing the document…
+FinalizedSaved = Finalized copy saved: “{0}”
+FinalizeFailed = Couldn't finalize the document: {0}
+FinalizedSuffix = final
 """

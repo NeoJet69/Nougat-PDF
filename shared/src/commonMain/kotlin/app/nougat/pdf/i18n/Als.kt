@@ -364,4 +364,14 @@ DeleteSelected = Lösche
 DeletingText = Dr Text wùrd glöscht…
 LinesDeleted = {0} Zill glöscht|{0} Zille glöscht
 ClearSelection = D Üssuech ùffhewe
+
+Finalize = Züm Verschìcke fertig màche
+FinalizeTitle = S Dokument fertig màche
+FinalizeExplain = Es gìtt e Kopie, wo jedi Sitt e Bìld wùrd: kenn Text, kenn Ebene, kenn Notiz ùn kenn versteckti Information kànn me meh rüsshole. Ideal, wenn mer ebbs abgedeckt odder glöscht hàt. S offene Dokument bliebt glich.
+FinalizeSearchable = Dr Text durchsüechbar lonn (nùr wàs me sieht, wùrd erkännt)
+FinalizeStart = Fertig màche
+Finalizing = S Dokument wùrd fertig gmàcht…
+FinalizedSaved = Fertigi Kopie gspichert: „{0}“
+FinalizeFailed = S Dokument hàt nìt kenne fertig gmàcht wäre: {0}
+FinalizedSuffix = final
 """

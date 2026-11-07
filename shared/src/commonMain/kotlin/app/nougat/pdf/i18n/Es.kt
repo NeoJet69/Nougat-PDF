@@ -363,4 +363,14 @@ DeleteSelected = Borrar
 DeletingText = Borrando el texto…
 LinesDeleted = {0} línea borrada|{0} líneas borradas
 ClearSelection = Quitar la selección
+
+Finalize = Finalizar para enviar
+FinalizeTitle = Finalizar el documento
+FinalizeExplain = Se crea una copia en la que cada página se convierte en una imagen: ningún texto, capa, anotación ni información oculta se puede recuperar. Ideal tras tapar o borrar información. El documento abierto no cambia.
+FinalizeSearchable = Mantener el texto buscable (solo se reconoce lo visible)
+FinalizeStart = Finalizar
+Finalizing = Finalizando el documento…
+FinalizedSaved = Copia finalizada guardada: «{0}»
+FinalizeFailed = No se pudo finalizar el documento: {0}
+FinalizedSuffix = final
 """

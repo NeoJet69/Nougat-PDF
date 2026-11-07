@@ -250,7 +250,7 @@ private class PageImageFinder : org.apache.pdfbox.contentstream.PDFStreamEngine(
 }
 
 /** Repeint les zones [areas] dans les images de la page (scan) et remplace ces images. */
-private fun scrubPageImages(doc: PDDocument, page: org.apache.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
+internal fun scrubPageImages(doc: PDDocument, page: org.apache.pdfbox.pdmodel.PDPage, areas: List<ScrubArea>) {
     val finder = PageImageFinder()
     finder.processPage(page)
     val resources = page.resources ?: return

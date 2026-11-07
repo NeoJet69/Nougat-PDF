@@ -364,4 +364,14 @@ DeleteSelected = Sguassà
 DeletingText = Sguassamentu di u testu…
 LinesDeleted = {0} linea sguassata|{0} linee sguassate
 ClearSelection = Annullà a selezzione
+
+Finalize = Finalizà per mandà
+FinalizeTitle = Finalizà u ducumentu
+FinalizeExplain = Una copia hè creata induve ogni pagina diventa una maghjina : nisun testu, stratu, annutazione nè infurmazione piattata ùn pò più esse ripresa. Ideale dopu avè piattatu o sguassatu infurmazioni. U ducumentu apertu ùn cambia micca.
+FinalizeSearchable = Tene u testu circhevule (solu ciò chì si vede hè ricunnisciutu)
+FinalizeStart = Finalizà
+Finalizing = Finalizazione di u ducumentu…
+FinalizedSaved = Copia finalizata arregistrata : « {0} »
+FinalizeFailed = Impussibule di finalizà u ducumentu : {0}
+FinalizedSuffix = finale
 """
