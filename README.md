@@ -199,6 +199,10 @@ version (signée avec la clé de test), puis les mises à jour s'installeront no
 
 ## Pour les développeurs
 
+Le contexte du projet est dans [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md), les consignes pour les
+agents de code (Codex, Claude Code) dans [`AGENTS.md`](AGENTS.md), la liste des choses à faire dans
+[`TODO.md`](TODO.md).
+
 Kotlin + Compose Multiplatform. Le moteur PDF est [Apache PDFBox](https://pdfbox.apache.org/) sur
 ordinateur, `PdfRenderer` d'Android + [PdfBox-Android](https://github.com/TomRoush/PdfBox-Android)
 sur téléphone. L'OCR utilise [Tesseract](https://github.com/tesseract-ocr/tesseract) 5 (via
