@@ -33,6 +33,14 @@ Ce que fait l'app aujourd'hui :
   dans la police la plus ressemblante.
 - **Traduire** un document en gardant sa mise en page (affichage par-dessus les pages, ou copie
   traduite). Android : ML Kit Translation sur le téléphone (+ Gemini Nano). Windows : Claude.
+- **QR-facture suisse** : lire le code QR d'une facture (montant, compte, référence à copier) et
+  ajouter la section paiement (récépissé + code QR) à un devis ou une facture (ZXing).
+- **Métré sur plan** : échelle lue sur le plan, choisie ou étalonnée ; longueurs et surfaces.
+- **Ce que je dois faire** : résumé d'une lettre et choses à faire avec les dates, vers le
+  calendrier (Gemini Nano, Claude, ou seulement les dates sans IA).
+- **Lire à voix haute** (synthèse vocale d'Android, voix de Windows), aussi la traduction.
+- **Remplir un formulaire papier** scanné : champs repérés dans le texte, profil sur l'appareil.
+- **Markdown** : exporter le texte d'un PDF en Markdown, créer un PDF depuis un fichier `.md`.
 - **Assistant Claude** (facultatif, avec la clé API Anthropic de l'utilisateur).
 - **24 langues d'interface** : 16 langues et 8 dialectes (suisse allemand, romanche, québécois,
   alsacien, occitan, breton, corse… et le « Miaou »), dont l'arabe de droite à gauche.
@@ -59,10 +67,19 @@ shared/                     le cœur commun (bibliothèque Kotlin Multiplatform)
       TextEditing.kt          modification du texte : groupTextBlocks, TextEditPlanner
       Translation.kt          paragraphes, mise en page des traductions, couleurs, arabe lié
       Ocr.kt, Forms.kt, TextSearch.kt
+      Redaction.kt            censure : détection des informations sensibles
+      PageStamp.kt            numéros de page et date ; CompressLevel
+      Markdown.kt             PDF vers Markdown, Markdown vers PDF
+      SwissQrBill.kt          QR-facture : lire, contrôler, dessiner la section paiement
+      Measure.kt              métré : longueurs, surfaces, échelle
+      LetterTasks.kt          « Ce que je dois faire » : réponse de l'IA, dates d'un texte
+      Speech.kt               lecture à voix haute (interface) et devinette de la langue
+      PaperForm.kt            champs d'un formulaire papier et profil
     viewer/                 état de l'écran (pas d'interface ici)
       ViewerState.kt          état global : document ouvert, modifications, enregistrement, OCR
       DocumentSession.kt      un document ouvert : pages, zoom, recherche, sélection
       TranslationState.kt     la traduction affichée, page par page
+      CensorState, QrBillState, MeasureState, TodoState, ReadAloudState, PaperFormState
       EditTools.kt, PlatformFiles.kt
     ui/                     écrans Compose (ViewerScreen, HomeScreen, EditOverlay, dialogues…)
     i18n/                   textes de l'app : une table par langue (Fr.kt, En.kt…) + Str.kt
@@ -116,7 +133,9 @@ ce qui permet « Annuler ».
 
 - Dernière release publique : **v1.0.55** (scanner, couleur libre, OCR + Gemini Nano).
 - Sur la branche de travail de Claude Code, pas encore en release : traducteur, effacement de
-  lignes (y compris sur les scans), symboles natifs dans l'AAB, captures pour Google Play.
+  lignes (y compris sur les scans), Masquer qui efface vraiment, Finaliser, Censurer, outils de
+  pages, Markdown, QR-facture, métré, « Ce que je dois faire », lecture à voix haute, formulaire
+  papier, « Signaler » une réponse de Claude, symboles natifs dans l'AAB, captures Google Play.
 - **Google Play** : compte créé, signature (Play App Signing + clé d'envoi) en place, premier AAB
   accepté (version 64) en test fermé ; il faut 12 testeurs pendant 14 jours avant la publication.
 - Pages légales : `https://artisango.ch/nougatpdf/terms-conditions`, `…/privacy-policy`,
@@ -125,5 +144,9 @@ ce qui permet « Annuler ».
 ## Limites connues
 
 - Sur Windows, la traduction passe par Claude : il faut une clé API, pas de traduction hors ligne.
-- Les fonctions Android (Gemini Nano, ML Kit, scanner, copie traduite) sont compilées et testées
-  par la compilation, mais peu essayées sur de vrais téléphones.
+- Les fonctions Android (Gemini Nano, ML Kit, scanner, copie traduite, synthèse vocale, agenda)
+  sont compilées et testées par la compilation, mais peu essayées sur de vrais téléphones.
+- La lecture à voix haute sur Windows passe par PowerShell (System.Speech) : seules les voix SAPI
+  installées sont vues ; elle n'est pas testée par la CI.
+- Le formulaire papier ne repère que les champs annoncés par du texte (libellé + traits, points ou
+  deux-points) ; pas encore les cases à cocher ni les cadres dessinés.
