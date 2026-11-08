@@ -52,6 +52,22 @@
 - [x] Numéros de page et date (position, format, première page ou non).
 - [x] PDF vers Markdown (titres, listes, tableaux, avec l'OCR pour les scans) et Markdown vers PDF.
 
+## Retours de Dylan après la 1.0.79 (à faire plus tard)
+
+- [ ] Échange par Wi-Fi : la page ouverte par le QR code affiche « des trucs bizarres » (peut-être
+      le VPN du téléphone ou du PC ; réessayer sans). Pas besoin de Nougat sur le téléphone : vérifier
+      le message d'erreur exact, ajouter dans la fenêtre une aide « VPN ou Wi-Fi invité ».
+- [ ] Censurer sur les scans : le texte est bien trouvé, mais les barres ne cachent pas bien
+      (placement ou taille des barres sur l'image à revoir).
+- [ ] Sélectionner du texte en mode Lire, à la souris ou au doigt, pour le copier directement.
+- [ ] Déplacer (et redimensionner) les barres noires de censure, les rectangles Masquer et les
+      annotations après les avoir posés.
+- [ ] Barre du bas plus claire : regrouper les outils au lieu du menu ⋮ (Censurer, Remplir un
+      formulaire papier…), et dans Éditer faire apparaître les outils de pages (Compresser, Numéros
+      de page, Rogner, Redresser), comme Annoter montre ses outils.
+- [ ] Rogner à la main (cadre à tirer à la souris ou au doigt), en plus du rognage automatique.
+- [ ] Redresser à la main (faire tourner la page à la souris ou au doigt) si l'automatique se trompe.
+
 ## Autres idées
 
 - [ ] Comparer deux versions d'un document.
