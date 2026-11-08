@@ -608,4 +608,6 @@ TransferPageSending = Sending {0}…
 TransferPageSent = {0} arrived on the computer.
 TransferPageFailed = {0} could not be sent.
 TransferPageGet = Download the open document: {0}
+
+TransferTrouble = Not working? Some phones block the local network: VPN, Advanced Protection, "Always use secure connections" in Chrome, guest Wi-Fi. Simple test: if the phone cannot open the router page (often 192.168.0.1), the phone is blocking.
 """

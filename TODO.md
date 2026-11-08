@@ -54,7 +54,9 @@
 
 ## Retours de Dylan après la 1.0.79 (à faire plus tard)
 
-- [ ] Échange par Wi-Fi : le téléphone trouve bien l'adresse (192.168.0.39:54193) mais Chrome dit
+- [x] Échange par Wi-Fi, cause trouvée : le Pixel 9 Pro de Dylan bloque le réseau local (sécurités
+      du téléphone) ; avec un OnePlus, la page marche. Aide ajoutée dans la fenêtre.
+- [ ] Échange par Wi-Fi (suite) : le téléphone trouve bien l'adresse (192.168.0.39:54193) mais Chrome dit
       « Ce site est inaccessible, ERR_TOO_MANY_RETRIES » : la connexion est bloquée. Causes probables :
       pare-feu Windows (accès refusé ou réseau réglé en « Public ») ou VPN sur le téléphone. À faire :
       aide dans la fenêtre (pare-feu, réseau privé, VPN, Wi-Fi invité), port fixe pour une règle de

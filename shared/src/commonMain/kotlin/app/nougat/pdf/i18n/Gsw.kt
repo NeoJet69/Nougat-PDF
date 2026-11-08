@@ -609,4 +609,6 @@ TransferPageSending = {0} wird gschickt…
 TransferPageSent = {0} isch uf em Computer aacho.
 TransferPageFailed = {0} het nöd chöne gschickt wärde.
 TransferPageGet = Offes Dokumänt abelade: {0}
+
+TransferTrouble = Gaht's nöd? Es paar Handys sperred s lokale Netz: VPN, Erwiiterete Schutz, „Immer sicheri Verbindige bruuche“ in Chrome, Gascht-WLAN. Eifache Test: Wänn s Handy d Siite vom Router nöd uufmacht (oft 192.168.0.1), blockiert s Handy.
 """

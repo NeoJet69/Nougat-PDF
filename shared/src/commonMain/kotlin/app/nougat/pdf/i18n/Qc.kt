@@ -609,4 +609,6 @@ TransferPageSending = Envoi de {0}…
 TransferPageSent = {0} est arrivé sur l'ordinateur.
 TransferPageFailed = {0} n'a pas pu être envoyé.
 TransferPageGet = Télécharger le document ouvert : {0}
+
+TransferTrouble = Ça ne marche pas ? Certains téléphones bloquent le réseau local : VPN, « Protection avancée », « Toujours utiliser des connexions sécurisées » dans Chrome, Wi-Fi invité. Essai simple : si le téléphone n'ouvre pas la page de la box (souvent 192.168.0.1), c'est lui qui bloque.
 """

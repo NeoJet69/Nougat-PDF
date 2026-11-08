@@ -608,4 +608,6 @@ TransferPageSending = {0} wird gesendet…
 TransferPageSent = {0} ist auf dem Computer angekommen.
 TransferPageFailed = {0} konnte nicht gesendet werden.
 TransferPageGet = Geöffnetes Dokument herunterladen: {0}
+
+TransferTrouble = Klappt es nicht? Manche Handys sperren das lokale Netz: VPN, Erweiterter Schutz, „Immer sichere Verbindungen verwenden“ in Chrome, Gast-WLAN. Einfacher Test: Öffnet das Handy die Seite des Routers nicht (oft 192.168.0.1), blockiert das Handy.
 """

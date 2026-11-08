@@ -609,4 +609,6 @@ TransferPageSending = O kas {0}…
 TransferPageSent = Erruet eo {0} war an urzhiataer.
 TransferPageFailed = N'eus ket bet gallet kas {0}.
 TransferPageGet = Pellgargañ an teul digor : {0}
+
+TransferTrouble = Ne ya ket en-dro ? Pellgomzoù zo a stank ar rouedad lec'hel : VPN, Gwarez araokaet, « Implijout kevreadennoù suraet atav » e Chrome, Wi-Fi gouvidi. Taol-arnod aes : ma ne zigor ket ar pellgomz pajenn ar voest (alies 192.168.0.1), eñ eo a stank.
 """

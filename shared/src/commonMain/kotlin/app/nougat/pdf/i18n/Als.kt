@@ -609,4 +609,6 @@ TransferPageSending = {0} wurd gschickt…
 TransferPageSent = {0} isch uf em Computer aakumme.
 TransferPageFailed = {0} het nit kenne gschickt wäre.
 TransferPageGet = S'offeni Dokument runterlade: {0}
+
+TransferTrouble = Geht's nit? Manchi Handys sperre s'lokale Netz: VPN, Erwiterter Schutz, „Immer sicheri Verbindunge bruche“ in Chrome, Gascht-WLAN. Eifacher Test: Wenn s'Handy d'Sitt vum Router nit ufmacht (oft 192.168.0.1), blockiert s'Handy.
 """

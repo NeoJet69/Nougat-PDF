@@ -609,4 +609,6 @@ TransferPageSending = Mandata di {0}…
 TransferPageSent = {0} hè ghjuntu nant'à l'urdinatore.
 TransferPageFailed = {0} ùn hè micca statu mandatu.
 TransferPageGet = Scaricà u documentu apertu : {0}
+
+TransferTrouble = Ùn funziona micca ? Certi telefoni bloccanu a reta lucale : VPN, Prutezzione avanzata, « Aduprà sempre cunnessione sicure » in Chrome, Wi-Fi invitati. Prova simplice : s'è u telefonu ùn apre micca a pagina di a scatula (spessu 192.168.0.1), hè ellu chì blocca.
 """

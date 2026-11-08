@@ -608,4 +608,6 @@ TransferPageSending = 正在发送 {0}…
 TransferPageSent = {0} 已传到电脑。
 TransferPageFailed = {0} 发送失败。
 TransferPageGet = 下载当前打开的文档：{0}
+
+TransferTrouble = 无法使用？有些手机会阻止局域网：VPN、高级保护、Chrome 中的“一律使用安全连接”、访客 Wi-Fi。简单测试：如果手机打不开路由器页面（通常是 192.168.0.1），就是手机在阻止。
 """

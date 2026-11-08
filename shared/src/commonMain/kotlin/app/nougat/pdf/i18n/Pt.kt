@@ -608,4 +608,6 @@ TransferPageSending = A enviar {0}…
 TransferPageSent = {0} chegou ao computador.
 TransferPageFailed = Não foi possível enviar {0}.
 TransferPageGet = Transferir o documento aberto: {0}
+
+TransferTrouble = Não funciona? Alguns telemóveis bloqueiam a rede local: VPN, Proteção avançada, «Usar sempre ligações seguras» no Chrome, Wi-Fi de convidados. Teste simples: se o telemóvel não abrir a página do router (muitas vezes 192.168.0.1), é ele que bloqueia.
 """

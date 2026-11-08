@@ -608,4 +608,6 @@ TransferPageSending = {0} gönderiliyor…
 TransferPageSent = {0} bilgisayara ulaştı.
 TransferPageFailed = {0} gönderilemedi.
 TransferPageGet = Açık belgeyi indir: {0}
+
+TransferTrouble = Çalışmıyor mu? Bazı telefonlar yerel ağı engeller: VPN, Gelişmiş Koruma, Chrome'da "Her zaman güvenli bağlantı kullan", misafir Wi-Fi. Basit test: telefon modem sayfasını (çoğunlukla 192.168.0.1) açamıyorsa engelleyen telefondur.
 """

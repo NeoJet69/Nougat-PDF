@@ -608,4 +608,6 @@ TransferPageSending = Skickar {0}…
 TransferPageSent = {0} har kommit fram till datorn.
 TransferPageFailed = {0} kunde inte skickas.
 TransferPageGet = Ladda ner det öppna dokumentet: {0}
+
+TransferTrouble = Fungerar det inte? Vissa telefoner blockerar det lokala nätverket: VPN, Avancerat skydd, ”Använd alltid säkra anslutningar” i Chrome, gäst-wifi. Enkelt test: om telefonen inte kan öppna routerns sida (ofta 192.168.0.1) är det telefonen som blockerar.
 """

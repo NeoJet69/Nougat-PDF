@@ -608,4 +608,6 @@ TransferPageSending = {0} wordt verstuurd…
 TransferPageSent = {0} is aangekomen op de computer.
 TransferPageFailed = {0} kon niet worden verstuurd.
 TransferPageGet = Geopend document downloaden: {0}
+
+TransferTrouble = Werkt het niet? Sommige telefoons blokkeren het lokale netwerk: vpn, Geavanceerde bescherming, ‘Altijd beveiligde verbindingen gebruiken’ in Chrome, gastwifi. Eenvoudige test: opent de telefoon de pagina van de router niet (vaak 192.168.0.1), dan blokkeert de telefoon.
 """

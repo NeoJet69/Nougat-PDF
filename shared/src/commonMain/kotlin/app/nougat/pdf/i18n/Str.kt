@@ -97,5 +97,5 @@ enum class Str {
     ReportByEmail, Transfer, TransferTitle, TransferHow, TransferFirewall, TransferNoNetwork,
     TransferReceived, TransferWaiting, TransferOpen, TransferSavedIn, TransferHome, TransferHomeHint,
     TransferPhoneDocument, TransferImagesToPdf, TransferPageTitle, TransferPageIntro, TransferPageChoose, TransferPageSending,
-    TransferPageSent, TransferPageFailed, TransferPageGet,
+    TransferPageSent, TransferPageFailed, TransferPageGet, TransferTrouble,
 }

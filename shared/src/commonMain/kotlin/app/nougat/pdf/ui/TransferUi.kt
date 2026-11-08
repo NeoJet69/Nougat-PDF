@@ -57,6 +57,7 @@ fun TransferDialog(state: ViewerState) {
                     }
                     if (state.session != null) Text(tr(Str.TransferPhoneDocument), style = MaterialTheme.typography.bodySmall, color = muted)
                     Text(tr(Str.TransferFirewall), style = MaterialTheme.typography.bodySmall, color = muted)
+                    Text(tr(Str.TransferTrouble), style = MaterialTheme.typography.bodySmall, color = muted)
 
                     Text(tr(Str.TransferReceived), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                     if (t.received.isEmpty()) {
