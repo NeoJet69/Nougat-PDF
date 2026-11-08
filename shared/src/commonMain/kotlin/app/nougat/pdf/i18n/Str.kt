@@ -60,5 +60,10 @@ enum class Str {
     TranslateAiLater, TranslateLanguageFailed, TranslateStopped, SelectHintDesktop, SelectHintPhone, SelectedLines,
     DeleteSelected, DeletingText, LinesDeleted, ClearSelection, Finalize, FinalizeTitle,
     FinalizeExplain, FinalizeSearchable, FinalizeStart, Finalizing, FinalizedSaved, FinalizeFailed,
-    FinalizedSuffix,
+    FinalizedSuffix, Censor, CensorTitle, CensorExplain, CensorWords, CensorWordsHint,
+    CensorSmart, KindPerson, KindCompany, KindIdNumber, KindBirthDate, KindAddress,
+    KindPhone, KindEmail, KindAccount, KindInsurance, KindMedical, KindCustom,
+    CensorAi, CensorOcrNote, CensorSearch, CensorSearching, CensorFound, CensorChosen,
+    CensorAll, CensorNone, CensorConfirm, CensorHint, CensorNothing, Censoring,
+    CensorDone, CensorAiFailed,
 }

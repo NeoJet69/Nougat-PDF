@@ -79,7 +79,7 @@ object TextSearch {
     }
 
     /** Regroupe les cases des lettres en un rectangle par ligne. */
-    private fun mergeByLine(boxes: List<NormRect?>): List<NormRect> {
+    internal fun mergeByLine(boxes: List<NormRect?>): List<NormRect> {
         val lines = ArrayList<NormRect>()
         var current: NormRect? = null
         for (b in boxes) {

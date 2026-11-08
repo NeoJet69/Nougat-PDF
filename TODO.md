@@ -35,7 +35,7 @@
 
 ## Outils demandés (prochaine série)
 
-- [ ] Censurer : par mot ou expression (recherche dans le texte), ou censure intelligente qui
+- [x] Censurer : par mot ou expression (recherche dans le texte), ou censure intelligente qui
       propose les noms de personnes et d'entreprises, numéros AVS et pièces d'identité, dates de
       naissance, adresses, téléphones, e-mails, numéros de compte, de police d'assurance et de
       dossier médical, et demande s'il y a autre chose à cacher. Tout sélectionner / tout

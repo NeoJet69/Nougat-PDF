@@ -60,6 +60,33 @@ class DesktopRedactionTest {
     }
 
     @Test
+    fun censoredItemsAreGoneFromTheFile() = runTest {
+        val file = File(dir, "lettre.pdf")
+        PDDocument().use { doc ->
+            val page = PDPage(PDRectangle.A4)
+            doc.addPage(page)
+            PDPageContentStream(doc, page).use { cs ->
+                var y = 720f
+                for (line in listOf("Madame Marie Nougat", "Tel. +41 79 123 45 67", "marie.nougat@example.ch", "Objet : votre demande")) {
+                    cs.beginText(); cs.setFont(helvetica, 12f); cs.newLineAtOffset(72f, y); cs.showText(line); cs.endText()
+                    y -= 18f
+                }
+            }
+            doc.save(file)
+        }
+        val pageText = engine.open(file.path).use { it.pageText(0) }
+        val text = SensitiveData.linedText(pageText)
+        val findings = SensitiveData.detect(text, SensitiveKind.smart.toSet())
+        assertEquals(setOf("Marie Nougat", "+41 79 123 45 67", "marie.nougat@example.ch"), findings.map { text.substring(it.start, it.end) }.toSet())
+        val boxes = findings.flatMap { f -> SensitiveData.rects(pageText, f.start, f.end).map { r -> BoxMark(0, NormRect(r.left - 0.002f, r.top - 0.001f, r.right + 0.002f, r.bottom + 0.001f), 0xFF000000.toInt()) } }
+        val out = File(dir, "lettre-censuree.pdf").path
+        engine.edit(file.path, null, out) { it.burn(boxes) }
+        val result = text(out)
+        assertFalse("Nougat" in result || "123 45" in result || "example.ch" in result, result)
+        assertTrue("Madame" in result && "Objet : votre demande" in result, result)
+    }
+
+    @Test
     fun finalizedCopyHasNoTextLeft() = runTest {
         val path = sample()
         val out = File(dir, "finalise.pdf").path

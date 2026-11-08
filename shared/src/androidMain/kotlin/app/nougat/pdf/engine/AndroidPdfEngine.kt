@@ -48,6 +48,9 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
 
     override val deviceTranslator: DeviceTranslator by lazy { MlKitTranslator() }
 
+    override suspend fun deviceFindNames(text: String): List<Pair<SensitiveKind, String>>? =
+        if (GeminiNano.status() == DeviceAiStatus.Available) GeminiNano.findNames(text) else null
+
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val file = File(path)
         try {

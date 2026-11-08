@@ -141,6 +141,10 @@ class CaptureTest {
             val session = state.session ?: error("Pas de document")
             runBlocking { session.textBlocks(0) }.filter { it.text.first().isDigit() }.forEach(session::toggleSelection)
         }
+        // Censure : les informations trouvees dans la facture, a verifier avant de confirmer.
+        shot("37-censure", 1440, 900, 1f, desktop, withDocument = true, until = { it.censor.reviewing }) {
+            it.startCensorSearch(app.nougat.pdf.engine.SensitiveKind.smart.toSet(), "", useAi = false)
+        }
         // Fiche Google Play en anglais : les memes ecrans, l'app en anglais.
         shot("30-en-phone-home", 412, 892, 2f, phone, language = "en")
         shot("31-en-phone-edit", 412, 892, 2f, phone, withDocument = true, language = "en") { state ->

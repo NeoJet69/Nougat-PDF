@@ -43,6 +43,9 @@ import app.nougat.pdf.engine.defaultOcrLanguages
 import app.nougat.pdf.engine.DeviceAiStatus
 import app.nougat.pdf.engine.OCR_LANGUAGES
 import app.nougat.pdf.engine.deleteTextBlocks
+import app.nougat.pdf.engine.SensitiveKind
+import app.nougat.pdf.engine.BoxMark
+import app.nougat.pdf.engine.NormRect
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -352,6 +355,7 @@ class ViewerState(
                 savedPath = if (isNew) null else path
                 if (temporary) temps.add(path)
                 translation.stop()
+                censor.stop()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -425,6 +429,7 @@ class ViewerState(
             pagesOpen -> pagesOpen = false
             s?.searchOpen == true -> s.closeSearch()
             s?.selectedBlocks?.isNotEmpty() == true -> s.clearSelection()
+            censor.reviewing -> censor.stop()
             tools.editing -> tools.enter(DockMode.Read)
             translation.active -> translation.stop()
             s != null -> runAfterConfirm(::closeDocument)
@@ -458,6 +463,7 @@ class ViewerState(
         session = null
         pagesOpen = false
         translation.stop()
+        censor.stop()
     }
 
     private fun closeCurrent() {
@@ -551,6 +557,8 @@ class ViewerState(
         pageSelection = pageSelection.filter { it < doc.pageCount }.toSet()
         session = fresh
         translation.documentChanged(fresh)
+        // Les trouvailles de la censure visent l'ancienne version des pages.
+        censor.stop()
     }
 
     /** Annule la derniere annotation, ou sinon la derniere modification du document. */
@@ -677,6 +685,65 @@ class ViewerState(
                 for ((page, blocks) in selected.groupBy { it.page }) doc.deleteTextBlocks(page, blocks)
             }
             if (ok) toast = trn(Str.LinesDeleted, selected.size)
+        }
+    }
+
+    // ---- Censurer ---------------------------------------------------------------------------------
+
+    /** La censure du document : ce qu'il faut chercher, puis les trouvailles a verifier. */
+    val censor = CensorState(
+        engine, assistantEngine, files,
+        claude = { apiKey.takeIf { it.isNotBlank() }?.let { AssistantSettings(it, assistantModel) } },
+    )
+
+    /** Cherche ce qu'il faut cacher ; les trouvailles s'affichent ensuite sur les pages. */
+    fun startCensorSearch(kinds: Set<SensitiveKind>, words: String, useAi: Boolean) {
+        val s = session ?: return
+        censor.choose(kinds, words, useAi)
+        censor.dialogOpen = false
+        translation.stop()
+        tools.enter(DockMode.Read)
+        scope.launch {
+            var stop = false
+            busyCancel = { stop = true }
+            busyMessage = tr(Str.CensorSearching, 1, s.pageCount)
+            try {
+                var aiProblem: String? = null
+                val count = censor.search(s, { done, total ->
+                    busyMessage = tr(Str.CensorSearching, (done + 1).coerceAtMost(total), total)
+                    !stop
+                }) { aiProblem = it }
+                toast = when {
+                    count == null -> tr(Str.Stopped)
+                    aiProblem != null -> tr(Str.CensorAiFailed, aiProblem)
+                    count == 0 -> tr(Str.CensorNothing)
+                    else -> trn(Str.CensorFound, count)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                errorMessage = e.message ?: tr(Str.UnknownError)
+            } finally {
+                busyMessage = null
+                busyCancel = null
+            }
+        }
+    }
+
+    /**
+     * Confirme la censure : chaque trouvaille choisie est recouverte d'une barre noire et son texte
+     * est retire du PDF (voir [EditableDoc.eraseUnder]). « Annuler » la remet.
+     */
+    fun applyCensor() {
+        val s = session ?: return
+        val chosen = censor.findings.filter { it.selected }
+        censor.stop()
+        if (chosen.isEmpty()) return
+        val boxes = chosen.flatMap { f ->
+            f.rects.map { r -> BoxMark(f.page, NormRect(r.left - 0.002f, r.top - 0.001f, r.right + 0.002f, r.bottom + 0.001f), CENSOR_BLACK) }
+        }
+        scope.launch {
+            if (editNow(tr(Str.Censoring), s.password) { it.burn(boxes) }) toast = trn(Str.CensorDone, chosen.size)
         }
     }
 
@@ -1185,6 +1252,9 @@ class ViewerState(
         const val SETTING_OCR_LANGUAGES = "ocr.languages"
         const val SETTING_OCR_AI = "ocr.ai"
         const val MAX_RECENTS = 8
+
+        /** La barre de la censure. */
+        const val CENSOR_BLACK = 0xFF000000.toInt()
 
         /** Resolution des pages d'une copie finalisee : nette a l'ecran et a l'impression. */
         const val FINAL_DPI = 200f

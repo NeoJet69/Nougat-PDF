@@ -128,6 +128,39 @@ internal object GeminiNano {
         return answer
     }
 
+    /** Censure : les noms de personnes et d'entreprises de [text], par morceaux de 2500 caracteres. */
+    suspend fun findNames(text: String): List<Pair<SensitiveKind, String>> {
+        val result = ArrayList<Pair<SensitiveKind, String>>()
+        for (chunk in text.chunked(2500)) {
+            val prompt = "List every person name and every company or organization name in the text below. " +
+                "Answer one per line, as P: name for a person or C: name for a company, copied exactly as in the text. " +
+                "If there is none, answer NONE.\n\nText:\n" + chunk
+            val answer = runCatching {
+                withTimeoutOrNull(20_000) {
+                    client().generateContent(
+                        generateContentRequest(TextPart(prompt)) {
+                            temperature = 0f
+                            topK = 1
+                            maxOutputTokens = 256
+                        },
+                    ).candidates.firstOrNull()?.text
+                }
+            }.getOrNull() ?: continue
+            for (line in answer.lines()) {
+                val t = line.trim().removePrefix("-").trim()
+                val kind = when {
+                    t.startsWith("P:", ignoreCase = true) -> SensitiveKind.Person
+                    t.startsWith("C:", ignoreCase = true) -> SensitiveKind.Company
+                    else -> continue
+                }
+                val name = t.substring(2).trim().trim('"')
+                // Seulement ce qui est vraiment dans le texte (le modele peut inventer).
+                if (name.length >= 3 && name in chunk) result.add(kind to name)
+            }
+        }
+        return result
+    }
+
     private val LANGUAGE_NAMES = mapOf(
         "fra" to "French", "eng" to "English", "deu" to "German", "ita" to "Italian", "spa" to "Spanish",
         "por" to "Portuguese", "nld" to "Dutch", "pol" to "Polish", "tur" to "Turkish", "rus" to "Russian",

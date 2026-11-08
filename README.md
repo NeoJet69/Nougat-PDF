@@ -83,6 +83,23 @@ relecture qui change un chiffre est refusée). On peut aussi choisir **Claude** 
 qualité. **Sur Windows** : la traduction passe par **Claude**, avec votre clé API Anthropic (le
 texte est alors envoyé à Anthropic).
 
+## Cacher des informations pour de bon
+
+Dans beaucoup de lecteurs PDF, un rectangle noir ne fait que cacher : Ctrl + A puis copier-coller
+fait réapparaître le texte. Dans Nougat, ce qui est caché est vraiment retiré du fichier.
+
+- **Effacer** (mode Éditer) : Ctrl + clic pour choisir plusieurs lignes, Maj + clic pour toute une
+  zone (une colonne de prix), appui long sur téléphone, puis Suppr ou « Effacer ».
+- **Masquer** (mode Annoter) : le rectangle retire aussi le texte et les pixels qu'il couvre.
+- **Censurer** (menu ⋮) : par mots choisis, ou censure intelligente qui repère les noms de
+  personnes et d'entreprises, n° AVS et pièces d'identité, dates de naissance, adresses,
+  téléphones, e-mails, n° de compte et IBAN, n° de police d'assurance et de dossier médical
+  (l'IA, Claude ou Gemini Nano, peut aider pour les noms). On vérifie les trouvailles sur les
+  pages (Tout, Aucun, toucher pour garder ou retirer), puis des barres noires les remplacent.
+- **Finaliser pour envoyer** (menu ⋮) : une copie dont chaque page est une image, sans texte,
+  calque, annotation, formulaire ni métadonnée cachés ; en option, la reconnaissance du texte la
+  rend de nouveau cherchable.
+
 **Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
 blanche, un autre PDF ou des images à la fin.
 

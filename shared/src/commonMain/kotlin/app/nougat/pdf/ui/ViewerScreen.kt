@@ -194,8 +194,11 @@ fun ViewerScreen(
                     session = session,
                     state = state,
                     inlineEditor = platform.isDesktop,
-                    topPadding = topSpace + (if (searchBelow) 64.dp else 0.dp) +
-                        if (state.translation.active) (if (compact) 116.dp else 58.dp) else 0.dp,
+                    topPadding = topSpace + (if (searchBelow) 64.dp else 0.dp) + when {
+                        state.censor.reviewing -> if (compact) 150.dp else 140.dp
+                        state.translation.active -> if (compact) 116.dp else 58.dp
+                        else -> 0.dp
+                    },
                     bottomPadding = 170.dp,
                     onTextRequest = { textRequest = it },
                     onSignatureNeeded = { page, at ->
@@ -237,8 +240,16 @@ fun ViewerScreen(
             }
         }
 
-        // Traduction affichee : le bandeau (original ou traduction, enregistrer la copie traduite).
-        if (state.translation.active) {
+        // Censure : les trouvailles a verifier, puis confirmer.
+        if (state.censor.reviewing) {
+            CensorBar(
+                state = state,
+                compact = compact,
+                modifier = Modifier.align(Alignment.TopCenter)
+                    .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
+            )
+        } else if (state.translation.active) {
+            // Traduction affichee : le bandeau (original ou traduction, enregistrer la copie traduite).
             TranslationBar(
                 state = state,
                 compact = compact,
@@ -249,7 +260,7 @@ fun ViewerScreen(
         }
 
         // Document scanne : proposer la reconnaissance du texte.
-        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active) {
+        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active && !state.censor.reviewing) {
             ScanBanner(
                 pages = session.ocrPages,
                 compact = compact,
@@ -398,6 +409,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             if (state.canScan) item(tr(Str.ScanAppend), NougatIcons.Camera, state::appendScan)
             if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
             item(tr(Str.TranslateTitle), NougatIcons.Translate) { state.translation.dialogOpen = true }
+            item(tr(Str.Censor), NougatIcons.Censor) { state.censor.dialogOpen = true }
             item(tr(Str.Finalize), NougatIcons.Shield) { state.finalizeOpen = true }
             if (session.password == null) {
                 item(tr(Str.ProtectWithPassword), Icons.Filled.Lock, onProtect)
@@ -973,8 +985,11 @@ private fun PageView(
             )
         }
 
-        // Traduction : posee sur la page (en mode Lire), la page s'affiche donc on la traduit.
-        if (state.translation.active && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
+        // Censure : les trouvailles de la page, a garder ou non d'un toucher.
+        if (state.censor.reviewing) {
+            CensorOverlay(state, index)
+        } else if (state.translation.active && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
+            // Traduction : posee sur la page (en mode Lire), la page s'affiche donc on la traduit.
             LaunchedEffect(session, state.translation.settings) { state.translation.want(session, index) }
             TranslationOverlay(state, session, index, pageSize, image)
         }

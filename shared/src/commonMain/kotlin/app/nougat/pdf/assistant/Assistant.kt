@@ -83,4 +83,11 @@ interface AssistantEngine {
      */
     suspend fun translate(texts: List<String>, language: String, settings: AssistantSettings): List<String> =
         throw UnsupportedOperationException("Traduction indisponible")
+
+    /**
+     * Censure : les informations des sortes [kinds] (noms anglais : person, company, address…) que
+     * Claude trouve dans [text], recopiees exactement. Paires (sorte, texte).
+     */
+    suspend fun findSensitive(text: String, kinds: List<String>, settings: AssistantSettings): List<Pair<String, String>> =
+        throw UnsupportedOperationException("Censure par l'IA indisponible")
 }

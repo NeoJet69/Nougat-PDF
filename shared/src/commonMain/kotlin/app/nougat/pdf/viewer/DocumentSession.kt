@@ -318,6 +318,9 @@ class DocumentSession(
         }
     }
 
+    /** Le texte de la page, lettre par lettre avec sa position (calcule une fois). */
+    suspend fun pageTextOf(page: Int): PageText = textOf(page)
+
     private suspend fun textOf(page: Int): PageText = textMutex.withLock {
         texts.getOrPut(page) {
             try {

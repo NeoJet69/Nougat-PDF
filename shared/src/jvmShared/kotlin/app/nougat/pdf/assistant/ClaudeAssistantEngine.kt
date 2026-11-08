@@ -153,6 +153,38 @@ class ClaudeAssistantEngine : AssistantEngine {
         return texts.mapIndexed { i, t -> found[i + 1]?.takeIf { it.isNotBlank() } ?: t }
     }
 
+    override suspend fun findSensitive(text: String, kinds: List<String>, settings: AssistantSettings): List<Pair<String, String>> {
+        if (text.isBlank() || kinds.isEmpty()) return emptyList()
+        val client = clientFor(settings.apiKey)
+        val system = "You find personal and confidential information in the text of a document, so that it can be redacted. " +
+            "Answer with one item per line, as: KIND, a tab, then the item copied exactly as it appears in the text. " +
+            "KIND is one of: " + kinds.joinToString(", ") + ". Only report items of these kinds. " +
+            "Report every occurrence form once (the same name written differently counts twice). " +
+            "If there is nothing, answer NONE. No other text."
+        val params = MessageCreateParams.builder()
+            .model(settings.model)
+            .maxTokens(4000L)
+            .system(system)
+            .addUserMessage(text.take(30_000))
+            .outputConfig(OutputConfig.builder().effort(OutputConfig.Effort.LOW).build())
+            .build()
+        val response = try {
+            withContext(Dispatchers.IO) { client.messages().create(params) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            throw IllegalStateException(friendlyMessage(e), e)
+        }
+        val answer = response.content().mapNotNull { it.text().orElse(null)?.text() }.joinToString("")
+        return answer.lines().mapNotNull { line ->
+            val parts = line.split('\t', limit = 2)
+            if (parts.size != 2) return@mapNotNull null
+            val kind = parts[0].trim().lowercase()
+            val item = parts[1].trim()
+            if (kind in kinds && item.length >= 2) kind to item else null
+        }
+    }
+
     private fun escapeXml(s: String) = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     private fun unescapeXml(s: String) = s.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&amp;", "&")

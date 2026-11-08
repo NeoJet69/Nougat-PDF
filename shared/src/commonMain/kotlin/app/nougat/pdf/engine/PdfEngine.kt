@@ -46,6 +46,12 @@ interface PdfEngine {
 
     /** Le traducteur de l'appareil (ML Kit sur Android), ou null : la traduction passe alors par Claude. */
     val deviceTranslator: DeviceTranslator? get() = null
+
+    /**
+     * Censure : les noms de personnes et d'entreprises de [text] trouves par l'IA de l'appareil
+     * (Gemini Nano), ou null si elle n'est pas disponible.
+     */
+    suspend fun deviceFindNames(text: String): List<Pair<SensitiveKind, String>>? = null
 }
 
 interface PdfDocument : AutoCloseable {

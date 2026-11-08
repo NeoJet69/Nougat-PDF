@@ -19,6 +19,8 @@ Ce que fait l'app aujourd'hui :
 - **Annoter** (stylo, surligneur, texte, rectangle « Masquer » qui retire vraiment ce qu'il couvre,
   gomme, couleur libre), **signer**,
   **remplir les formulaires** PDF.
+- **Censurer** : par mots ou censure intelligente (noms, adresses, n° AVS, IBAN, téléphones…),
+  vérification sur les pages puis barres noires et texte retiré.
 - **Finaliser pour envoyer** : copie dont chaque page est une image (plus rien de caché), avec OCR
   facultatif pour rester cherchable.
 - **Organiser les pages** : pivoter, déplacer, supprimer, extraire, ajouter une page, un PDF, des
