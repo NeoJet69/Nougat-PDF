@@ -546,4 +546,20 @@ MeasurePerimeter = Umfang {0}
 MeasurePage = Siite {0}
 MeasureSumLength = Total Längene
 MeasureSumArea = Total Flächene
+
+Todo = Was i mues mache
+TodoReading = Dokumänt wird gläse…
+TodoNoText = Kei Text i dem Dokumänt. Bi me Scan zerscht d Texterkennig starte.
+TodoSummary = Churz gseit
+TodoTasks = Z tue
+TodoNothing = I dem Dokumänt isch nüt z tue.
+TodoNoAi = Ohni KI: Das sind d Datum us em Dokumänt. Mit Gemini Nano (uf em Handy) oder emne Claude-Schlüssel fasst Nougat de Brief au zäme.
+TodoCheck = Kontrollier d Datum immer im Dokumänt.
+TodoCalendar = Zum Kaländer derzuefüege
+TodoAdded = Im Kaländer gööffnet: {0}
+TodoCalendarFailed = De Kaländer chan nöd gööffnet wärde.
+TodoCopied = Kopiert.
+TodoAiFailed = D KI het nöd chöne antworte: {0}
+TodoNoDate = ohni Datum
+TodoCopy = Kopiere
 """

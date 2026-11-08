@@ -549,4 +549,20 @@ MeasurePerimeter = périmètre {0}
 MeasurePage = page {0}
 MeasureSumLength = Total des longueurs
 MeasureSumArea = Total des surfaces
+
+Todo = Ce que je dois faire
+TodoReading = Le chat lit le document… ronron
+TodoNoText = Pas de texte dans ce document. Pour un scan, lancez d'abord la reconnaissance du texte.
+TodoSummary = En bref
+TodoTasks = À faire
+TodoNothing = Rien à faire trouvé : sieste autorisée.
+TodoNoAi = Sans IA : voici les dates trouvées dans le document. Avec Gemini Nano (sur le téléphone) ou une clé Claude, Nougat résume aussi la lettre.
+TodoCheck = Vérifiez toujours les dates dans le document.
+TodoCalendar = Ajouter au calendrier
+TodoAdded = Ouvert dans le calendrier : {0}
+TodoCalendarFailed = Impossible d'ouvrir le calendrier.
+TodoCopied = Copié.
+TodoAiFailed = L'IA n'a pas pu répondre : {0}
+TodoNoDate = sans date
+TodoCopy = Copier
 """

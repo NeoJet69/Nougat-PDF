@@ -546,4 +546,20 @@ MeasurePerimeter = perimètre {0}
 MeasurePage = pagina {0}
 MeasureSumLength = Total de las longors
 MeasureSumArea = Total de las superfícias
+
+Todo = Çò que me cal far
+TodoReading = Lectura del document…
+TodoNoText = Pas cap de tèxte dins aqueste document. Per un escaneg, aviatz d'en primièr la reconeissença del tèxte.
+TodoSummary = En brèu
+TodoTasks = De far
+TodoNothing = Pas res de far dins aqueste document.
+TodoNoAi = Sens IA : vaquí las datas trobadas dins lo document. Amb Gemini Nano (sul telefòn) o una clau Claude, Nougat resumís tanben la letra.
+TodoCheck = Verificatz totjorn las datas dins lo document.
+TodoCalendar = Apondre al calendièr
+TodoAdded = Dobèrt dins lo calendièr : {0}
+TodoCalendarFailed = Impossible de dobrir lo calendièr.
+TodoCopied = Copiat.
+TodoAiFailed = L'IA a pas pogut respondre : {0}
+TodoNoDate = sens data
+TodoCopy = Copiar
 """

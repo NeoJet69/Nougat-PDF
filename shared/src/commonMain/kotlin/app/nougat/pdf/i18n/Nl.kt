@@ -545,4 +545,20 @@ MeasurePerimeter = omtrek {0}
 MeasurePage = pagina {0}
 MeasureSumLength = Totaal lengtes
 MeasureSumArea = Totaal oppervlaktes
+
+Todo = Wat ik moet doen
+TodoReading = Document lezen…
+TodoNoText = Geen tekst in dit document. Start bij een scan eerst de tekstherkenning.
+TodoSummary = In het kort
+TodoTasks = Te doen
+TodoNothing = Niets te doen gevonden in dit document.
+TodoNoAi = Zonder AI: dit zijn de datums uit het document. Met Gemini Nano (op de telefoon) of een Claude-sleutel vat Nougat de brief ook samen.
+TodoCheck = Controleer de datums altijd in het document.
+TodoCalendar = Aan agenda toevoegen
+TodoAdded = Geopend in de agenda: {0}
+TodoCalendarFailed = Kan de agenda niet openen.
+TodoCopied = Gekopieerd.
+TodoAiFailed = De AI kon niet antwoorden: {0}
+TodoNoDate = geen datum
+TodoCopy = Kopiëren
 """

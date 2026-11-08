@@ -546,4 +546,20 @@ MeasurePerimeter = troward {0}
 MeasurePage = pajenn {0}
 MeasureSumLength = Hollad an hirderioù
 MeasureSumArea = Hollad ar gorreadoù
+
+Todo = Ar pezh am eus d'ober
+TodoReading = O lenn an teul…
+TodoNoText = Testenn ebet en teul-mañ. Evit ur skan, lañsit da gentañ anaoudegezh an destenn.
+TodoSummary = Berr ha berr
+TodoTasks = Da ober
+TodoNothing = Netra da ober en teul-mañ.
+TodoNoAi = Hep IA : setu an deiziadoù kavet en teul. Gant Gemini Nano (war ar pellgomz) pe un alc'hwez Claude e ra Nougat un diverrañ eus al lizher ivez.
+TodoCheck = Gwiriit atav an deiziadoù en teul.
+TodoCalendar = Ouzhpennañ d'an deiziadur
+TodoAdded = Digoret en deiziadur : {0}
+TodoCalendarFailed = Ne c'haller ket digeriñ an deiziadur.
+TodoCopied = Eilet.
+TodoAiFailed = N'eo ket bet gouest an IA da respont : {0}
+TodoNoDate = hep deiziad
+TodoCopy = Eilañ
 """

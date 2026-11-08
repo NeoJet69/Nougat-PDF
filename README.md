@@ -119,6 +119,12 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Ce que je dois faire** (menu ⋮) : le résumé d'une lettre en deux ou trois phrases simples et
+la liste de ce qu'il faut faire (payer, répondre, envoyer un papier, aller à un rendez-vous), avec
+les dates. Chaque date s'ajoute au calendrier d'un toucher (rappel la veille). Sur Android,
+Gemini Nano le fait sur le téléphone ; sur Windows, avec une clé Claude. Sans IA, Nougat liste les
+dates et les délais trouvés dans le texte.
+
 **Métré sur plan** (menu ⋮) : choisir l'échelle du plan (1:50, 1:100..., ou celle écrite sur le
 plan, reprise toute seule), ou l'étalonner en traçant une cote connue (pour un scan ou un plan
 imprimé réduit). Puis toucher le plan point par point : **Longueur** (ligne brisée) ou

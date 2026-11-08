@@ -545,4 +545,20 @@ MeasurePerimeter = 周长 {0}
 MeasurePage = 第 {0} 页
 MeasureSumLength = 长度合计
 MeasureSumArea = 面积合计
+
+Todo = 我需要做什么
+TodoReading = 正在读取文档…
+TodoNoText = 此文档没有文字。如果是扫描件，请先运行文字识别。
+TodoSummary = 简要
+TodoTasks = 待办
+TodoNothing = 此文档中没有需要做的事。
+TodoNoAi = 未使用 AI：以下是文档中找到的日期。使用 Gemini Nano（手机上）或 Claude 密钥时，Nougat 还会总结这封信。
+TodoCheck = 请务必在文档中核对日期。
+TodoCalendar = 添加到日历
+TodoAdded = 已在日历中打开：{0}
+TodoCalendarFailed = 无法打开日历。
+TodoCopied = 已复制。
+TodoAiFailed = AI 无法回答：{0}
+TodoNoDate = 无日期
+TodoCopy = 复制
 """

@@ -546,4 +546,20 @@ MeasurePerimeter = perimetru {0}
 MeasurePage = pagina {0}
 MeasureSumLength = Totale di e longhezze
 MeasureSumArea = Totale di e superficie
+
+Todo = Ciò ch'aghju da fà
+TodoReading = Lettura di u documentu…
+TodoNoText = Nisun testu in stu documentu. Per una scansione, lanciate prima a ricunniscenza di u testu.
+TodoSummary = In breve
+TodoTasks = Da fà
+TodoNothing = Nunda à fà in stu documentu.
+TodoNoAi = Senza IA : eccu e date trove in u documentu. Cù Gemini Nano (nant'à u telefonu) o una chjave Claude, Nougat riassume dinò a lettera.
+TodoCheck = Verificate sempre e date in u documentu.
+TodoCalendar = Aghjunghje à u calendariu
+TodoAdded = Apertu in u calendariu : {0}
+TodoCalendarFailed = Impussibule d'apre u calendariu.
+TodoCopied = Cupiatu.
+TodoAiFailed = L'IA ùn hà micca pussutu risponde : {0}
+TodoNoDate = senza data
+TodoCopy = Cupià
 """

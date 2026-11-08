@@ -55,6 +55,9 @@ import app.nougat.pdf.engine.PageLines
 import app.nougat.pdf.engine.PageSize
 import app.nougat.pdf.engine.PdfToMarkdown
 import app.nougat.pdf.engine.SwissQr
+import app.nougat.pdf.engine.LetterDigest
+import app.nougat.pdf.engine.LetterTasks
+import app.nougat.pdf.engine.TodoItem
 import app.nougat.pdf.engine.InkMark
 import app.nougat.pdf.engine.MeasureKind
 import app.nougat.pdf.engine.Measurement
@@ -373,6 +376,7 @@ class ViewerState(
                 censor.stop()
                 qrBill.close()
                 measure.reset()
+                closeTodo()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -448,6 +452,7 @@ class ViewerState(
             s?.selectedBlocks?.isNotEmpty() == true -> s.clearSelection()
             censor.reviewing -> censor.stop()
             measure.active -> measure.stop()
+            todo.dialogOpen -> closeTodo()
             tools.editing -> tools.enter(DockMode.Read)
             translation.active -> translation.stop()
             s != null -> runAfterConfirm(::closeDocument)
@@ -484,6 +489,7 @@ class ViewerState(
         censor.stop()
         qrBill.close()
         measure.reset()
+        closeTodo()
     }
 
     private fun closeCurrent() {
@@ -817,6 +823,101 @@ class ViewerState(
         scope.launch {
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
         }
+    }
+
+    // ---- Ce que je dois faire ---------------------------------------------------------------------
+
+    val todo = TodoState()
+    private var todoJob: Job? = null
+
+    /**
+     * Resume la lettre et liste ce qu'il faut faire : IA de l'appareil (Gemini Nano), sinon Claude
+     * (avec une cle), sinon les dates trouvees dans le texte.
+     */
+    fun startTodo() {
+        val s = session ?: return
+        todoJob?.cancel()
+        todo.reset()
+        todo.dialogOpen = true
+        todo.working = true
+        todoJob = scope.launch {
+            try {
+                val text = StringBuilder()
+                for (page in 0 until s.pageCount) {
+                    if (text.length >= LetterTasks.MAX_TEXT) break
+                    runCatching { text.append(s.pageTextOf(page).text).append('\n') }
+                }
+                val content = text.toString().take(LetterTasks.MAX_TEXT)
+                if (content.isBlank()) {
+                    todo.noText = true
+                    return@launch
+                }
+                val today = files.todayIso()
+                val instructions = LetterTasks.instructions(aiLanguageName(), today)
+                var digest: LetterDigest? = runCatching { engine.deviceDigest(content, instructions) }.getOrNull()
+                    ?.let(LetterTasks::parseAnswer)
+                val claude = assistantEngine
+                if (digest == null && claude != null && apiKey.isNotBlank()) {
+                    try {
+                        digest = LetterTasks.parseAnswer(claude.digest(content, instructions, AssistantSettings(apiKey, assistantModel)))
+                    } catch (e: CancellationException) {
+                        throw e
+                    } catch (e: Throwable) {
+                        todo.aiError = e.message ?: e::class.simpleName
+                    }
+                }
+                todo.digest = digest ?: LetterDigest("", LetterTasks.findDeadlines(content, today), fromAi = false)
+            } finally {
+                todo.working = false
+            }
+        }
+    }
+
+    fun closeTodo() {
+        todoJob?.cancel()
+        todo.reset()
+    }
+
+    /** La langue de reponse demandee a l'IA (les dialectes prennent leur langue de base). */
+    private fun aiLanguageName(): String = when (I18n.lang) {
+        Lang.En -> "English"
+        Lang.De, Lang.Gsw, Lang.Rm -> "German"
+        Lang.It -> "Italian"
+        Lang.Es -> "Spanish"
+        Lang.Pt -> "Portuguese"
+        Lang.Nl -> "Dutch"
+        Lang.Pl -> "Polish"
+        Lang.Tr -> "Turkish"
+        Lang.Ru -> "Russian"
+        Lang.Uk -> "Ukrainian"
+        Lang.Ar -> "Arabic"
+        Lang.Zh -> "Simplified Chinese"
+        Lang.Sv -> "Swedish"
+        Lang.El -> "Greek"
+        Lang.Ro -> "Romanian"
+        else -> "French"
+    }
+
+    /** « 30.11.2026 » (« 2026-11-30 » en chinois). */
+    fun todoDate(iso: String): String {
+        if (I18n.lang == Lang.Zh) return iso
+        val (y, m, d) = iso.split('-')
+        return "$d.$m.$y"
+    }
+
+    fun addTodoToCalendar(item: TodoItem) {
+        val date = item.date ?: return
+        val name = session?.name.orEmpty()
+        toast = if (files.addToCalendar(item.what, name, date)) tr(Str.TodoAdded, todoDate(date)) else tr(Str.TodoCalendarFailed)
+    }
+
+    fun copyTodo() {
+        val d = todo.digest ?: return
+        val lines = ArrayList<String>()
+        if (d.summary.isNotBlank()) lines += d.summary
+        for (t in d.tasks) lines += "- " + (t.date?.let { todoDate(it) + " : " } ?: "") + t.what
+        files.copyText(lines.joinToString("\n"))
+        toast = tr(Str.TodoCopied)
     }
 
     // ---- Metre sur plan ---------------------------------------------------------------------------

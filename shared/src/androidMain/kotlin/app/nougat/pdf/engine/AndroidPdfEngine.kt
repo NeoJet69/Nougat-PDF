@@ -51,6 +51,9 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
     override suspend fun deviceFindNames(text: String): List<Pair<SensitiveKind, String>>? =
         if (GeminiNano.status() == DeviceAiStatus.Available) GeminiNano.findNames(text) else null
 
+    override suspend fun deviceDigest(text: String, instructions: String): String? =
+        if (GeminiNano.status() == DeviceAiStatus.Available) GeminiNano.digest(text, instructions) else null
+
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val file = File(path)
         try {

@@ -28,7 +28,7 @@
 - [x] QR-facture suisse : la lire (montant, IBAN, référence, copier pour l'e-banking) et en
       ajouter une à un devis ou une facture.
 - [x] Métré sur plan : étalonner l'échelle, mesurer longueurs et surfaces au doigt.
-- [ ] « Ce que je dois faire » : résumé simple d'une lettre et échéances vers le calendrier
+- [x] « Ce que je dois faire » : résumé simple d'une lettre et échéances vers le calendrier
       (Gemini Nano, sur le téléphone).
 - [ ] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
 - [ ] Lecture à voix haute, aussi dans la langue traduite.

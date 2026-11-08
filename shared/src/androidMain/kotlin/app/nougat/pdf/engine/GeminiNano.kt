@@ -128,6 +128,19 @@ internal object GeminiNano {
         return answer
     }
 
+    /** « Ce que je dois faire » : la reponse a [instructions] pour le debut de [text] (Gemini Nano lit peu). */
+    suspend fun digest(text: String, instructions: String): String? = runCatching {
+        withTimeoutOrNull(45_000) {
+            client().generateContent(
+                generateContentRequest(TextPart(instructions + "\n\nDocument:\n" + text.take(5000))) {
+                    temperature = 0.2f
+                    topK = 8
+                    maxOutputTokens = 400
+                },
+            ).candidates.firstOrNull()?.text
+        }
+    }.getOrNull()
+
     /** Censure : les noms de personnes et d'entreprises de [text], par morceaux de 2500 caracteres. */
     suspend fun findNames(text: String): List<Pair<SensitiveKind, String>> {
         val result = ArrayList<Pair<SensitiveKind, String>>()

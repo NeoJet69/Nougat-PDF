@@ -545,4 +545,20 @@ MeasurePerimeter = omkrets {0}
 MeasurePage = sida {0}
 MeasureSumLength = Total längd
 MeasureSumArea = Total yta
+
+Todo = Vad jag behöver göra
+TodoReading = Läser dokumentet…
+TodoNoText = Ingen text i dokumentet. För en skanning, kör textigenkänning först.
+TodoSummary = I korthet
+TodoTasks = Att göra
+TodoNothing = Inget att göra i det här dokumentet.
+TodoNoAi = Utan AI: här är datumen som hittades i dokumentet. Med Gemini Nano (på telefonen) eller en Claude-nyckel sammanfattar Nougat även brevet.
+TodoCheck = Kontrollera alltid datumen i dokumentet.
+TodoCalendar = Lägg till i kalendern
+TodoAdded = Öppnat i kalendern: {0}
+TodoCalendarFailed = Det går inte att öppna kalendern.
+TodoCopied = Kopierat.
+TodoAiFailed = AI:n kunde inte svara: {0}
+TodoNoDate = inget datum
+TodoCopy = Kopiera
 """

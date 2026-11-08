@@ -124,6 +124,7 @@ fun NougatApp(
                 if (state.compressOpen && session != null) CompressDialog(state) { state.compressOpen = false }
                 if (state.stampOpen && session != null) StampDialog(state) { state.stampOpen = false }
                 if (state.qrBill.dialogOpen && session != null) QrBillDialog(state)
+                if (state.todo.dialogOpen && session != null) TodoDialog(state)
                 if (state.measure.scaleDialog && session != null) MeasureScaleDialog(state)
                 if (state.measure.calibrationLine?.complete == true && session != null) MeasureCalibrateDialog(state)
                 state.errorMessage?.let { message ->

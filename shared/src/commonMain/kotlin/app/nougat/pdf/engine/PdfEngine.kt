@@ -52,6 +52,12 @@ interface PdfEngine {
      * (Gemini Nano), ou null si elle n'est pas disponible.
      */
     suspend fun deviceFindNames(text: String): List<Pair<SensitiveKind, String>>? = null
+
+    /**
+     * « Ce que je dois faire » : la reponse de l'IA de l'appareil (Gemini Nano) a [instructions]
+     * pour [text], ou null si elle n'est pas disponible.
+     */
+    suspend fun deviceDigest(text: String, instructions: String): String? = null
 }
 
 interface PdfDocument : AutoCloseable {

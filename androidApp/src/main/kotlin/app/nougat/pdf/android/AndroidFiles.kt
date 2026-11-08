@@ -75,6 +75,23 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
         return SavedFile(uri.toString(), displayName(uri) ?: suggestedName)
     }
 
+    override fun todayIso(): String = java.time.LocalDate.now().toString()
+
+    /** L'appli Agenda s'ouvre sur un nouvel evenement d'une journee, deja rempli. */
+    override fun addToCalendar(title: String, notes: String, dateIso: String): Boolean = runCatching {
+        val start = java.time.LocalDate.parse(dateIso).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli()
+        val intent = android.content.Intent(android.content.Intent.ACTION_INSERT)
+            .setData(android.provider.CalendarContract.Events.CONTENT_URI)
+            .putExtra(android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME, start)
+            .putExtra(android.provider.CalendarContract.EXTRA_EVENT_END_TIME, start + 86_400_000L)
+            .putExtra(android.provider.CalendarContract.EXTRA_EVENT_ALL_DAY, true)
+            .putExtra(android.provider.CalendarContract.Events.TITLE, title)
+            .putExtra(android.provider.CalendarContract.Events.DESCRIPTION, notes)
+            .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+        app.startActivity(intent)
+        true
+    }.getOrDefault(false)
+
     override fun copyText(text: String) {
         val clipboard = app.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager ?: return
         clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Nougat PDF", text))

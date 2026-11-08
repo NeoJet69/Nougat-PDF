@@ -546,4 +546,20 @@ MeasurePerimeter = perimeter {0}
 MeasurePage = pagina {0}
 MeasureSumLength = Total lunghezzas
 MeasureSumArea = Total surfatschas
+
+Todo = Quai che jau stoss far
+TodoReading = Leger il document…
+TodoNoText = Nagin text en quest document. Per in scan, aviai l'emprim la renconuschientscha dal text.
+TodoSummary = En curt
+TodoTasks = Da far
+TodoNothing = Nagut da far en quest document.
+TodoNoAi = Senza IA: qua èn las datas chattadas en il document. Cun Gemini Nano (sin il telefon) u ina clav Claude fa Nougat er in resumaziun da la brev.
+TodoCheck = Controllai adina las datas en il document.
+TodoCalendar = Agiuntar al chalender
+TodoAdded = Avert en il chalender: {0}
+TodoCalendarFailed = Impussibel d'avrir il chalender.
+TodoCopied = Copià.
+TodoAiFailed = L'IA n'ha betg pudì respunder: {0}
+TodoNoDate = senza data
+TodoCopy = Copiar
 """

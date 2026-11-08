@@ -545,4 +545,20 @@ MeasurePerimeter = периметр {0}
 MeasurePage = страница {0}
 MeasureSumLength = Сумма длин
 MeasureSumArea = Сумма площадей
+
+Todo = Что мне нужно сделать
+TodoReading = Чтение документа…
+TodoNoText = В этом документе нет текста. Для скана сначала запустите распознавание текста.
+TodoSummary = Вкратце
+TodoTasks = Сделать
+TodoNothing = В этом документе нечего делать.
+TodoNoAi = Без ИИ: вот даты, найденные в документе. С Gemini Nano (на телефоне) или ключом Claude Nougat также кратко пересказывает письмо.
+TodoCheck = Всегда проверяйте даты в документе.
+TodoCalendar = Добавить в календарь
+TodoAdded = Открыто в календаре: {0}
+TodoCalendarFailed = Не удаётся открыть календарь.
+TodoCopied = Скопировано.
+TodoAiFailed = ИИ не смог ответить: {0}
+TodoNoDate = без даты
+TodoCopy = Копировать
 """

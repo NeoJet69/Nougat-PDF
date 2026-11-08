@@ -90,4 +90,11 @@ interface AssistantEngine {
      */
     suspend fun findSensitive(text: String, kinds: List<String>, settings: AssistantSettings): List<Pair<String, String>> =
         throw UnsupportedOperationException("Censure par l'IA indisponible")
+
+    /**
+     * « Ce que je dois faire » : la reponse brute de Claude a [instructions] pour le texte [text]
+     * (format de lignes lu par LetterTasks.parseAnswer).
+     */
+    suspend fun digest(text: String, instructions: String, settings: AssistantSettings): String =
+        throw UnsupportedOperationException("Resume indisponible")
 }

@@ -545,4 +545,20 @@ MeasurePerimeter = çevre {0}
 MeasurePage = sayfa {0}
 MeasureSumLength = Toplam uzunluk
 MeasureSumArea = Toplam alan
+
+Todo = Yapmam gerekenler
+TodoReading = Belge okunuyor…
+TodoNoText = Bu belgede metin yok. Taranmış belgede önce metin tanımayı çalıştırın.
+TodoSummary = Kısaca
+TodoTasks = Yapılacaklar
+TodoNothing = Bu belgede yapılacak bir şey bulunamadı.
+TodoNoAi = Yapay zekâ olmadan: belgede bulunan tarihler bunlar. Gemini Nano (telefonda) veya bir Claude anahtarıyla Nougat mektubu da özetler.
+TodoCheck = Tarihleri her zaman belgede kontrol edin.
+TodoCalendar = Takvime ekle
+TodoAdded = Takvimde açıldı: {0}
+TodoCalendarFailed = Takvim açılamıyor.
+TodoCopied = Kopyalandı.
+TodoAiFailed = Yapay zekâ yanıt veremedi: {0}
+TodoNoDate = tarihsiz
+TodoCopy = Kopyala
 """

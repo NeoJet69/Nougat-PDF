@@ -185,6 +185,25 @@ class ClaudeAssistantEngine : AssistantEngine {
         }
     }
 
+    override suspend fun digest(text: String, instructions: String, settings: AssistantSettings): String {
+        val client = clientFor(settings.apiKey)
+        val params = MessageCreateParams.builder()
+            .model(settings.model)
+            .maxTokens(2000L)
+            .system(instructions)
+            .addUserMessage(text)
+            .outputConfig(OutputConfig.builder().effort(OutputConfig.Effort.LOW).build())
+            .build()
+        val response = try {
+            withContext(Dispatchers.IO) { client.messages().create(params) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            throw IllegalStateException(friendlyMessage(e), e)
+        }
+        return response.content().mapNotNull { it.text().orElse(null)?.text() }.joinToString("")
+    }
+
     private fun escapeXml(s: String) = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     private fun unescapeXml(s: String) = s.replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&amp;", "&")

@@ -53,6 +53,15 @@ interface PlatformFiles {
     /** Copie [text] dans le presse-papiers. */
     fun copyText(text: String) {}
 
+    /** La date du jour, AAAA-MM-JJ ; vide si inconnue. */
+    fun todayIso(): String = ""
+
+    /**
+     * Ouvre le calendrier de l'appareil sur un evenement d'une journee le [dateIso] (AAAA-MM-JJ),
+     * avec un rappel la veille. Faux si ce n'est pas possible.
+     */
+    fun addToCalendar(title: String, notes: String, dateIso: String): Boolean = false
+
     /** Taille du fichier local [path] en octets, ou -1 si inconnue. */
     fun fileSize(path: String): Long = -1
 

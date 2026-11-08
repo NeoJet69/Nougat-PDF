@@ -546,4 +546,20 @@ MeasurePerimeter = المحيط {0}
 MeasurePage = الصفحة {0}
 MeasureSumLength = مجموع الأطوال
 MeasureSumArea = مجموع المساحات
+
+Todo = ما عليّ فعله
+TodoReading = جارٍ قراءة المستند…
+TodoNoText = لا يوجد نص في هذا المستند. بالنسبة للمستند الممسوح، شغّل التعرف على النص أولاً.
+TodoSummary = باختصار
+TodoTasks = المطلوب
+TodoNothing = لا يوجد ما يجب فعله في هذا المستند.
+TodoNoAi = بدون ذكاء اصطناعي: هذه التواريخ الموجودة في المستند. مع Gemini Nano (على الهاتف) أو مفتاح Claude يلخّص Nougat الرسالة أيضاً.
+TodoCheck = تحقق دائماً من التواريخ في المستند.
+TodoCalendar = إضافة إلى التقويم
+TodoAdded = فُتح في التقويم: {0}
+TodoCalendarFailed = تعذّر فتح التقويم.
+TodoCopied = تم النسخ.
+TodoAiFailed = تعذّر على الذكاء الاصطناعي الرد: {0}
+TodoNoDate = بدون تاريخ
+TodoCopy = نسخ
 """

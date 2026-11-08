@@ -59,6 +59,30 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         return SavedFile(target.absolutePath, target.name)
     }
 
+    override fun todayIso(): String = java.time.LocalDate.now().toString()
+
+    /** Un fichier .ics ouvert avec le calendrier de l'ordinateur (Outlook, Calendrier...). */
+    override fun addToCalendar(title: String, notes: String, dateIso: String): Boolean = runCatching {
+        val day = java.time.LocalDate.parse(dateIso)
+        val start = day.toString().replace("-", "")
+        val end = day.plusDays(1).toString().replace("-", "")
+        val stamp = java.time.ZonedDateTime.now(java.time.ZoneOffset.UTC)
+            .format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"))
+        fun esc(s: String) = s.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+        val ics = listOf(
+            "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Nougat PDF//EN", "BEGIN:VEVENT",
+            "UID:${java.util.UUID.randomUUID()}@nougat-pdf", "DTSTAMP:$stamp",
+            "DTSTART;VALUE=DATE:$start", "DTEND;VALUE=DATE:$end",
+            "SUMMARY:${esc(title)}", "DESCRIPTION:${esc(notes)}",
+            "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", "DESCRIPTION:${esc(title)}", "END:VALARM",
+            "END:VEVENT", "END:VCALENDAR",
+        ).joinToString("\r\n", postfix = "\r\n")
+        val file = File(tempDir, "nougat-$start-${(1000..9999).random()}.ics")
+        file.writeText(ics)
+        java.awt.Desktop.getDesktop().open(file)
+        true
+    }.getOrDefault(false)
+
     override fun copyText(text: String) {
         runCatching { java.awt.Toolkit.getDefaultToolkit().systemClipboard.setContents(java.awt.datatransfer.StringSelection(text), null) }
     }

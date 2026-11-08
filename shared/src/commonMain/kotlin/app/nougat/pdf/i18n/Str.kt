@@ -87,5 +87,8 @@ enum class Str {
     MeasureHintLength, MeasureHintArea, MeasureFinish, MeasureUndo, MeasureCopy, MeasureCopied,
     MeasureAddToPlan, MeasureAdded, MeasureTotals, MeasureScaleTitle, MeasureScaleExplain, MeasureFoundOnPlan,
     MeasureCustomRatio, MeasureCalibrate, MeasureCalibrateTitle, MeasureCalibrateExplain, MeasureApply, MeasureLengthN,
-    MeasureAreaN, MeasurePerimeter, MeasurePage, MeasureSumLength, MeasureSumArea,
+    MeasureAreaN, MeasurePerimeter, MeasurePage, MeasureSumLength, MeasureSumArea, Todo,
+    TodoReading, TodoNoText, TodoSummary, TodoTasks, TodoNothing, TodoNoAi,
+    TodoCheck, TodoCalendar, TodoAdded, TodoCalendarFailed, TodoCopied, TodoAiFailed,
+    TodoNoDate, TodoCopy,
 }

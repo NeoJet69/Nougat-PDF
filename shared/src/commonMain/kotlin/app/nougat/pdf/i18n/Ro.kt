@@ -546,4 +546,20 @@ MeasurePerimeter = perimetru {0}
 MeasurePage = pagina {0}
 MeasureSumLength = Total lungimi
 MeasureSumArea = Total suprafețe
+
+Todo = Ce trebuie să fac
+TodoReading = Se citește documentul…
+TodoNoText = Nu există text în acest document. Pentru o scanare, rulați mai întâi recunoașterea textului.
+TodoSummary = Pe scurt
+TodoTasks = De făcut
+TodoNothing = Nimic de făcut în acest document.
+TodoNoAi = Fără IA: iată datele găsite în document. Cu Gemini Nano (pe telefon) sau o cheie Claude, Nougat rezumă și scrisoarea.
+TodoCheck = Verificați întotdeauna datele în document.
+TodoCalendar = Adaugă în calendar
+TodoAdded = Deschis în calendar: {0}
+TodoCalendarFailed = Calendarul nu poate fi deschis.
+TodoCopied = Copiat.
+TodoAiFailed = IA nu a putut răspunde: {0}
+TodoNoDate = fără dată
+TodoCopy = Copiază
 """
