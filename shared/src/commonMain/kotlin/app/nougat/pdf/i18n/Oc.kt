@@ -458,4 +458,13 @@ ReportSend = Senhalar
 ReplyReported = Responsa senhalada e amagada.
 ReportThanks = Mercé : la responsa es amagada.
 ReportMailSubject = Nougat PDF : responsa de Claude senhalada
+
+ChooseMarkdown = Causir un fichièr Markdown
+ExportMarkdown = Exportar en Markdown
+ExportingMarkdown = Exportacion en Markdown…
+MarkdownSaved = Markdown enregistrat : {0}
+MarkdownNoText = Pas cap de tèxte d'exportar. Per un escaneg, aviatz d'en primièr la reconeissença del tèxte.
+MarkdownToPdf = De Markdown a PDF
+MarkdownToPdfHint = Un fichièr .md ven un PDF paginat
+MarkdownUnreadable = Impossible de legir aqueste fichièr.\n{0}
 """

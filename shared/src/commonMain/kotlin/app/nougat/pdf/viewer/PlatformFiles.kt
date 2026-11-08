@@ -44,6 +44,12 @@ interface PlatformFiles {
     val canShare: Boolean
     suspend fun share(path: String, name: String)
 
+    /** Enregistre un texte (Markdown) a l'endroit choisi par l'utilisateur ; null si annule. */
+    suspend fun saveText(text: String, suggestedName: String): SavedFile? = null
+
+    /** Fait choisir un fichier texte (Markdown) et renvoie son nom et son contenu ; null si annule. */
+    suspend fun pickText(): Pair<String, String>? = null
+
     /** Taille du fichier local [path] en octets, ou -1 si inconnue. */
     fun fileSize(path: String): Long = -1
 

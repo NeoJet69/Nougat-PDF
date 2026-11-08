@@ -457,4 +457,13 @@ ReportSend = Rapportera
 ReplyReported = Svaret rapporterat och dolt.
 ReportThanks = Tack: svaret är dolt.
 ReportMailSubject = Nougat PDF: rapporterat svar från Claude
+
+ChooseMarkdown = Välj en Markdown-fil
+ExportMarkdown = Exportera som Markdown
+ExportingMarkdown = Exporterar till Markdown…
+MarkdownSaved = Markdown sparad: {0}
+MarkdownNoText = Ingen text att exportera. För en skanning, kör textigenkänning först.
+MarkdownToPdf = Markdown till PDF
+MarkdownToPdfHint = En .md-fil blir en snyggt uppställd PDF
+MarkdownUnreadable = Det går inte att läsa filen.\n{0}
 """

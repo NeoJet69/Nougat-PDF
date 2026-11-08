@@ -108,7 +108,12 @@ l'écran Pages, **Rogner** les marges blanches et **Redresser** un scan un peu p
 blanche, un autre PDF ou des images à la fin.
 
 **Créer un PDF** (accueil) : **Photos → PDF** (une page par photo ou image, remise droite et
-centrée sur une page A4) ou **Document vierge** (une page A4 à remplir avec Texte, Signature...).
+centrée sur une page A4), **Document vierge** (une page A4 à remplir avec Texte, Signature...)
+ou **Markdown → PDF** (un fichier `.md` mis en page : titres, listes, citations, code, tableaux).
+
+**Exporter en Markdown** (menu ⋮) : le texte du document devient un fichier `.md`, avec les
+titres reconnus à la taille du texte, les listes et les tableaux. Pour un scan, lancer d'abord
+la reconnaissance du texte.
 
 Menu **⋮** : enregistrer, enregistrer sous, imprimer, partager (Android), protéger par mot de
 passe ou retirer le mot de passe, thème clair / sombre / automatique.
@@ -175,7 +180,6 @@ L'assistant est la seule partie de Nougat qui utilise Internet.
 
 ## Prochaines idées
 
-- Compresser un PDF
 - Traduire sur Windows sans Internet
 - Déplacer / redimensionner une annotation après l'avoir posée
 

@@ -458,4 +458,13 @@ ReportSend = Mälde
 ReplyReported = Antwort gmäldet ùn üssbländet.
 ReportThanks = Merci: D Antwort ìsch üssbländet.
 ReportMailSubject = Nougat PDF: Antwort vùn Claude gmäldet
+
+ChooseMarkdown = E Markdown-Datei üssüecha
+ExportMarkdown = Als Markdown exportiere
+ExportingMarkdown = Export als Markdown…
+MarkdownSaved = Markdown gspeichert: {0}
+MarkdownNoText = Ken Text zum Exportiere. Bi me Scan zerscht d'Texterkennung starte.
+MarkdownToPdf = Markdown noch PDF
+MarkdownToPdfHint = E .md-Datei wurd e scheen gstaltets PDF
+MarkdownUnreadable = Die Datei kann nit gläse wäre.\n{0}
 """

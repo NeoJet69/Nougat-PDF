@@ -457,4 +457,13 @@ ReportSend = Bildir
 ReplyReported = Yanıt bildirildi ve gizlendi.
 ReportThanks = Teşekkürler: yanıt gizlendi.
 ReportMailSubject = Nougat PDF: bildirilen Claude yanıtı
+
+ChooseMarkdown = Markdown dosyası seç
+ExportMarkdown = Markdown olarak dışa aktar
+ExportingMarkdown = Markdown'a aktarılıyor…
+MarkdownSaved = Markdown kaydedildi: {0}
+MarkdownNoText = Dışa aktarılacak metin yok. Taranmış belgede önce metin tanımayı çalıştırın.
+MarkdownToPdf = Markdown'dan PDF'ye
+MarkdownToPdfHint = Bir .md dosyası düzenli bir PDF olur
+MarkdownUnreadable = Bu dosya okunamıyor.\n{0}
 """

@@ -102,6 +102,17 @@ object NougatIcons {
         svgIcon("Compress", "M8,19h3v3h2v-3h3l-4,-4 -4,4zM16,4h-3L13,1h-2v3L8,4l4,4 4,-4zM4,9v2h16L20,9L4,9zM4,12h16v2L4,14z")
     }
 
+    /** Le signe Markdown : un cadre, un M et une fleche vers le bas. */
+    val Markdown by lazy {
+        svgIcon(
+            "Markdown",
+            "M3,6h18a1,1 0,0 1,1 1v10a1,1 0,0 1,-1 1H3a1,1 0,0 1,-1 -1V7a1,1 0,0 1,1 -1z" +
+                "M3.6,7.6v8.8h16.8V7.6z" +
+                "M5,15V9h1.8l1.7,2.2 1.7,-2.2h1.8v6h-1.8v-3.4l-1.7,2.2 -1.7,-2.2V15z" +
+                "M16,9h2v3h1.8l-2.8,3.2 -2.8,-3.2H16z",
+        )
+    }
+
     /** Une liste numerotee : numeros de page. */
     val Numbers by lazy {
         svgIcon("Numbers", "M2,17h2v0.5L3,17.5v1h1v0.5L2,19v1h3v-4L2,16v1zM3,8h1L4,4L2,4v1h1v3zM2,11h1.8L2,13.1v0.9h3v-1L3.2,13L5,10.9L5,10L2,10v1zM7,5v2h14L21,5L7,5zM7,19h14v-2L7,17v2zM7,13h14v-2L7,11v2z")

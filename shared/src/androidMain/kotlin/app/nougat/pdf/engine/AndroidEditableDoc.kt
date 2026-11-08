@@ -240,6 +240,33 @@ private class AndroidEditableDoc(
             }
         }
 
+        private fun fontOf(kind: FontKind): PDType1Font = when (kind) {
+            FontKind.Regular -> PDType1Font.HELVETICA
+            FontKind.Bold -> PDType1Font.HELVETICA_BOLD
+            FontKind.Italic -> PDType1Font.HELVETICA_OBLIQUE
+            FontKind.BoldItalic -> PDType1Font.HELVETICA_BOLD_OBLIQUE
+            FontKind.Mono -> PDType1Font.COURIER
+        }
+
+        private fun safe(f: PDType1Font, text: String) = buildString {
+            for (c in text) append(if (runCatching { f.encode(c.toString()) }.isSuccess) c else '?')
+        }
+
+        override fun styledWidth(text: String, size: Float, font: FontKind): Float {
+            val f = fontOf(font)
+            return runCatching { f.getStringWidth(safe(f, text)) / 1000f * size }.getOrDefault(text.length * size * 0.5f)
+        }
+
+        override fun styledText(x: Float, baseline: Float, text: String, size: Float, argb: Int, font: FontKind) {
+            val f = fontOf(font)
+            cs.beginText()
+            cs.setFont(f, size)
+            cs.setNonStrokingColor(red(argb), green(argb), blue(argb))
+            cs.newLineAtOffset(x, baseline)
+            cs.showText(safe(f, text))
+            cs.endText()
+        }
+
         override fun textWidth(text: String, size: Float): Float = runCatching {
             val safe = buildString { for (c in text) append(if (runCatching { font.encode(c.toString()) }.isSuccess) c else '?') }
             font.getStringWidth(safe) / 1000f * size

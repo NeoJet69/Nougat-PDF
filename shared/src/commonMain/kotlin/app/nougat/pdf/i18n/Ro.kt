@@ -458,4 +458,13 @@ ReportSend = Raportează
 ReplyReported = Răspuns raportat și ascuns.
 ReportThanks = Mulțumim: răspunsul este ascuns.
 ReportMailSubject = Nougat PDF: răspuns Claude raportat
+
+ChooseMarkdown = Alegeți un fișier Markdown
+ExportMarkdown = Exportă în Markdown
+ExportingMarkdown = Se exportă în Markdown…
+MarkdownSaved = Markdown salvat: {0}
+MarkdownNoText = Nu există text de exportat. Pentru o scanare, rulați mai întâi recunoașterea textului.
+MarkdownToPdf = Din Markdown în PDF
+MarkdownToPdfHint = Un fișier .md devine un PDF paginat
+MarkdownUnreadable = Fișierul nu poate fi citit.\n{0}
 """

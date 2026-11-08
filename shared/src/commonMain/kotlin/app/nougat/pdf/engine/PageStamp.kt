@@ -62,3 +62,10 @@ fun EditableDoc.stampPages(stamp: PageStamp) {
         }
     }
 }
+
+/** Niveaux de compression : resolution maximale des images (points par pouce) et qualite JPEG. */
+enum class CompressLevel(val dpi: Float, val quality: Float) {
+    Light(200f, 0.85f),
+    Medium(144f, 0.72f),
+    Strong(96f, 0.55f),
+}

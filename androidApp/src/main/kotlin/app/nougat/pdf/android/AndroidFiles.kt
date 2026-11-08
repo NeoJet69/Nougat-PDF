@@ -15,6 +15,12 @@ import kotlin.coroutines.resume
 interface ActivityHost {
     fun createDocument(suggestedName: String, onResult: (Uri?) -> Unit)
     fun openDocument(onResult: (Uri?) -> Unit)
+
+    /** Creer un fichier texte (Markdown) a l'endroit choisi. */
+    fun createTextDocument(suggestedName: String, onResult: (Uri?) -> Unit)
+
+    /** Choisir un fichier texte (Markdown). */
+    fun openTextDocument(onResult: (Uri?) -> Unit)
     fun pickImages(onResult: (List<Uri>) -> Unit)
 
     /** Scanner de documents de Google (ML Kit) ; [onResult] recoit le PDF, null si annule ou erreur. */
@@ -58,6 +64,24 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
             app.contentResolver.openOutputStream(uri, "w")!!.use { out -> File(path).inputStream().use { it.copyTo(out) } }
         }
         return SavedFile(uri.toString(), displayName(uri) ?: suggestedName)
+    }
+
+    override suspend fun saveText(text: String, suggestedName: String): SavedFile? {
+        val h = host ?: return null
+        val uri = suspendCancellableCoroutine<Uri?> { cont -> h.createTextDocument(suggestedName) { cont.resume(it) } } ?: return null
+        withContext(Dispatchers.IO) {
+            app.contentResolver.openOutputStream(uri, "w")!!.use { it.write(text.toByteArray()) }
+        }
+        return SavedFile(uri.toString(), displayName(uri) ?: suggestedName)
+    }
+
+    override suspend fun pickText(): Pair<String, String>? {
+        val h = host ?: return null
+        val uri = suspendCancellableCoroutine<Uri?> { cont -> h.openTextDocument { cont.resume(it) } } ?: return null
+        val text = withContext(Dispatchers.IO) {
+            app.contentResolver.openInputStream(uri)!!.use { it.readBytes().toString(Charsets.UTF_8) }
+        }
+        return (displayName(uri) ?: "document.md") to text
     }
 
     override suspend fun pickPdf(): SavedFile? {

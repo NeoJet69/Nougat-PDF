@@ -115,17 +115,22 @@ fun HomeScreen(
             @Composable
             fun Scan(modifier: Modifier) =
                 CreateCard(NougatIcons.Camera, tr(Str.ScanDocument), tr(Str.ScanDocumentHint), modifier, onClick = state::createPdfFromScan)
+            @Composable
+            fun FromMarkdown(modifier: Modifier) =
+                CreateCard(NougatIcons.Markdown, tr(Str.MarkdownToPdf), tr(Str.MarkdownToPdfHint), modifier, onClick = state::createPdfFromMarkdown)
             if (compact) {
                 Column(Modifier.widthIn(max = 620.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (state.canScan) Scan(Modifier.fillMaxWidth())
                     FromImages(Modifier.fillMaxWidth())
                     Blank(Modifier.fillMaxWidth())
+                    FromMarkdown(Modifier.fillMaxWidth())
                 }
             } else {
-                Row(Modifier.widthIn(max = if (state.canScan) 860.dp else 620.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(Modifier.widthIn(max = if (state.canScan) 1080.dp else 860.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (state.canScan) Scan(Modifier.weight(1f))
                     FromImages(Modifier.weight(1f))
                     Blank(Modifier.weight(1f))
+                    FromMarkdown(Modifier.weight(1f))
                 }
             }
 

@@ -13,13 +13,6 @@ import kotlin.math.tan
  * (rogner) et l'inclinaison d'un scan (redresser), sur l'image de la page ; compresser les images.
  */
 
-/** Niveaux de compression : resolution maximale des images (points par pouce) et qualite JPEG. */
-enum class CompressLevel(val dpi: Float, val quality: Float) {
-    Light(200f, 0.85f),
-    Medium(144f, 0.72f),
-    Strong(96f, 0.55f),
-}
-
 internal object PageTools {
     /** Seuil (0..255) en dessous duquel un pixel compte comme de l'encre. */
     private fun inkThreshold(img: GrayImage): Int {

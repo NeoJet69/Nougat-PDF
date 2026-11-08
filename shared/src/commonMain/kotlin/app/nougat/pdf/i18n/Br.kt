@@ -458,4 +458,13 @@ ReportSend = Disklêriañ
 ReplyReported = Respont disklêriet ha kuzhet.
 ReportThanks = Trugarez : kuzhet eo ar respont.
 ReportMailSubject = Nougat PDF : respont Claude disklêriet
+
+ChooseMarkdown = Dibab ur restr Markdown
+ExportMarkdown = Ezporzhiañ e Markdown
+ExportingMarkdown = Oc'h ezporzhiañ e Markdown…
+MarkdownSaved = Markdown enrollet : {0}
+MarkdownNoText = Testenn ebet da ezporzhiañ. Evit ur skan, lañsit da gentañ anaoudegezh an destenn.
+MarkdownToPdf = Markdown da PDF
+MarkdownToPdfHint = Ur restr .md a zeu da vezañ ur PDF pajennaouet
+MarkdownUnreadable = Ne c'haller ket lenn ar restr-mañ.\n{0}
 """

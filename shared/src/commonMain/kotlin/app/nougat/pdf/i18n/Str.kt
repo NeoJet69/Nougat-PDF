@@ -73,5 +73,6 @@ enum class Str {
     PosTopRight, PosTopLeft, Crop, Cropping, Cropped, CropNothing,
     Straighten, Straightening, Straightened, StraightenNothing, Report, ReportTitle,
     ReportExplain, ReportOffensive, ReportDangerous, ReportWrong, ReportOther, ReportComment,
-    ReportSend, ReplyReported, ReportThanks, ReportMailSubject,
+    ReportSend, ReplyReported, ReportThanks, ReportMailSubject, ChooseMarkdown, ExportMarkdown,
+    ExportingMarkdown, MarkdownSaved, MarkdownNoText, MarkdownToPdf, MarkdownToPdfHint, MarkdownUnreadable,
 }

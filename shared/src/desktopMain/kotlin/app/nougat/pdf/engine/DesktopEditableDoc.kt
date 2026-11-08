@@ -184,6 +184,38 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
             }
         }
 
+        private val styled = HashMap<FontKind, PDType1Font>()
+        private fun fontOf(kind: FontKind) = styled.getOrPut(kind) {
+            PDType1Font(
+                when (kind) {
+                    FontKind.Regular -> Standard14Fonts.FontName.HELVETICA
+                    FontKind.Bold -> Standard14Fonts.FontName.HELVETICA_BOLD
+                    FontKind.Italic -> Standard14Fonts.FontName.HELVETICA_OBLIQUE
+                    FontKind.BoldItalic -> Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE
+                    FontKind.Mono -> Standard14Fonts.FontName.COURIER
+                },
+            )
+        }
+
+        private fun safe(f: PDType1Font, text: String) = buildString {
+            for (c in text) append(if (runCatching { f.encode(c.toString()) }.isSuccess) c else '?')
+        }
+
+        override fun styledWidth(text: String, size: Float, font: FontKind): Float {
+            val f = fontOf(font)
+            return runCatching { f.getStringWidth(safe(f, text)) / 1000f * size }.getOrDefault(text.length * size * 0.5f)
+        }
+
+        override fun styledText(x: Float, baseline: Float, text: String, size: Float, argb: Int, font: FontKind) {
+            val f = fontOf(font)
+            cs.beginText()
+            cs.setFont(f, size)
+            cs.setNonStrokingColor(red(argb), green(argb), blue(argb))
+            cs.newLineAtOffset(x, baseline)
+            cs.showText(safe(f, text))
+            cs.endText()
+        }
+
         override fun textWidth(text: String, size: Float): Float = runCatching {
             val safe = buildString { for (c in text) append(if (runCatching { font.encode(c.toString()) }.isSuccess) c else '?') }
             font.getStringWidth(safe) / 1000f * size

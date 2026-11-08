@@ -50,7 +50,7 @@
 - [x] Compresser un PDF (images réduites et recompressées, plusieurs niveaux).
 - [x] Rogner une page, et redresser un scan un peu penché.
 - [x] Numéros de page et date (position, format, première page ou non).
-- [ ] PDF vers Markdown (titres, listes, tableaux, avec l'OCR pour les scans) et Markdown vers PDF.
+- [x] PDF vers Markdown (titres, listes, tableaux, avec l'OCR pour les scans) et Markdown vers PDF.
 
 ## Autres idées
 

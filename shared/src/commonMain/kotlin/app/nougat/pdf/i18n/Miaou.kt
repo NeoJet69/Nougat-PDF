@@ -461,4 +461,13 @@ ReportSend = Signaler
 ReplyReported = Réponse signalée et cachée.
 ReportThanks = Merci : la réponse est cachée.
 ReportMailSubject = Nougat PDF : réponse de Claude signalée
+
+ChooseMarkdown = Choisir un fichier Markdown
+ExportMarkdown = Exporter en Markdown
+ExportingMarkdown = Export en Markdown… ronron
+MarkdownSaved = Markdown rangé dans son panier : {0}
+MarkdownNoText = Pas de texte à exporter. Pour un scan, lancez d'abord la reconnaissance du texte : le chat a de bons yeux.
+MarkdownToPdf = Markdown vers PDF
+MarkdownToPdfHint = Un fichier .md devient un PDF bien peigné
+MarkdownUnreadable = Impossible de lire ce fichier, il a craché une boule de poils.\n{0}
 """

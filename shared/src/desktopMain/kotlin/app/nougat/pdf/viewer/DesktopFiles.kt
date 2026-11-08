@@ -47,6 +47,28 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         return SavedFile(fixed.absolutePath, fixed.name)
     }
 
+    override suspend fun saveText(text: String, suggestedName: String): SavedFile? {
+        val dialog = FileDialog(frame(), tr(Str.SaveAs).trimEnd('…'), FileDialog.SAVE).apply {
+            file = suggestedName
+            isVisible = true
+        }
+        val name = dialog.file ?: return null
+        val chosen = File(dialog.directory, name)
+        val target = if (chosen.name.contains('.')) chosen else File(chosen.parentFile, chosen.name + ".md")
+        withContext(Dispatchers.IO) { target.writeText(text) }
+        return SavedFile(target.absolutePath, target.name)
+    }
+
+    override suspend fun pickText(): Pair<String, String>? {
+        val dialog = FileDialog(frame(), tr(Str.ChooseMarkdown), FileDialog.LOAD).apply {
+            file = "*.md;*.markdown;*.txt"
+            setFilenameFilter { _, n -> n.substringAfterLast('.', "").lowercase() in setOf("md", "markdown", "txt") }
+            isVisible = true
+        }
+        val file = dialog.files.orEmpty().firstOrNull { it.isFile } ?: return null
+        return file.name to withContext(Dispatchers.IO) { file.readText() }
+    }
+
     override suspend fun pickPdf(): SavedFile? {
         val file = chooseFile(tr(Str.ChoosePdf), FileDialog.LOAD, "*.pdf") ?: return null
         return SavedFile(file.absolutePath, file.name)

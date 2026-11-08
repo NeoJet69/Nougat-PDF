@@ -457,4 +457,13 @@ ReportSend = Αναφορά
 ReplyReported = Η απάντηση αναφέρθηκε και κρύφτηκε.
 ReportThanks = Ευχαριστούμε: η απάντηση κρύφτηκε.
 ReportMailSubject = Nougat PDF: αναφορά απάντησης του Claude
+
+ChooseMarkdown = Επιλογή αρχείου Markdown
+ExportMarkdown = Εξαγωγή σε Markdown
+ExportingMarkdown = Εξαγωγή σε Markdown…
+MarkdownSaved = Το Markdown αποθηκεύτηκε: {0}
+MarkdownNoText = Δεν υπάρχει κείμενο για εξαγωγή. Για σαρωμένο έγγραφο, εκτελέστε πρώτα αναγνώριση κειμένου.
+MarkdownToPdf = Από Markdown σε PDF
+MarkdownToPdfHint = Ένα αρχείο .md γίνεται σελιδοποιημένο PDF
+MarkdownUnreadable = Δεν είναι δυνατή η ανάγνωση αυτού του αρχείου.\n{0}
 """

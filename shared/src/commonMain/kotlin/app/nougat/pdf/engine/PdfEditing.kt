@@ -116,9 +116,17 @@ interface PageCanvas {
     /** Largeur d'une ligne de texte en Helvetica, en points (pour centrer ou aligner a droite). */
     fun textWidth(text: String, size: Float): Float = text.length * size * 0.5f
 
+    /** Une ligne de texte en gras, italique ou a chasse fixe (Helvetica, Courier). */
+    fun styledText(x: Float, baseline: Float, text: String, size: Float, argb: Int, font: FontKind) = text(x, baseline, text, size, argb)
+
+    fun styledWidth(text: String, size: Float, font: FontKind): Float = textWidth(text, size)
+
     /** Une ligne de texte en Helvetica ; les caracteres non pris en charge deviennent « ? ». */
     fun text(x: Float, baseline: Float, text: String, size: Float, argb: Int)
 }
+
+/** Les polices standard que les outils de Nougat savent ecrire. */
+enum class FontKind { Regular, Bold, Italic, BoldItalic, Mono }
 
 /** Position de la page dans le fichier : cadre visible (cropBox) et rotation. */
 data class PageGeometry(val x0: Float, val y0: Float, val width: Float, val height: Float, val rotation: Int) {

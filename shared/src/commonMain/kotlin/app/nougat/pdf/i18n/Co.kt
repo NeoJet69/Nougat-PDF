@@ -458,4 +458,13 @@ ReportSend = Signalà
 ReplyReported = Risposta signalata è piattata.
 ReportThanks = Grazie : a risposta hè piattata.
 ReportMailSubject = Nougat PDF : risposta di Claude signalata
+
+ChooseMarkdown = Sceglie un schedariu Markdown
+ExportMarkdown = Esportà in Markdown
+ExportingMarkdown = Esportazione in Markdown…
+MarkdownSaved = Markdown arregistratu : {0}
+MarkdownNoText = Nisun testu à esportà. Per una scansione, lanciate prima a ricunniscenza di u testu.
+MarkdownToPdf = Da Markdown à PDF
+MarkdownToPdfHint = Un schedariu .md diventa un PDF impaginatu
+MarkdownUnreadable = Impussibule di leghje stu schedariu.\n{0}
 """

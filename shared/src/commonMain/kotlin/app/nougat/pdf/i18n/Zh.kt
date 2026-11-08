@@ -457,4 +457,13 @@ ReportSend = 举报
 ReplyReported = 回复已举报并隐藏。
 ReportThanks = 谢谢：回复已隐藏。
 ReportMailSubject = Nougat PDF：Claude 回复被举报
+
+ChooseMarkdown = 选择 Markdown 文件
+ExportMarkdown = 导出为 Markdown
+ExportingMarkdown = 正在导出为 Markdown…
+MarkdownSaved = Markdown 已保存：{0}
+MarkdownNoText = 没有可导出的文本。如果是扫描件，请先运行文字识别。
+MarkdownToPdf = Markdown 转 PDF
+MarkdownToPdfHint = 将 .md 文件转为排版好的 PDF
+MarkdownUnreadable = 无法读取此文件。\n{0}
 """

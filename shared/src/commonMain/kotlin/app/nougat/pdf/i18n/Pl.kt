@@ -457,4 +457,13 @@ ReportSend = Zgłoś
 ReplyReported = Odpowiedź zgłoszona i ukryta.
 ReportThanks = Dziękujemy: odpowiedź jest ukryta.
 ReportMailSubject = Nougat PDF: zgłoszona odpowiedź Claude
+
+ChooseMarkdown = Wybierz plik Markdown
+ExportMarkdown = Eksportuj do Markdown
+ExportingMarkdown = Eksportowanie do Markdown…
+MarkdownSaved = Zapisano Markdown: {0}
+MarkdownNoText = Brak tekstu do eksportu. W przypadku skanu najpierw uruchom rozpoznawanie tekstu.
+MarkdownToPdf = Markdown do PDF
+MarkdownToPdfHint = Plik .md staje się sformatowanym PDF
+MarkdownUnreadable = Nie można odczytać tego pliku.\n{0}
 """

@@ -49,6 +49,11 @@ import app.nougat.pdf.engine.NormRect
 import app.nougat.pdf.engine.CompressLevel
 import app.nougat.pdf.engine.PageStamp
 import app.nougat.pdf.engine.stampPages
+import app.nougat.pdf.engine.MarkdownLayout
+import app.nougat.pdf.engine.MarkdownParser
+import app.nougat.pdf.engine.PageLines
+import app.nougat.pdf.engine.PageSize
+import app.nougat.pdf.engine.PdfToMarkdown
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -799,6 +804,61 @@ class ViewerState(
         val s = session ?: return
         scope.launch {
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
+        }
+    }
+
+    // ---- Markdown ---------------------------------------------------------------------------------
+
+    /** Enregistre le texte du document en Markdown (titres, listes, tableaux) a l'endroit choisi. */
+    fun exportMarkdown() {
+        val s = session ?: return
+        scope.launch {
+            busyMessage = tr(Str.ExportingMarkdown)
+            val markdown = try {
+                PdfToMarkdown.convert(
+                    (0 until s.pageCount).map { i ->
+                        val size = s.pageSizes.getOrNull(i) ?: PageSize(A4_WIDTH, A4_HEIGHT)
+                        PageLines(s.textBlocks(i), size.width, size.height)
+                    },
+                )
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                errorMessage = tr(Str.CannotSave, e.message ?: e::class.simpleName)
+                return@launch
+            } finally {
+                busyMessage = null
+            }
+            if (markdown.isBlank()) {
+                errorMessage = tr(Str.MarkdownNoText)
+                return@launch
+            }
+            val saved = try {
+                files.saveText(markdown, s.name.substringBeforeLast('.') + ".md")
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                errorMessage = tr(Str.CannotSave, e.message ?: e::class.simpleName)
+                return@launch
+            }
+            if (saved != null) toast = tr(Str.MarkdownSaved, saved.name)
+        }
+    }
+
+    /** Nouveau PDF a partir d'un fichier Markdown : titres, listes, tableaux et code mis en page. */
+    fun createPdfFromMarkdown() = runAfterConfirm {
+        scope.launch {
+            val picked = try {
+                files.pickText()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                errorMessage = tr(Str.MarkdownUnreadable, e.message ?: e::class.simpleName)
+                null
+            }
+            val (name, text) = picked ?: return@launch
+            val blocks = MarkdownParser.parse(text)
+            createNow(name.substringBeforeLast('.').ifBlank { "Markdown" } + ".pdf", tr(Str.CreatingPdf)) { MarkdownLayout.render(it, blocks) }
         }
     }
 

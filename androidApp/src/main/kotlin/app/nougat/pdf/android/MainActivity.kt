@@ -48,6 +48,11 @@ class MainActivity : ComponentActivity(), ActivityHost {
         openCallback?.invoke(it)
         openCallback = null
     }
+    private var createTextCallback: ((Uri?) -> Unit)? = null
+    private val createTextLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument("text/markdown")) {
+        createTextCallback?.invoke(it)
+        createTextCallback = null
+    }
     private var scanCallback: ((Uri?, Throwable?) -> Unit)? = null
 
     /**
@@ -139,6 +144,16 @@ class MainActivity : ComponentActivity(), ActivityHost {
     override fun openDocument(onResult: (Uri?) -> Unit) {
         openCallback = onResult
         openLauncher.launch(arrayOf("application/pdf"))
+    }
+
+    override fun createTextDocument(suggestedName: String, onResult: (Uri?) -> Unit) {
+        createTextCallback = onResult
+        createTextLauncher.launch(suggestedName)
+    }
+
+    override fun openTextDocument(onResult: (Uri?) -> Unit) {
+        openCallback = onResult
+        openLauncher.launch(arrayOf("text/markdown", "text/x-markdown", "text/plain", "application/octet-stream"))
     }
 
     override fun pickImages(onResult: (List<Uri>) -> Unit) {

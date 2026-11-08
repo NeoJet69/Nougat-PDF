@@ -458,4 +458,13 @@ ReportSend = Annunziar
 ReplyReported = Resposta annunziada e zuppada.
 ReportThanks = Grazia: la resposta è zuppada.
 ReportMailSubject = Nougat PDF: resposta da Claude annunziada
+
+ChooseMarkdown = Tscherner ina datoteca Markdown
+ExportMarkdown = Exportar sco Markdown
+ExportingMarkdown = Exportar en Markdown…
+MarkdownSaved = Markdown memorisà: {0}
+MarkdownNoText = Nagin text per exportar. Per in scan, aviai l'emprim la renconuschientscha dal text.
+MarkdownToPdf = Markdown en PDF
+MarkdownToPdfHint = Ina datoteca .md daventa in PDF cumpaginà
+MarkdownUnreadable = Impussibel da leger questa datoteca.\n{0}
 """
