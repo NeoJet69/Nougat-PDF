@@ -58,6 +58,10 @@
 - [x] Envoyer un PDF du téléphone au PC par le Wi-Fi local (QR code, sans cloud).
 - [ ] Notes de frais : tickets scannés, montant, date et TVA vers un PDF et un tableau.
 - [ ] Traduire sur Windows sans Internet.
+- [ ] IA sur l'appareil à télécharger (pas prioritaire) : l'utilisateur choisit un modèle GGUF
+      d'environ 3 Go (licence à vérifier), le télécharge et peut le désinstaller ; moteur llama.cpp
+      (MIT) sur Windows puis Android. Sert à traduire hors ligne, « Ce que je dois faire », censure,
+      assistant sans clé Claude.
 
 ## Release
 
