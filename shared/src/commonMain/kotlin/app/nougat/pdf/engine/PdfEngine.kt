@@ -80,6 +80,9 @@ interface PdfDocument : AutoCloseable {
 
     /** Nombre de pages scannees dont le texte n'est pas encore reconnu. */
     suspend fun pagesNeedingOcr(): Int = 0
+
+    /** Les textes des codes QR dessines sur la page [index] (QR-facture...). */
+    suspend fun qrCodes(index: Int): List<String> = emptyList()
 }
 
 data class PageSize(val width: Float, val height: Float) {

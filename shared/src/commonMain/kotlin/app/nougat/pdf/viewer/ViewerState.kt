@@ -54,6 +54,7 @@ import app.nougat.pdf.engine.MarkdownParser
 import app.nougat.pdf.engine.PageLines
 import app.nougat.pdf.engine.PageSize
 import app.nougat.pdf.engine.PdfToMarkdown
+import app.nougat.pdf.engine.SwissQr
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -364,6 +365,7 @@ class ViewerState(
                 if (temporary) temps.add(path)
                 translation.stop()
                 censor.stop()
+                qrBill.close()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -472,6 +474,7 @@ class ViewerState(
         pagesOpen = false
         translation.stop()
         censor.stop()
+        qrBill.close()
     }
 
     private fun closeCurrent() {
@@ -805,6 +808,57 @@ class ViewerState(
         scope.launch {
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
         }
+    }
+
+    // ---- QR-facture suisse ------------------------------------------------------------------------
+
+    val qrBill = QrBillState(files)
+    private var qrSearchJob: Job? = null
+
+    /** Ouvre la fenetre QR-facture et cherche les codes QR du document. */
+    fun openQrBill() {
+        val s = session ?: return
+        qrBill.dialogOpen = true
+        qrBill.creating = false
+        qrSearchJob?.cancel()
+        qrSearchJob = scope.launch { qrBill.search(s) }
+    }
+
+    fun closeQrBill() {
+        qrSearchJob?.cancel()
+        qrBill.close()
+    }
+
+    /** Passe au formulaire « Ajouter une QR-facture ». */
+    fun startQrBillCreate() {
+        val s = session ?: return
+        qrSearchJob?.cancel()
+        scope.launch { qrBill.startCreate(s, I18n.lang) }
+    }
+
+    /** Ajoute la section paiement au document, si le formulaire est juste. */
+    fun addQrBill() {
+        val s = session ?: return
+        val form = qrBill.form
+        val bill = form.bill()
+        val problems = SwissQr.problems(bill)
+        qrBill.problems = problems
+        if (problems.isNotEmpty()) return
+        qrBill.saveCreditor()
+        val newPage = form.newPage || !qrBill.lastPageFits
+        closeQrBill()
+        scope.launch {
+            if (editNow(tr(Str.QrBillAdding), s.password) { it.addQrBill(bill, newPage, form.language) }) {
+                toast = tr(Str.QrBillAdded)
+                session?.let { it.goToPage(it.pageCount - 1, 0.6f) }
+            }
+        }
+    }
+
+    /** Copie une valeur (IBAN, montant, reference...) pour la coller dans l'e-banking. */
+    fun copyValue(label: String, value: String) {
+        files.copyText(value)
+        toast = tr(Str.QrBillCopied, label)
     }
 
     // ---- Markdown ---------------------------------------------------------------------------------

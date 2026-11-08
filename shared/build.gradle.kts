@@ -45,6 +45,7 @@ kotlin {
             kotlin.srcDir("src/jvmShared/kotlin")
             dependencies {
                 implementation(libs.pdfbox)
+                implementation(libs.zxing.core)
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.anthropic.java)
                 // OCR : Tesseract 5 (bibliotheque native) ; celle de Windows pour l'app.
@@ -123,6 +124,7 @@ if (!desktopOnly) {
             kotlin.srcDir("src/jvmShared/kotlin")
             dependencies {
                 implementation(libs.pdfbox.android)
+                implementation(libs.zxing.core)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.anthropic.java)
                 // OCR : Tesseract 5 pour Android, et Gemini Nano (IA de l'appareil) pour relire.

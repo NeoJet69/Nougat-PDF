@@ -111,6 +111,14 @@ blanche, un autre PDF ou des images à la fin.
 centrée sur une page A4), **Document vierge** (une page A4 à remplir avec Texte, Signature...)
 ou **Markdown → PDF** (un fichier `.md` mis en page : titres, listes, citations, code, tableaux).
 
+**QR-facture** (menu ⋮) : Nougat cherche le code QR d'une facture suisse et affiche le montant,
+le compte, le bénéficiaire et la référence, avec un bouton **Copier** pour chacun (à coller dans
+l'e-banking) ; un avertissement s'affiche si l'IBAN ou la référence ne passe pas le contrôle.
+**Créer une QR-facture** ajoute la section paiement (récépissé et code QR, 210 × 105 mm, en
+français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la dernière page d'un
+devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
+montant total trouvé dans le document est proposé.
+
 **Exporter en Markdown** (menu ⋮) : le texte du document devient un fichier `.md`, avec les
 titres reconnus à la taille du texte, les listes et les tableaux. Pour un scan, lancer d'abord
 la reconnaissance du texte.

@@ -25,7 +25,7 @@
 
 ## Prochaines fonctions (choisies, pas encore commencées)
 
-- [ ] QR-facture suisse : la lire (montant, IBAN, référence, copier pour l'e-banking) et en
+- [x] QR-facture suisse : la lire (montant, IBAN, référence, copier pour l'e-banking) et en
       ajouter une à un devis ou une facture.
 - [ ] Métré sur plan : étalonner l'échelle, mesurer longueurs et surfaces au doigt.
 - [ ] « Ce que je dois faire » : résumé simple d'une lettre et échéances vers le calendrier

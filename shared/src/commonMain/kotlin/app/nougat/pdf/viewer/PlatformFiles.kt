@@ -50,6 +50,9 @@ interface PlatformFiles {
     /** Fait choisir un fichier texte (Markdown) et renvoie son nom et son contenu ; null si annule. */
     suspend fun pickText(): Pair<String, String>? = null
 
+    /** Copie [text] dans le presse-papiers. */
+    fun copyText(text: String) {}
+
     /** Taille du fichier local [path] en octets, ou -1 si inconnue. */
     fun fileSize(path: String): Long = -1
 

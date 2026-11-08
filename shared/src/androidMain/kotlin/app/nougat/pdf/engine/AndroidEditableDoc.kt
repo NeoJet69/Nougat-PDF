@@ -188,6 +188,8 @@ private class AndroidEditableDoc(
 
     override fun compressImages(level: CompressLevel): Int = compressImagesAndroid(doc, level)
 
+    override fun addQrBill(bill: SwissQrBill, newPage: Boolean, language: QrLanguage) = addSwissQrBill(bill, newPage, language)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {

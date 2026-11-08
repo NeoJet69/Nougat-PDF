@@ -59,6 +59,10 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         return SavedFile(target.absolutePath, target.name)
     }
 
+    override fun copyText(text: String) {
+        runCatching { java.awt.Toolkit.getDefaultToolkit().systemClipboard.setContents(java.awt.datatransfer.StringSelection(text), null) }
+    }
+
     override suspend fun pickText(): Pair<String, String>? {
         val dialog = FileDialog(frame(), tr(Str.ChooseMarkdown), FileDialog.LOAD).apply {
             file = "*.md;*.markdown;*.txt"

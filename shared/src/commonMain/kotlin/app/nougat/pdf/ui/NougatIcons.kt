@@ -102,6 +102,25 @@ object NougatIcons {
         svgIcon("Compress", "M8,19h3v3h2v-3h3l-4,-4 -4,4zM16,4h-3L13,1h-2v3L8,4l4,4 4,-4zM4,9v2h16L20,9L4,9zM4,12h16v2L4,14z")
     }
 
+    /** Un code QR : QR-facture. */
+    val QrCode by lazy {
+        svgIcon(
+            "QrCode",
+            "M3,11h8V3H3V11zM5,5h4v4H5V5zM3,21h8v-8H3V21zM5,15h4v4H5V15zM13,3v8h8V3H13zM19,9h-4V5h4V9z" +
+                "M19,19h2v2h-2V19zM13,13h2v2h-2V13zM15,15h2v2h-2V15zM13,17h2v2h-2V17zM15,19h2v2h-2V19z" +
+                "M17,17h2v2h-2V17zM17,13h2v2h-2V13zM19,15h2v2h-2V15z",
+        )
+    }
+
+    /** Deux feuilles : copier. */
+    val Copy by lazy {
+        svgIcon(
+            "Copy",
+            "M16,1H4c-1.1,0 -2,0.9 -2,2v14h2V3h12V1zM19,5H8c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h11" +
+                "c1.1,0 2,-0.9 2,-2V7c0,-1.1 -0.9,-2 -2,-2zM19,21H8V7h11v14z",
+        )
+    }
+
     /** Le signe Markdown : un cadre, un M et une fleche vers le bas. */
     val Markdown by lazy {
         svgIcon(

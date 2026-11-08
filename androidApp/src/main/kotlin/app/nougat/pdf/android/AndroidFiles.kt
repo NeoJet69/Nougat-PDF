@@ -75,6 +75,11 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
         return SavedFile(uri.toString(), displayName(uri) ?: suggestedName)
     }
 
+    override fun copyText(text: String) {
+        val clipboard = app.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager ?: return
+        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("Nougat PDF", text))
+    }
+
     override suspend fun pickText(): Pair<String, String>? {
         val h = host ?: return null
         val uri = suspendCancellableCoroutine<Uri?> { cont -> h.openTextDocument { cont.resume(it) } } ?: return null

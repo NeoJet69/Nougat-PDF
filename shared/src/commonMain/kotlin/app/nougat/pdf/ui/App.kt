@@ -123,6 +123,7 @@ fun NougatApp(
                 if (state.censor.dialogOpen && session != null) CensorDialog(state, session) { state.censor.dialogOpen = false }
                 if (state.compressOpen && session != null) CompressDialog(state) { state.compressOpen = false }
                 if (state.stampOpen && session != null) StampDialog(state) { state.stampOpen = false }
+                if (state.qrBill.dialogOpen && session != null) QrBillDialog(state)
                 state.errorMessage?.let { message ->
                     AlertDialog(
                         onDismissRequest = state::dismissError,

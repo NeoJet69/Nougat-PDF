@@ -91,6 +91,10 @@ interface EditableDoc {
 
     /** Recompresse les images du document au niveau [level]. Renvoie le nombre d'images allegees. */
     fun compressImages(level: CompressLevel): Int = 0
+
+    /** Ajoute la section paiement d'une QR-facture, sur une nouvelle page ou en bas de la derniere. */
+    fun addQrBill(bill: SwissQrBill, newPage: Boolean, language: QrLanguage): Unit =
+        throw UnsupportedOperationException("QR-facture indisponible")
 }
 
 /**

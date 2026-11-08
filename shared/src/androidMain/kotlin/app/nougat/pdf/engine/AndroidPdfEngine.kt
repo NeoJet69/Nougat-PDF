@@ -132,6 +132,23 @@ private class AndroidPdfDocument(
         }
     }
 
+    override suspend fun qrCodes(index: Int): List<String> = withContext(Dispatchers.IO) {
+        val gray = renderMutex.withLock {
+            renderer.openPage(index).use { page ->
+                val scale = QrCodes.DPI / 72f
+                val bitmap = Bitmap.createBitmap(
+                    (page.width * scale).roundToInt().coerceAtLeast(1),
+                    (page.height * scale).roundToInt().coerceAtLeast(1),
+                    Bitmap.Config.ARGB_8888,
+                )
+                bitmap.eraseColor(Color.WHITE)
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_PRINT)
+                bitmap.toGrayImage().also { bitmap.recycle() }
+            }
+        }
+        QrCodes.decode(gray)
+    }
+
     override suspend fun renderPageJpeg(index: Int, widthPx: Int): ByteArray = withContext(Dispatchers.IO) {
         renderMutex.withLock {
             renderer.openPage(index).use { page ->

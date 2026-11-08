@@ -75,4 +75,12 @@ enum class Str {
     ReportExplain, ReportOffensive, ReportDangerous, ReportWrong, ReportOther, ReportComment,
     ReportSend, ReplyReported, ReportThanks, ReportMailSubject, ChooseMarkdown, ExportMarkdown,
     ExportingMarkdown, MarkdownSaved, MarkdownNoText, MarkdownToPdf, MarkdownToPdfHint, MarkdownUnreadable,
+    QrBill, QrBillSearching, QrBillNone, QrBillPage, QrBillAmount, QrBillAccount,
+    QrBillPayableTo, QrBillReference, QrBillMessage, QrBillPayableBy, QrBillCopy, QrBillCopied,
+    QrBillCopyAll, QrBillAmountOpen, QrBillWarning, QrBillCreate, QrBillCreateTitle, QrBillCreateHint,
+    QrBillYou, QrBillIban, QrBillName, QrBillStreet, QrBillNumber, QrBillPostalCode,
+    QrBillTown, QrBillCountry, QrBillCurrency, QrBillAmountHint, QrBillReferenceHint, QrBillMessageField,
+    QrBillAddDebtor, QrBillPlaceNew, QrBillPlaceLast, QrBillLanguage, QrBillAdd, QrBillAdding,
+    QrBillAdded, QrErrIban, QrErrCountry, QrErrNeedQrr, QrErrQrrNeedsQrIban, QrErrReference,
+    QrErrAmount, QrErrCreditor, QrErrDebtor,
 }

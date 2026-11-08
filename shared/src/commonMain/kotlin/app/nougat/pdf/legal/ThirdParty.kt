@@ -56,6 +56,10 @@ object Licenses {
             texts = listOf(LicenseTexts.ANTHROPIC_MIT),
         ),
         ThirdParty(
+            "ZXing core 3.5.4", "Apache-2.0", "ZXing authors", "https://github.com/zxing/zxing",
+            details = "Reads and writes the QR codes of Swiss QR-bills.",
+        ),
+        ThirdParty(
             "OkHttp, Okio", "Apache-2.0", "Square, Inc.", "https://square.github.io/okhttp/",
             details = "OkHttp includes the Public Suffix List (Mozilla Public License 2.0).",
             texts = listOf(LicenseTexts.PUBLIC_SUFFIX_NOTICE),

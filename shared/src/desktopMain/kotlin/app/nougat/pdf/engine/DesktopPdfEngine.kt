@@ -98,6 +98,11 @@ private class DesktopPdfDocument(private val doc: PDDocument) : PdfDocument {
         mutex.withLock { runCatching { countPagesNeedingOcr(doc) }.getOrDefault(0) }
     }
 
+    override suspend fun qrCodes(index: Int): List<String> = withContext(Dispatchers.IO) {
+        val image = mutex.withLock { renderer.renderImage(index, QrCodes.DPI / 72f, ImageType.GRAY) }
+        QrCodes.decode(image.toGrayImage())
+    }
+
     override suspend fun hasForm(): Boolean = withContext(Dispatchers.IO) {
         mutex.withLock { runCatching { documentHasForm(doc) }.getOrDefault(false) }
     }
