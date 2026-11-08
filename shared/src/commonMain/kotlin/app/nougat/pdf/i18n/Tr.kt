@@ -575,4 +575,14 @@ ReadAloudNoText = Okunacak bir şey yok. Taranmış belgede önce metin tanımay
 ReadAloudUnavailable = Bu cihazda sesli okuma kullanılamıyor.
 ReadAloudTranslated = {0} çeviri
 ReadAloudFinished = Okuma bitti.
+
+PaperForm = Kâğıt formu doldur
+PaperFormTitle = Formu doldur
+PaperFormExplain = Nougat {0}. sayfada bu alanları buldu. Profil bilgileriniz zaten yazıldı: gerekeni değiştirin.
+PaperFormNone = Bu sayfada alan bulunamadı. Not modundaki Metin aracıyla yazın.
+PaperFormNoText = Bu sayfa tanınmış metni olmayan bir tarama. Alanları bulmak için önce metin tanımayı çalıştırın.
+PaperFormSave = Bilgilerimi bu cihazda sakla
+PaperFormFill = Doldur
+PaperFormFilled = Doldurulan alanlar: {0}. Kontrol edip kaydedin (Geri al son metni kaldırır).
+PaperFormSearching = Alanlar aranıyor…
 """

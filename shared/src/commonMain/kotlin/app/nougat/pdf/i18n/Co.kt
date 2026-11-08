@@ -576,4 +576,14 @@ ReadAloudNoText = Nunda à leghje. Per una scansione, lanciate prima a ricunnisc
 ReadAloudUnavailable = A lettura à voce alta ùn hè micca dispunibule nant'à stu apparechju.
 ReadAloudTranslated = traduzzione in {0}
 ReadAloudFinished = Lettura finita.
+
+PaperForm = Riempie un furmulariu in carta
+PaperFormTitle = Riempie u furmulariu
+PaperFormExplain = Nougat hà trovu sti campi nant'à a pagina {0}. I dati di u vostru prufilu sò dighjà messi : cambiate ciò chì ci vole.
+PaperFormNone = Nisun campu trovu nant'à sta pagina. Scrivite cù l'attrezzu Testu di u modu Annutà.
+PaperFormNoText = Sta pagina hè una scansione senza testu ricunnisciutu. Lanciate prima a ricunniscenza di u testu per truvà i campi.
+PaperFormSave = Tene i mo dati nant'à stu apparechju
+PaperFormFill = Riempie
+PaperFormFilled = Campi riempiuti : {0}. Verificate po arregistrate (Annullà caccia l'ultimu testu).
+PaperFormSearching = Ricerca di i campi…
 """

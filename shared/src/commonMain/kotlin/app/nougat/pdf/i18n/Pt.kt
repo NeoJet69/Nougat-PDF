@@ -575,4 +575,14 @@ ReadAloudNoText = Nada para ler. Num documento digitalizado, execute primeiro o 
 ReadAloudUnavailable = A leitura em voz alta não está disponível neste dispositivo.
 ReadAloudTranslated = tradução em {0}
 ReadAloudFinished = Leitura terminada.
+
+PaperForm = Preencher um formulário em papel
+PaperFormTitle = Preencher o formulário
+PaperFormExplain = O Nougat encontrou estes campos na página {0}. Os dados do seu perfil já estão preenchidos: altere o que for preciso.
+PaperFormNone = Nenhum campo encontrado nesta página. Escreva com a ferramenta Texto do modo Anotar.
+PaperFormNoText = Esta página é uma digitalização sem texto reconhecido. Execute primeiro o reconhecimento de texto para encontrar os campos.
+PaperFormSave = Guardar os meus dados neste dispositivo
+PaperFormFill = Preencher
+PaperFormFilled = Campos preenchidos: {0}. Verifique e guarde (Anular retira o último texto).
+PaperFormSearching = A procurar campos…
 """

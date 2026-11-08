@@ -575,4 +575,14 @@ ReadAloudNoText = Inget att läsa. För en skanning, kör textigenkänning förs
 ReadAloudUnavailable = Uppläsning är inte tillgänglig på den här enheten.
 ReadAloudTranslated = översättning till {0}
 ReadAloudFinished = Uppläsningen är klar.
+
+PaperForm = Fyll i en pappersblankett
+PaperFormTitle = Fyll i blanketten
+PaperFormExplain = Nougat hittade de här fälten på sida {0}. Dina profiluppgifter är redan ifyllda: ändra det som behövs.
+PaperFormNone = Inga fält hittades på sidan. Skriv med verktyget Text i läget Anteckna.
+PaperFormNoText = Sidan är en skanning utan igenkänd text. Kör textigenkänning först för att hitta fälten.
+PaperFormSave = Spara mina uppgifter på den här enheten
+PaperFormFill = Fyll i
+PaperFormFilled = Ifyllda fält: {0}. Kontrollera och spara (Ångra tar bort den senaste texten).
+PaperFormSearching = Söker fält…
 """

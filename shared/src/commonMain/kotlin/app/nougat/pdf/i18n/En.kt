@@ -575,4 +575,14 @@ ReadAloudNoText = Nothing to read. For a scan, run text recognition first.
 ReadAloudUnavailable = Reading aloud is not available on this device.
 ReadAloudTranslated = translation in {0}
 ReadAloudFinished = Finished reading.
+
+PaperForm = Fill in a paper form
+PaperFormTitle = Fill in the form
+PaperFormExplain = Nougat found these fields on page {0}. Your profile details are already filled in: change what you need.
+PaperFormNone = No field found on this page. Write with the Text tool of the Annotate mode.
+PaperFormNoText = This page is a scan without recognized text. Run text recognition first to find the fields.
+PaperFormSave = Keep my details on this device
+PaperFormFill = Fill in
+PaperFormFilled = Fields filled: {0}. Check, then save (Undo removes the last text).
+PaperFormSearching = Looking for fields…
 """

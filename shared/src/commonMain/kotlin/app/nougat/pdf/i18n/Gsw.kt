@@ -576,4 +576,14 @@ ReadAloudNoText = Nüt zum Vorläse. Bi me Scan zerscht d Texterkennig starte.
 ReadAloudUnavailable = Vorläse gaht uf dem Gerät nöd.
 ReadAloudTranslated = Übersetzig uf {0}
 ReadAloudFinished = Fertig vorgläse.
+
+PaperForm = Papierformular uusfülle
+PaperFormTitle = Formular uusfülle
+PaperFormExplain = Nougat het die Fälder uf Siite {0} gfunde. Dini Profilaagabe sind scho iitreit: Änder, was nötig isch.
+PaperFormNone = Uf dere Siite isch kei Fäld gfunde worde. Schriib mit em Wärchzüüg Text im Modus Aamerke.
+PaperFormNoText = Die Siite isch en Scan ohni erkannte Text. Start zerscht d Texterkennig, zum d Fälder finde.
+PaperFormSave = Mini Aagabe uf dem Gerät bhalte
+PaperFormFill = Uusfülle
+PaperFormFilled = Uusgfüllti Fälder: {0}. Prüefe, denn speichere (Rückgängig nimmt de letscht Text wäg).
+PaperFormSearching = Fälder wärded gsuecht…
 """

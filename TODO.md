@@ -23,14 +23,14 @@
 - [ ] Page de confidentialité (artisango.ch) : ajouter la traduction (modèles ML Kit
       téléchargés depuis Google, texte envoyé à Anthropic avec Claude).
 
-## Prochaines fonctions (choisies, pas encore commencées)
+## Prochaines fonctions (choisies)
 
 - [x] QR-facture suisse : la lire (montant, IBAN, référence, copier pour l'e-banking) et en
       ajouter une à un devis ou une facture.
 - [x] Métré sur plan : étalonner l'échelle, mesurer longueurs et surfaces au doigt.
 - [x] « Ce que je dois faire » : résumé simple d'une lettre et échéances vers le calendrier
       (Gemini Nano, sur le téléphone).
-- [ ] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
+- [x] Remplir un formulaire papier scanné (champs détectés, profil enregistré sur l'appareil).
 - [x] Lecture à voix haute, aussi dans la langue traduite.
 
 ## Outils demandés (prochaine série)

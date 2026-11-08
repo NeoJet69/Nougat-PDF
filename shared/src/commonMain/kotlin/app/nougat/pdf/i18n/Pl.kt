@@ -575,4 +575,14 @@ ReadAloudNoText = Nie ma nic do czytania. W przypadku skanu najpierw uruchom roz
 ReadAloudUnavailable = Czytanie na głos nie jest dostępne na tym urządzeniu.
 ReadAloudTranslated = tłumaczenie: {0}
 ReadAloudFinished = Czytanie zakończone.
+
+PaperForm = Wypełnij papierowy formularz
+PaperFormTitle = Wypełnij formularz
+PaperFormExplain = Nougat znalazł te pola na stronie {0}. Dane z Twojego profilu są już wpisane: zmień, co trzeba.
+PaperFormNone = Nie znaleziono pól na tej stronie. Pisz narzędziem Tekst w trybie Adnotacje.
+PaperFormNoText = Ta strona to skan bez rozpoznanego tekstu. Najpierw uruchom rozpoznawanie tekstu, aby znaleźć pola.
+PaperFormSave = Zachowaj moje dane na tym urządzeniu
+PaperFormFill = Wypełnij
+PaperFormFilled = Wypełnione pola: {0}. Sprawdź, potem zapisz (Cofnij usuwa ostatni tekst).
+PaperFormSearching = Szukanie pól…
 """

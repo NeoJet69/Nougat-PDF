@@ -576,4 +576,14 @@ ReadAloudNoText = لا يوجد ما يُقرأ. بالنسبة للمستند �
 ReadAloudUnavailable = القراءة بصوت عالٍ غير متاحة على هذا الجهاز.
 ReadAloudTranslated = الترجمة إلى {0}
 ReadAloudFinished = انتهت القراءة.
+
+PaperForm = ملء استمارة ورقية
+PaperFormTitle = ملء الاستمارة
+PaperFormExplain = وجد Nougat هذه الحقول في الصفحة {0}. بيانات ملفك الشخصي موضوعة مسبقاً: غيّر ما يلزم.
+PaperFormNone = لم يُعثر على أي حقل في هذه الصفحة. اكتب بأداة النص في وضع التعليق.
+PaperFormNoText = هذه الصفحة مسح ضوئي بلا نص معروف. شغّل التعرف على النص أولاً للعثور على الحقول.
+PaperFormSave = الاحتفاظ ببياناتي على هذا الجهاز
+PaperFormFill = ملء
+PaperFormFilled = الحقول المملوءة: {0}. تحقق ثم احفظ (التراجع يزيل آخر نص).
+PaperFormSearching = جارٍ البحث عن الحقول…
 """

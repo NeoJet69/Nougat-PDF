@@ -576,4 +576,14 @@ ReadAloudNoText = Pas res de legir. Per un escaneg, aviatz d'en primièr la reco
 ReadAloudUnavailable = La lectura a votz nauta es pas disponibla sus aqueste aparelh.
 ReadAloudTranslated = traduccion en {0}
 ReadAloudFinished = Lectura acabada.
+
+PaperForm = Emplenar un formulari papièr
+PaperFormTitle = Emplenar lo formulari
+PaperFormExplain = Nougat a trobat aquestes camps sus la pagina {0}. Las informacions de vòstre perfil i son ja : cambiatz çò que cal.
+PaperFormNone = Cap de camp pas trobat sus aquesta pagina. Escrivètz amb l'aisina Tèxte del mòde Anotar.
+PaperFormNoText = Aquesta pagina es un escaneg sens tèxte reconegut. Aviatz d'en primièr la reconeissença del tèxte per trobar los camps.
+PaperFormSave = Gardar mas informacions sus aqueste aparelh
+PaperFormFill = Emplenar
+PaperFormFilled = Camps emplenats : {0}. Verificatz puèi enregistratz (Anullar tira lo darrièr tèxte).
+PaperFormSearching = Recèrca dels camps…
 """

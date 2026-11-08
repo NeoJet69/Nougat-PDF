@@ -56,6 +56,8 @@ import app.nougat.pdf.engine.PageLines
 import app.nougat.pdf.engine.PageSize
 import app.nougat.pdf.engine.PdfToMarkdown
 import app.nougat.pdf.engine.SwissQr
+import app.nougat.pdf.engine.PaperForms
+import app.nougat.pdf.engine.ProfileKey
 import app.nougat.pdf.engine.LanguageGuess
 import app.nougat.pdf.engine.Paragraphs
 import app.nougat.pdf.engine.defaultTranslationTarget
@@ -383,6 +385,7 @@ class ViewerState(
                 measure.reset()
                 closeTodo()
                 stopReadAloud()
+                paperForm.reset()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -498,6 +501,7 @@ class ViewerState(
         measure.reset()
         closeTodo()
         stopReadAloud()
+        paperForm.reset()
     }
 
     private fun closeCurrent() {
@@ -830,6 +834,74 @@ class ViewerState(
         val s = session ?: return
         scope.launch {
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
+        }
+    }
+
+    // ---- Remplir un formulaire papier -------------------------------------------------------------
+
+    val paperForm = PaperFormState()
+
+    private fun loadProfile(): Map<ProfileKey, String> = (PaperForms.STORED + ProfileKey.FullName).mapNotNull { key ->
+        runCatching { files.loadSetting(PROFILE_PREFIX + key.name) }.getOrNull()?.takeIf { it.isNotBlank() }?.let { key to it }
+    }.toMap()
+
+    /** Cherche les champs de la page affichee et les pre-remplit avec le profil. */
+    fun startPaperForm() {
+        val s = session ?: return
+        val page = s.visiblePage
+        paperForm.reset()
+        paperForm.page = page
+        paperForm.dialogOpen = true
+        paperForm.searching = true
+        scope.launch {
+            try {
+                val size = s.pageSizes.getOrNull(page) ?: return@launch
+                val blocks = runCatching { s.textBlocks(page) }.getOrDefault(emptyList())
+                if (blocks.isEmpty()) {
+                    paperForm.noText = true
+                    return@launch
+                }
+                val profile = loadProfile()
+                val today = files.today()
+                paperForm.entries = PaperForms.detect(page, blocks, size.width, size.height).map { field ->
+                    PaperFieldEntry(field, field.key?.let { PaperForms.valueFor(it, profile, today) }.orEmpty())
+                }
+            } finally {
+                paperForm.searching = false
+            }
+        }
+    }
+
+    /** Ecrit les valeurs sur la page (comme du texte du mode Annoter) et garde le profil. */
+    fun fillPaperForm() {
+        val s = session ?: return
+        val size = s.pageSizes.getOrNull(paperForm.page) ?: return
+        val filled = paperForm.entries.filter { it.value.isNotBlank() }
+        for (entry in filled) {
+            val f = entry.field
+            val y = (f.rect.bottom - f.fontSize * 1.05f / size.height).coerceIn(0f, 0.98f)
+            s.marks.add(TextMark(f.page, f.rect.left, y, entry.value.trim(), f.fontSize, PAPER_FORM_INK, size.width, size.height))
+        }
+        if (paperForm.saveProfile) saveProfile(filled)
+        paperForm.reset()
+        toast = tr(Str.PaperFormFilled, filled.size)
+    }
+
+    private fun saveProfile(entries: List<PaperFieldEntry>) {
+        fun put(key: ProfileKey, value: String) {
+            runCatching { files.saveSetting(PROFILE_PREFIX + key.name, value.trim()) }
+        }
+        for (entry in entries) {
+            val key = entry.field.key ?: continue
+            val value = entry.value.trim()
+            when (key) {
+                ProfileKey.PostalTown -> Regex("""^(\d{4,5})\s+(.+)$""").matchEntire(value)?.let {
+                    put(ProfileKey.PostalCode, it.groupValues[1])
+                    put(ProfileKey.Town, it.groupValues[2])
+                }
+                ProfileKey.PlaceDate, ProfileKey.Date -> Unit
+                else -> put(key, value)
+            }
         }
     }
 
@@ -1838,3 +1910,8 @@ fun labelAnchor(m: Measurement): NPoint {
     }
     return NPoint((m.points[i].x + m.points[i - 1].x) / 2f, (m.points[i].y + m.points[i - 1].y) / 2f)
 }
+
+/** Couleur du texte ecrit dans un formulaire papier. */
+const val PAPER_FORM_INK = 0xFF1A1A1A.toInt()
+
+private const val PROFILE_PREFIX = "profile."

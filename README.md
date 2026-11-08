@@ -119,6 +119,12 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Remplir un formulaire papier** (menu ⋮) : sur un formulaire scanné (texte reconnu) ou un PDF
+sans champs, Nougat repère les champs de la page (un libellé suivi de « ____ », de « …… » ou de
+deux-points) et les remplit avec votre profil : nom, prénom, adresse, NPA et localité, date de
+naissance, téléphone, e-mail, n° AVS, IBAN, « Lieu et date ». Vous corrigez, puis le texte est
+écrit sur la page. Le profil reste sur l'appareil, pour le formulaire suivant.
+
 **Lire à voix haute** (menu ⋮) : la voix de l'appareil lit le document paragraphe par paragraphe
 depuis la page affichée, en surlignant ce qu'elle lit (pause, paragraphe précédent ou suivant,
 trois vitesses). Quand la traduction est affichée, c'est la traduction qui est lue, dans sa

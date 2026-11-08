@@ -429,6 +429,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             item(tr(Str.Compress), NougatIcons.Compress) { state.compressOpen = true }
             item(tr(Str.ExportMarkdown), NougatIcons.Markdown, state::exportMarkdown)
             item(tr(Str.QrBill), NougatIcons.QrCode, state::openQrBill)
+            item(tr(Str.PaperForm), NougatIcons.EditText, state::startPaperForm)
             item(tr(Str.Measure), NougatIcons.Measure, state::startMeasure)
             item(tr(Str.Censor), NougatIcons.Censor) { state.censor.dialogOpen = true }
             item(tr(Str.Finalize), NougatIcons.Shield) { state.finalizeOpen = true }

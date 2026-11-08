@@ -575,4 +575,14 @@ ReadAloudNoText = 没有可朗读的内容。如果是扫描件，请先运行�
 ReadAloudUnavailable = 此设备不支持朗读。
 ReadAloudTranslated = {0}译文
 ReadAloudFinished = 朗读结束。
+
+PaperForm = 填写纸质表格
+PaperFormTitle = 填写表格
+PaperFormExplain = Nougat 在第 {0} 页找到了这些栏位。您的个人资料已经填好：请修改需要改的地方。
+PaperFormNone = 此页未找到栏位。请用标注模式的文字工具书写。
+PaperFormNoText = 此页是未识别文字的扫描件。请先运行文字识别以查找栏位。
+PaperFormSave = 在此设备上保留我的信息
+PaperFormFill = 填写
+PaperFormFilled = 已填写栏位：{0}。请检查后保存（撤销会移除最后的文字）。
+PaperFormSearching = 正在查找栏位…
 """

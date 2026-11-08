@@ -575,4 +575,14 @@ ReadAloudNoText = Nichts zum Vorlesen. Bei einem Scan zuerst die Texterkennung s
 ReadAloudUnavailable = Vorlesen ist auf diesem Gerät nicht verfügbar.
 ReadAloudTranslated = Übersetzung auf {0}
 ReadAloudFinished = Vorlesen beendet.
+
+PaperForm = Papierformular ausfüllen
+PaperFormTitle = Formular ausfüllen
+PaperFormExplain = Nougat hat diese Felder auf Seite {0} gefunden. Ihre Profilangaben sind schon eingetragen: Ändern Sie, was nötig ist.
+PaperFormNone = Auf dieser Seite wurde kein Feld gefunden. Schreiben Sie mit dem Werkzeug Text im Modus Anmerken.
+PaperFormNoText = Diese Seite ist ein Scan ohne erkannten Text. Starten Sie zuerst die Texterkennung, um die Felder zu finden.
+PaperFormSave = Meine Angaben auf diesem Gerät behalten
+PaperFormFill = Ausfüllen
+PaperFormFilled = Ausgefüllte Felder: {0}. Prüfen, dann speichern (Rückgängig entfernt den letzten Text).
+PaperFormSearching = Felder werden gesucht…
 """

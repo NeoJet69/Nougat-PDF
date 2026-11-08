@@ -92,5 +92,6 @@ enum class Str {
     TodoCheck, TodoCalendar, TodoAdded, TodoCalendarFailed, TodoCopied, TodoAiFailed,
     TodoNoDate, TodoCopy, ReadAloud, ReadAloudTitle, ReadAloudWhere, ReadAloudPause,
     ReadAloudPlay, ReadAloudPrevious, ReadAloudNext, ReadAloudSpeed, ReadAloudNoVoice, ReadAloudNoText,
-    ReadAloudUnavailable, ReadAloudTranslated, ReadAloudFinished,
+    ReadAloudUnavailable, ReadAloudTranslated, ReadAloudFinished, PaperForm, PaperFormTitle, PaperFormExplain,
+    PaperFormNone, PaperFormNoText, PaperFormSave, PaperFormFill, PaperFormFilled, PaperFormSearching,
 }

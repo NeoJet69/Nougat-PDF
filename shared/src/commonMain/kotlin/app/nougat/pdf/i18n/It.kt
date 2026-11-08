@@ -575,4 +575,14 @@ ReadAloudNoText = Niente da leggere. Per una scansione, avvia prima il riconosci
 ReadAloudUnavailable = La lettura ad alta voce non è disponibile su questo dispositivo.
 ReadAloudTranslated = traduzione in {0}
 ReadAloudFinished = Lettura terminata.
+
+PaperForm = Compila un modulo cartaceo
+PaperFormTitle = Compila il modulo
+PaperFormExplain = Nougat ha trovato questi campi a pagina {0}. I dati del tuo profilo sono già inseriti: cambia ciò che serve.
+PaperFormNone = Nessun campo trovato in questa pagina. Scrivi con lo strumento Testo della modalità Annota.
+PaperFormNoText = Questa pagina è una scansione senza testo riconosciuto. Avvia prima il riconoscimento del testo per trovare i campi.
+PaperFormSave = Conserva i miei dati su questo dispositivo
+PaperFormFill = Compila
+PaperFormFilled = Campi compilati: {0}. Controlla, poi salva (Annulla toglie l'ultimo testo).
+PaperFormSearching = Ricerca dei campi…
 """

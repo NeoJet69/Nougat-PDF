@@ -576,4 +576,14 @@ ReadAloudNoText = Netra da lenn. Evit ur skan, lañsit da gentañ anaoudegezh an
 ReadAloudUnavailable = Ne c'haller ket lenn a vouezh uhel war an trevnad-mañ.
 ReadAloudTranslated = troidigezh e {0}
 ReadAloudFinished = Echu eo al lenn.
+
+PaperForm = Leuniañ ur furmskrid paper
+PaperFormTitle = Leuniañ ar furmskrid
+PaperFormExplain = Kavet en deus Nougat ar maeziennoù-mañ war ar bajenn {0}. Lakaet eo bet titouroù ho profil endeo : cheñchit ar pezh a zo ret.
+PaperFormNone = Maezienn ebet kavet war ar bajenn-mañ. Skrivit gant ar benveg Testenn er mod Notennañ.
+PaperFormNoText = Ur skan hep testenn anavezet eo ar bajenn-mañ. Lañsit da gentañ anaoudegezh an destenn evit kavout ar maeziennoù.
+PaperFormSave = Mirout ma zitouroù war an trevnad-mañ
+PaperFormFill = Leuniañ
+PaperFormFilled = Maeziennoù leuniet : {0}. Gwiriit hag enrollit (Nullañ a lam an destenn ziwezhañ).
+PaperFormSearching = O klask ar maeziennoù…
 """

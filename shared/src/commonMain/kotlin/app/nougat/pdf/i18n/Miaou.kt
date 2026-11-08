@@ -579,4 +579,14 @@ ReadAloudNoText = Rien à lire. Pour un scan, lancez d'abord la reconnaissance d
 ReadAloudUnavailable = La lecture à voix haute n'est pas disponible sur cet appareil.
 ReadAloudTranslated = traduction en {0}
 ReadAloudFinished = Lecture terminée. Le chat s'est endormi.
+
+PaperForm = Remplir un formulaire papier
+PaperFormTitle = Remplir le formulaire
+PaperFormExplain = Nougat a trouvé ces champs sur la page {0}. Les informations de votre profil sont déjà mises : changez ce qu'il faut.
+PaperFormNone = Aucun champ trouvé sur cette page. Écrivez avec l'outil Texte du mode Annoter.
+PaperFormNoText = Cette page est un scan sans texte reconnu. Lancez d'abord la reconnaissance du texte pour trouver les champs.
+PaperFormSave = Garder mes informations sur cet appareil
+PaperFormFill = Remplir
+PaperFormFilled = Champs remplis : {0}. Vérifiez puis enregistrez (Annuler retire le dernier texte).
+PaperFormSearching = Recherche des champs…
 """

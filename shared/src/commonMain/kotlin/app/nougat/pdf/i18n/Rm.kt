@@ -576,4 +576,14 @@ ReadAloudNoText = Nagut da leger. Per in scan, aviai l'emprim la renconuschients
 ReadAloudUnavailable = La lectura ad auta vusch n'è betg disponibla sin quest apparat.
 ReadAloudTranslated = translaziun en {0}
 ReadAloudFinished = Lectura terminada.
+
+PaperForm = Emplenir in formular da palpiri
+PaperFormTitle = Emplenir il formular
+PaperFormExplain = Nougat ha chattà quests champs sin la pagina {0}. Las indicaziuns da Voss profil èn gia inditgadas: midai quai che fa basegn.
+PaperFormNone = Nagin champ chattà sin questa pagina. Scrivai cun l'utensil Text dal modus Annotar.
+PaperFormNoText = Questa pagina è in scan senza text renconuschì. Aviai l'emprim la renconuschientscha dal text per chattar ils champs.
+PaperFormSave = Tegnair mias indicaziuns sin quest apparat
+PaperFormFill = Emplenir
+PaperFormFilled = Champs emplenids: {0}. Controllai, lura memorisai (Revocar allontanescha l'ultim text).
+PaperFormSearching = Tschertga dals champs…
 """

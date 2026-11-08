@@ -575,4 +575,14 @@ ReadAloudNoText = Niets om voor te lezen. Start bij een scan eerst de tekstherke
 ReadAloudUnavailable = Voorlezen is niet beschikbaar op dit apparaat.
 ReadAloudTranslated = vertaling in het {0}
 ReadAloudFinished = Voorlezen klaar.
+
+PaperForm = Papieren formulier invullen
+PaperFormTitle = Formulier invullen
+PaperFormExplain = Nougat vond deze velden op pagina {0}. Uw profielgegevens zijn al ingevuld: pas aan wat nodig is.
+PaperFormNone = Geen veld gevonden op deze pagina. Schrijf met het hulpmiddel Tekst in de modus Aantekenen.
+PaperFormNoText = Deze pagina is een scan zonder herkende tekst. Start eerst de tekstherkenning om de velden te vinden.
+PaperFormSave = Mijn gegevens op dit apparaat bewaren
+PaperFormFill = Invullen
+PaperFormFilled = Ingevulde velden: {0}. Controleer en sla op (Ongedaan maken verwijdert de laatste tekst).
+PaperFormSearching = Velden zoeken…
 """
