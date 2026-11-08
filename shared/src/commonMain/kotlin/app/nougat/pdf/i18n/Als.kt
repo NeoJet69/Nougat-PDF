@@ -586,4 +586,6 @@ PaperFormSave = Mini Angawe uf dem Gerät bhalte
 PaperFormFill = Üssfülle
 PaperFormFilled = Üssgfüllti Felder: {0}. Prüefe, dann speichere (Zruck nimmt dr letscht Text ewäg).
 PaperFormSearching = Felder wäre gsüecht…
+
+ReportByEmail = Au am Entwickler schicke (per E-Mail)
 """

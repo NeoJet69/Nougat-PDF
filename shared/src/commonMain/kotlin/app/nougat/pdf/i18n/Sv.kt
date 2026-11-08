@@ -585,4 +585,6 @@ PaperFormSave = Spara mina uppgifter på den här enheten
 PaperFormFill = Fyll i
 PaperFormFilled = Ifyllda fält: {0}. Kontrollera och spara (Ångra tar bort den senaste texten).
 PaperFormSearching = Söker fält…
+
+ReportByEmail = Skicka även till utvecklaren (via e-post)
 """

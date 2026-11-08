@@ -586,4 +586,6 @@ PaperFormSave = الاحتفاظ ببياناتي على هذا الجهاز
 PaperFormFill = ملء
 PaperFormFilled = الحقول المملوءة: {0}. تحقق ثم احفظ (التراجع يزيل آخر نص).
 PaperFormSearching = جارٍ البحث عن الحقول…
+
+ReportByEmail = إرسالها أيضاً إلى المطوّر (بالبريد الإلكتروني)
 """

@@ -585,4 +585,6 @@ PaperFormSave = Guardar os meus dados neste dispositivo
 PaperFormFill = Preencher
 PaperFormFilled = Campos preenchidos: {0}. Verifique e guarde (Anular retira o último texto).
 PaperFormSearching = A procurar campos…
+
+ReportByEmail = Enviar também ao programador (por e-mail)
 """

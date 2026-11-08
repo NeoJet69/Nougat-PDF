@@ -586,4 +586,6 @@ PaperFormSave = Gardar mas informacions sus aqueste aparelh
 PaperFormFill = Emplenar
 PaperFormFilled = Camps emplenats : {0}. Verificatz puèi enregistratz (Anullar tira lo darrièr tèxte).
 PaperFormSearching = Recèrca dels camps…
+
+ReportByEmail = Mandar tanben al desvolopaire (per corrièl)
 """

@@ -586,4 +586,6 @@ PaperFormSave = Tegnair mias indicaziuns sin quest apparat
 PaperFormFill = Emplenir
 PaperFormFilled = Champs emplenids: {0}. Controllai, lura memorisai (Revocar allontanescha l'ultim text).
 PaperFormSearching = Tschertga dals champs…
+
+ReportByEmail = Trametter er al sviluppader (per e-mail)
 """

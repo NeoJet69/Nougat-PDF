@@ -586,4 +586,6 @@ PaperFormSave = Mirout ma zitouroù war an trevnad-mañ
 PaperFormFill = Leuniañ
 PaperFormFilled = Maeziennoù leuniet : {0}. Gwiriit hag enrollit (Nullañ a lam an destenn ziwezhañ).
 PaperFormSearching = O klask ar maeziennoù…
+
+ReportByEmail = Kas ivez d'an diorroer (dre bostel)
 """

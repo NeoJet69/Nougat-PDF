@@ -585,4 +585,6 @@ PaperFormSave = Зберегти мої дані на цьому пристро�
 PaperFormFill = Заповнити
 PaperFormFilled = Заповнено полів: {0}. Перевірте й збережіть («Скасувати» прибирає останній текст).
 PaperFormSearching = Пошук полів…
+
+ReportByEmail = Також надіслати розробнику (e-mail)
 """

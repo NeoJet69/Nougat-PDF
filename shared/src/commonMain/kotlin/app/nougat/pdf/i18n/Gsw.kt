@@ -586,4 +586,6 @@ PaperFormSave = Mini Aagabe uf dem Gerät bhalte
 PaperFormFill = Uusfülle
 PaperFormFilled = Uusgfüllti Fälder: {0}. Prüefe, denn speichere (Rückgängig nimmt de letscht Text wäg).
 PaperFormSearching = Fälder wärded gsuecht…
+
+ReportByEmail = Au am Entwickler schicke (per E-Mail)
 """

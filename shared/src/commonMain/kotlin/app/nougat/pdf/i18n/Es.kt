@@ -585,4 +585,6 @@ PaperFormSave = Guardar mis datos en este dispositivo
 PaperFormFill = Rellenar
 PaperFormFilled = Campos rellenados: {0}. Revisa y guarda (Deshacer quita el último texto).
 PaperFormSearching = Buscando campos…
+
+ReportByEmail = Enviarla también al desarrollador (por correo)
 """

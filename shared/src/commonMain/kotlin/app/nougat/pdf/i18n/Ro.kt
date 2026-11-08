@@ -586,4 +586,6 @@ PaperFormSave = Păstrează datele mele pe acest dispozitiv
 PaperFormFill = Completează
 PaperFormFilled = Câmpuri completate: {0}. Verificați, apoi salvați (Anulare elimină ultimul text).
 PaperFormSearching = Se caută câmpurile…
+
+ReportByEmail = Trimite și dezvoltatorului (prin e-mail)
 """

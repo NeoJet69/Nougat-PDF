@@ -585,4 +585,6 @@ PaperFormSave = Conserva i miei dati su questo dispositivo
 PaperFormFill = Compila
 PaperFormFilled = Campi compilati: {0}. Controlla, poi salva (Annulla toglie l'ultimo testo).
 PaperFormSearching = Ricerca dei campi…
+
+ReportByEmail = Invia anche allo sviluppatore (via e-mail)
 """

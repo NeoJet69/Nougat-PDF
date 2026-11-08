@@ -585,4 +585,6 @@ PaperFormSave = Meine Angaben auf diesem Gerät behalten
 PaperFormFill = Ausfüllen
 PaperFormFilled = Ausgefüllte Felder: {0}. Prüfen, dann speichern (Rückgängig entfernt den letzten Text).
 PaperFormSearching = Felder werden gesucht…
+
+ReportByEmail = Auch an den Entwickler senden (per E-Mail)
 """

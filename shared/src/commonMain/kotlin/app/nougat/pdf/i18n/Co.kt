@@ -586,4 +586,6 @@ PaperFormSave = Tene i mo dati nant'à stu apparechju
 PaperFormFill = Riempie
 PaperFormFilled = Campi riempiuti : {0}. Verificate po arregistrate (Annullà caccia l'ultimu testu).
 PaperFormSearching = Ricerca di i campi…
+
+ReportByEmail = Mandà dinò à u sviluppatore (per e-mail)
 """

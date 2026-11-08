@@ -585,4 +585,6 @@ PaperFormSave = Mijn gegevens op dit apparaat bewaren
 PaperFormFill = Invullen
 PaperFormFilled = Ingevulde velden: {0}. Controleer en sla op (Ongedaan maken verwijdert de laatste tekst).
 PaperFormSearching = Velden zoeken…
+
+ReportByEmail = Ook naar de ontwikkelaar sturen (per e-mail)
 """

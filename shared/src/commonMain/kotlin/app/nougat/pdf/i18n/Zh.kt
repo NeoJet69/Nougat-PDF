@@ -585,4 +585,6 @@ PaperFormSave = 在此设备上保留我的信息
 PaperFormFill = 填写
 PaperFormFilled = 已填写栏位：{0}。请检查后保存（撤销会移除最后的文字）。
 PaperFormSearching = 正在查找栏位…
+
+ReportByEmail = 同时发送给开发者（电子邮件）
 """

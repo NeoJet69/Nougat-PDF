@@ -585,4 +585,6 @@ PaperFormSave = Bilgilerimi bu cihazda sakla
 PaperFormFill = Doldur
 PaperFormFilled = Doldurulan alanlar: {0}. Kontrol edip kaydedin (Geri al son metni kaldırır).
 PaperFormSearching = Alanlar aranıyor…
+
+ReportByEmail = Geliştiriciye de gönder (e-postayla)
 """

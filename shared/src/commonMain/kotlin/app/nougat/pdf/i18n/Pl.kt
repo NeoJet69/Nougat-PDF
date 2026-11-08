@@ -585,4 +585,6 @@ PaperFormSave = Zachowaj moje dane na tym urządzeniu
 PaperFormFill = Wypełnij
 PaperFormFilled = Wypełnione pola: {0}. Sprawdź, potem zapisz (Cofnij usuwa ostatni tekst).
 PaperFormSearching = Szukanie pól…
+
+ReportByEmail = Wyślij też do twórcy (e-mailem)
 """

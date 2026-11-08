@@ -132,11 +132,11 @@ private fun Conversation(state: ViewerState, modifier: Modifier) {
     reporting?.let { item ->
         ReportDialog(
             onDismiss = { reporting = null },
-            onReport = { reason, comment ->
+            onReport = { reason, comment, byEmail ->
                 a.reported.add(item)
                 reporting = null
                 state.showToast(tr(Str.ReportThanks))
-                (item as? ChatItem.Assistant)?.let { sendReport(it.text, reason, comment) }
+                if (byEmail) (item as? ChatItem.Assistant)?.let { sendReport(it.text, reason, comment) }
             },
         )
     }
@@ -336,9 +336,10 @@ private val ReportReasons = listOf(Str.ReportOffensive, Str.ReportDangerous, Str
 
 /** Signaler une reponse de Claude : elle est masquee, et peut etre envoyee au developpeur. */
 @Composable
-private fun ReportDialog(onDismiss: () -> Unit, onReport: (String, String) -> Unit) {
+private fun ReportDialog(onDismiss: () -> Unit, onReport: (String, String, Boolean) -> Unit) {
     var reason by remember { mutableStateOf(ReportReasons.first()) }
     var comment by remember { mutableStateOf("") }
+    var byEmail by remember { mutableStateOf(false) }
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(tr(Str.ReportTitle)) },
@@ -347,18 +348,19 @@ private fun ReportDialog(onDismiss: () -> Unit, onReport: (String, String) -> Un
                 Text(tr(Str.ReportExplain), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 for (r in ReportReasons) ChoiceRow(tr(r), reason == r) { reason = r }
                 OutlinedTextField(value = comment, onValueChange = { comment = it.take(500) }, label = { Text(tr(Str.ReportComment)) }, modifier = Modifier.fillMaxWidth())
+                if (REPORT_EMAIL.isNotBlank()) CheckRow(tr(Str.ReportByEmail), byEmail) { byEmail = it }
             }
         },
-        confirmButton = { Button(onClick = { onReport(tr(reason), comment) }) { Text(tr(Str.ReportSend)) } },
+        confirmButton = { Button(onClick = { onReport(tr(reason), comment, byEmail) }) { Text(tr(Str.ReportSend)) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
     )
 }
 
 /**
- * Adresse ou envoyer les reponses signalees (le courriel s'ouvre, l'utilisateur l'envoie).
- * Vide : la reponse est seulement masquee.
+ * Adresse ou envoyer les reponses signalees, si l'utilisateur coche la case : son application
+ * d'e-mail s'ouvre, il envoie lui-meme. Sans la case, la reponse est seulement masquee.
  */
-const val REPORT_EMAIL = ""
+const val REPORT_EMAIL = "support+signaler@artisango.ch"
 
 /** Encode un texte pour une adresse mailto: (UTF-8, pourcentages). */
 private fun encodeUrl(text: String): String = buildString {

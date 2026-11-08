@@ -585,4 +585,6 @@ PaperFormSave = Keep my details on this device
 PaperFormFill = Fill in
 PaperFormFilled = Fields filled: {0}. Check, then save (Undo removes the last text).
 PaperFormSearching = Looking for fields…
+
+ReportByEmail = Also send it to the developer (by e-mail)
 """
