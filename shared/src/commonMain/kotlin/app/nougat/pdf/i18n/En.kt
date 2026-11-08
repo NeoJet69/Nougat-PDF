@@ -561,4 +561,18 @@ TodoCopied = Copied.
 TodoAiFailed = The AI could not answer: {0}
 TodoNoDate = no date
 TodoCopy = Copy
+
+ReadAloud = Read aloud
+ReadAloudTitle = Reading aloud
+ReadAloudWhere = Page {0} · paragraph {1}
+ReadAloudPause = Pause
+ReadAloudPlay = Read
+ReadAloudPrevious = Previous paragraph
+ReadAloudNext = Next paragraph
+ReadAloudSpeed = Speed {0}
+ReadAloudNoVoice = No {0} voice on this device. Add it in the system text-to-speech settings (on Windows: Time & language, Speech).
+ReadAloudNoText = Nothing to read. For a scan, run text recognition first.
+ReadAloudUnavailable = Reading aloud is not available on this device.
+ReadAloudTranslated = translation in {0}
+ReadAloudFinished = Finished reading.
 """

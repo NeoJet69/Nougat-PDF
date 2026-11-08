@@ -562,4 +562,18 @@ TodoCopied = تم النسخ.
 TodoAiFailed = تعذّر على الذكاء الاصطناعي الرد: {0}
 TodoNoDate = بدون تاريخ
 TodoCopy = نسخ
+
+ReadAloud = القراءة بصوت عالٍ
+ReadAloudTitle = القراءة بصوت عالٍ
+ReadAloudWhere = الصفحة {0} · الفقرة {1}
+ReadAloudPause = إيقاف مؤقت
+ReadAloudPlay = قراءة
+ReadAloudPrevious = الفقرة السابقة
+ReadAloudNext = الفقرة التالية
+ReadAloudSpeed = السرعة {0}
+ReadAloudNoVoice = لا يوجد صوت بلغة {0} على هذا الجهاز. أضفه من إعدادات تحويل النص إلى كلام في النظام (في Windows: الوقت واللغة، الكلام).
+ReadAloudNoText = لا يوجد ما يُقرأ. بالنسبة للمستند الممسوح، شغّل التعرف على النص أولاً.
+ReadAloudUnavailable = القراءة بصوت عالٍ غير متاحة على هذا الجهاز.
+ReadAloudTranslated = الترجمة إلى {0}
+ReadAloudFinished = انتهت القراءة.
 """

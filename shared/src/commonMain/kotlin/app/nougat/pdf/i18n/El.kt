@@ -561,4 +561,18 @@ TodoCopied = Αντιγράφηκε.
 TodoAiFailed = Η ΤΝ δεν μπόρεσε να απαντήσει: {0}
 TodoNoDate = χωρίς ημερομηνία
 TodoCopy = Αντιγραφή
+
+ReadAloud = Ανάγνωση φωναχτά
+ReadAloudTitle = Ανάγνωση φωναχτά
+ReadAloudWhere = Σελίδα {0} · παράγραφος {1}
+ReadAloudPause = Παύση
+ReadAloudPlay = Ανάγνωση
+ReadAloudPrevious = Προηγούμενη παράγραφος
+ReadAloudNext = Επόμενη παράγραφος
+ReadAloudSpeed = Ταχύτητα {0}
+ReadAloudNoVoice = Δεν υπάρχει φωνή για {0} σε αυτή τη συσκευή. Προσθέστε τη στις ρυθμίσεις μετατροπής κειμένου σε ομιλία (στα Windows: Ώρα και γλώσσα, Ομιλία).
+ReadAloudNoText = Τίποτα για ανάγνωση. Για σαρωμένο έγγραφο, εκτελέστε πρώτα αναγνώριση κειμένου.
+ReadAloudUnavailable = Η ανάγνωση φωναχτά δεν είναι διαθέσιμη σε αυτή τη συσκευή.
+ReadAloudTranslated = μετάφραση στα {0}
+ReadAloudFinished = Η ανάγνωση τελείωσε.
 """

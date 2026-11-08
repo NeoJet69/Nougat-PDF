@@ -90,5 +90,7 @@ enum class Str {
     MeasureAreaN, MeasurePerimeter, MeasurePage, MeasureSumLength, MeasureSumArea, Todo,
     TodoReading, TodoNoText, TodoSummary, TodoTasks, TodoNothing, TodoNoAi,
     TodoCheck, TodoCalendar, TodoAdded, TodoCalendarFailed, TodoCopied, TodoAiFailed,
-    TodoNoDate, TodoCopy,
+    TodoNoDate, TodoCopy, ReadAloud, ReadAloudTitle, ReadAloudWhere, ReadAloudPause,
+    ReadAloudPlay, ReadAloudPrevious, ReadAloudNext, ReadAloudSpeed, ReadAloudNoVoice, ReadAloudNoText,
+    ReadAloudUnavailable, ReadAloudTranslated, ReadAloudFinished,
 }

@@ -28,6 +28,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import app.nougat.pdf.i18n.I18n
 import app.nougat.pdf.i18n.Lang
@@ -55,6 +56,10 @@ import app.nougat.pdf.engine.PageLines
 import app.nougat.pdf.engine.PageSize
 import app.nougat.pdf.engine.PdfToMarkdown
 import app.nougat.pdf.engine.SwissQr
+import app.nougat.pdf.engine.LanguageGuess
+import app.nougat.pdf.engine.Paragraphs
+import app.nougat.pdf.engine.defaultTranslationTarget
+import app.nougat.pdf.engine.translationLanguage
 import app.nougat.pdf.engine.LetterDigest
 import app.nougat.pdf.engine.LetterTasks
 import app.nougat.pdf.engine.TodoItem
@@ -377,6 +382,7 @@ class ViewerState(
                 qrBill.close()
                 measure.reset()
                 closeTodo()
+                stopReadAloud()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -451,6 +457,7 @@ class ViewerState(
             s?.searchOpen == true -> s.closeSearch()
             s?.selectedBlocks?.isNotEmpty() == true -> s.clearSelection()
             censor.reviewing -> censor.stop()
+            readAloud.active -> stopReadAloud()
             measure.active -> measure.stop()
             todo.dialogOpen -> closeTodo()
             tools.editing -> tools.enter(DockMode.Read)
@@ -490,6 +497,7 @@ class ViewerState(
         qrBill.close()
         measure.reset()
         closeTodo()
+        stopReadAloud()
     }
 
     private fun closeCurrent() {
@@ -824,6 +832,137 @@ class ViewerState(
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
         }
     }
+
+    // ---- Lecture a voix haute ---------------------------------------------------------------------
+
+    val readAloud = ReadAloudState()
+    private var readJob: Job? = null
+    private var readLanguage: String? = null
+
+    /** L'appareil a une voix (synthese vocale d'Android, voix de Windows). */
+    val canReadAloud: Boolean get() = engine.speaker != null
+
+    private class ReadItem(val text: String, val rects: List<NormRect>, val language: String)
+
+    /** Lit a voix haute depuis la page affichee (la traduction si elle est affichee). */
+    fun startReadAloud() {
+        val s = session ?: return
+        readLanguage = null
+        readAloud.active = true
+        readFrom(s.visiblePage, 0)
+    }
+
+    fun stopReadAloud() {
+        readJob?.cancel()
+        readJob = null
+        engine.speaker?.stop()
+        readAloud.reset()
+    }
+
+    fun pauseReadAloud() {
+        readJob?.cancel()
+        readJob = null
+        engine.speaker?.stop()
+        readAloud.playing = false
+    }
+
+    fun resumeReadAloud() = readFrom(readAloud.page, readAloud.index)
+
+    fun nextParagraph() = readFrom(readAloud.page, readAloud.index + 1)
+
+    fun previousParagraph() {
+        if (readAloud.index > 0) {
+            readFrom(readAloud.page, readAloud.index - 1)
+        } else if (readAloud.page > 0) {
+            readFrom(readAloud.page - 1, Int.MAX_VALUE)
+        }
+    }
+
+    /** Vitesse : normale, un peu plus vite, plus lent. */
+    fun cycleReadSpeed() {
+        readAloud.rate = when (readAloud.rate) {
+            1f -> 1.25f
+            1.25f -> 0.8f
+            else -> 1f
+        }
+        engine.speaker?.rate = readAloud.rate
+        if (readAloud.playing) readFrom(readAloud.page, readAloud.index)
+    }
+
+    private fun readFrom(startPage: Int, startIndex: Int) {
+        val s = session ?: return
+        val speaker = engine.speaker ?: run {
+            toast = tr(Str.ReadAloudUnavailable)
+            return
+        }
+        readJob?.cancel()
+        speaker.stop()
+        speaker.rate = readAloud.rate
+        readAloud.active = true
+        readAloud.playing = true
+        readJob = scope.launch {
+            var page = startPage.coerceIn(0, (s.pageCount - 1).coerceAtLeast(0))
+            var index = startIndex
+            var readSomething = false
+            while (page < s.pageCount) {
+                val items = itemsToRead(s, page)
+                if (index == Int.MAX_VALUE) index = (items.size - 1).coerceAtLeast(0)
+                if (items.isNotEmpty() && page != s.visiblePage) s.goToPage(page, (items[index.coerceIn(0, items.lastIndex)].rects.firstOrNull()?.top ?: 0f) - 0.05f)
+                for (i in index until items.size) {
+                    val item = items[i]
+                    readAloud.page = page
+                    readAloud.index = i
+                    readAloud.rects = item.rects
+                    readAloud.language = item.language
+                    readSomething = true
+                    if (!speaker.speak(item.text, item.language)) {
+                        val name = translationLanguage(item.language)?.nativeName ?: item.language
+                        errorMessage = tr(Str.ReadAloudNoVoice, name)
+                        readAloud.playing = false
+                        return@launch
+                    }
+                }
+                page++
+                index = 0
+            }
+            readAloud.playing = false
+            readAloud.rects = emptyList()
+            toast = tr(if (readSomething) Str.ReadAloudFinished else Str.ReadAloudNoText)
+        }
+    }
+
+    /** Les paragraphes de la page : ceux de la traduction affichee, sinon ceux du texte. */
+    private suspend fun itemsToRead(s: DocumentSession, page: Int): List<ReadItem> {
+        val t = translation
+        val settings = t.settings
+        if (settings != null && !t.showOriginal) {
+            t.want(s, page)
+            // La traduction de cette page arrive (au plus 90 secondes).
+            var waited = 0
+            while (t.pages[page] == null || t.pages[page] is PageTranslation.Working || t.pages[page] is PageTranslation.Downloading) {
+                if (waited > 90_000 || t.settings == null) break
+                delay(250)
+                waited += 250
+            }
+            val done = t.pages[page] as? PageTranslation.Done
+            if (done != null) {
+                readAloud.translated = true
+                return done.paragraphs.filter { it.text.isNotBlank() }.map { ReadItem(it.text, it.paragraph.lines, settings.target) }
+            }
+        }
+        readAloud.translated = false
+        val size = s.pageSizes.getOrNull(page) ?: return emptyList()
+        val blocks = runCatching { s.textBlocks(page) }.getOrDefault(emptyList())
+        val paragraphs = Paragraphs.group(page, blocks, size.width, size.height).filter { it.text.isNotBlank() }
+        if (paragraphs.isEmpty()) return emptyList()
+        val language = readLanguage ?: detectReadLanguage(paragraphs.joinToString(" ") { it.text }).also { readLanguage = it }
+        return paragraphs.map { ReadItem(it.text, it.lines, language) }
+    }
+
+    private suspend fun detectReadLanguage(text: String): String =
+        runCatching { engine.deviceTranslator?.detect(text.take(2000)) }.getOrNull()
+            ?: LanguageGuess.guess(text)
+            ?: defaultTranslationTarget(I18n.lang.code)
 
     // ---- Ce que je dois faire ---------------------------------------------------------------------
 

@@ -248,6 +248,13 @@ fun ViewerScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
                     .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
             )
+        } else if (state.readAloud.active) {
+            ReadAloudBar(
+                state = state,
+                compact = compact,
+                modifier = Modifier.align(Alignment.TopCenter)
+                    .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
+            )
         } else if (state.censor.reviewing) {
             CensorBar(
                 state = state,
@@ -267,7 +274,7 @@ fun ViewerScreen(
         }
 
         // Document scanne : proposer la reconnaissance du texte.
-        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active && !state.censor.reviewing && !state.measure.active) {
+        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active && !state.censor.reviewing && !state.measure.active && !state.readAloud.active) {
             ScanBanner(
                 pages = session.ocrPages,
                 compact = compact,
@@ -417,6 +424,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
             item(tr(Str.TranslateTitle), NougatIcons.Translate) { state.translation.dialogOpen = true }
             item(tr(Str.Todo), NougatIcons.Todo, state::startTodo)
+            if (state.canReadAloud) item(tr(Str.ReadAloud), NougatIcons.Speaker, state::startReadAloud)
             item(tr(Str.Stamp), NougatIcons.Numbers) { state.stampOpen = true }
             item(tr(Str.Compress), NougatIcons.Compress) { state.compressOpen = true }
             item(tr(Str.ExportMarkdown), NougatIcons.Markdown, state::exportMarkdown)
@@ -970,6 +978,8 @@ private fun PageView(
                 }
             }
         }
+
+        ReadAloudHighlight(state, index)
 
         EditOverlay(
             session = session,

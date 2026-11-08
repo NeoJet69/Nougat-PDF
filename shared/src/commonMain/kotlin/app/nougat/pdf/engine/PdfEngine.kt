@@ -44,6 +44,9 @@ interface PdfEngine {
     /** Fait telecharger l'IA de l'appareil par le systeme ([onBytes] : progression). Vrai si elle est prete. */
     suspend fun prepareDeviceAi(onBytes: (Long) -> Unit): Boolean = false
 
+    /** La voix de l'appareil pour lire a voix haute, ou null si elle n'existe pas. */
+    val speaker: Speaker? get() = null
+
     /** Le traducteur de l'appareil (ML Kit sur Android), ou null : la traduction passe alors par Claude. */
     val deviceTranslator: DeviceTranslator? get() = null
 

@@ -562,4 +562,18 @@ TodoCopied = Copià.
 TodoAiFailed = L'IA n'ha betg pudì respunder: {0}
 TodoNoDate = senza data
 TodoCopy = Copiar
+
+ReadAloud = Leger ad auta vusch
+ReadAloudTitle = Lectura ad auta vusch
+ReadAloudWhere = Pagina {0} · alinea {1}
+ReadAloudPause = Pausa
+ReadAloudPlay = Leger
+ReadAloudPrevious = Alinea precedenta
+ReadAloudNext = Proxima alinea
+ReadAloudSpeed = Sveltezza {0}
+ReadAloudNoVoice = Nagina vusch per {0} sin quest apparat. Agiuntai ella en ils parameters da la sintesa vocala dal sistem (Windows: Temp e lingua, Vusch).
+ReadAloudNoText = Nagut da leger. Per in scan, aviai l'emprim la renconuschientscha dal text.
+ReadAloudUnavailable = La lectura ad auta vusch n'è betg disponibla sin quest apparat.
+ReadAloudTranslated = translaziun en {0}
+ReadAloudFinished = Lectura terminada.
 """

@@ -562,4 +562,18 @@ TodoCopied = Copiat.
 TodoAiFailed = IA nu a putut răspunde: {0}
 TodoNoDate = fără dată
 TodoCopy = Copiază
+
+ReadAloud = Citește cu voce tare
+ReadAloudTitle = Citire cu voce tare
+ReadAloudWhere = Pagina {0} · paragraful {1}
+ReadAloudPause = Pauză
+ReadAloudPlay = Citește
+ReadAloudPrevious = Paragraful anterior
+ReadAloudNext = Paragraful următor
+ReadAloudSpeed = Viteză {0}
+ReadAloudNoVoice = Nu există voce pentru {0} pe acest dispozitiv. Adăugați-o în setările de sinteză vocală ale sistemului (în Windows: Oră și limbă, Vorbire).
+ReadAloudNoText = Nimic de citit. Pentru o scanare, rulați mai întâi recunoașterea textului.
+ReadAloudUnavailable = Citirea cu voce tare nu este disponibilă pe acest dispozitiv.
+ReadAloudTranslated = traducere în {0}
+ReadAloudFinished = Citire terminată.
 """

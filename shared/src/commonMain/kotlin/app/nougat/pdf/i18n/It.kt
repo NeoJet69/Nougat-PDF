@@ -561,4 +561,18 @@ TodoCopied = Copiato.
 TodoAiFailed = L'IA non ha potuto rispondere: {0}
 TodoNoDate = senza data
 TodoCopy = Copia
+
+ReadAloud = Leggi ad alta voce
+ReadAloudTitle = Lettura ad alta voce
+ReadAloudWhere = Pagina {0} · paragrafo {1}
+ReadAloudPause = Pausa
+ReadAloudPlay = Leggi
+ReadAloudPrevious = Paragrafo precedente
+ReadAloudNext = Paragrafo successivo
+ReadAloudSpeed = Velocità {0}
+ReadAloudNoVoice = Nessuna voce {0} su questo dispositivo. Aggiungila nelle impostazioni della sintesi vocale del sistema (su Windows: Data/ora e lingua, Voce).
+ReadAloudNoText = Niente da leggere. Per una scansione, avvia prima il riconoscimento del testo.
+ReadAloudUnavailable = La lettura ad alta voce non è disponibile su questo dispositivo.
+ReadAloudTranslated = traduzione in {0}
+ReadAloudFinished = Lettura terminata.
 """

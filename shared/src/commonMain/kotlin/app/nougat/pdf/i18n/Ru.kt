@@ -561,4 +561,18 @@ TodoCopied = Скопировано.
 TodoAiFailed = ИИ не смог ответить: {0}
 TodoNoDate = без даты
 TodoCopy = Копировать
+
+ReadAloud = Читать вслух
+ReadAloudTitle = Чтение вслух
+ReadAloudWhere = Страница {0} · абзац {1}
+ReadAloudPause = Пауза
+ReadAloudPlay = Читать
+ReadAloudPrevious = Предыдущий абзац
+ReadAloudNext = Следующий абзац
+ReadAloudSpeed = Скорость {0}
+ReadAloudNoVoice = На этом устройстве нет голоса для языка «{0}». Добавьте его в настройках синтеза речи (в Windows: Время и язык, Речь).
+ReadAloudNoText = Нечего читать. Для скана сначала запустите распознавание текста.
+ReadAloudUnavailable = Чтение вслух недоступно на этом устройстве.
+ReadAloudTranslated = перевод: {0}
+ReadAloudFinished = Чтение завершено.
 """

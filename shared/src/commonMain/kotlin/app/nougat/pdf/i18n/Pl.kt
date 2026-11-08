@@ -561,4 +561,18 @@ TodoCopied = Skopiowano.
 TodoAiFailed = AI nie mogła odpowiedzieć: {0}
 TodoNoDate = bez daty
 TodoCopy = Kopiuj
+
+ReadAloud = Czytaj na głos
+ReadAloudTitle = Czytanie na głos
+ReadAloudWhere = Strona {0} · akapit {1}
+ReadAloudPause = Pauza
+ReadAloudPlay = Czytaj
+ReadAloudPrevious = Poprzedni akapit
+ReadAloudNext = Następny akapit
+ReadAloudSpeed = Tempo {0}
+ReadAloudNoVoice = Brak głosu {0} na tym urządzeniu. Dodaj go w ustawieniach syntezy mowy systemu (w Windows: Czas i język, Mowa).
+ReadAloudNoText = Nie ma nic do czytania. W przypadku skanu najpierw uruchom rozpoznawanie tekstu.
+ReadAloudUnavailable = Czytanie na głos nie jest dostępne na tym urządzeniu.
+ReadAloudTranslated = tłumaczenie: {0}
+ReadAloudFinished = Czytanie zakończone.
 """

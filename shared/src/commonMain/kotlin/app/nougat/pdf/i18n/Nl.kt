@@ -561,4 +561,18 @@ TodoCopied = Gekopieerd.
 TodoAiFailed = De AI kon niet antwoorden: {0}
 TodoNoDate = geen datum
 TodoCopy = Kopiëren
+
+ReadAloud = Voorlezen
+ReadAloudTitle = Voorlezen
+ReadAloudWhere = Pagina {0} · alinea {1}
+ReadAloudPause = Pauze
+ReadAloudPlay = Lezen
+ReadAloudPrevious = Vorige alinea
+ReadAloudNext = Volgende alinea
+ReadAloudSpeed = Snelheid {0}
+ReadAloudNoVoice = Geen {0} stem op dit apparaat. Voeg die toe in de spraakinstellingen van het systeem (Windows: Tijd en taal, Spraak).
+ReadAloudNoText = Niets om voor te lezen. Start bij een scan eerst de tekstherkenning.
+ReadAloudUnavailable = Voorlezen is niet beschikbaar op dit apparaat.
+ReadAloudTranslated = vertaling in het {0}
+ReadAloudFinished = Voorlezen klaar.
 """

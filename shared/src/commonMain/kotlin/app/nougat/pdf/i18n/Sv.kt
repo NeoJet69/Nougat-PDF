@@ -561,4 +561,18 @@ TodoCopied = Kopierat.
 TodoAiFailed = AI:n kunde inte svara: {0}
 TodoNoDate = inget datum
 TodoCopy = Kopiera
+
+ReadAloud = Läs upp
+ReadAloudTitle = Uppläsning
+ReadAloudWhere = Sida {0} · stycke {1}
+ReadAloudPause = Paus
+ReadAloudPlay = Läs
+ReadAloudPrevious = Föregående stycke
+ReadAloudNext = Nästa stycke
+ReadAloudSpeed = Hastighet {0}
+ReadAloudNoVoice = Ingen röst för {0} på enheten. Lägg till den i systemets inställningar för talsyntes (i Windows: Tid och språk, Tal).
+ReadAloudNoText = Inget att läsa. För en skanning, kör textigenkänning först.
+ReadAloudUnavailable = Uppläsning är inte tillgänglig på den här enheten.
+ReadAloudTranslated = översättning till {0}
+ReadAloudFinished = Uppläsningen är klar.
 """

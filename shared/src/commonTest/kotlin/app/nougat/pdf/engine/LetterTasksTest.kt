@@ -55,3 +55,14 @@ class LetterTasksTest {
         assertEquals("2028-02-29", LetterTasks.nextDay("2028-02-28"))
     }
 }
+
+class LanguageGuessTest {
+    @Test
+    fun guessesTheMainLanguages() {
+        kotlin.test.assertEquals("fr", LanguageGuess.guess("Nous vous remercions pour votre commande et vous prions de trouver ci-joint la facture."))
+        kotlin.test.assertEquals("de", LanguageGuess.guess("Wir danken Ihnen für die Bestellung und bitten Sie, die Rechnung bis zum Ende des Monats zu bezahlen."))
+        kotlin.test.assertEquals("it", LanguageGuess.guess("La ringraziamo per il suo ordine e le inviamo la fattura che è da pagare entro la fine del mese."))
+        kotlin.test.assertEquals("en", LanguageGuess.guess("Thank you for your order. Please find the invoice attached and pay it by the end of the month."))
+        kotlin.test.assertNull(LanguageGuess.guess("12.03.2026 CHF 450.00"))
+    }
+}

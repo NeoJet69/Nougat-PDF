@@ -562,4 +562,18 @@ TodoCopied = Cupiatu.
 TodoAiFailed = L'IA ùn hà micca pussutu risponde : {0}
 TodoNoDate = senza data
 TodoCopy = Cupià
+
+ReadAloud = Leghje à voce alta
+ReadAloudTitle = Lettura à voce alta
+ReadAloudWhere = Pagina {0} · paragrafu {1}
+ReadAloudPause = Pausa
+ReadAloudPlay = Leghje
+ReadAloudPrevious = Paragrafu precedente
+ReadAloudNext = Paragrafu seguente
+ReadAloudSpeed = Vitezza {0}
+ReadAloudNoVoice = Nisuna voce in {0} nant'à stu apparechju. Aghjunghjitela in i parametri di sintesi vucale di u sistema (nant'à Windows : Ora è lingua, Voce).
+ReadAloudNoText = Nunda à leghje. Per una scansione, lanciate prima a ricunniscenza di u testu.
+ReadAloudUnavailable = A lettura à voce alta ùn hè micca dispunibule nant'à stu apparechju.
+ReadAloudTranslated = traduzzione in {0}
+ReadAloudFinished = Lettura finita.
 """

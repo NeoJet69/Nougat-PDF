@@ -562,4 +562,18 @@ TodoCopied = Kopiert.
 TodoAiFailed = D KI het nöd chöne antworte: {0}
 TodoNoDate = ohni Datum
 TodoCopy = Kopiere
+
+ReadAloud = Vorläse
+ReadAloudTitle = Vorläse
+ReadAloudWhere = Siite {0} · Absatz {1}
+ReadAloudPause = Pause
+ReadAloudPlay = Läse
+ReadAloudPrevious = Vorherige Absatz
+ReadAloudNext = Nöchste Absatz
+ReadAloudSpeed = Tempo {0}
+ReadAloudNoVoice = Kei Stimm für {0} uf dem Gerät. Füeg sie i de Sprachuusgab-Iistellige vom System derzue (Windows: Ziit und Sprach, Spraach).
+ReadAloudNoText = Nüt zum Vorläse. Bi me Scan zerscht d Texterkennig starte.
+ReadAloudUnavailable = Vorläse gaht uf dem Gerät nöd.
+ReadAloudTranslated = Übersetzig uf {0}
+ReadAloudFinished = Fertig vorgläse.
 """

@@ -48,6 +48,8 @@ class AndroidPdfEngine(context: Context) : PdfEngine {
 
     override val deviceTranslator: DeviceTranslator by lazy { MlKitTranslator() }
 
+    override val speaker: Speaker by lazy { AndroidSpeaker(appContext) }
+
     override suspend fun deviceFindNames(text: String): List<Pair<SensitiveKind, String>>? =
         if (GeminiNano.status() == DeviceAiStatus.Available) GeminiNano.findNames(text) else null
 

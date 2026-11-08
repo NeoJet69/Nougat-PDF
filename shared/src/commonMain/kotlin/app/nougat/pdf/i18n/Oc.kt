@@ -562,4 +562,18 @@ TodoCopied = Copiat.
 TodoAiFailed = L'IA a pas pogut respondre : {0}
 TodoNoDate = sens data
 TodoCopy = Copiar
+
+ReadAloud = Legir a votz nauta
+ReadAloudTitle = Lectura a votz nauta
+ReadAloudWhere = Pagina {0} · paragraf {1}
+ReadAloudPause = Pausa
+ReadAloudPlay = Legir
+ReadAloudPrevious = Paragraf precedent
+ReadAloudNext = Paragraf seguent
+ReadAloudSpeed = Velocitat {0}
+ReadAloudNoVoice = Pas cap de votz en {0} sus aqueste aparelh. Apondètz-la dins los paramètres de sintèsi vocala del sistèma (sus Windows : Ora e lenga, Votz).
+ReadAloudNoText = Pas res de legir. Per un escaneg, aviatz d'en primièr la reconeissença del tèxte.
+ReadAloudUnavailable = La lectura a votz nauta es pas disponibla sus aqueste aparelh.
+ReadAloudTranslated = traduccion en {0}
+ReadAloudFinished = Lectura acabada.
 """

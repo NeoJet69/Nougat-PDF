@@ -561,4 +561,18 @@ TodoCopied = Kopiert.
 TodoAiFailed = Die KI konnte nicht antworten: {0}
 TodoNoDate = ohne Datum
 TodoCopy = Kopieren
+
+ReadAloud = Vorlesen
+ReadAloudTitle = Vorlesen
+ReadAloudWhere = Seite {0} · Absatz {1}
+ReadAloudPause = Pause
+ReadAloudPlay = Lesen
+ReadAloudPrevious = Vorheriger Absatz
+ReadAloudNext = Nächster Absatz
+ReadAloudSpeed = Tempo {0}
+ReadAloudNoVoice = Keine Stimme für {0} auf diesem Gerät. Fügen Sie sie in den Sprachausgabe-Einstellungen des Systems hinzu (Windows: Zeit und Sprache, Spracherkennung).
+ReadAloudNoText = Nichts zum Vorlesen. Bei einem Scan zuerst die Texterkennung starten.
+ReadAloudUnavailable = Vorlesen ist auf diesem Gerät nicht verfügbar.
+ReadAloudTranslated = Übersetzung auf {0}
+ReadAloudFinished = Vorlesen beendet.
 """

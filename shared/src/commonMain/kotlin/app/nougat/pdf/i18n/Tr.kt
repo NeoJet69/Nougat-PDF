@@ -561,4 +561,18 @@ TodoCopied = Kopyalandı.
 TodoAiFailed = Yapay zekâ yanıt veremedi: {0}
 TodoNoDate = tarihsiz
 TodoCopy = Kopyala
+
+ReadAloud = Sesli oku
+ReadAloudTitle = Sesli okuma
+ReadAloudWhere = Sayfa {0} · paragraf {1}
+ReadAloudPause = Duraklat
+ReadAloudPlay = Oku
+ReadAloudPrevious = Önceki paragraf
+ReadAloudNext = Sonraki paragraf
+ReadAloudSpeed = Hız {0}
+ReadAloudNoVoice = Bu cihazda {0} ses yok. Sistemin metin okuma ayarlarından ekleyin (Windows'ta: Saat ve dil, Konuşma).
+ReadAloudNoText = Okunacak bir şey yok. Taranmış belgede önce metin tanımayı çalıştırın.
+ReadAloudUnavailable = Bu cihazda sesli okuma kullanılamıyor.
+ReadAloudTranslated = {0} çeviri
+ReadAloudFinished = Okuma bitti.
 """

@@ -561,4 +561,18 @@ TodoCopied = 已复制。
 TodoAiFailed = AI 无法回答：{0}
 TodoNoDate = 无日期
 TodoCopy = 复制
+
+ReadAloud = 朗读
+ReadAloudTitle = 正在朗读
+ReadAloudWhere = 第 {0} 页 · 第 {1} 段
+ReadAloudPause = 暂停
+ReadAloudPlay = 朗读
+ReadAloudPrevious = 上一段
+ReadAloudNext = 下一段
+ReadAloudSpeed = 语速 {0}
+ReadAloudNoVoice = 此设备上没有 {0} 语音。请在系统的文字转语音设置中添加（Windows：时间和语言 > 语音）。
+ReadAloudNoText = 没有可朗读的内容。如果是扫描件，请先运行文字识别。
+ReadAloudUnavailable = 此设备不支持朗读。
+ReadAloudTranslated = {0}译文
+ReadAloudFinished = 朗读结束。
 """

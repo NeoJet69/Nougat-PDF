@@ -119,6 +119,12 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Lire à voix haute** (menu ⋮) : la voix de l'appareil lit le document paragraphe par paragraphe
+depuis la page affichée, en surlignant ce qu'elle lit (pause, paragraphe précédent ou suivant,
+trois vitesses). Quand la traduction est affichée, c'est la traduction qui est lue, dans sa
+langue. Sur Android, la synthèse vocale du téléphone ; sur Windows, les voix installées
+(Paramètres, Heure et langue, Voix).
+
 **Ce que je dois faire** (menu ⋮) : le résumé d'une lettre en deux ou trois phrases simples et
 la liste de ce qu'il faut faire (payer, répondre, envoyer un papier, aller à un rendez-vous), avec
 les dates. Chaque date s'ajoute au calendrier d'un toucher (rappel la veille). Sur Android,

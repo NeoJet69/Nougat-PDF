@@ -562,4 +562,18 @@ TodoCopied = Eilet.
 TodoAiFailed = N'eo ket bet gouest an IA da respont : {0}
 TodoNoDate = hep deiziad
 TodoCopy = Eilañ
+
+ReadAloud = Lenn a vouezh uhel
+ReadAloudTitle = Lenn a vouezh uhel
+ReadAloudWhere = Pajenn {0} · rannbennad {1}
+ReadAloudPause = Ehan
+ReadAloudPlay = Lenn
+ReadAloudPrevious = Rannbennad kent
+ReadAloudNext = Rannbennad war-lerc'h
+ReadAloudSpeed = Tizh {0}
+ReadAloudNoVoice = Mouezh ebet e {0} war an trevnad-mañ. Ouzhpennit anezhi e arventennoù sintezenn ar vouezh (war Windows : Eur ha yezh, Mouezh).
+ReadAloudNoText = Netra da lenn. Evit ur skan, lañsit da gentañ anaoudegezh an destenn.
+ReadAloudUnavailable = Ne c'haller ket lenn a vouezh uhel war an trevnad-mañ.
+ReadAloudTranslated = troidigezh e {0}
+ReadAloudFinished = Echu eo al lenn.
 """

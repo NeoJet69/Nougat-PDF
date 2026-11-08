@@ -22,6 +22,8 @@ class DesktopPdfEngine : PdfEngine {
 
     override val ocrLanguages: List<String> by lazy { TessData.languages() }
 
+    override val speaker: Speaker? by lazy { if (WindowsSpeaker.supported) WindowsSpeaker() else null }
+
     override suspend fun open(path: String, password: String?): PdfDocument = withContext(Dispatchers.IO) {
         val doc = try {
             Loader.loadPDF(File(path), password ?: "")
