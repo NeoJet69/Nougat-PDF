@@ -240,8 +240,15 @@ fun ViewerScreen(
             }
         }
 
-        // Censure : les trouvailles a verifier, puis confirmer.
-        if (state.censor.reviewing) {
+        // Metre sur plan, ou censure : les trouvailles a verifier, puis confirmer.
+        if (state.measure.active) {
+            MeasureBar(
+                state = state,
+                compact = compact,
+                modifier = Modifier.align(Alignment.TopCenter)
+                    .padding(start = railWidth + 12.dp, end = assistantWidth + 12.dp, top = topSpace + if (searchBelow) 70.dp else 6.dp),
+            )
+        } else if (state.censor.reviewing) {
             CensorBar(
                 state = state,
                 compact = compact,
@@ -260,7 +267,7 @@ fun ViewerScreen(
         }
 
         // Document scanne : proposer la reconnaissance du texte.
-        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active && !state.censor.reviewing) {
+        if (state.canOcr && session.ocrPages > 0 && !session.ocrBannerClosed && !tools.editing && !state.translation.active && !state.censor.reviewing && !state.measure.active) {
             ScanBanner(
                 pages = session.ocrPages,
                 compact = compact,
@@ -413,6 +420,7 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             item(tr(Str.Compress), NougatIcons.Compress) { state.compressOpen = true }
             item(tr(Str.ExportMarkdown), NougatIcons.Markdown, state::exportMarkdown)
             item(tr(Str.QrBill), NougatIcons.QrCode, state::openQrBill)
+            item(tr(Str.Measure), NougatIcons.Measure, state::startMeasure)
             item(tr(Str.Censor), NougatIcons.Censor) { state.censor.dialogOpen = true }
             item(tr(Str.Finalize), NougatIcons.Shield) { state.finalizeOpen = true }
             if (session.password == null) {
@@ -976,7 +984,7 @@ private fun PageView(
         )
 
         // Formulaire : en mode Lire (ou avec la main), toucher un champ pour le remplir.
-        if (session.hasForm && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
+        if (session.hasForm && !state.measure.active && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
             FormOverlay(
                 session = session,
                 page = index,
@@ -990,7 +998,9 @@ private fun PageView(
         }
 
         // Censure : les trouvailles de la page, a garder ou non d'un toucher.
-        if (state.censor.reviewing) {
+        if (state.measure.active) {
+            MeasureOverlay(state, index, pageSize)
+        } else if (state.censor.reviewing) {
             CensorOverlay(state, index)
         } else if (state.translation.active && (!state.tools.editing || state.tools.tool == Tool.Pan)) {
             // Traduction : posee sur la page (en mode Lire), la page s'affiche donc on la traduit.

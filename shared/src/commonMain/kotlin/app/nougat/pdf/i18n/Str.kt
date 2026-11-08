@@ -82,5 +82,10 @@ enum class Str {
     QrBillTown, QrBillCountry, QrBillCurrency, QrBillAmountHint, QrBillReferenceHint, QrBillMessageField,
     QrBillAddDebtor, QrBillPlaceNew, QrBillPlaceLast, QrBillLanguage, QrBillAdd, QrBillAdding,
     QrBillAdded, QrErrIban, QrErrCountry, QrErrNeedQrr, QrErrQrrNeedsQrIban, QrErrReference,
-    QrErrAmount, QrErrCreditor, QrErrDebtor,
+    QrErrAmount, QrErrCreditor, QrErrDebtor, Measure, MeasureTitle, MeasureLength,
+    MeasureArea, MeasureScale, MeasureCalibratedScale, MeasureNoScale, MeasureHintScale, MeasureHintCalibrate,
+    MeasureHintLength, MeasureHintArea, MeasureFinish, MeasureUndo, MeasureCopy, MeasureCopied,
+    MeasureAddToPlan, MeasureAdded, MeasureTotals, MeasureScaleTitle, MeasureScaleExplain, MeasureFoundOnPlan,
+    MeasureCustomRatio, MeasureCalibrate, MeasureCalibrateTitle, MeasureCalibrateExplain, MeasureApply, MeasureLengthN,
+    MeasureAreaN, MeasurePerimeter, MeasurePage, MeasureSumLength, MeasureSumArea,
 }

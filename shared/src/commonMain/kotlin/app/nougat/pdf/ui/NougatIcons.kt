@@ -102,6 +102,16 @@ object NougatIcons {
         svgIcon("Compress", "M8,19h3v3h2v-3h3l-4,-4 -4,4zM16,4h-3L13,1h-2v3L8,4l4,4 4,-4zM4,9v2h16L20,9L4,9zM4,12h16v2L4,14z")
     }
 
+    /** Une equerre graduee : metre sur plan. */
+    val Measure by lazy {
+        svgIcon(
+            "Measure",
+            "M17.66,17.66l-1.06,1.06 -0.71,-0.71 1.06,-1.06 -1.94,-1.94 -1.06,1.06 -0.71,-0.71 1.06,-1.06 -1.94,-1.94" +
+                " -1.06,1.06 -0.71,-0.71 1.06,-1.06L9.7,9.7l-1.06,1.06 -0.71,-0.71 1.06,-1.06 -1.94,-1.94 -1.06,1.06" +
+                " -0.71,-0.71 1.06,-1.06L4,4v14c0,1.1 0.9,2 2,2h14L17.66,17.66zM7,17v-5.76L12.76,17H7z",
+        )
+    }
+
     /** Un code QR : QR-facture. */
     val QrCode by lazy {
         svgIcon(

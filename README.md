@@ -119,6 +119,12 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Métré sur plan** (menu ⋮) : choisir l'échelle du plan (1:50, 1:100..., ou celle écrite sur le
+plan, reprise toute seule), ou l'étalonner en traçant une cote connue (pour un scan ou un plan
+imprimé réduit). Puis toucher le plan point par point : **Longueur** (ligne brisée) ou
+**Surface** (toucher le premier point pour fermer, avec le périmètre). Les totaux s'affichent,
+**Copier** donne la liste des mesures, **Ajouter au plan** les dessine sur le document.
+
 **Exporter en Markdown** (menu ⋮) : le texte du document devient un fichier `.md`, avec les
 titres reconnus à la taille du texte, les listes et les tableaux. Pour un scan, lancer d'abord
 la reconnaissance du texte.

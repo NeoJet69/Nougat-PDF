@@ -55,6 +55,12 @@ import app.nougat.pdf.engine.PageLines
 import app.nougat.pdf.engine.PageSize
 import app.nougat.pdf.engine.PdfToMarkdown
 import app.nougat.pdf.engine.SwissQr
+import app.nougat.pdf.engine.InkMark
+import app.nougat.pdf.engine.MeasureKind
+import app.nougat.pdf.engine.Measurement
+import app.nougat.pdf.engine.Measures
+import app.nougat.pdf.engine.NPoint
+import app.nougat.pdf.engine.TextMark
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -366,6 +372,7 @@ class ViewerState(
                 translation.stop()
                 censor.stop()
                 qrBill.close()
+                measure.reset()
                 pagesOpen = false
                 resetAssistant()
                 if (!isNew) addRecent(sourceRef, name)
@@ -440,6 +447,7 @@ class ViewerState(
             s?.searchOpen == true -> s.closeSearch()
             s?.selectedBlocks?.isNotEmpty() == true -> s.clearSelection()
             censor.reviewing -> censor.stop()
+            measure.active -> measure.stop()
             tools.editing -> tools.enter(DockMode.Read)
             translation.active -> translation.stop()
             s != null -> runAfterConfirm(::closeDocument)
@@ -475,6 +483,7 @@ class ViewerState(
         translation.stop()
         censor.stop()
         qrBill.close()
+        measure.reset()
     }
 
     private fun closeCurrent() {
@@ -808,6 +817,105 @@ class ViewerState(
         scope.launch {
             if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
         }
+    }
+
+    // ---- Metre sur plan ---------------------------------------------------------------------------
+
+    val measure = MeasureState()
+
+    /** Passe en mode Metre ; l'echelle ecrite sur la page affichee est reprise si on la trouve. */
+    fun startMeasure() {
+        val s = session ?: return
+        tools.enter(DockMode.Read)
+        translation.stop()
+        censor.stop()
+        scope.launch {
+            val found = runCatching { Measures.findScale(s.pageTextOf(s.visiblePage).text) }.getOrNull()
+            measure.start(found)
+        }
+    }
+
+    private val usesComma: Boolean get() = I18n.lang != Lang.En && I18n.lang != Lang.Zh
+
+    /** Le resultat d'une mesure (« 3,45 m », « 12,30 m² »), ou null sans echelle. */
+    fun measureLabel(m: Measurement): String? {
+        val mpp = measure.metersPerPoint ?: return null
+        val size = session?.pageSizes?.getOrNull(m.page) ?: return null
+        return if (m.kind == MeasureKind.Area) Measures.formatArea(Measures.squareMeters(m, size, mpp), usesComma)
+        else Measures.formatLength(Measures.meters(m, size, mpp), usesComma)
+    }
+
+    /** Totaux des longueurs et des surfaces (pour la barre). */
+    fun measureTotals(): Pair<String, String>? {
+        val mpp = measure.metersPerPoint ?: return null
+        val sizes = session?.pageSizes ?: return null
+        var length = 0.0
+        var area = 0.0
+        for (m in measure.all) {
+            val size = sizes.getOrNull(m.page) ?: continue
+            if (m.kind == MeasureKind.Area) area += Measures.squareMeters(m, size, mpp) else length += Measures.meters(m, size, mpp)
+        }
+        return Measures.formatLength(length, usesComma) to Measures.formatArea(area, usesComma)
+    }
+
+    /** La ligne d'etalonnage mesure [realMeters] en vrai. */
+    fun calibrateMeasure(realMeters: Double) {
+        val line = measure.calibrationLine ?: return
+        val size = session?.pageSizes?.getOrNull(line.page) ?: return
+        measure.calibrate(realMeters, size)
+    }
+
+    /** Copie la liste des mesures et les totaux. */
+    fun copyMeasures() {
+        val s = session ?: return
+        val mpp = measure.metersPerPoint ?: return
+        val all = measure.all
+        if (all.isEmpty()) return
+        val lines = ArrayList<String>()
+        val scale = measure.ratio?.let { if (measure.calibrated) tr(Str.MeasureCalibratedScale, it) else tr(Str.MeasureScale, it) }.orEmpty()
+        lines += "${tr(Str.MeasureTitle)} : ${s.name}" + if (scale.isNotEmpty()) " ($scale)" else ""
+        var lengthNo = 0
+        var areaNo = 0
+        var totalLength = 0.0
+        var totalArea = 0.0
+        for (m in all) {
+            val size = s.pageSizes.getOrNull(m.page) ?: continue
+            val page = if (s.pageCount > 1) " (${tr(Str.MeasurePage, m.page + 1)})" else ""
+            if (m.kind == MeasureKind.Area) {
+                val area = Measures.squareMeters(m, size, mpp)
+                totalArea += area
+                lines += tr(Str.MeasureAreaN, ++areaNo) + page + " : " + Measures.formatArea(area, usesComma) +
+                    " ; " + tr(Str.MeasurePerimeter, Measures.formatLength(Measures.meters(m, size, mpp), usesComma))
+            } else {
+                val length = Measures.meters(m, size, mpp)
+                totalLength += length
+                lines += tr(Str.MeasureLengthN, ++lengthNo) + page + " : " + Measures.formatLength(length, usesComma)
+            }
+        }
+        if (lengthNo > 0) lines += tr(Str.MeasureSumLength) + " : " + Measures.formatLength(totalLength, usesComma)
+        if (areaNo > 0) lines += tr(Str.MeasureSumArea) + " : " + Measures.formatArea(totalArea, usesComma)
+        files.copyText(lines.joinToString("\n"))
+        toast = tr(Str.MeasureCopied)
+    }
+
+    /** Dessine les mesures sur le plan, comme des annotations (enregistrees avec le document). */
+    fun addMeasuresToPlan() {
+        val s = session ?: return
+        measure.finish()
+        val color = MEASURE_INK
+        for (m in measure.items) {
+            val size = s.pageSizes.getOrNull(m.page) ?: continue
+            val label = measureLabel(m) ?: continue
+            val path = if (m.kind == MeasureKind.Area) m.points + m.points.first() else m.points
+            s.marks.add(InkMark(m.page, path, color, 1.4f))
+            val anchor = labelAnchor(m)
+            val textSize = 10f
+            val x = (anchor.x - label.length * textSize * 0.28f / size.width).coerceIn(0f, 0.95f)
+            val y = (anchor.y - textSize * 1.4f / size.height).coerceIn(0f, 0.97f)
+            s.marks.add(TextMark(m.page, x, y, label, textSize, color, size.width, size.height))
+        }
+        measure.items.clear()
+        toast = tr(Str.MeasureAdded)
     }
 
     // ---- QR-facture suisse ------------------------------------------------------------------------
@@ -1473,3 +1581,20 @@ fun copyName(name: String): String = name.replace(Regex("(?i)\\.pdf$"), "") + "_
 
 /** La reconnaissance n'a rien trouve a faire (ou a ete arretee avant la premiere page). */
 private class NothingRecognized(val stopped: Boolean) : Exception()
+
+/** Couleur des mesures dessinees sur le plan. */
+const val MEASURE_INK = 0xFFD84315.toInt()
+
+/** Ou ecrire le resultat d'une mesure : milieu du plus long segment, ou centre de la surface. */
+fun labelAnchor(m: Measurement): NPoint {
+    if (m.kind == MeasureKind.Area && m.points.size >= 3) {
+        return NPoint(m.points.map { it.x }.average().toFloat(), m.points.map { it.y }.average().toFloat())
+    }
+    if (m.points.size < 2) return m.points.firstOrNull() ?: NPoint(0.5f, 0.5f)
+    val i = (1 until m.points.size).maxBy { j ->
+        val dx = m.points[j].x - m.points[j - 1].x
+        val dy = m.points[j].y - m.points[j - 1].y
+        dx * dx + dy * dy
+    }
+    return NPoint((m.points[i].x + m.points[i - 1].x) / 2f, (m.points[i].y + m.points[i - 1].y) / 2f)
+}
