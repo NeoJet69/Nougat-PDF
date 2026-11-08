@@ -54,9 +54,13 @@
 
 ## Retours de Dylan après la 1.0.79 (à faire plus tard)
 
-- [ ] Échange par Wi-Fi : la page ouverte par le QR code affiche « des trucs bizarres » (peut-être
-      le VPN du téléphone ou du PC ; réessayer sans). Pas besoin de Nougat sur le téléphone : vérifier
-      le message d'erreur exact, ajouter dans la fenêtre une aide « VPN ou Wi-Fi invité ».
+- [ ] Échange par Wi-Fi : le téléphone trouve bien l'adresse (192.168.0.39:54193) mais Chrome dit
+      « Ce site est inaccessible, ERR_TOO_MANY_RETRIES » : la connexion est bloquée. Causes probables :
+      pare-feu Windows (accès refusé ou réseau réglé en « Public ») ou VPN sur le téléphone. À faire :
+      aide dans la fenêtre (pare-feu, réseau privé, VPN, Wi-Fi invité), port fixe pour une règle de
+      pare-feu stable, et proposer d'ajouter la règle de pare-feu à l'installation.
+- [ ] Android : bouton « Recevoir du PC » avec la caméra dans Nougat (scanner le QR code du PC) qui
+      télécharge le fichier directement dans l'app, et « Envoyer au PC » du document ouvert.
 - [ ] Censurer sur les scans : le texte est bien trouvé, mais les barres ne cachent pas bien
       (placement ou taille des barres sur l'image à revoir).
 - [ ] Sélectionner du texte en mode Lire, à la souris ou au doigt, pour le copier directement.
