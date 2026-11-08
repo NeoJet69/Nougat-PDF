@@ -106,6 +106,16 @@ jobs:
           distribution: temurin
           java-version: 21
       - uses: gradle/actions/setup-gradle@v4
+      # WiX 3.11 (pour le .msi) depuis NuGet, empreinte verifiee : le lien GitHub que Compose
+      # utilise par defaut tombe parfois en panne (erreur 504).
+      - name: WiX Toolset
+        shell: bash
+        run: |
+          curl -sSfL --retry 4 --retry-delay 5 -o "$RUNNER_TEMP/wix.nupkg" https://www.nuget.org/api/v2/package/wix/3.11.2
+          echo "ac2fff0541f87756b530c93ca3a45ff2dfb1ebe392c269901de0c19074bec5d0  $RUNNER_TEMP/wix.nupkg" | sha256sum -c -
+          mkdir -p "$RUNNER_TEMP/wix"
+          unzip -q "$RUNNER_TEMP/wix.nupkg" 'tools/*' -d "$RUNNER_TEMP/wix"
+          echo "WIX_PATH=$(cygpath -w "$RUNNER_TEMP/wix/tools")" >> "$GITHUB_ENV"
       - name: Installateur .msi et .exe
         shell: bash
         run: ./gradlew -Pnougat.desktopOnly=true :desktopApp:packageMsi :desktopApp:packageExe --console=plain
