@@ -61,6 +61,10 @@
       pare-feu Windows (accès refusé ou réseau réglé en « Public ») ou VPN sur le téléphone. À faire :
       aide dans la fenêtre (pare-feu, réseau privé, VPN, Wi-Fi invité), port fixe pour une règle de
       pare-feu stable, et proposer d'ajouter la règle de pare-feu à l'installation.
+- [ ] Échange par câble USB, pour les téléphones qui bloquent le Wi-Fi local. Pistes : le téléphone
+      branché apparaît comme un appareil MTP ; Nougat sur Windows le détecte (API Windows Portable
+      Devices) et liste ses PDF et photos à importer, ou y copie le document ouvert. À éviter : le
+      « débogage USB » (adb), trop technique pour les utilisateurs.
 - [ ] Android : bouton « Recevoir du PC » avec la caméra dans Nougat (scanner le QR code du PC) qui
       télécharge le fichier directement dans l'app, et « Envoyer au PC » du document ouvert.
 - [ ] Censurer sur les scans : le texte est bien trouvé, mais les barres ne cachent pas bien
