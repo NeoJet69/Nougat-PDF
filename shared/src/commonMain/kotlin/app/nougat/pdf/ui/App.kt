@@ -117,6 +117,7 @@ fun NougatApp(
                     AboutDialog(platform.version, onLicenses = { state.aboutOpen = false; state.licensesOpen = true }) { state.aboutOpen = false }
                 }
                 if (state.licensesOpen) LicensesDialog(platform.isDesktop) { state.licensesOpen = false }
+                if (state.transfer.dialogOpen) TransferDialog(state)
                 if (state.ocrDialog && session != null) OcrDialog(state) { state.ocrDialog = false }
                 if (state.translation.dialogOpen && session != null) TranslateDialog(state) { state.translation.dialogOpen = false }
                 if (state.finalizeOpen && session != null) FinalizeDialog(state) { state.finalizeOpen = false }

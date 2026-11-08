@@ -588,4 +588,25 @@ PaperFormFilled = Campi riempiuti : {0}. Verificate po arregistrate (Annullà ca
 PaperFormSearching = Ricerca di i campi…
 
 ReportByEmail = Mandà dinò à u sviluppatore (per e-mail)
+
+Transfer = Scambià cù u telefonu (Wi-Fi)
+TransferTitle = Scambià cù u telefonu
+TransferHow = Nant'à u telefonu, scannate stu codice cù a camera. U telefonu è l'urdinatore devenu esse nant'à u listessu Wi-Fi. Nunda passa per Internet.
+TransferFirewall = S'è Windows dumanda l'accessu à a reta, permettitelu per e rete private.
+TransferNoNetwork = Nisuna reta lucale trova. Cunnettite l'urdinatore à u Wi-Fi o à a reta di casa.
+TransferReceived = Ricevuti
+TransferWaiting = In attesa di schedarii da u telefonu…
+TransferOpen = Apre
+TransferSavedIn = Arregistrati in {0}
+TransferHome = Da u telefonu
+TransferHomeHint = Per Wi-Fi, senza cavu nè nuvula
+TransferPhoneDocument = U telefonu pò ancu scaricà u documentu apertu.
+TransferImagesToPdf = Creà un PDF cù e fote
+TransferPageTitle = Mandà à Nougat PDF
+TransferPageIntro = Sciglite PDF o fote : ghjunghjenu nant'à l'urdinatore. Nunda passa per Internet.
+TransferPageChoose = Sceglie schedarii
+TransferPageSending = Mandata di {0}…
+TransferPageSent = {0} hè ghjuntu nant'à l'urdinatore.
+TransferPageFailed = {0} ùn hè micca statu mandatu.
+TransferPageGet = Scaricà u documentu apertu : {0}
 """

@@ -587,4 +587,25 @@ PaperFormFilled = Заповнено полів: {0}. Перевірте й зб
 PaperFormSearching = Пошук полів…
 
 ReportByEmail = Також надіслати розробнику (e-mail)
+
+Transfer = Обмін з телефоном (Wi-Fi)
+TransferTitle = Обмін з телефоном
+TransferHow = Відскануйте цей код камерою телефона. Телефон і комп'ютер мають бути в одній мережі Wi-Fi. Нічого не йде через Інтернет.
+TransferFirewall = Якщо Windows запитає доступ до мережі, дозвольте його для приватних мереж.
+TransferNoNetwork = Локальну мережу не знайдено. Підключіть комп'ютер до Wi-Fi або домашньої мережі.
+TransferReceived = Отримано
+TransferWaiting = Очікування файлів з телефона…
+TransferOpen = Відкрити
+TransferSavedIn = Збережено в {0}
+TransferHome = З телефона
+TransferHomeHint = Через Wi-Fi, без кабелю й хмари
+TransferPhoneDocument = Телефон також може завантажити відкритий документ.
+TransferImagesToPdf = Створити PDF із фото
+TransferPageTitle = Надіслати в Nougat PDF
+TransferPageIntro = Виберіть PDF або фото: вони прийдуть на комп'ютер. Нічого не йде через Інтернет.
+TransferPageChoose = Вибрати файли
+TransferPageSending = Надсилання {0}…
+TransferPageSent = {0} отримано на комп'ютері.
+TransferPageFailed = Не вдалося надіслати {0}.
+TransferPageGet = Завантажити відкритий документ: {0}
 """

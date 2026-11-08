@@ -52,7 +52,12 @@ fun main(args: Array<String>) = application {
     }
 
     Window(
-        onCloseRequest = { state.runAfterConfirm(::exitApplication) },
+        onCloseRequest = {
+            state.runAfterConfirm {
+                state.closeTransfer()
+                exitApplication()
+            }
+        },
         title = state.session?.let { (if (state.modified) "• " else "") + "${it.name} – Nougat PDF" } ?: "Nougat PDF",
         icon = rememberVectorPainter(NougatIcons.NougatLogo),
         // Fenetre agrandie : rien ne passe sous la barre des taches de Windows.

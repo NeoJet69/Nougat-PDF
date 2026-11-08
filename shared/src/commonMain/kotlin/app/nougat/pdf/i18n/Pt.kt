@@ -587,4 +587,25 @@ PaperFormFilled = Campos preenchidos: {0}. Verifique e guarde (Anular retira o �
 PaperFormSearching = A procurar campos…
 
 ReportByEmail = Enviar também ao programador (por e-mail)
+
+Transfer = Trocar com o telemóvel (Wi-Fi)
+TransferTitle = Trocar com o telemóvel
+TransferHow = No telemóvel, leia este código com a câmara. O telemóvel e o computador devem estar na mesma rede Wi-Fi. Nada passa pela Internet.
+TransferFirewall = Se o Windows pedir acesso à rede, permita-o para redes privadas.
+TransferNoNetwork = Nenhuma rede local encontrada. Ligue o computador ao Wi-Fi ou à rede de casa.
+TransferReceived = Recebidos
+TransferWaiting = À espera de ficheiros do telemóvel…
+TransferOpen = Abrir
+TransferSavedIn = Guardados em {0}
+TransferHome = Do telemóvel
+TransferHomeHint = Por Wi-Fi, sem cabo nem nuvem
+TransferPhoneDocument = O telemóvel também pode transferir o documento aberto.
+TransferImagesToPdf = Criar um PDF com as fotos
+TransferPageTitle = Enviar para o Nougat PDF
+TransferPageIntro = Escolha PDF ou fotos: chegam ao computador. Nada passa pela Internet.
+TransferPageChoose = Escolher ficheiros
+TransferPageSending = A enviar {0}…
+TransferPageSent = {0} chegou ao computador.
+TransferPageFailed = Não foi possível enviar {0}.
+TransferPageGet = Transferir o documento aberto: {0}
 """

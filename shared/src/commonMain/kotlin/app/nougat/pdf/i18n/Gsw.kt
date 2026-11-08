@@ -588,4 +588,25 @@ PaperFormFilled = Uusgfüllti Fälder: {0}. Prüefe, denn speichere (Rückgängi
 PaperFormSearching = Fälder wärded gsuecht…
 
 ReportByEmail = Au am Entwickler schicke (per E-Mail)
+
+Transfer = Mit em Handy uustuusche (WLAN)
+TransferTitle = Mit em Handy uustuusche
+TransferHow = Scann dä Code mit de Handykamera. Handy und Computer müend im glichä WLAN sii. Nüt gaht übers Internet.
+TransferFirewall = Wänn Windows nach em Netzwärchzuegriff fröget, erlaub en für privati Netzwärch.
+TransferNoNetwork = Kei lokals Netzwärch gfunde. Verbind de Computer mit em WLAN oder em Netz dihei.
+TransferReceived = Übercho
+TransferWaiting = Warte uf Dateie vom Handy…
+TransferOpen = Uufmache
+TransferSavedIn = Gspeicheret i {0}
+TransferHome = Vom Handy
+TransferHomeHint = Übers WLAN, ohni Kabel und Cloud
+TransferPhoneDocument = S Handy cha au s offeni Dokumänt abelade.
+TransferImagesToPdf = PDF mit de Fotos mache
+TransferPageTitle = A Nougat PDF schicke
+TransferPageIntro = Wähl PDFs oder Fotos: Sie chömed uf em Computer aa. Nüt gaht übers Internet.
+TransferPageChoose = Dateie wähle
+TransferPageSending = {0} wird gschickt…
+TransferPageSent = {0} isch uf em Computer aacho.
+TransferPageFailed = {0} het nöd chöne gschickt wärde.
+TransferPageGet = Offes Dokumänt abelade: {0}
 """

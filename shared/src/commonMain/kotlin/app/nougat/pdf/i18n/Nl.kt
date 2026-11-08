@@ -587,4 +587,25 @@ PaperFormFilled = Ingevulde velden: {0}. Controleer en sla op (Ongedaan maken ve
 PaperFormSearching = Velden zoeken…
 
 ReportByEmail = Ook naar de ontwikkelaar sturen (per e-mail)
+
+Transfer = Uitwisselen met de telefoon (wifi)
+TransferTitle = Uitwisselen met de telefoon
+TransferHow = Scan deze code met de camera van de telefoon. Telefoon en computer moeten op hetzelfde wifi-netwerk zitten. Niets gaat via internet.
+TransferFirewall = Als Windows om netwerktoegang vraagt, sta die toe voor privénetwerken.
+TransferNoNetwork = Geen lokaal netwerk gevonden. Verbind de computer met de wifi of het thuisnetwerk.
+TransferReceived = Ontvangen
+TransferWaiting = Wachten op bestanden van de telefoon…
+TransferOpen = Openen
+TransferSavedIn = Opgeslagen in {0}
+TransferHome = Vanaf de telefoon
+TransferHomeHint = Via wifi, zonder kabel of cloud
+TransferPhoneDocument = De telefoon kan ook het geopende document downloaden.
+TransferImagesToPdf = Pdf maken met de foto's
+TransferPageTitle = Naar Nougat PDF sturen
+TransferPageIntro = Kies pdf's of foto's: ze komen aan op de computer. Niets gaat via internet.
+TransferPageChoose = Bestanden kiezen
+TransferPageSending = {0} wordt verstuurd…
+TransferPageSent = {0} is aangekomen op de computer.
+TransferPageFailed = {0} kon niet worden verstuurd.
+TransferPageGet = Geopend document downloaden: {0}
 """

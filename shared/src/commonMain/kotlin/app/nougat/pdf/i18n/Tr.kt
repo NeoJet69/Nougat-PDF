@@ -587,4 +587,25 @@ PaperFormFilled = Doldurulan alanlar: {0}. Kontrol edip kaydedin (Geri al son me
 PaperFormSearching = Alanlar aranıyor…
 
 ReportByEmail = Geliştiriciye de gönder (e-postayla)
+
+Transfer = Telefonla paylaş (Wi-Fi)
+TransferTitle = Telefonla paylaş
+TransferHow = Telefonda bu kodu kamerayla tarayın. Telefon ve bilgisayar aynı Wi-Fi ağında olmalı. Hiçbir şey İnternet'ten geçmez.
+TransferFirewall = Windows ağ erişimi isterse özel ağlar için izin verin.
+TransferNoNetwork = Yerel ağ bulunamadı. Bilgisayarı Wi-Fi'ye veya ev ağına bağlayın.
+TransferReceived = Alınanlar
+TransferWaiting = Telefondan dosya bekleniyor…
+TransferOpen = Aç
+TransferSavedIn = {0} klasörüne kaydedildi
+TransferHome = Telefondan
+TransferHomeHint = Wi-Fi ile, kablosuz ve bulutsuz
+TransferPhoneDocument = Telefon açık belgeyi de indirebilir.
+TransferImagesToPdf = Fotoğraflarla PDF oluştur
+TransferPageTitle = Nougat PDF'ye gönder
+TransferPageIntro = PDF'leri veya fotoğrafları seçin: bilgisayara ulaşırlar. Hiçbir şey İnternet'ten geçmez.
+TransferPageChoose = Dosya seç
+TransferPageSending = {0} gönderiliyor…
+TransferPageSent = {0} bilgisayara ulaştı.
+TransferPageFailed = {0} gönderilemedi.
+TransferPageGet = Açık belgeyi indir: {0}
 """

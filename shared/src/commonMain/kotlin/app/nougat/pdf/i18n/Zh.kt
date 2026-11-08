@@ -587,4 +587,25 @@ PaperFormFilled = 已填写栏位：{0}。请检查后保存（撤销会移除�
 PaperFormSearching = 正在查找栏位…
 
 ReportByEmail = 同时发送给开发者（电子邮件）
+
+Transfer = 与手机互传（Wi-Fi）
+TransferTitle = 与手机互传
+TransferHow = 用手机相机扫描此二维码。手机和电脑必须连接同一个 Wi-Fi。不经过互联网。
+TransferFirewall = 如果 Windows 请求网络访问，请允许专用网络。
+TransferNoNetwork = 未找到局域网。请将电脑连接到 Wi-Fi 或家庭网络。
+TransferReceived = 已接收
+TransferWaiting = 正在等待手机发送文件…
+TransferOpen = 打开
+TransferSavedIn = 已保存到 {0}
+TransferHome = 来自手机
+TransferHomeHint = 通过 Wi-Fi，无需数据线或云端
+TransferPhoneDocument = 手机也可以下载当前打开的文档。
+TransferImagesToPdf = 用照片创建 PDF
+TransferPageTitle = 发送到 Nougat PDF
+TransferPageIntro = 选择 PDF 或照片：它们会传到电脑上。不经过互联网。
+TransferPageChoose = 选择文件
+TransferPageSending = 正在发送 {0}…
+TransferPageSent = {0} 已传到电脑。
+TransferPageFailed = {0} 发送失败。
+TransferPageGet = 下载当前打开的文档：{0}
 """

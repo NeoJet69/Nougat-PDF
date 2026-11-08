@@ -587,4 +587,25 @@ PaperFormFilled = Campos rellenados: {0}. Revisa y guarda (Deshacer quita el úl
 PaperFormSearching = Buscando campos…
 
 ReportByEmail = Enviarla también al desarrollador (por correo)
+
+Transfer = Intercambiar con el teléfono (Wi-Fi)
+TransferTitle = Intercambiar con el teléfono
+TransferHow = En el teléfono, escanea este código con la cámara. El teléfono y el ordenador deben estar en la misma red Wi-Fi. Nada pasa por Internet.
+TransferFirewall = Si Windows pide acceso a la red, permítelo para las redes privadas.
+TransferNoNetwork = No se ha encontrado ninguna red local. Conecta el ordenador al Wi-Fi o a la red de casa.
+TransferReceived = Recibidos
+TransferWaiting = Esperando archivos del teléfono…
+TransferOpen = Abrir
+TransferSavedIn = Guardados en {0}
+TransferHome = Desde el teléfono
+TransferHomeHint = Por Wi-Fi, sin cable ni nube
+TransferPhoneDocument = El teléfono también puede descargar el documento abierto.
+TransferImagesToPdf = Crear un PDF con las fotos
+TransferPageTitle = Enviar a Nougat PDF
+TransferPageIntro = Elige PDF o fotos: llegan al ordenador. Nada pasa por Internet.
+TransferPageChoose = Elegir archivos
+TransferPageSending = Enviando {0}…
+TransferPageSent = {0} ha llegado al ordenador.
+TransferPageFailed = No se ha podido enviar {0}.
+TransferPageGet = Descargar el documento abierto: {0}
 """

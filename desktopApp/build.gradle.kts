@@ -39,7 +39,7 @@ compose.desktop {
             description = "Lecteur et editeur de PDF, gratuit et sans pub"
             vendor = "NeoJet, Nougat et Caramel"
             // Modules Java utilises par PDFBox et l'interface.
-            modules("java.desktop", "java.logging", "java.management", "java.naming", "java.xml", "jdk.unsupported")
+            modules("java.desktop", "java.logging", "java.management", "java.naming", "java.xml", "jdk.unsupported", "jdk.httpserver")
             appResourcesRootDir.set(ocrResources)
 
             windows {

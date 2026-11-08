@@ -587,4 +587,25 @@ PaperFormFilled = Συμπληρωμένα πεδία: {0}. Ελέγξτε κα�
 PaperFormSearching = Αναζήτηση πεδίων…
 
 ReportByEmail = Αποστολή και στον προγραμματιστή (με e-mail)
+
+Transfer = Ανταλλαγή με το τηλέφωνο (Wi-Fi)
+TransferTitle = Ανταλλαγή με το τηλέφωνο
+TransferHow = Σαρώστε αυτόν τον κωδικό με την κάμερα του τηλεφώνου. Τηλέφωνο και υπολογιστής πρέπει να είναι στο ίδιο Wi-Fi. Τίποτα δεν περνά από το Διαδίκτυο.
+TransferFirewall = Αν τα Windows ζητήσουν πρόσβαση στο δίκτυο, επιτρέψτε την για ιδιωτικά δίκτυα.
+TransferNoNetwork = Δεν βρέθηκε τοπικό δίκτυο. Συνδέστε τον υπολογιστή στο Wi-Fi ή στο οικιακό δίκτυο.
+TransferReceived = Ληφθέντα
+TransferWaiting = Αναμονή για αρχεία από το τηλέφωνο…
+TransferOpen = Άνοιγμα
+TransferSavedIn = Αποθηκεύτηκαν στο {0}
+TransferHome = Από το τηλέφωνο
+TransferHomeHint = Μέσω Wi-Fi, χωρίς καλώδιο και cloud
+TransferPhoneDocument = Το τηλέφωνο μπορεί επίσης να κατεβάσει το ανοιχτό έγγραφο.
+TransferImagesToPdf = Δημιουργία PDF με τις φωτογραφίες
+TransferPageTitle = Αποστολή στο Nougat PDF
+TransferPageIntro = Επιλέξτε PDF ή φωτογραφίες: φτάνουν στον υπολογιστή. Τίποτα δεν περνά από το Διαδίκτυο.
+TransferPageChoose = Επιλογή αρχείων
+TransferPageSending = Αποστολή {0}…
+TransferPageSent = Το {0} έφτασε στον υπολογιστή.
+TransferPageFailed = Δεν ήταν δυνατή η αποστολή του {0}.
+TransferPageGet = Λήψη του ανοιχτού εγγράφου: {0}
 """

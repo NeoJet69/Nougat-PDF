@@ -59,6 +59,8 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
         return SavedFile(target.absolutePath, target.name)
     }
 
+    override val localTransfer: LocalTransfer by lazy { DesktopTransfer() }
+
     override fun todayIso(): String = java.time.LocalDate.now().toString()
 
     /** Un fichier .ics ouvert avec le calendrier de l'ordinateur (Outlook, Calendrier...). */

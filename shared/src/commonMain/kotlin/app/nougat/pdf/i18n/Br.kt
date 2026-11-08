@@ -588,4 +588,25 @@ PaperFormFilled = Maeziennoù leuniet : {0}. Gwiriit hag enrollit (Nullañ a lam
 PaperFormSearching = O klask ar maeziennoù…
 
 ReportByEmail = Kas ivez d'an diorroer (dre bostel)
+
+Transfer = Eskemm gant ar pellgomz (Wi-Fi)
+TransferTitle = Eskemm gant ar pellgomz
+TransferHow = War ar pellgomz, skanit ar c'hod-mañ gant ar benveg-luc'hskeudenniñ. Ret eo d'ar pellgomz ha d'an urzhiataer bezañ war an hevelep Wi-Fi. Netra ne dremen dre ar Genrouedad.
+TransferFirewall = Mar goulenn Windows an aotre war ar rouedad, roit anezhañ evit ar rouedadoù prevez.
+TransferNoNetwork = Rouedad lec'hel ebet kavet. Kevreit an urzhiataer ouzh ar Wi-Fi pe rouedad an ti.
+TransferReceived = Resevet
+TransferWaiting = O c'hortoz restroù eus ar pellgomz…
+TransferOpen = Digeriñ
+TransferSavedIn = Enrollet e {0}
+TransferHome = Eus ar pellgomz
+TransferHomeHint = Dre Wi-Fi, hep fun na koumoul
+TransferPhoneDocument = Gallout a ra ar pellgomz pellgargañ an teul digor ivez.
+TransferImagesToPdf = Krouiñ ur PDF gant ar skeudennoù
+TransferPageTitle = Kas da Nougat PDF
+TransferPageIntro = Dibabit PDFoù pe skeudennoù : erruout a reont war an urzhiataer. Netra ne dremen dre ar Genrouedad.
+TransferPageChoose = Dibab restroù
+TransferPageSending = O kas {0}…
+TransferPageSent = Erruet eo {0} war an urzhiataer.
+TransferPageFailed = N'eus ket bet gallet kas {0}.
+TransferPageGet = Pellgargañ an teul digor : {0}
 """

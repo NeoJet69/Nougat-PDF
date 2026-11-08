@@ -118,19 +118,26 @@ fun HomeScreen(
             @Composable
             fun FromMarkdown(modifier: Modifier) =
                 CreateCard(NougatIcons.Markdown, tr(Str.MarkdownToPdf), tr(Str.MarkdownToPdfHint), modifier, onClick = state::createPdfFromMarkdown)
+
+            @Composable
+            fun FromPhone(modifier: Modifier) =
+                CreateCard(NougatIcons.Phone, tr(Str.TransferHome), tr(Str.TransferHomeHint), modifier, onClick = state::openTransfer)
+            val cards = 3 + (if (state.canScan) 1 else 0) + (if (state.canTransfer) 1 else 0)
             if (compact) {
                 Column(Modifier.widthIn(max = 620.dp).fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (state.canScan) Scan(Modifier.fillMaxWidth())
                     FromImages(Modifier.fillMaxWidth())
                     Blank(Modifier.fillMaxWidth())
                     FromMarkdown(Modifier.fillMaxWidth())
+                    if (state.canTransfer) FromPhone(Modifier.fillMaxWidth())
                 }
             } else {
-                Row(Modifier.widthIn(max = if (state.canScan) 1080.dp else 860.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Row(Modifier.widthIn(max = (cards * 270).dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (state.canScan) Scan(Modifier.weight(1f))
                     FromImages(Modifier.weight(1f))
                     Blank(Modifier.weight(1f))
                     FromMarkdown(Modifier.weight(1f))
+                    if (state.canTransfer) FromPhone(Modifier.weight(1f))
                 }
             }
 

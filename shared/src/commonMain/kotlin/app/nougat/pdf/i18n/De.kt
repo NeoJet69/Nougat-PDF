@@ -587,4 +587,25 @@ PaperFormFilled = Ausgefüllte Felder: {0}. Prüfen, dann speichern (Rückgängi
 PaperFormSearching = Felder werden gesucht…
 
 ReportByEmail = Auch an den Entwickler senden (per E-Mail)
+
+Transfer = Mit dem Handy austauschen (WLAN)
+TransferTitle = Mit dem Handy austauschen
+TransferHow = Scannen Sie diesen Code mit der Handykamera. Handy und Computer müssen im selben WLAN sein. Nichts geht über das Internet.
+TransferFirewall = Wenn Windows nach Netzwerkzugriff fragt, erlauben Sie ihn für private Netzwerke.
+TransferNoNetwork = Kein lokales Netzwerk gefunden. Verbinden Sie den Computer mit dem WLAN oder dem Heimnetz.
+TransferReceived = Empfangen
+TransferWaiting = Warten auf Dateien vom Handy…
+TransferOpen = Öffnen
+TransferSavedIn = Gespeichert in {0}
+TransferHome = Vom Handy
+TransferHomeHint = Über WLAN, ohne Kabel und Cloud
+TransferPhoneDocument = Das Handy kann auch das geöffnete Dokument herunterladen.
+TransferImagesToPdf = PDF mit den Fotos erstellen
+TransferPageTitle = An Nougat PDF senden
+TransferPageIntro = Wählen Sie PDFs oder Fotos: Sie kommen auf dem Computer an. Nichts geht über das Internet.
+TransferPageChoose = Dateien wählen
+TransferPageSending = {0} wird gesendet…
+TransferPageSent = {0} ist auf dem Computer angekommen.
+TransferPageFailed = {0} konnte nicht gesendet werden.
+TransferPageGet = Geöffnetes Dokument herunterladen: {0}
 """

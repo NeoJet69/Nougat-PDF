@@ -588,4 +588,25 @@ PaperFormFilled = الحقول المملوءة: {0}. تحقق ثم احفظ (ا
 PaperFormSearching = جارٍ البحث عن الحقول…
 
 ReportByEmail = إرسالها أيضاً إلى المطوّر (بالبريد الإلكتروني)
+
+Transfer = التبادل مع الهاتف (Wi-Fi)
+TransferTitle = التبادل مع الهاتف
+TransferHow = على الهاتف، امسح هذا الرمز بالكاميرا. يجب أن يكون الهاتف والحاسوب على شبكة Wi-Fi نفسها. لا شيء يمر عبر الإنترنت.
+TransferFirewall = إذا طلب Windows الوصول إلى الشبكة، فاسمح به للشبكات الخاصة.
+TransferNoNetwork = لم يُعثر على شبكة محلية. صِل الحاسوب بشبكة Wi-Fi أو بشبكة المنزل.
+TransferReceived = المستلَمة
+TransferWaiting = في انتظار ملفات من الهاتف…
+TransferOpen = فتح
+TransferSavedIn = حُفظت في {0}
+TransferHome = من الهاتف
+TransferHomeHint = عبر Wi-Fi، بلا كابل ولا سحابة
+TransferPhoneDocument = يمكن للهاتف أيضاً تنزيل المستند المفتوح.
+TransferImagesToPdf = إنشاء PDF بالصور
+TransferPageTitle = إرسال إلى Nougat PDF
+TransferPageIntro = اختر ملفات PDF أو صوراً: تصل إلى الحاسوب. لا شيء يمر عبر الإنترنت.
+TransferPageChoose = اختيار ملفات
+TransferPageSending = جارٍ إرسال {0}…
+TransferPageSent = وصل {0} إلى الحاسوب.
+TransferPageFailed = تعذّر إرسال {0}.
+TransferPageGet = تنزيل المستند المفتوح: {0}
 """

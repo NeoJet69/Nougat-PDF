@@ -55,7 +55,7 @@
 ## Autres idées
 
 - [ ] Comparer deux versions d'un document.
-- [ ] Envoyer un PDF du téléphone au PC par le Wi-Fi local (QR code, sans cloud).
+- [x] Envoyer un PDF du téléphone au PC par le Wi-Fi local (QR code, sans cloud).
 - [ ] Notes de frais : tickets scannés, montant, date et TVA vers un PDF et un tableau.
 - [ ] Traduire sur Windows sans Internet.
 

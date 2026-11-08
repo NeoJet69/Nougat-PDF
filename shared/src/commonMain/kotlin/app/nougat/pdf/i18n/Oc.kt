@@ -588,4 +588,25 @@ PaperFormFilled = Camps emplenats : {0}. Verificatz puèi enregistratz (Anullar 
 PaperFormSearching = Recèrca dels camps…
 
 ReportByEmail = Mandar tanben al desvolopaire (per corrièl)
+
+Transfer = Escambiar amb lo telefòn (Wi-Fi)
+TransferTitle = Escambiar amb lo telefòn
+TransferHow = Sul telefòn, escanatz aqueste còdi amb la camèra. Lo telefòn e l'ordinador devon èsser sul meteis Wi-Fi. Res passa pas per Internet.
+TransferFirewall = Se Windows demanda l'accès a la ret, autorizatz-lo pels rets privats.
+TransferNoNetwork = Cap de ret locala pas trobada. Connectatz l'ordinador al Wi-Fi o a la ret de l'ostal.
+TransferReceived = Recebuts
+TransferWaiting = En espèra de fichièrs del telefòn…
+TransferOpen = Dobrir
+TransferSavedIn = Enregistrats dins {0}
+TransferHome = Dempuèi lo telefòn
+TransferHomeHint = Per Wi-Fi, sens cable ni nívol
+TransferPhoneDocument = Lo telefòn pòt tanben telecargar lo document dobèrt.
+TransferImagesToPdf = Crear un PDF amb las fotos
+TransferPageTitle = Mandar a Nougat PDF
+TransferPageIntro = Causissètz de PDF o de fotos : arriban sus l'ordinador. Res passa pas per Internet.
+TransferPageChoose = Causir de fichièrs
+TransferPageSending = Mandadís de {0}…
+TransferPageSent = {0} es arribat sus l'ordinador.
+TransferPageFailed = {0} a pas pogut èsser mandat.
+TransferPageGet = Telecargar lo document dobèrt : {0}
 """

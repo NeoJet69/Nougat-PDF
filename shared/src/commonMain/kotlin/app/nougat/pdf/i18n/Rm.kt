@@ -588,4 +588,25 @@ PaperFormFilled = Champs emplenids: {0}. Controllai, lura memorisai (Revocar all
 PaperFormSearching = Tschertga dals champs…
 
 ReportByEmail = Trametter er al sviluppader (per e-mail)
+
+Transfer = Barattar cun il telefon (Wi-Fi)
+TransferTitle = Barattar cun il telefon
+TransferHow = Scannai quest code cun la camera dal telefon. Il telefon e l'computer ston esser en la medema rait Wi-Fi. Nagut na passa tras l'internet.
+TransferFirewall = Sche Windows dumonda l'access a la rait, permettai el per raits privatas.
+TransferNoNetwork = Nagina rait locala chattada. Colliai il computer cun il Wi-Fi u la rait da chasa.
+TransferReceived = Retschavids
+TransferWaiting = Spetgar datotecas dal telefon…
+TransferOpen = Avrir
+TransferSavedIn = Memorisads en {0}
+TransferHome = Dal telefon
+TransferHomeHint = Via Wi-Fi, senza cabel e senza cloud
+TransferPhoneDocument = Il telefon po er telechargiar il document avert.
+TransferImagesToPdf = Crear in PDF cun las fotografias
+TransferPageTitle = Trametter a Nougat PDF
+TransferPageIntro = Tscherni PDFs u fotografias: ellas arrivan sin il computer. Nagut na passa tras l'internet.
+TransferPageChoose = Tscherner datotecas
+TransferPageSending = Trametter {0}…
+TransferPageSent = {0} è arrivà sin il computer.
+TransferPageFailed = {0} n'ha betg pudì vegnir tramess.
+TransferPageGet = Telechargiar il document avert: {0}
 """

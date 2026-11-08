@@ -837,6 +837,63 @@ class ViewerState(
         }
     }
 
+    // ---- Echanger avec le telephone (Wi-Fi local) -------------------------------------------------
+
+    val transfer = TransferState()
+
+    /** L'ordinateur peut ouvrir la page du Wi-Fi local. */
+    val canTransfer: Boolean get() = files.localTransfer != null
+
+    /** Ouvre la page du Wi-Fi local et montre son code QR ; les fichiers recus s'ajoutent a la liste. */
+    fun openTransfer() {
+        val local = files.localTransfer ?: return
+        local.stop()
+        transfer.reset()
+        transfer.dialogOpen = true
+        val texts = TransferPageTexts(
+            language = I18n.lang.code,
+            title = tr(Str.TransferPageTitle),
+            intro = tr(Str.TransferPageIntro),
+            choose = tr(Str.TransferPageChoose),
+            sending = tr(Str.TransferPageSending),
+            sent = tr(Str.TransferPageSent),
+            failed = tr(Str.TransferPageFailed),
+            getDocument = tr(Str.TransferPageGet),
+        )
+        val address = runCatching {
+            local.start(
+                texts,
+                document = { session?.let { it.path to it.name } },
+                onFile = { path, name -> scope.launch { transfer.received += ReceivedFile(path, name) } },
+            )
+        }.getOrNull()
+        if (address == null) transfer.noNetwork = true else transfer.address = address
+    }
+
+    fun closeTransfer() {
+        files.localTransfer?.stop()
+        transfer.reset()
+    }
+
+    /** Ouvre un PDF recu du telephone (il est deja enregistre dans Telechargements). */
+    fun openReceived(file: ReceivedFile) {
+        closeTransfer()
+        runAfterConfirm { open(file.path, file.name) }
+    }
+
+    /** Un PDF avec toutes les photos recues, une page par photo. */
+    fun receivedImagesToPdf() {
+        val images = transfer.received.filter { !it.isPdf }.map { it.path }
+        if (images.isEmpty()) return
+        closeTransfer()
+        runAfterConfirm {
+            scope.launch {
+                val label = if (images.size > 1) tr(Str.CreatingPdfImages, images.size) else tr(Str.CreatingPdf)
+                createNow(tr(if (images.size > 1) Str.ImagesPdfName else Str.ImagePdfName) + ".pdf", label) { it.appendImages(images) }
+            }
+        }
+    }
+
     // ---- Remplir un formulaire papier -------------------------------------------------------------
 
     val paperForm = PaperFormState()

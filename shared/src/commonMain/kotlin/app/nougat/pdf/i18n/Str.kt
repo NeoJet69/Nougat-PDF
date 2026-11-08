@@ -94,5 +94,8 @@ enum class Str {
     ReadAloudPlay, ReadAloudPrevious, ReadAloudNext, ReadAloudSpeed, ReadAloudNoVoice, ReadAloudNoText,
     ReadAloudUnavailable, ReadAloudTranslated, ReadAloudFinished, PaperForm, PaperFormTitle, PaperFormExplain,
     PaperFormNone, PaperFormNoText, PaperFormSave, PaperFormFill, PaperFormFilled, PaperFormSearching,
-    ReportByEmail,
+    ReportByEmail, Transfer, TransferTitle, TransferHow, TransferFirewall, TransferNoNetwork,
+    TransferReceived, TransferWaiting, TransferOpen, TransferSavedIn, TransferHome, TransferHomeHint,
+    TransferPhoneDocument, TransferImagesToPdf, TransferPageTitle, TransferPageIntro, TransferPageChoose, TransferPageSending,
+    TransferPageSent, TransferPageFailed, TransferPageGet,
 }

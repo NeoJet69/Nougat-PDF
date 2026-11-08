@@ -41,6 +41,9 @@ Ce que fait l'app aujourd'hui :
 - **Lire à voix haute** (synthèse vocale d'Android, voix de Windows), aussi la traduction.
 - **Remplir un formulaire papier** scanné : champs repérés dans le texte, profil sur l'appareil.
 - **Markdown** : exporter le texte d'un PDF en Markdown, créer un PDF depuis un fichier `.md`.
+- **Échanger avec le téléphone** (Windows) : petit serveur web sur le Wi-Fi local (code QR,
+  adresse secrète) ; le téléphone envoie des PDF ou des photos depuis son navigateur, ou
+  télécharge le document ouvert (`DesktopTransfer.kt`).
 - **Assistant Claude** (facultatif, avec la clé API Anthropic de l'utilisateur).
 - **24 langues d'interface** : 16 langues et 8 dialectes (suisse allemand, romanche, québécois,
   alsacien, occitan, breton, corse… et le « Miaou »), dont l'arabe de droite à gauche.

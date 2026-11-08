@@ -119,6 +119,15 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Depuis le téléphone** (accueil, ou menu ⋮ « Échanger avec le téléphone », sur Windows) :
+Nougat affiche un code QR. On le scanne avec l'appareil photo du téléphone, une page s'ouvre dans
+le navigateur, on choisit des PDF ou des photos et ils arrivent sur l'ordinateur (dossier
+Téléchargements). Le téléphone peut aussi télécharger le document ouvert sur l'ordinateur. Tout
+passe par le Wi-Fi de la maison, rien par Internet, et ça marche avec n'importe quel téléphone
+(Android ou iPhone, sans installer d'appli). La page n'existe que pendant que la fenêtre est
+ouverte, à une adresse secrète. La première fois, Windows demande d'autoriser le réseau : choisir
+« réseaux privés ».
+
 **Remplir un formulaire papier** (menu ⋮) : sur un formulaire scanné (texte reconnu) ou un PDF
 sans champs, Nougat repère les champs de la page (un libellé suivi de « ____ », de « …… » ou de
 deux-points) et les remplit avec votre profil : nom, prénom, adresse, NPA et localité, date de

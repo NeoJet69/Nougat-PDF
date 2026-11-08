@@ -587,4 +587,25 @@ PaperFormFilled = Campi compilati: {0}. Controlla, poi salva (Annulla toglie l'u
 PaperFormSearching = Ricerca dei campi…
 
 ReportByEmail = Invia anche allo sviluppatore (via e-mail)
+
+Transfer = Scambia con il telefono (Wi-Fi)
+TransferTitle = Scambia con il telefono
+TransferHow = Sul telefono, inquadra questo codice con la fotocamera. Telefono e computer devono essere sulla stessa rete Wi-Fi. Niente passa da Internet.
+TransferFirewall = Se Windows chiede l'accesso alla rete, consentilo per le reti private.
+TransferNoNetwork = Nessuna rete locale trovata. Collega il computer al Wi-Fi o alla rete di casa.
+TransferReceived = Ricevuti
+TransferWaiting = In attesa di file dal telefono…
+TransferOpen = Apri
+TransferSavedIn = Salvati in {0}
+TransferHome = Dal telefono
+TransferHomeHint = Via Wi-Fi, senza cavo né cloud
+TransferPhoneDocument = Il telefono può anche scaricare il documento aperto.
+TransferImagesToPdf = Crea un PDF con le foto
+TransferPageTitle = Invia a Nougat PDF
+TransferPageIntro = Scegli PDF o foto: arrivano sul computer. Niente passa da Internet.
+TransferPageChoose = Scegli i file
+TransferPageSending = Invio di {0}…
+TransferPageSent = {0} è arrivato sul computer.
+TransferPageFailed = Impossibile inviare {0}.
+TransferPageGet = Scarica il documento aperto: {0}
 """

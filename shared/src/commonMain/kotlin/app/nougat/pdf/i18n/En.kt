@@ -587,4 +587,25 @@ PaperFormFilled = Fields filled: {0}. Check, then save (Undo removes the last te
 PaperFormSearching = Looking for fields…
 
 ReportByEmail = Also send it to the developer (by e-mail)
+
+Transfer = Exchange with the phone (Wi-Fi)
+TransferTitle = Exchange with the phone
+TransferHow = On the phone, scan this code with the camera. The phone and the computer must be on the same Wi-Fi. Nothing goes through the Internet.
+TransferFirewall = If Windows asks for network access, allow it for private networks.
+TransferNoNetwork = No local network found. Connect the computer to the Wi-Fi or the home network.
+TransferReceived = Received
+TransferWaiting = Waiting for files from the phone…
+TransferOpen = Open
+TransferSavedIn = Saved in {0}
+TransferHome = From the phone
+TransferHomeHint = Over Wi-Fi, no cable, no cloud
+TransferPhoneDocument = The phone can also download the open document.
+TransferImagesToPdf = Create a PDF with the photos
+TransferPageTitle = Send to Nougat PDF
+TransferPageIntro = Choose PDFs or photos: they arrive on the computer. Nothing goes through the Internet.
+TransferPageChoose = Choose files
+TransferPageSending = Sending {0}…
+TransferPageSent = {0} arrived on the computer.
+TransferPageFailed = {0} could not be sent.
+TransferPageGet = Download the open document: {0}
 """

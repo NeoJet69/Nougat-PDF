@@ -588,4 +588,25 @@ PaperFormFilled = Câmpuri completate: {0}. Verificați, apoi salvați (Anulare 
 PaperFormSearching = Se caută câmpurile…
 
 ReportByEmail = Trimite și dezvoltatorului (prin e-mail)
+
+Transfer = Schimb cu telefonul (Wi-Fi)
+TransferTitle = Schimb cu telefonul
+TransferHow = Pe telefon, scanați acest cod cu camera. Telefonul și computerul trebuie să fie pe aceeași rețea Wi-Fi. Nimic nu trece prin Internet.
+TransferFirewall = Dacă Windows cere acces la rețea, permiteți-l pentru rețelele private.
+TransferNoNetwork = Nu s-a găsit nicio rețea locală. Conectați computerul la Wi-Fi sau la rețeaua de acasă.
+TransferReceived = Primite
+TransferWaiting = Se așteaptă fișiere de pe telefon…
+TransferOpen = Deschide
+TransferSavedIn = Salvate în {0}
+TransferHome = De pe telefon
+TransferHomeHint = Prin Wi-Fi, fără cablu și fără cloud
+TransferPhoneDocument = Telefonul poate descărca și documentul deschis.
+TransferImagesToPdf = Creează un PDF cu fotografiile
+TransferPageTitle = Trimite la Nougat PDF
+TransferPageIntro = Alegeți PDF-uri sau fotografii: ajung pe computer. Nimic nu trece prin Internet.
+TransferPageChoose = Alege fișiere
+TransferPageSending = Se trimite {0}…
+TransferPageSent = {0} a ajuns pe computer.
+TransferPageFailed = {0} nu a putut fi trimis.
+TransferPageGet = Descarcă documentul deschis: {0}
 """

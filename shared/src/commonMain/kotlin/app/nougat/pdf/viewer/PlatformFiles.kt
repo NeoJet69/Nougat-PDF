@@ -50,6 +50,9 @@ interface PlatformFiles {
     /** Fait choisir un fichier texte (Markdown) et renvoie son nom et son contenu ; null si annule. */
     suspend fun pickText(): Pair<String, String>? = null
 
+    /** Echanger des fichiers avec le telephone par le Wi-Fi local (ordinateur), ou null. */
+    val localTransfer: LocalTransfer? get() = null
+
     /** Copie [text] dans le presse-papiers. */
     fun copyText(text: String) {}
 

@@ -587,4 +587,25 @@ PaperFormFilled = Ifyllda fält: {0}. Kontrollera och spara (Ångra tar bort den
 PaperFormSearching = Söker fält…
 
 ReportByEmail = Skicka även till utvecklaren (via e-post)
+
+Transfer = Utbyte med telefonen (wifi)
+TransferTitle = Utbyte med telefonen
+TransferHow = Skanna koden med telefonens kamera. Telefonen och datorn måste vara på samma wifi. Inget går via internet.
+TransferFirewall = Om Windows ber om nätverksåtkomst, tillåt den för privata nätverk.
+TransferNoNetwork = Inget lokalt nätverk hittades. Anslut datorn till wifi eller hemnätverket.
+TransferReceived = Mottagna
+TransferWaiting = Väntar på filer från telefonen…
+TransferOpen = Öppna
+TransferSavedIn = Sparade i {0}
+TransferHome = Från telefonen
+TransferHomeHint = Via wifi, utan kabel och moln
+TransferPhoneDocument = Telefonen kan också ladda ner det öppna dokumentet.
+TransferImagesToPdf = Skapa en PDF med bilderna
+TransferPageTitle = Skicka till Nougat PDF
+TransferPageIntro = Välj PDF:er eller bilder: de kommer till datorn. Inget går via internet.
+TransferPageChoose = Välj filer
+TransferPageSending = Skickar {0}…
+TransferPageSent = {0} har kommit fram till datorn.
+TransferPageFailed = {0} kunde inte skickas.
+TransferPageGet = Ladda ner det öppna dokumentet: {0}
 """
