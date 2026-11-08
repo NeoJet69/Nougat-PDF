@@ -8,8 +8,8 @@ plugins {
 // Sans elle, l'APK est signe avec la cle de debug (il faut alors desinstaller avant chaque mise a jour).
 val keystoreFile = providers.environmentVariable("NOUGAT_KEYSTORE_FILE").orNull?.let { file(it) }?.takeIf { it.isFile }
 
-// Numero de version : celui de la compilation GitHub, pour que chaque APK remplace le precedent.
-val buildNumber = providers.environmentVariable("GITHUB_RUN_NUMBER").orNull?.toIntOrNull() ?: 1
+// Numero de version : nougat.versionCode dans gradle.properties (+1 a chaque release).
+val buildNumber = providers.gradleProperty("nougat.versionCode").get().toInt()
 
 android {
     namespace = "app.nougat.pdf.android"

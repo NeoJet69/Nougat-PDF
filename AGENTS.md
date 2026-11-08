@@ -11,6 +11,11 @@ compilation. Ce fichier-ci dit **comment travailler** sur le dépôt.
   cherche les bugs, les failles et les incohérences, et **note ce qu'il trouve** dans
   `docs/codex/REVUE.md`. Claude Code lit ce fichier et y répond.
 
+### Version d'une release
+
+Avant chaque release, augmenter `nougat.versionCode` de **1** dans `gradle.properties` (et seulement
+à ce moment-là) : c'est le numéro de version Android (Google Play) et la version Windows `1.0.N`.
+
 ### Règles pour Codex
 
 1. Travaille sur ta propre branche, par exemple `codex/revue`, créée depuis la branche de
