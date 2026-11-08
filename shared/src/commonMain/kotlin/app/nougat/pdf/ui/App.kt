@@ -121,6 +121,8 @@ fun NougatApp(
                 if (state.translation.dialogOpen && session != null) TranslateDialog(state) { state.translation.dialogOpen = false }
                 if (state.finalizeOpen && session != null) FinalizeDialog(state) { state.finalizeOpen = false }
                 if (state.censor.dialogOpen && session != null) CensorDialog(state, session) { state.censor.dialogOpen = false }
+                if (state.compressOpen && session != null) CompressDialog(state) { state.compressOpen = false }
+                if (state.stampOpen && session != null) StampDialog(state) { state.stampOpen = false }
                 state.errorMessage?.let { message ->
                     AlertDialog(
                         onDismissRequest = state::dismissError,

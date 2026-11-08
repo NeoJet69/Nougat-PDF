@@ -100,6 +100,10 @@ fait réapparaître le texte. Dans Nougat, ce qui est caché est vraiment retir�
   calque, annotation, formulaire ni métadonnée cachés ; en option, la reconnaissance du texte la
   rend de nouveau cherchable.
 
+**Outils de pages** : **Compresser** le document (trois niveaux, taille avant et après),
+**Numéros de page et date** (format, position, premier numéro, sans la première page), et dans
+l'écran Pages, **Rogner** les marges blanches et **Redresser** un scan un peu penché.
+
 **Pages** : pivoter, déplacer, supprimer, extraire dans un nouveau fichier, ajouter une page
 blanche, un autre PDF ou des images à la fin.
 

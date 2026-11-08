@@ -46,6 +46,9 @@ import app.nougat.pdf.engine.deleteTextBlocks
 import app.nougat.pdf.engine.SensitiveKind
 import app.nougat.pdf.engine.BoxMark
 import app.nougat.pdf.engine.NormRect
+import app.nougat.pdf.engine.CompressLevel
+import app.nougat.pdf.engine.PageStamp
+import app.nougat.pdf.engine.stampPages
 
 /** Ce que l'app affiche : l'accueil ou un document, l'edition, et les fenetres par-dessus. */
 class ViewerState(
@@ -744,6 +747,69 @@ class ViewerState(
         }
         scope.launch {
             if (editNow(tr(Str.Censoring), s.password) { it.burn(boxes) }) toast = trn(Str.CensorDone, chosen.size)
+        }
+    }
+
+    // ---- Outils de pages ---------------------------------------------------------------------------
+
+    /** Fenetres « Compresser » et « Numeros de page et date » ouvertes. */
+    var compressOpen by mutableStateOf(false)
+    var stampOpen by mutableStateOf(false)
+
+    /** Rogne les marges blanches des pages choisies. */
+    fun cropPages(pages: Set<Int>) {
+        val s = session ?: return
+        scope.launch {
+            var count = 0
+            if (editNow(tr(Str.Cropping), s.password) { count = it.cropMargins(pages.sorted()) }) {
+                toast = if (count == 0) tr(Str.CropNothing) else trn(Str.Cropped, count)
+            }
+        }
+    }
+
+    /** Redresse les pages choisies (scans un peu penches). */
+    fun straightenPages(pages: Set<Int>) {
+        val s = session ?: return
+        scope.launch {
+            var count = 0
+            if (editNow(tr(Str.Straightening), s.password) { count = it.straighten(pages.sorted()) }) {
+                toast = if (count == 0) tr(Str.StraightenNothing) else trn(Str.Straightened, count)
+            }
+        }
+    }
+
+    /** Allege le document (images recompressees) ; la taille avant et apres s'affiche. */
+    fun compressDocument(level: CompressLevel) {
+        compressOpen = false
+        val s = session ?: return
+        val before = files.fileSize(s.path)
+        scope.launch {
+            var count = 0
+            if (editNow(tr(Str.Compressing), s.password) { count = it.compressImages(level) }) {
+                val after = session?.path?.let(files::fileSize) ?: -1L
+                toast = if (count == 0 || after < 0 || before <= 0 || after >= before) tr(Str.CompressNothing)
+                else tr(Str.Compressed, sizeText(before), sizeText(after))
+            }
+        }
+    }
+
+    /** Ecrit les numeros de page et la date sur toutes les pages. */
+    fun stampDocument(stamp: PageStamp) {
+        stampOpen = false
+        val s = session ?: return
+        scope.launch {
+            if (editNow(tr(Str.Stamping), s.password) { it.stampPages(stamp) }) toast = tr(Str.Stamped)
+        }
+    }
+
+    /** « 4,2 Mo », « 830 Ko ». */
+    fun sizeText(bytes: Long): String {
+        val comma = I18n.lang != Lang.En && I18n.lang != Lang.Zh
+        return if (bytes < 1_000_000) tr(Str.SizeKb, (bytes + 999) / 1000)
+        else {
+            val tenths = (bytes + 50_000) / 100_000
+            val text = "${tenths / 10}" + (if (comma) "," else ".") + "${tenths % 10}"
+            tr(Str.SizeMb, text)
         }
     }
 

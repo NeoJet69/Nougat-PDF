@@ -13,7 +13,7 @@
       `NOUGAT_UPLOAD_KEYSTORE` (fichier en base64), `NOUGAT_UPLOAD_KEYSTORE_PASSWORD`,
       `NOUGAT_UPLOAD_KEY_ALIAS`, `NOUGAT_UPLOAD_KEY_PASSWORD`. La compilation produit alors
       l'AAB (`Nougat-PDF-….aab`), joint aux releases.
-- [ ] Bouton « Signaler une réponse » sous les réponses de Claude (règle de Google Play sur
+- [x] Bouton « Signaler une réponse » sous les réponses de Claude (règle de Google Play sur
       l'IA générative).
 - [ ] Formulaire « Sécurité des données » : rien n'est collecté ; le texte part chez Anthropic
       seulement avec Claude et la clé de l'utilisateur ; OCR, scanner et traduction ML Kit sur
@@ -47,9 +47,9 @@
 - [x] Bouton « Finaliser pour envoyer » : transformer les pages en images (PDF aplati), pour être
       sûr que plus rien ne peut être repris (texte, calques, annotations, métadonnées). En option,
       garder une copie cherchable en refaisant l'OCR sur les images.
-- [ ] Compresser un PDF (images réduites et recompressées, plusieurs niveaux).
-- [ ] Rogner une page, et redresser un scan un peu penché.
-- [ ] Numéros de page et date (position, format, première page ou non).
+- [x] Compresser un PDF (images réduites et recompressées, plusieurs niveaux).
+- [x] Rogner une page, et redresser un scan un peu penché.
+- [x] Numéros de page et date (position, format, première page ou non).
 - [ ] PDF vers Markdown (titres, listes, tableaux, avec l'OCR pour les scans) et Markdown vers PDF.
 
 ## Autres idées

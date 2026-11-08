@@ -126,6 +126,12 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
 
     override fun flatten(dpi: Float) = flattenWithPdfBox(doc, dpi)
 
+    override fun cropMargins(pages: List<Int>): Int = cropMarginsWithPdfBox(doc, pages)
+
+    override fun straighten(pages: List<Int>): Int = straightenWithPdfBox(doc, pages)
+
+    override fun compressImages(level: CompressLevel): Int = compressImagesWithPdfBox(doc, level)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {
@@ -177,6 +183,11 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
                 cs.fill()
             }
         }
+
+        override fun textWidth(text: String, size: Float): Float = runCatching {
+            val safe = buildString { for (c in text) append(if (runCatching { font.encode(c.toString()) }.isSuccess) c else '?') }
+            font.getStringWidth(safe) / 1000f * size
+        }.getOrDefault(text.length * size * 0.5f)
 
         override fun text(x: Float, baseline: Float, text: String, size: Float, argb: Int) {
             val safe = buildString {

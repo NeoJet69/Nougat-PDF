@@ -12,4 +12,7 @@ class AssistantUiState {
     var input by mutableStateOf("")
     var showSettings by mutableStateOf(false)
     val items = mutableStateListOf<ChatItem>()
+
+    /** Reponses de Claude signalees par l'utilisateur : elles sont masquees. */
+    val reported = mutableStateListOf<ChatItem>()
 }

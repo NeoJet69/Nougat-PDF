@@ -44,6 +44,12 @@ interface PlatformFiles {
     val canShare: Boolean
     suspend fun share(path: String, name: String)
 
+    /** Taille du fichier local [path] en octets, ou -1 si inconnue. */
+    fun fileSize(path: String): Long = -1
+
+    /** La date du jour, ecrite comme dans le pays de l'utilisateur (pour la mettre sur les pages). */
+    fun today(): String = ""
+
     /** Petits reglages conserves sur l'appareil (cle API de l'assistant...). */
     fun loadSetting(key: String): String?
     fun saveSetting(key: String, value: String)

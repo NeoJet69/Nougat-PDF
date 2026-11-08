@@ -23,6 +23,7 @@ Ce que fait l'app aujourd'hui :
   vérification sur les pages puis barres noires et texte retiré.
 - **Finaliser pour envoyer** : copie dont chaque page est une image (plus rien de caché), avec OCR
   facultatif pour rester cherchable.
+- **Compresser**, **numéros de page et date**, **rogner** les marges, **redresser** un scan penché.
 - **Organiser les pages** : pivoter, déplacer, supprimer, extraire, ajouter une page, un PDF, des
   images. **Créer** un PDF depuis des photos ou un document vierge.
 - **Scanner** un document avec l'appareil photo (Android, ML Kit Document Scanner).

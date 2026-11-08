@@ -128,6 +128,10 @@ class AndroidFiles(private val app: Application) : PlatformFiles {
 
     private val prefs = app.getSharedPreferences("nougat", android.content.Context.MODE_PRIVATE)
 
+    override fun fileSize(path: String): Long = runCatching { File(path).length() }.getOrDefault(-1L)
+
+    override fun today(): String = java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.ROOT).format(java.util.Date())
+
     override fun loadSetting(key: String): String? = prefs.getString(key, null)
 
     override fun saveSetting(key: String, value: String) {

@@ -262,7 +262,7 @@ private fun drawParagraph(canvas: android.graphics.Canvas, item: TranslatedParag
 }
 
 /** Les images posees directement par la page, avec leur matrice (a, b, c, d, e, f). */
-private class PageImageFinder : com.tom_roush.pdfbox.contentstream.PDFStreamEngine() {
+internal class PageImageFinder : com.tom_roush.pdfbox.contentstream.PDFStreamEngine() {
     val found = ArrayList<Pair<com.tom_roush.pdfbox.cos.COSName, FloatArray>>()
 
     init {

@@ -98,6 +98,10 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
 
     private val prefs = java.util.prefs.Preferences.userRoot().node("app/nougat/pdf")
 
+    override fun fileSize(path: String): Long = runCatching { java.io.File(path).length() }.getOrDefault(-1L)
+
+    override fun today(): String = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+
     override fun loadSetting(key: String): String? = prefs.get(key, null)
 
     override fun saveSetting(key: String, value: String) {

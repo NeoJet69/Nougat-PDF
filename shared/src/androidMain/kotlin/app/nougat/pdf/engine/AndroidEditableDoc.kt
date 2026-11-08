@@ -182,6 +182,12 @@ private class AndroidEditableDoc(
 
     override fun flatten(dpi: Float) = flattenAndroid(doc, src, dpi)
 
+    override fun cropMargins(pages: List<Int>): Int = cropMarginsAndroid(doc, src, pages)
+
+    override fun straighten(pages: List<Int>): Int = straightenAndroid(doc, src, pages)
+
+    override fun compressImages(level: CompressLevel): Int = compressImagesAndroid(doc, level)
+
     fun applySecurity() {
         val pwd = password
         if (pwd.isNullOrEmpty()) {
@@ -233,6 +239,11 @@ private class AndroidEditableDoc(
                 cs.fill()
             }
         }
+
+        override fun textWidth(text: String, size: Float): Float = runCatching {
+            val safe = buildString { for (c in text) append(if (runCatching { font.encode(c.toString()) }.isSuccess) c else '?') }
+            font.getStringWidth(safe) / 1000f * size
+        }.getOrDefault(text.length * size * 0.5f)
 
         override fun text(x: Float, baseline: Float, text: String, size: Float, argb: Int) {
             val safe = buildString {

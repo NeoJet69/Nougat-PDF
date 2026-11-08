@@ -97,6 +97,26 @@ object NougatIcons {
         svgIcon("Scan", "M7,3H4v3H2V1h5V3zM22,6V1h-5v2h3v3H22zM7,21H4v-3H2v5h5V21zM20,18v3h-3v2h5v-5H20zM17,6H7v12h10V6zM19,18c0,1.1 -0.9,2 -2,2H7c-1.1,0 -2,-0.9 -2,-2V6c0,-1.1 0.9,-2 2,-2h10c1.1,0 2,0.9 2,2V18zM15,8H9v2h6V8zM15,11H9v2h6V11zM15,14H9v2h6V14z")
     }
 
+    /** Deux fleches qui se rapprochent : compresser. */
+    val Compress by lazy {
+        svgIcon("Compress", "M8,19h3v3h2v-3h3l-4,-4 -4,4zM16,4h-3L13,1h-2v3L8,4l4,4 4,-4zM4,9v2h16L20,9L4,9zM4,12h16v2L4,14z")
+    }
+
+    /** Une liste numerotee : numeros de page. */
+    val Numbers by lazy {
+        svgIcon("Numbers", "M2,17h2v0.5L3,17.5v1h1v0.5L2,19v1h3v-4L2,16v1zM3,8h1L4,4L2,4v1h1v3zM2,11h1.8L2,13.1v0.9h3v-1L3.2,13L5,10.9L5,10L2,10v1zM7,5v2h14L21,5L7,5zM7,19h14v-2L7,17v2zM7,13h14v-2L7,11v2z")
+    }
+
+    /** Deux equerres : rogner. */
+    val Crop by lazy {
+        svgIcon("Crop", "M17,15h2V7c0,-1.1 -0.9,-2 -2,-2H9v2h8v8zM7,17V1H5v4H1v2h4v10c0,1.1 0.9,2 2,2h10v4h2v-4h4v-2H7z")
+    }
+
+    /** Une regle : redresser. */
+    val Straighten by lazy {
+        svgIcon("Straighten", "M21,6H3C1.9,6 1,6.9 1,8v8c0,1.1 0.9,2 2,2h18c1.1,0 2,-0.9 2,-2V8c0,-1.1 -0.9,-2 -2,-2zM21,16H3V8h2v4h2V8h2v4h2V8h2v4h2V8h2v4h2V8h2v8z")
+    }
+
     /** Un oeil barre : censurer. */
     val Censor by lazy {
         svgIcon("Censor", "M12,7c2.76,0 5,2.24 5,5 0,0.65 -0.13,1.26 -0.36,1.83l2.92,2.92c1.51,-1.26 2.7,-2.89 3.43,-4.75 -1.73,-4.39 -6,-7.5 -11,-7.5 -1.4,0 -2.74,0.25 -3.98,0.7l2.16,2.16C10.74,7.13 11.35,7 12,7zM2,4.27l2.28,2.28 0.46,0.46C3.08,8.3 1.78,10.02 1,12c1.73,4.39 6,7.5 11,7.5 1.55,0 3.03,-0.3 4.38,-0.84l0.42,0.42L19.73,22 21,20.73 3.27,3 2,4.27zM7.53,9.8l1.55,1.55c-0.05,0.21 -0.08,0.43 -0.08,0.65 0,1.66 1.34,3 3,3 0.22,0 0.44,-0.03 0.65,-0.08l1.55,1.55c-0.67,0.33 -1.41,0.53 -2.2,0.53 -2.76,0 -5,-2.24 -5,-5 0,-0.79 0.2,-1.53 0.53,-2.2zM11.84,9.02l3.15,3.15 0.02,-0.16c0,-1.66 -1.34,-3 -3,-3l-0.17,0.01z")

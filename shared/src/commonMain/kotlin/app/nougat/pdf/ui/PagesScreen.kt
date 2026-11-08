@@ -124,6 +124,8 @@ fun PagesScreen(state: ViewerState, session: DocumentSession) {
             PageAction(NougatIcons.ArrowLeft, tr(Str.MoveForward), any, compact) { state.movePages(selected, -1) }
             PageAction(NougatIcons.ArrowRight, tr(Str.MoveBack), any, compact) { state.movePages(selected, +1) }
             PageAction(NougatIcons.Extract, tr(Str.Extract), any, compact) { state.extractPages(selected) }
+            PageAction(NougatIcons.Crop, tr(Str.Crop), any, compact) { state.cropPages(selected) }
+            PageAction(NougatIcons.Straighten, tr(Str.Straighten), any, compact) { state.straightenPages(selected) }
             PageAction(Icons.Filled.Delete, tr(Str.Delete), any, compact, danger = true) { state.deletePages(selected) }
             IslandDivider()
             PageAction(Icons.Filled.Add, tr(Str.BlankPage), true, compact) {

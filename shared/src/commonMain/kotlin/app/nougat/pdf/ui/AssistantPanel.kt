@@ -121,6 +121,25 @@ fun AssistantPanel(state: ViewerState, modifier: Modifier) {
 private fun Conversation(state: ViewerState, modifier: Modifier) {
     val a = state.assistant
     val listState = rememberLazyListState()
+    var reporting by remember { mutableStateOf<ChatItem?>(null) }
+    val uri = androidx.compose.ui.platform.LocalUriHandler.current
+    fun sendReport(reply: String, reason: String, comment: String) {
+        if (REPORT_EMAIL.isBlank()) return
+        val body = tr(Str.ReportMailSubject) + "\n\n" + reason + "\n" + comment + "\n\n---\n" + reply.take(1500)
+        val url = "mailto:" + REPORT_EMAIL + "?subject=" + encodeUrl(tr(Str.ReportMailSubject)) + "&body=" + encodeUrl(body)
+        runCatching { uri.openUri(url) }
+    }
+    reporting?.let { item ->
+        ReportDialog(
+            onDismiss = { reporting = null },
+            onReport = { reason, comment ->
+                a.reported.add(item)
+                reporting = null
+                state.showToast(tr(Str.ReportThanks))
+                (item as? ChatItem.Assistant)?.let { sendReport(it.text, reason, comment) }
+            },
+        )
+    }
     LaunchedEffect(a.items.size, a.running) {
         val last = a.items.size + (if (a.running) 1 else 0) - 1
         if (last >= 0) listState.animateScrollToItem(last)
@@ -134,7 +153,9 @@ private fun Conversation(state: ViewerState, modifier: Modifier) {
         if (a.items.isEmpty()) {
             item { Welcome(onPick = { a.input = it }) }
         }
-        items(a.items) { ChatBubble(it) }
+        items(a.items) { item ->
+            ChatBubble(item, reported = item in a.reported, onReport = { reporting = item })
+        }
         if (a.running) {
             item {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(4.dp)) {
@@ -171,17 +192,30 @@ private fun Welcome(onPick: (String) -> Unit) {
 }
 
 @Composable
-private fun ChatBubble(item: ChatItem) {
+private fun ChatBubble(item: ChatItem, reported: Boolean = false, onReport: () -> Unit = {}) {
     val colors = MaterialTheme.colorScheme
     when (item) {
+        is ChatItem.Assistant -> if (reported) {
+            Text(tr(Str.ReplyReported), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant, modifier = Modifier.padding(horizontal = 6.dp))
+        } else {
+            Column {
+                Surface(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 6.dp), color = colors.surfaceContainerHigh) {
+                    SelectionContainer {
+                        Text(item.text, modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
+                    }
+                }
+                // Google Play : une reponse d'IA doit pouvoir etre signalee depuis l'app.
+                Text(
+                    tr(Str.Report),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = colors.onSurfaceVariant,
+                    modifier = Modifier.padding(start = 10.dp, top = 2.dp).clip(RoundedCornerShape(6.dp)).clickable(onClick = onReport).padding(horizontal = 4.dp, vertical = 2.dp),
+                )
+            }
+        }
         is ChatItem.User -> Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
             Box(Modifier.clip(RoundedCornerShape(20.dp, 20.dp, 6.dp, 20.dp)).background(NougatGradient)) {
                 Text(item.text, color = Color.White, modifier = Modifier.widthIn(max = 320.dp).padding(horizontal = 14.dp, vertical = 10.dp))
-            }
-        }
-        is ChatItem.Assistant -> Surface(shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 6.dp), color = colors.surfaceContainerHigh) {
-            SelectionContainer {
-                Text(item.text, modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp))
             }
         }
         is ChatItem.Action -> Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(horizontal = 4.dp)) {
@@ -294,5 +328,43 @@ private fun AssistantSettingsForm(state: ViewerState, modifier: Modifier) {
                 }
             }
         }
+    }
+}
+
+/** Pourquoi une reponse est signalee. */
+private val ReportReasons = listOf(Str.ReportOffensive, Str.ReportDangerous, Str.ReportWrong, Str.ReportOther)
+
+/** Signaler une reponse de Claude : elle est masquee, et peut etre envoyee au developpeur. */
+@Composable
+private fun ReportDialog(onDismiss: () -> Unit, onReport: (String, String) -> Unit) {
+    var reason by remember { mutableStateOf(ReportReasons.first()) }
+    var comment by remember { mutableStateOf("") }
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(tr(Str.ReportTitle)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(tr(Str.ReportExplain), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                for (r in ReportReasons) ChoiceRow(tr(r), reason == r) { reason = r }
+                OutlinedTextField(value = comment, onValueChange = { comment = it.take(500) }, label = { Text(tr(Str.ReportComment)) }, modifier = Modifier.fillMaxWidth())
+            }
+        },
+        confirmButton = { Button(onClick = { onReport(tr(reason), comment) }) { Text(tr(Str.ReportSend)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(tr(Str.Cancel)) } },
+    )
+}
+
+/**
+ * Adresse ou envoyer les reponses signalees (le courriel s'ouvre, l'utilisateur l'envoie).
+ * Vide : la reponse est seulement masquee.
+ */
+const val REPORT_EMAIL = ""
+
+/** Encode un texte pour une adresse mailto: (UTF-8, pourcentages). */
+private fun encodeUrl(text: String): String = buildString {
+    for (b in text.encodeToByteArray()) {
+        val c = b.toInt() and 0xFF
+        if (c.toChar().isLetterOrDigit() && c < 128 || c.toChar() in "-_.~") append(c.toChar())
+        else append('%').append("0123456789ABCDEF"[c shr 4]).append("0123456789ABCDEF"[c and 15])
     }
 }

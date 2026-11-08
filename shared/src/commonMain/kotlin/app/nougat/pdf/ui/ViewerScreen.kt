@@ -409,6 +409,8 @@ private fun DocumentMenu(state: ViewerState, session: DocumentSession, onOpenFil
             if (state.canScan) item(tr(Str.ScanAppend), NougatIcons.Camera, state::appendScan)
             if (state.canOcr) item(tr(Str.RecognizeText), NougatIcons.Scan) { state.ocrDialog = true }
             item(tr(Str.TranslateTitle), NougatIcons.Translate) { state.translation.dialogOpen = true }
+            item(tr(Str.Stamp), NougatIcons.Numbers) { state.stampOpen = true }
+            item(tr(Str.Compress), NougatIcons.Compress) { state.compressOpen = true }
             item(tr(Str.Censor), NougatIcons.Censor) { state.censor.dialogOpen = true }
             item(tr(Str.Finalize), NougatIcons.Shield) { state.finalizeOpen = true }
             if (session.password == null) {

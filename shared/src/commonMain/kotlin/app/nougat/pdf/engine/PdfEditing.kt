@@ -82,6 +82,15 @@ interface EditableDoc {
      * texte, calque, annotation, champ de formulaire ni information cachee ne reste dans le fichier.
      */
     fun flatten(dpi: Float): Unit = throw UnsupportedOperationException("Finalisation indisponible")
+
+    /** Rogne les marges blanches des pages [pages]. Renvoie le nombre de pages rognees. */
+    fun cropMargins(pages: List<Int>): Int = 0
+
+    /** Redresse les pages [pages] un peu penchees (scans). Renvoie le nombre de pages redressees. */
+    fun straighten(pages: List<Int>): Int = 0
+
+    /** Recompresse les images du document au niveau [level]. Renvoie le nombre d'images allegees. */
+    fun compressImages(level: CompressLevel): Int = 0
 }
 
 /**
@@ -103,6 +112,9 @@ interface PageCanvas {
     fun stroke(points: FloatArray, argb: Int, width: Float, opacity: Float = 1f)
 
     fun fillRect(x: Float, y: Float, width: Float, height: Float, argb: Int, opacity: Float = 1f)
+
+    /** Largeur d'une ligne de texte en Helvetica, en points (pour centrer ou aligner a droite). */
+    fun textWidth(text: String, size: Float): Float = text.length * size * 0.5f
 
     /** Une ligne de texte en Helvetica ; les caracteres non pris en charge deviennent « ? ». */
     fun text(x: Float, baseline: Float, text: String, size: Float, argb: Int)

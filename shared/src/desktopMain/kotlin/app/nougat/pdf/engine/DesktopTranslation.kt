@@ -225,7 +225,7 @@ private fun green(rgb: Int) = ((rgb shr 8) and 0xFF) / 255f
 private fun blue(rgb: Int) = (rgb and 0xFF) / 255f
 
 /** Les images posees directement par la page, avec leur matrice (a, b, c, d, e, f). */
-private class PageImageFinder : org.apache.pdfbox.contentstream.PDFStreamEngine() {
+internal class PageImageFinder : org.apache.pdfbox.contentstream.PDFStreamEngine() {
     val found = ArrayList<Pair<org.apache.pdfbox.cos.COSName, FloatArray>>()
 
     init {
