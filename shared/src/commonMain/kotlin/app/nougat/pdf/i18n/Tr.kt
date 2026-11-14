@@ -621,4 +621,6 @@ LinesMoved = {0} satır taşındı
 ScanAnotherPage = {0}. sayfa tarandı. Başka bir sayfa taransın mı?
 ScanDocumentHintDesktop = Bağlı tarayıcı veya yazıcı ile
 ScannerUnavailableDesktop = Tarayıcı bulunamadı. Tarayıcının veya yazıcının açık, bağlı ve sürücüsünün kurulu olduğunu kontrol edin.\n{0}
+
+MoveOverlap = Satırlar başka bir metne değer: boş bir yer seçin.
 """

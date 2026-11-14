@@ -621,4 +621,6 @@ LinesMoved = {0} line moved|{0} lines moved
 ScanAnotherPage = Page {0} scanned. Scan another page?
 ScanDocumentHintDesktop = With the connected scanner or printer
 ScannerUnavailableDesktop = No scanner found. Check that the scanner or printer is on, connected and that its driver is installed.\n{0}
+
+MoveOverlap = The lines would touch other text: choose a free spot.
 """

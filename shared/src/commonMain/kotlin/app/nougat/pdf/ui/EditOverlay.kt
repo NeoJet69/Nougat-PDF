@@ -274,12 +274,13 @@ fun EditOverlay(
                 if (b in selected) {
                     // Ligne choisie (a effacer ou a deplacer) ; avec un deplacement en attente, sa nouvelle place.
                     if (session.hasPendingMove) {
+                        val moveColor = if (session.moveOverlaps(page, blocks)) Color(0xFFE53935) else Color(0xFF1E88E5)
                         drawRect(Color(0xFFE53935).copy(alpha = 0.6f), topLeft, box, style = Stroke(width = 1.2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 4f))))
                         val m = session.movedRect(b)
                         val mTopLeft = Offset(m.left * size.width - 2f, m.top * size.height - 1f)
                         val mBox = Size((m.right - m.left) * size.width + 4f, (m.bottom - m.top) * size.height + 2f)
-                        drawRect(Color(0xFF1E88E5).copy(alpha = 0.18f), mTopLeft, mBox)
-                        drawRect(Color(0xFF1E88E5), mTopLeft, mBox, style = Stroke(width = 2f))
+                        drawRect(moveColor.copy(alpha = 0.18f), mTopLeft, mBox)
+                        drawRect(moveColor, mTopLeft, mBox, style = Stroke(width = 2f))
                     } else {
                         drawRect(Color(0xFFE53935).copy(alpha = 0.18f), topLeft, box)
                         drawRect(Color(0xFFE53935), topLeft, box, style = Stroke(width = 2f))

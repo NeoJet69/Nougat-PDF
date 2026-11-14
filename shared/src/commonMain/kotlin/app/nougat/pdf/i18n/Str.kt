@@ -99,5 +99,5 @@ enum class Str {
     TransferPhoneDocument, TransferImagesToPdf, TransferPageTitle, TransferPageIntro, TransferPageChoose, TransferPageSending,
     TransferPageSent, TransferPageFailed, TransferPageGet, TransferTrouble, MoveLeft, MoveRight,
     MoveUp, MoveDown, MoveApply, MovingText, LinesMoved, ScanAnotherPage,
-    ScanDocumentHintDesktop, ScannerUnavailableDesktop,
+    ScanDocumentHintDesktop, ScannerUnavailableDesktop, MoveOverlap,
 }

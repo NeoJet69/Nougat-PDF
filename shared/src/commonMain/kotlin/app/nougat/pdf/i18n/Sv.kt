@@ -621,4 +621,6 @@ LinesMoved = {0} rad flyttad|{0} rader flyttade
 ScanAnotherPage = Sida {0} skannad. Skanna en sida till?
 ScanDocumentHintDesktop = Med den anslutna skannern eller skrivaren
 ScannerUnavailableDesktop = Ingen skanner hittades. Kontrollera att skannern eller skrivaren är på, ansluten och att drivrutinen är installerad.\n{0}
+
+MoveOverlap = Raderna skulle överlappa annan text: välj en ledig plats.
 """

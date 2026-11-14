@@ -621,4 +621,6 @@ LinesMoved = {0} línea movida|{0} líneas movidas
 ScanAnotherPage = Página {0} escaneada. ¿Escanear otra página?
 ScanDocumentHintDesktop = Con el escáner o la impresora conectados
 ScannerUnavailableDesktop = No se ha encontrado ningún escáner. Comprueba que el escáner o la impresora esté encendido, conectado y con el controlador instalado.\n{0}
+
+MoveOverlap = Las líneas tocarían otro texto: elige un lugar libre.
 """

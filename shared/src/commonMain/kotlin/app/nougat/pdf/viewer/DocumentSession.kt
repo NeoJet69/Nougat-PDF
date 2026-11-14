@@ -103,6 +103,24 @@ class DocumentSession(
         )
     }
 
+    /**
+     * Vrai si une ligne choisie, a sa nouvelle place, toucherait une autre ligne de la page
+     * ([pageBlocks] : toutes les lignes de cette page). Le texte ne doit pas se chevaucher.
+     */
+    fun moveOverlaps(page: Int, pageBlocks: List<TextBlock>): Boolean {
+        if (!hasPendingMove) return false
+        val moving = selectedBlocks.filter { it.page == page }
+        if (moving.isEmpty()) return false
+        val others = pageBlocks.filter { o -> moving.none { it.rect == o.rect && it.text == o.text } }
+        val inset = 0.002f
+        return moving.any { b ->
+            val m = movedRect(b)
+            others.any { o ->
+                m.left + inset < o.rect.right && m.right - inset > o.rect.left && m.top + inset < o.rect.bottom && m.bottom - inset > o.rect.top
+            }
+        }
+    }
+
     /** Ajoute la ligne a la selection, ou l'en retire. */
     fun toggleSelection(block: TextBlock) {
         resetMove()

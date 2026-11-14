@@ -734,8 +734,16 @@ class ViewerState(
         val dx = s.moveDx
         val dy = s.moveDy
         val scale = s.moveScale
-        s.clearSelection()
         scope.launch {
+            // Pas de chevauchement : la nouvelle place ne doit toucher aucune autre ligne.
+            val overlap = selected.map { it.page }.distinct().any { page ->
+                s.moveOverlaps(page, runCatching { s.textBlocks(page) }.getOrDefault(emptyList()))
+            }
+            if (overlap) {
+                toast = tr(Str.MoveOverlap)
+                return@launch
+            }
+            s.clearSelection()
             val ok = editNow(tr(Str.MovingText), s.password) { doc ->
                 for ((page, blocks) in selected.groupBy { it.page }) doc.moveTextBlocks(page, blocks, dx, dy, scale)
             }

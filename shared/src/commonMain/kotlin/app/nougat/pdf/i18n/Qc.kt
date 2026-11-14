@@ -622,4 +622,6 @@ LinesMoved = {0} ligne déplacée|{0} lignes déplacées
 ScanAnotherPage = Page {0} scannée. Scanner une autre page ?
 ScanDocumentHintDesktop = Avec le scanner ou l'imprimante branchés
 ScannerUnavailableDesktop = Aucun scanner trouvé. Vérifiez que le scanner ou l'imprimante est allumé, branché, et que son pilote est installé.\n{0}
+
+MoveOverlap = Les lignes toucheraient un autre texte : choisissez une place libre.
 """

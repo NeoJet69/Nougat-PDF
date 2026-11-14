@@ -621,4 +621,6 @@ LinesMoved = {0} Zeile verschoben|{0} Zeilen verschoben
 ScanAnotherPage = Seite {0} gescannt. Weitere Seite scannen?
 ScanDocumentHintDesktop = Mit dem angeschlossenen Scanner oder Drucker
 ScannerUnavailableDesktop = Kein Scanner gefunden. Prüfen Sie, ob Scanner oder Drucker eingeschaltet und angeschlossen sind und der Treiber installiert ist.\n{0}
+
+MoveOverlap = Die Zeilen würden anderen Text berühren: Wählen Sie eine freie Stelle.
 """

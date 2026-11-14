@@ -622,4 +622,6 @@ LinesMoved = {0} linha desplaçada|{0} linhas desplaçadas
 ScanAnotherPage = Pagina {0} escanada. Escanar una autra pagina ?
 ScanDocumentHintDesktop = Amb l'escanèr o l'imprimenta brancats
 ScannerUnavailableDesktop = Cap d'escanèr pas trobat. Verificatz que l'escanèr o l'imprimenta es alucat, brancat e que son pilòt es installat.\n{0}
+
+MoveOverlap = Las linhas tocarián un autre tèxte : causissètz una plaça liura.
 """

@@ -622,4 +622,6 @@ LinesMoved = {0} linenn dilec'hiet|{0} linenn dilec'hiet
 ScanAnotherPage = Pajenn {0} skannet. Skannañ ur bajenn all ?
 ScanDocumentHintDesktop = Gant ar skanner pe ar voullerez kevreet
 ScannerUnavailableDesktop = Skanner ebet kavet. Gwiriit ez eo enaouet ar skanner pe ar voullerez, kevreet, hag eo staliet he stur.\n{0}
+
+MoveOverlap = Al linennoù a stokfe ouzh un destenn all : dibabit ul lec'h dieub.
 """

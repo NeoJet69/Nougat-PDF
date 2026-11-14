@@ -121,7 +121,9 @@ montant total trouvé dans le document est proposé.
 
 **Déplacer des lignes** (mode Éditer) : après avoir choisi des lignes (Ctrl + clic, Maj + clic,
 appui long), on les glisse à la souris ou au doigt, ou on les règle avec les flèches ; A− et A+
-changent leur taille. **Placer ici** les écrit à leur nouvelle place : l'ancienne place est
+changent leur taille ; on peut glisser dans toutes les directions, y compris en diagonale. Le
+texte ne se chevauche jamais : si la nouvelle place touche un autre texte, l'aperçu devient rouge et
+Nougat refuse. **Placer ici** les écrit à leur nouvelle place : l'ancienne place est
 effacée (pixels du scan repeints), l'encre est recollée et le texte reste cherchable. Sur Windows,
 les flèches du clavier (Maj pour aller plus loin), + et - et Entrée font la même chose. Pratique
 après la reconnaissance du texte d'un scan.

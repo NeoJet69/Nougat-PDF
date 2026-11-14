@@ -622,4 +622,6 @@ LinesMoved = {0} Ziile verschobe|{0} Ziile verschobe
 ScanAnotherPage = Siite {0} gscannt. No e Siite scanne?
 ScanDocumentHintDesktop = Mit em aagschlossne Scanner oder Drucker
 ScannerUnavailableDesktop = Kei Scanner gfunde. Lueg, öb de Scanner oder Drucker aa und aagschlosse isch und de Triiber installiert isch.\n{0}
+
+MoveOverlap = D Ziile würded anderi Text berüere: Wähl en freie Platz.
 """

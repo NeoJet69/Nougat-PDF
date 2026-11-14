@@ -621,4 +621,6 @@ LinesMoved = {0} regel verplaatst|{0} regels verplaatst
 ScanAnotherPage = Pagina {0} gescand. Nog een pagina scannen?
 ScanDocumentHintDesktop = Met de aangesloten scanner of printer
 ScannerUnavailableDesktop = Geen scanner gevonden. Controleer of de scanner of printer aan staat, is aangesloten en het stuurprogramma is geïnstalleerd.\n{0}
+
+MoveOverlap = De regels zouden andere tekst raken: kies een vrije plek.
 """

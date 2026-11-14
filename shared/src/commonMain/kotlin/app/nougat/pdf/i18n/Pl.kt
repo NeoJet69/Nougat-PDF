@@ -621,4 +621,6 @@ LinesMoved = Przesunięto {0} wiersz|Przesunięto {0} wiersze|Przesunięto {0} w
 ScanAnotherPage = Zeskanowano stronę {0}. Skanować kolejną stronę?
 ScanDocumentHintDesktop = Z podłączonym skanerem lub drukarką
 ScannerUnavailableDesktop = Nie znaleziono skanera. Sprawdź, czy skaner lub drukarka jest włączona, podłączona i ma zainstalowany sterownik.\n{0}
+
+MoveOverlap = Wiersze nachodziłyby na inny tekst: wybierz wolne miejsce.
 """

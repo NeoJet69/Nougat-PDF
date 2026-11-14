@@ -622,4 +622,6 @@ LinesMoved = {0} rând mutat|{0} rânduri mutate|{0} de rânduri mutate
 ScanAnotherPage = Pagina {0} scanată. Scanați altă pagină?
 ScanDocumentHintDesktop = Cu scanerul sau imprimanta conectate
 ScannerUnavailableDesktop = Niciun scaner găsit. Verificați dacă scanerul sau imprimanta este pornit, conectat și are driverul instalat.\n{0}
+
+MoveOverlap = Rândurile ar atinge alt text: alegeți un loc liber.
 """

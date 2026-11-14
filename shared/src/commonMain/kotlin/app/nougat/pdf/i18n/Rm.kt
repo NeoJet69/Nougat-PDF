@@ -622,4 +622,6 @@ LinesMoved = {0} lingia spustada|{0} lingias spustadas
 ScanAnotherPage = Pagina {0} scannada. Scannar in'autra pagina?
 ScanDocumentHintDesktop = Cun il scanner u la stampanta colliads
 ScannerUnavailableDesktop = Nagin scanner chattà. Controllai ch'il scanner u la stampanta saja envidà, collià e ch'il driver saja installà.\n{0}
+
+MoveOverlap = Las lingias tutgassan in auter text: tscherni in lieu liber.
 """

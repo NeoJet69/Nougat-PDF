@@ -621,4 +621,6 @@ LinesMoved = 已移动 {0} 行
 ScanAnotherPage = 第 {0} 页已扫描。要再扫描一页吗？
 ScanDocumentHintDesktop = 使用已连接的扫描仪或打印机
 ScannerUnavailableDesktop = 未找到扫描仪。请检查扫描仪或打印机已开机、已连接并已安装驱动程序。\n{0}
+
+MoveOverlap = 这些行会与其他文字重叠：请选择空白位置。
 """

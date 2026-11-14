@@ -622,4 +622,6 @@ LinesMoved = {0} linea spiazzata|{0} linee spiazzate
 ScanAnotherPage = Pagina {0} scannata. Scannà un'altra pagina ?
 ScanDocumentHintDesktop = Cù u scanner o a stampatrice cunnessi
 ScannerUnavailableDesktop = Nisun scanner trovu. Verificate chì u scanner o a stampatrice sia accesu, cunnessu è chì u so driver sia installatu.\n{0}
+
+MoveOverlap = E linee toccherebbenu un altru testu : sciglite un locu liberu.
 """

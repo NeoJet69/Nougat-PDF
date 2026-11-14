@@ -622,4 +622,6 @@ LinesMoved = {0} Zitt verschowe|{0} Zitte verschowe
 ScanAnotherPage = Sitt {0} gscannt. Noch e Sitt scanne?
 ScanDocumentHintDesktop = Mit em agschlossene Scanner odder Drucker
 ScannerUnavailableDesktop = Ken Scanner gfunde. Lüeg, eb dr Scanner odder Drucker aa un agschlosse isch un dr Triewer installiert isch.\n{0}
+
+MoveOverlap = D'Zitte dät anderi Text berüehre: Wähl e freier Platz.
 """
