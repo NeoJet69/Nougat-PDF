@@ -80,8 +80,9 @@ class DesktopTransfer(private val folder: File = defaultFolder()) : LocalTransfe
                 if (saved == null) {
                     send(ex, 415, "application/json", "{\"ok\":false}".toByteArray())
                 } else {
-                    send(ex, 200, "application/json", "{\"ok\":true}".toByteArray())
+                    // D'abord prevenir l'app, puis repondre au telephone (le fichier est deja la).
                     onFile(saved.absolutePath, saved.name)
+                    send(ex, 200, "application/json", "{\"ok\":true}".toByteArray())
                 }
             }
             "/document" -> {
