@@ -132,6 +132,9 @@ private class DesktopEditableDoc(private val doc: PDDocument, private var passwo
 
     override fun compressImages(level: CompressLevel): Int = compressImagesWithPdfBox(doc, level)
 
+    override fun moveTextBlocks(index: Int, blocks: List<TextBlock>, dx: Float, dy: Float, scale: Float) =
+        moveBlocksWithPdfBox(this, doc, index, blocks, dx, dy, scale)
+
     override fun addQrBill(bill: SwissQrBill, newPage: Boolean, language: QrLanguage) = addSwissQrBill(bill, newPage, language)
 
     fun applySecurity() {

@@ -610,4 +610,15 @@ TransferPageFailed = {0} konnte nicht gesendet werden.
 TransferPageGet = Geöffnetes Dokument herunterladen: {0}
 
 TransferTrouble = Klappt es nicht? Manche Handys sperren das lokale Netz: VPN, Erweiterter Schutz, „Immer sichere Verbindungen verwenden“ in Chrome, Gast-WLAN. Einfacher Test: Öffnet das Handy die Seite des Routers nicht (oft 192.168.0.1), blockiert das Handy.
+
+MoveLeft = Nach links
+MoveRight = Nach rechts
+MoveUp = Nach oben
+MoveDown = Nach unten
+MoveApply = Hier platzieren
+MovingText = Zeilen werden verschoben…
+LinesMoved = {0} Zeile verschoben|{0} Zeilen verschoben
+ScanAnotherPage = Seite {0} gescannt. Weitere Seite scannen?
+ScanDocumentHintDesktop = Mit dem angeschlossenen Scanner oder Drucker
+ScannerUnavailableDesktop = Kein Scanner gefunden. Prüfen Sie, ob Scanner oder Drucker eingeschaltet und angeschlossen sind und der Treiber installiert ist.\n{0}
 """

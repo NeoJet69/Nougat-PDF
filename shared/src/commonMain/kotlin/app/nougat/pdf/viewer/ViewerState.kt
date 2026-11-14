@@ -726,6 +726,31 @@ class ViewerState(
         }
     }
 
+    /** Place les lignes choisies a leur nouvelle place (et taille) : glissees, ou reglees aux fleches. */
+    fun applyMove() {
+        val s = session ?: return
+        val selected = s.selectedBlocks.toList()
+        if (selected.isEmpty() || !s.hasPendingMove) return
+        val dx = s.moveDx
+        val dy = s.moveDy
+        val scale = s.moveScale
+        s.clearSelection()
+        scope.launch {
+            val ok = editNow(tr(Str.MovingText), s.password) { doc ->
+                for ((page, blocks) in selected.groupBy { it.page }) doc.moveTextBlocks(page, blocks, dx, dy, scale)
+            }
+            if (ok) toast = trn(Str.LinesMoved, selected.size)
+        }
+    }
+
+    /** Fleches : un petit pas en points PDF (Maj : dix fois plus). */
+    fun nudgeSelection(dxPoints: Float, dyPoints: Float) {
+        val s = session ?: return
+        val page = s.selectedBlocks.firstOrNull()?.page ?: return
+        val size = s.pageSizes.getOrNull(page) ?: return
+        s.nudge(dxPoints / size.width, dyPoints / size.height)
+    }
+
     // ---- Censurer ---------------------------------------------------------------------------------
 
     /** La censure du document : ce qu'il faut chercher, puis les trouvailles a verifier. */
@@ -1795,7 +1820,7 @@ class ViewerState(
     } catch (e: CancellationException) {
         throw e
     } catch (e: Throwable) {
-        errorMessage = tr(Str.ScannerUnavailable)
+        errorMessage = if (engine.isPhone) tr(Str.ScannerUnavailable) else tr(Str.ScannerUnavailableDesktop, e.message ?: "")
         null
     }
 

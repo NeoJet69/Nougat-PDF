@@ -611,4 +611,15 @@ TransferPageFailed = N'eus ket bet gallet kas {0}.
 TransferPageGet = Pellgargañ an teul digor : {0}
 
 TransferTrouble = Ne ya ket en-dro ? Pellgomzoù zo a stank ar rouedad lec'hel : VPN, Gwarez araokaet, « Implijout kevreadennoù suraet atav » e Chrome, Wi-Fi gouvidi. Taol-arnod aes : ma ne zigor ket ar pellgomz pajenn ar voest (alies 192.168.0.1), eñ eo a stank.
+
+MoveLeft = War an tu kleiz
+MoveRight = War an tu dehou
+MoveUp = Davit ar c'hrec'h
+MoveDown = Davit an traoñ
+MoveApply = Lakaat amañ
+MovingText = O tilec'hiañ al linennoù…
+LinesMoved = {0} linenn dilec'hiet|{0} linenn dilec'hiet
+ScanAnotherPage = Pajenn {0} skannet. Skannañ ur bajenn all ?
+ScanDocumentHintDesktop = Gant ar skanner pe ar voullerez kevreet
+ScannerUnavailableDesktop = Skanner ebet kavet. Gwiriit ez eo enaouet ar skanner pe ar voullerez, kevreet, hag eo staliet he stur.\n{0}
 """

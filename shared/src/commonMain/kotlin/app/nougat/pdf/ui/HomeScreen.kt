@@ -114,7 +114,7 @@ fun HomeScreen(
 
             @Composable
             fun Scan(modifier: Modifier) =
-                CreateCard(NougatIcons.Camera, tr(Str.ScanDocument), tr(Str.ScanDocumentHint), modifier, onClick = state::createPdfFromScan)
+                CreateCard(NougatIcons.Camera, tr(Str.ScanDocument), tr(if (platform.isDesktop) Str.ScanDocumentHintDesktop else Str.ScanDocumentHint), modifier, onClick = state::createPdfFromScan)
             @Composable
             fun FromMarkdown(modifier: Modifier) =
                 CreateCard(NougatIcons.Markdown, tr(Str.MarkdownToPdf), tr(Str.MarkdownToPdfHint), modifier, onClick = state::createPdfFromMarkdown)

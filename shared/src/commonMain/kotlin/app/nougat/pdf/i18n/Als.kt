@@ -611,4 +611,15 @@ TransferPageFailed = {0} het nit kenne gschickt wäre.
 TransferPageGet = S'offeni Dokument runterlade: {0}
 
 TransferTrouble = Geht's nit? Manchi Handys sperre s'lokale Netz: VPN, Erwiterter Schutz, „Immer sicheri Verbindunge bruche“ in Chrome, Gascht-WLAN. Eifacher Test: Wenn s'Handy d'Sitt vum Router nit ufmacht (oft 192.168.0.1), blockiert s'Handy.
+
+MoveLeft = Noch links
+MoveRight = Noch rechts
+MoveUp = Noch owe
+MoveDown = Noch unte
+MoveApply = Do hinmache
+MovingText = D'Zitte wäre verschowe…
+LinesMoved = {0} Zitt verschowe|{0} Zitte verschowe
+ScanAnotherPage = Sitt {0} gscannt. Noch e Sitt scanne?
+ScanDocumentHintDesktop = Mit em agschlossene Scanner odder Drucker
+ScannerUnavailableDesktop = Ken Scanner gfunde. Lüeg, eb dr Scanner odder Drucker aa un agschlosse isch un dr Triewer installiert isch.\n{0}
 """

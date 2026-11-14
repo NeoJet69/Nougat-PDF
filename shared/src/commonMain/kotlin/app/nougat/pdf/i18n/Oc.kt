@@ -611,4 +611,15 @@ TransferPageFailed = {0} a pas pogut èsser mandat.
 TransferPageGet = Telecargar lo document dobèrt : {0}
 
 TransferTrouble = Fonciona pas ? D'unes telefòns blòcan la ret locala : VPN, Proteccion avançada, « Totjorn utilizar de connexions securizadas » dins Chrome, Wi-Fi convidats. Ensag simple : se lo telefòn dobrís pas la pagina de la bóstia (sovent 192.168.0.1), es el que blòca.
+
+MoveLeft = Cap a esquèrra
+MoveRight = Cap a drecha
+MoveUp = Cap amont
+MoveDown = Cap aval
+MoveApply = Plaçar aicí
+MovingText = Desplaçament de las linhas…
+LinesMoved = {0} linha desplaçada|{0} linhas desplaçadas
+ScanAnotherPage = Pagina {0} escanada. Escanar una autra pagina ?
+ScanDocumentHintDesktop = Amb l'escanèr o l'imprimenta brancats
+ScannerUnavailableDesktop = Cap d'escanèr pas trobat. Verificatz que l'escanèr o l'imprimenta es alucat, brancat e que son pilòt es installat.\n{0}
 """

@@ -610,4 +610,15 @@ TransferPageFailed = {0} kunde inte skickas.
 TransferPageGet = Ladda ner det öppna dokumentet: {0}
 
 TransferTrouble = Fungerar det inte? Vissa telefoner blockerar det lokala nätverket: VPN, Avancerat skydd, ”Använd alltid säkra anslutningar” i Chrome, gäst-wifi. Enkelt test: om telefonen inte kan öppna routerns sida (ofta 192.168.0.1) är det telefonen som blockerar.
+
+MoveLeft = Åt vänster
+MoveRight = Åt höger
+MoveUp = Uppåt
+MoveDown = Nedåt
+MoveApply = Placera här
+MovingText = Flyttar raderna…
+LinesMoved = {0} rad flyttad|{0} rader flyttade
+ScanAnotherPage = Sida {0} skannad. Skanna en sida till?
+ScanDocumentHintDesktop = Med den anslutna skannern eller skrivaren
+ScannerUnavailableDesktop = Ingen skanner hittades. Kontrollera att skannern eller skrivaren är på, ansluten och att drivrutinen är installerad.\n{0}
 """

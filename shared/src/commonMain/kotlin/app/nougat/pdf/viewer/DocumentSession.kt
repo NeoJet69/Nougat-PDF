@@ -1,5 +1,6 @@
 package app.nougat.pdf.viewer
 
+import app.nougat.pdf.engine.NormRect
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -67,8 +68,44 @@ class DocumentSession(
     val selectedBlocks = mutableStateListOf<TextBlock>()
     private var selectionAnchor: TextBlock? = null
 
+    /** Deplacement en attente des lignes choisies (fractions de la page) et taille (1 = pareil). */
+    var moveDx by mutableStateOf(0f)
+    var moveDy by mutableStateOf(0f)
+    var moveScale by mutableStateOf(1f)
+
+    val hasPendingMove: Boolean get() = moveDx != 0f || moveDy != 0f || moveScale != 1f
+
+    fun resetMove() {
+        moveDx = 0f
+        moveDy = 0f
+        moveScale = 1f
+    }
+
+    fun nudge(dx: Float, dy: Float) {
+        moveDx += dx
+        moveDy += dy
+    }
+
+    fun resize(factor: Float) {
+        moveScale = (moveScale * factor).coerceIn(0.25f, 6f)
+    }
+
+    /** Ou la ligne choisie [b] ira (apercu), autour du coin haut gauche des lignes choisies de sa page. */
+    fun movedRect(b: TextBlock): NormRect {
+        if (!hasPendingMove) return b.rect
+        val onPage = selectedBlocks.filter { it.page == b.page }
+        val ox = onPage.minOfOrNull { it.rect.left } ?: b.rect.left
+        val oy = onPage.minOfOrNull { it.rect.top } ?: b.rect.top
+        val r = b.rect
+        return NormRect(
+            ox + (r.left - ox) * moveScale + moveDx, oy + (r.top - oy) * moveScale + moveDy,
+            ox + (r.right - ox) * moveScale + moveDx, oy + (r.bottom - oy) * moveScale + moveDy,
+        )
+    }
+
     /** Ajoute la ligne a la selection, ou l'en retire. */
     fun toggleSelection(block: TextBlock) {
+        resetMove()
         if (!selectedBlocks.remove(block)) {
             selectedBlocks.add(block)
             selectionAnchor = block
@@ -77,6 +114,7 @@ class DocumentSession(
 
     /** Maj + clic : toutes les lignes de la zone entre la derniere choisie et [block] (une colonne de prix). */
     fun selectArea(pageBlocks: List<TextBlock>, block: TextBlock) {
+        resetMove()
         val anchor = selectionAnchor?.takeIf { it.page == block.page && it in selectedBlocks }
         if (anchor == null) {
             toggleSelection(block)
@@ -93,6 +131,7 @@ class DocumentSession(
     }
 
     fun clearSelection() {
+        resetMove()
         selectedBlocks.clear()
         selectionAnchor = null
     }

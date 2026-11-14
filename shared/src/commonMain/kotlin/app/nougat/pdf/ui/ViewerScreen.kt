@@ -578,11 +578,7 @@ private fun ViewerDock(
                 when (mode) {
                     DockMode.Read -> if (compact) PagePill(session, onAskPage) else NavigationIsland(session, onAskPage, Modifier)
                     DockMode.Edit -> if (session.selectedBlocks.isNotEmpty()) {
-                        SelectionTray(
-                            count = session.selectedBlocks.size,
-                            onDelete = state::deleteSelectedText,
-                            onClear = session::clearSelection,
-                        )
+                        SelectionTray(state, session, compact)
                     } else {
                         HintTray(
                             when {
@@ -674,15 +670,37 @@ private fun HintTray(text: String, compact: Boolean, subtitle: String? = null) {
 
 /** Lignes choisies : combien, Effacer, annuler la selection. */
 @Composable
-private fun SelectionTray(count: Int, onDelete: () -> Unit, onClear: () -> Unit) {
-    Island(shape = RoundedCornerShape(50), padding = 4.dp) {
-        IslandButton(Icons.Filled.Close, tr(Str.ClearSelection), onClick = onClear, size = 40.dp, iconSize = 20.dp)
-        Text(trn(Str.SelectedLines, count), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 8.dp))
-        Box(
-            Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFE53935)).clickable(onClick = onDelete)
-                .padding(horizontal = 18.dp, vertical = 10.dp),
-        ) {
-            Text(tr(Str.DeleteSelected), style = MaterialTheme.typography.labelLarge, color = Color.White)
+private fun SelectionTray(state: ViewerState, session: DocumentSession, compact: Boolean) {
+    val step = 6f
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        // Deplacer (fleches, ou glisser les lignes sur la page) et changer la taille.
+        Island(shape = RoundedCornerShape(50), padding = 4.dp, scrollable = compact) {
+            IslandButton(NougatIcons.ArrowLeft, tr(Str.MoveLeft), onClick = { state.nudgeSelection(-step, 0f) }, size = 40.dp, iconSize = 22.dp)
+            IslandButton(NougatIcons.ArrowUp, tr(Str.MoveUp), onClick = { state.nudgeSelection(0f, -step) }, size = 40.dp, iconSize = 22.dp)
+            IslandButton(NougatIcons.ArrowDown, tr(Str.MoveDown), onClick = { state.nudgeSelection(0f, step) }, size = 40.dp, iconSize = 22.dp)
+            IslandButton(NougatIcons.ArrowRight, tr(Str.MoveRight), onClick = { state.nudgeSelection(step, 0f) }, size = 40.dp, iconSize = 22.dp)
+            TextButton(onClick = { session.resize(1f / 1.1f) }) { Text("A−", style = MaterialTheme.typography.labelLarge) }
+            Text("${(session.moveScale * 100).roundToInt()} %", style = MaterialTheme.typography.labelMedium)
+            TextButton(onClick = { session.resize(1.1f) }) { Text("A+", style = MaterialTheme.typography.titleMedium) }
+            if (session.hasPendingMove) {
+                Box(
+                    Modifier.clip(RoundedCornerShape(50)).background(Color(0xFF1E88E5)).clickable(onClick = state::applyMove)
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                ) {
+                    Text(tr(Str.MoveApply), style = MaterialTheme.typography.labelLarge, color = Color.White)
+                }
+            }
+        }
+        Spacer(Modifier.height(6.dp))
+        Island(shape = RoundedCornerShape(50), padding = 4.dp) {
+            IslandButton(Icons.Filled.Close, tr(Str.ClearSelection), onClick = session::clearSelection, size = 40.dp, iconSize = 20.dp)
+            Text(trn(Str.SelectedLines, session.selectedBlocks.size), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 8.dp))
+            Box(
+                Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFE53935)).clickable(onClick = state::deleteSelectedText)
+                    .padding(horizontal = 18.dp, vertical = 10.dp),
+            ) {
+                Text(tr(Str.DeleteSelected), style = MaterialTheme.typography.labelLarge, color = Color.White)
+            }
         }
     }
 }

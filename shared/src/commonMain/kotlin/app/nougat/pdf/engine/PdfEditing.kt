@@ -92,6 +92,14 @@ interface EditableDoc {
     /** Recompresse les images du document au niveau [level]. Renvoie le nombre d'images allegees. */
     fun compressImages(level: CompressLevel): Int = 0
 
+    /**
+     * Deplace les lignes [blocks] de la page [index] de [dx], [dy] (fractions de la page) et change
+     * leur taille ([scale] : 1 = pareil). L'encre est recollee a la nouvelle place, le texte reste
+     * cherchable (texte invisible).
+     */
+    fun moveTextBlocks(index: Int, blocks: List<TextBlock>, dx: Float, dy: Float, scale: Float): Unit =
+        throw UnsupportedOperationException("Deplacement indisponible")
+
     /** Ajoute la section paiement d'une QR-facture, sur une nouvelle page ou en bas de la derniere. */
     fun addQrBill(bill: SwissQrBill, newPage: Boolean, language: QrLanguage): Unit =
         throw UnsupportedOperationException("QR-facture indisponible")

@@ -610,4 +610,15 @@ TransferPageFailed = {0} gönderilemedi.
 TransferPageGet = Açık belgeyi indir: {0}
 
 TransferTrouble = Çalışmıyor mu? Bazı telefonlar yerel ağı engeller: VPN, Gelişmiş Koruma, Chrome'da "Her zaman güvenli bağlantı kullan", misafir Wi-Fi. Basit test: telefon modem sayfasını (çoğunlukla 192.168.0.1) açamıyorsa engelleyen telefondur.
+
+MoveLeft = Sola
+MoveRight = Sağa
+MoveUp = Yukarı
+MoveDown = Aşağı
+MoveApply = Buraya yerleştir
+MovingText = Satırlar taşınıyor…
+LinesMoved = {0} satır taşındı
+ScanAnotherPage = {0}. sayfa tarandı. Başka bir sayfa taransın mı?
+ScanDocumentHintDesktop = Bağlı tarayıcı veya yazıcı ile
+ScannerUnavailableDesktop = Tarayıcı bulunamadı. Tarayıcının veya yazıcının açık, bağlı ve sürücüsünün kurulu olduğunu kontrol edin.\n{0}
 """

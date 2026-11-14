@@ -40,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import app.nougat.pdf.engine.TextBlock
 import kotlin.math.roundToInt
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.foundation.gestures.drag
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -186,6 +190,24 @@ fun EditOverlay(
                 }
             }
             Tool.EditText -> modifier
+                .pointerInput(page) {
+                    // Glisser une ligne choisie : toute la selection se deplace (apercu, puis « Placer ici »).
+                    awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = false)
+                        val x = down.position.x / size.width
+                        val y = down.position.y / size.height
+                        val onSelection = session.editingBlock == null && session.selectedBlocks.any { b ->
+                            b.page == page && session.movedRect(b).let { r -> x >= r.left - 0.01f && x <= r.right + 0.01f && y >= r.top - 0.01f && y <= r.bottom + 0.01f }
+                        }
+                        if (!onSelection) return@awaitEachGesture
+                        var last = down.position
+                        drag(down.id) { change ->
+                            session.nudge((change.position.x - last.x) / size.width, (change.position.y - last.y) / size.height)
+                            last = change.position
+                            change.consume()
+                        }
+                    }
+                }
                 .pointerInput(Unit) {
                     awaitPointerEventScope {
                         while (true) {
@@ -250,9 +272,18 @@ fun EditOverlay(
                 val topLeft = Offset(r.left * size.width - 2f, r.top * size.height - 1f)
                 val box = Size((r.right - r.left) * size.width + 4f, (r.bottom - r.top) * size.height + 2f)
                 if (b in selected) {
-                    // Ligne choisie pour etre effacee.
-                    drawRect(Color(0xFFE53935).copy(alpha = 0.18f), topLeft, box)
-                    drawRect(Color(0xFFE53935), topLeft, box, style = Stroke(width = 2f))
+                    // Ligne choisie (a effacer ou a deplacer) ; avec un deplacement en attente, sa nouvelle place.
+                    if (session.hasPendingMove) {
+                        drawRect(Color(0xFFE53935).copy(alpha = 0.6f), topLeft, box, style = Stroke(width = 1.2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(6f, 4f))))
+                        val m = session.movedRect(b)
+                        val mTopLeft = Offset(m.left * size.width - 2f, m.top * size.height - 1f)
+                        val mBox = Size((m.right - m.left) * size.width + 4f, (m.bottom - m.top) * size.height + 2f)
+                        drawRect(Color(0xFF1E88E5).copy(alpha = 0.18f), mTopLeft, mBox)
+                        drawRect(Color(0xFF1E88E5), mTopLeft, mBox, style = Stroke(width = 2f))
+                    } else {
+                        drawRect(Color(0xFFE53935).copy(alpha = 0.18f), topLeft, box)
+                        drawRect(Color(0xFFE53935), topLeft, box, style = Stroke(width = 2f))
+                    }
                     continue
                 }
                 drawRect(

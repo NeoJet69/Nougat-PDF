@@ -78,6 +78,13 @@
 - [ ] Rogner à la main (cadre à tirer à la souris ou au doigt), en plus du rognage automatique.
 - [ ] Redresser à la main (faire tourner la page à la souris ou au doigt) si l'automatique se trompe.
 
+## Demandé le 14 novembre
+
+- [x] Bouton « Scanner » sur Windows, avec le scanner ou l'imprimante branchés (WIA).
+- [x] Déplacer les lignes choisies (x, y) et changer leur taille, après l'OCR ou sur un texte normal,
+      sur PC et Android (glisser, flèches, A− / A+, « Placer ici »).
+- [ ] À essayer sur un vrai scanner Windows et sur Android (déplacement au doigt).
+
 ## Autres idées
 
 - [ ] Comparer deux versions d'un document.

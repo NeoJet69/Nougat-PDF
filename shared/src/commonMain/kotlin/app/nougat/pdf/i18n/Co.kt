@@ -611,4 +611,15 @@ TransferPageFailed = {0} ùn hè micca statu mandatu.
 TransferPageGet = Scaricà u documentu apertu : {0}
 
 TransferTrouble = Ùn funziona micca ? Certi telefoni bloccanu a reta lucale : VPN, Prutezzione avanzata, « Aduprà sempre cunnessione sicure » in Chrome, Wi-Fi invitati. Prova simplice : s'è u telefonu ùn apre micca a pagina di a scatula (spessu 192.168.0.1), hè ellu chì blocca.
+
+MoveLeft = À manca
+MoveRight = À diritta
+MoveUp = In sù
+MoveDown = In giò
+MoveApply = Mette quì
+MovingText = Spiazzamentu di e linee…
+LinesMoved = {0} linea spiazzata|{0} linee spiazzate
+ScanAnotherPage = Pagina {0} scannata. Scannà un'altra pagina ?
+ScanDocumentHintDesktop = Cù u scanner o a stampatrice cunnessi
+ScannerUnavailableDesktop = Nisun scanner trovu. Verificate chì u scanner o a stampatrice sia accesu, cunnessu è chì u so driver sia installatu.\n{0}
 """

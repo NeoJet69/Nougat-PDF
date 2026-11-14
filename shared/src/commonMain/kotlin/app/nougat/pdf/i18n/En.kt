@@ -610,4 +610,15 @@ TransferPageFailed = {0} could not be sent.
 TransferPageGet = Download the open document: {0}
 
 TransferTrouble = Not working? Some phones block the local network: VPN, Advanced Protection, "Always use secure connections" in Chrome, guest Wi-Fi. Simple test: if the phone cannot open the router page (often 192.168.0.1), the phone is blocking.
+
+MoveLeft = Left
+MoveRight = Right
+MoveUp = Up
+MoveDown = Down
+MoveApply = Place here
+MovingText = Moving the lines…
+LinesMoved = {0} line moved|{0} lines moved
+ScanAnotherPage = Page {0} scanned. Scan another page?
+ScanDocumentHintDesktop = With the connected scanner or printer
+ScannerUnavailableDesktop = No scanner found. Check that the scanner or printer is on, connected and that its driver is installed.\n{0}
 """

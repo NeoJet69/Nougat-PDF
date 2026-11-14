@@ -102,6 +102,11 @@ object NougatIcons {
         svgIcon("Compress", "M8,19h3v3h2v-3h3l-4,-4 -4,4zM16,4h-3L13,1h-2v3L8,4l4,4 4,-4zM4,9v2h16L20,9L4,9zM4,12h16v2L4,14z")
     }
 
+    val ArrowLeft by lazy { svgIcon("ArrowLeft", "M15.41,16.59L10.83,12l4.58,-4.59L14,6l-6,6 6,6 1.41,-1.41z") }
+    val ArrowRight by lazy { svgIcon("ArrowRight", "M8.59,16.59L13.17,12 8.59,7.41 10,6l6,6 -6,6 -1.41,-1.41z") }
+    val ArrowUp by lazy { svgIcon("ArrowUp", "M7.41,15.41L12,10.83l4.59,4.58L18,14l-6,-6 -6,6z") }
+    val ArrowDown by lazy { svgIcon("ArrowDown", "M7.41,8.59L12,13.17l4.59,-4.58L18,10l-6,6 -6,-6 1.41,-1.41z") }
+
     /** Un telephone : echanger avec le telephone par le Wi-Fi. */
     val Phone by lazy {
         svgIcon("Phone", "M17,1.01L7,1c-1.1,0 -2,0.9 -2,2v18c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2V3c0,-1.1 -0.9,-1.99 -2,-1.99zM17,19H7V5h10v14z")

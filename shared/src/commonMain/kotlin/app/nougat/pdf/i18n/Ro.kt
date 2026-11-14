@@ -611,4 +611,15 @@ TransferPageFailed = {0} nu a putut fi trimis.
 TransferPageGet = Descarcă documentul deschis: {0}
 
 TransferTrouble = Nu merge? Unele telefoane blochează rețeaua locală: VPN, Protecție avansată, „Folosește întotdeauna conexiuni securizate” în Chrome, Wi-Fi pentru oaspeți. Test simplu: dacă telefonul nu deschide pagina routerului (adesea 192.168.0.1), telefonul blochează.
+
+MoveLeft = La stânga
+MoveRight = La dreapta
+MoveUp = În sus
+MoveDown = În jos
+MoveApply = Plasează aici
+MovingText = Se mută rândurile…
+LinesMoved = {0} rând mutat|{0} rânduri mutate|{0} de rânduri mutate
+ScanAnotherPage = Pagina {0} scanată. Scanați altă pagină?
+ScanDocumentHintDesktop = Cu scanerul sau imprimanta conectate
+ScannerUnavailableDesktop = Niciun scaner găsit. Verificați dacă scanerul sau imprimanta este pornit, conectat și are driverul instalat.\n{0}
 """

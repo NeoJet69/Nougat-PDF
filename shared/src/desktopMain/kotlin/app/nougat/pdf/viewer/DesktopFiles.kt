@@ -61,6 +61,11 @@ class DesktopFiles(private val frame: () -> Frame?) : PlatformFiles {
 
     override val localTransfer: LocalTransfer by lazy { DesktopTransfer() }
 
+    /** Le scanner ou l'imprimante multifonction branche a l'ordinateur (Windows, WIA). */
+    override val canScan: Boolean = WindowsScanner.supported
+
+    override suspend fun scanDocument(): String? = WindowsScanner.scan(tempDir, frame())
+
     override fun todayIso(): String = java.time.LocalDate.now().toString()
 
     /** Un fichier .ics ouvert avec le calendrier de l'ordinateur (Outlook, Calendrier...). */

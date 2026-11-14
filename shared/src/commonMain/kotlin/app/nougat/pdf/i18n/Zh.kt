@@ -610,4 +610,15 @@ TransferPageFailed = {0} 发送失败。
 TransferPageGet = 下载当前打开的文档：{0}
 
 TransferTrouble = 无法使用？有些手机会阻止局域网：VPN、高级保护、Chrome 中的“一律使用安全连接”、访客 Wi-Fi。简单测试：如果手机打不开路由器页面（通常是 192.168.0.1），就是手机在阻止。
+
+MoveLeft = 向左
+MoveRight = 向右
+MoveUp = 向上
+MoveDown = 向下
+MoveApply = 放在这里
+MovingText = 正在移动文字行…
+LinesMoved = 已移动 {0} 行
+ScanAnotherPage = 第 {0} 页已扫描。要再扫描一页吗？
+ScanDocumentHintDesktop = 使用已连接的扫描仪或打印机
+ScannerUnavailableDesktop = 未找到扫描仪。请检查扫描仪或打印机已开机、已连接并已安装驱动程序。\n{0}
 """

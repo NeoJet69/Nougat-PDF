@@ -611,4 +611,15 @@ TransferPageFailed = {0} n'ha betg pudì vegnir tramess.
 TransferPageGet = Telechargiar il document avert: {0}
 
 TransferTrouble = Na funcziuna betg? Tscherts telefons bloccan la rait locala: VPN, Protecziun avanzada, «Adina duvrar colliaziuns segiras» en Chrome, Wi-Fi da giasts. Test simpel: sch'il telefon n'avra betg la pagina dal router (savens 192.168.0.1), blocca il telefon.
+
+MoveLeft = A sanestra
+MoveRight = A dretga
+MoveUp = Ensi
+MoveDown = Engiu
+MoveApply = Plazzar qua
+MovingText = Spustar las lingias…
+LinesMoved = {0} lingia spustada|{0} lingias spustadas
+ScanAnotherPage = Pagina {0} scannada. Scannar in'autra pagina?
+ScanDocumentHintDesktop = Cun il scanner u la stampanta colliads
+ScannerUnavailableDesktop = Nagin scanner chattà. Controllai ch'il scanner u la stampanta saja envidà, collià e ch'il driver saja installà.\n{0}
 """

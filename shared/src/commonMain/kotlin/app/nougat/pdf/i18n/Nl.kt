@@ -610,4 +610,15 @@ TransferPageFailed = {0} kon niet worden verstuurd.
 TransferPageGet = Geopend document downloaden: {0}
 
 TransferTrouble = Werkt het niet? Sommige telefoons blokkeren het lokale netwerk: vpn, Geavanceerde bescherming, ‘Altijd beveiligde verbindingen gebruiken’ in Chrome, gastwifi. Eenvoudige test: opent de telefoon de pagina van de router niet (vaak 192.168.0.1), dan blokkeert de telefoon.
+
+MoveLeft = Naar links
+MoveRight = Naar rechts
+MoveUp = Omhoog
+MoveDown = Omlaag
+MoveApply = Hier plaatsen
+MovingText = Regels verplaatsen…
+LinesMoved = {0} regel verplaatst|{0} regels verplaatst
+ScanAnotherPage = Pagina {0} gescand. Nog een pagina scannen?
+ScanDocumentHintDesktop = Met de aangesloten scanner of printer
+ScannerUnavailableDesktop = Geen scanner gevonden. Controleer of de scanner of printer aan staat, is aangesloten en het stuurprogramma is geïnstalleerd.\n{0}
 """

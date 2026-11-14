@@ -611,4 +611,15 @@ TransferPageFailed = {0} het nöd chöne gschickt wärde.
 TransferPageGet = Offes Dokumänt abelade: {0}
 
 TransferTrouble = Gaht's nöd? Es paar Handys sperred s lokale Netz: VPN, Erwiiterete Schutz, „Immer sicheri Verbindige bruuche“ in Chrome, Gascht-WLAN. Eifache Test: Wänn s Handy d Siite vom Router nöd uufmacht (oft 192.168.0.1), blockiert s Handy.
+
+MoveLeft = Nach links
+MoveRight = Nach rechts
+MoveUp = Nach obe
+MoveDown = Nach unde
+MoveApply = Da platziere
+MovingText = Ziile wärded verschobe…
+LinesMoved = {0} Ziile verschobe|{0} Ziile verschobe
+ScanAnotherPage = Siite {0} gscannt. No e Siite scanne?
+ScanDocumentHintDesktop = Mit em aagschlossne Scanner oder Drucker
+ScannerUnavailableDesktop = Kei Scanner gfunde. Lueg, öb de Scanner oder Drucker aa und aagschlosse isch und de Triiber installiert isch.\n{0}
 """

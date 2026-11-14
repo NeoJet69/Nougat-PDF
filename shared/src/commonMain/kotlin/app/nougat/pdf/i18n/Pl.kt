@@ -610,4 +610,15 @@ TransferPageFailed = Nie udało się wysłać {0}.
 TransferPageGet = Pobierz otwarty dokument: {0}
 
 TransferTrouble = Nie działa? Niektóre telefony blokują sieć lokalną: VPN, Zaawansowana ochrona, „Zawsze używaj bezpiecznych połączeń” w Chrome, Wi-Fi dla gości. Prosty test: jeśli telefon nie otwiera strony routera (często 192.168.0.1), blokuje telefon.
+
+MoveLeft = W lewo
+MoveRight = W prawo
+MoveUp = W górę
+MoveDown = W dół
+MoveApply = Umieść tutaj
+MovingText = Przesuwanie wierszy…
+LinesMoved = Przesunięto {0} wiersz|Przesunięto {0} wiersze|Przesunięto {0} wierszy
+ScanAnotherPage = Zeskanowano stronę {0}. Skanować kolejną stronę?
+ScanDocumentHintDesktop = Z podłączonym skanerem lub drukarką
+ScannerUnavailableDesktop = Nie znaleziono skanera. Sprawdź, czy skaner lub drukarka jest włączona, podłączona i ma zainstalowany sterownik.\n{0}
 """

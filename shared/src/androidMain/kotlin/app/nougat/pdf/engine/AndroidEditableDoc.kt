@@ -188,6 +188,9 @@ private class AndroidEditableDoc(
 
     override fun compressImages(level: CompressLevel): Int = compressImagesAndroid(doc, level)
 
+    override fun moveTextBlocks(index: Int, blocks: List<TextBlock>, dx: Float, dy: Float, scale: Float) =
+        moveBlocksAndroid(this, doc, src, index, blocks, dx, dy, scale)
+
     override fun addQrBill(bill: SwissQrBill, newPage: Boolean, language: QrLanguage) = addSwissQrBill(bill, newPage, language)
 
     fun applySecurity() {

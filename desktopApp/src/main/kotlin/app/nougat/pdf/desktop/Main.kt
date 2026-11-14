@@ -118,6 +118,20 @@ private fun handleShortcut(event: KeyEvent, state: ViewerState, openDialog: () -
         when (event.key) {
             Key.Delete, Key.Backspace -> { state.deleteSelectedText(); return true }
             Key.Escape -> { session.clearSelection(); return true }
+            // Fleches : deplacer les lignes choisies (Maj : plus loin) ; + et - : taille ; Entree : placer.
+            Key.DirectionLeft, Key.DirectionRight, Key.DirectionUp, Key.DirectionDown -> {
+                val step = if (event.isShiftPressed) 10f else 1f
+                when (event.key) {
+                    Key.DirectionLeft -> state.nudgeSelection(-step, 0f)
+                    Key.DirectionRight -> state.nudgeSelection(step, 0f)
+                    Key.DirectionUp -> state.nudgeSelection(0f, -step)
+                    else -> state.nudgeSelection(0f, step)
+                }
+                return true
+            }
+            Key.Plus, Key.Equals, Key.NumPadAdd -> { session.resize(1.05f); return true }
+            Key.Minus, Key.NumPadSubtract -> { session.resize(1f / 1.05f); return true }
+            Key.Enter, Key.NumPadEnter -> { state.applyMove(); return true }
             else -> Unit
         }
     }

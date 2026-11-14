@@ -119,6 +119,17 @@ français, allemand, italien ou anglais) sur une nouvelle page ou en bas de la d
 devis ou d'une facture. Vos coordonnées restent sur l'appareil pour la fois suivante, et le
 montant total trouvé dans le document est proposé.
 
+**Déplacer des lignes** (mode Éditer) : après avoir choisi des lignes (Ctrl + clic, Maj + clic,
+appui long), on les glisse à la souris ou au doigt, ou on les règle avec les flèches ; A− et A+
+changent leur taille. **Placer ici** les écrit à leur nouvelle place : l'ancienne place est
+effacée (pixels du scan repeints), l'encre est recollée et le texte reste cherchable. Sur Windows,
+les flèches du clavier (Maj pour aller plus loin), + et - et Entrée font la même chose. Pratique
+après la reconnaissance du texte d'un scan.
+
+**Scanner sur Windows** (accueil ou menu ⋮) : avec le scanner ou l'imprimante multifonction branchés
+à l'ordinateur, par le service de numérisation de Windows (WIA). Une page à la fois ; Nougat
+demande s'il faut scanner une autre page, puis toutes les pages forment un PDF.
+
 **Depuis le téléphone** (accueil, ou menu ⋮ « Échanger avec le téléphone », sur Windows) :
 Nougat affiche un code QR. On le scanne avec l'appareil photo du téléphone, une page s'ouvre dans
 le navigateur, on choisit des PDF ou des photos et ils arrivent sur l'ordinateur (dossier
