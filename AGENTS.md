@@ -11,6 +11,12 @@ compilation. Ce fichier-ci dit **comment travailler** sur le dépôt.
   cherche les bugs, les failles et les incohérences, et **note ce qu'il trouve** dans
   `docs/codex/REVUE.md`. Claude Code lit ce fichier et y répond.
 
+### Dépôt public
+
+Ce dépôt est **public**. Les discussions et informations internes sur ArtisanGo (comptes,
+site, organisation, échanges entre agents) vont dans le dépôt privé `NeoJet69/argo`, jamais ici.
+Ici restent seulement les liens publics (partenaire, pages légales).
+
 ### Version d'une release
 
 Avant chaque release, augmenter `nougat.versionCode` de **1** dans `gradle.properties` (et seulement

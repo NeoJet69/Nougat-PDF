@@ -3,8 +3,7 @@
 ## Google Play
 
 - [x] Compte développeur Google Play (25 $, vérification d'identité). Compte personnel récent :
-      test fermé obligatoire avec 12 testeurs pendant 14 jours. Compte d'entreprise (ArtisanGo) :
-      numéro D-U-N-S, sans ce test.
+      test fermé obligatoire avec 12 testeurs pendant 14 jours.
 - [x] Play App Signing : importer la clé `nougat.jks` (outil PEPK donné par la Play Console),
       pour que l'app du Store et l'APK de GitHub aient la même signature et se mettent à jour
       l'une par-dessus l'autre.
@@ -20,8 +19,6 @@
       le téléphone.
 - [x] Fiche du Store : icône 512 × 512, image 1024 × 500, captures (dossier `captures/`),
       description, lien vers la page de confidentialité.
-- [ ] Page de confidentialité (artisango.ch) : ajouter la traduction (modèles ML Kit
-      téléchargés depuis Google, texte envoyé à Anthropic avec Claude).
 
 ## Prochaines fonctions (choisies)
 
