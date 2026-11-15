@@ -85,6 +85,14 @@
       sur PC et Android (glisser, flèches, A− / A+, « Placer ici »).
 - [ ] À essayer sur un vrai scanner Windows et sur Android (déplacement au doigt).
 
+## Installation Windows
+
+- [ ] Norton bloque l'installateur non signé (erreur « Error writing to file », puis code 2932) :
+      signaler le faux positif à Norton à chaque version, et à terme signer l'installateur
+      (certificat de signature de code, à brancher dans la CI).
+- [ ] Lien direct vers chaque fichier dans les notes de version (le lien de la page GitHub
+      n'était pas cliquable chez Dylan).
+
 ## Autres idées
 
 - [ ] Comparer deux versions d'un document.
