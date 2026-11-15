@@ -162,7 +162,7 @@ jobs:
         shell: bash
         run: |
           VERSION="1.0.$(grep '^nougat.versionCode=' gradle.properties | cut -d= -f2)"
-          printf 'mime-type=application/pdf\nextension=pdf\ndescription=Document PDF\nicon=%s\n' "$(cygpath -w "$PWD/desktopApp/icons/nougat.ico")" > pdf.properties
+          printf 'mime-type=application/pdf\nextension=pdf\ndescription=Document PDF\nicon=%s\n' "$(cygpath -m "$PWD/desktopApp/icons/nougat.ico")" > pdf.properties
           mkdir -p installers
           for TYPE in msi exe; do
             "$JAVA_HOME/bin/jpackage" --type "$TYPE" --app-image "$APP_DIR/Nougat PDF" \
