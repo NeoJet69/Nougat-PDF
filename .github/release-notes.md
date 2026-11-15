@@ -13,9 +13,10 @@
 
 ## Nouveau
 
-- **Scanner sur Windows** : avec le scanner ou l'imprimante multifonction branchés à l'ordinateur. Une page à la fois, puis toutes les pages forment un PDF.
-- **Déplacer des lignes** (mode Éditer) : après les avoir choisies, glissez-les à la souris ou au doigt, dans toutes les directions, ou utilisez les flèches. A− et A+ changent leur taille. **Placer ici** les écrit à leur nouvelle place, aussi sur un scan après la reconnaissance du texte. Le texte ne se chevauche jamais.
-- **Échanger avec le téléphone** : une aide s'affiche si le téléphone bloque le réseau local (VPN, protections, Wi-Fi invité).
+- **Windows** : le scanner et la lecture à voix haute ne sont plus bloqués par certains antivirus (Norton). Ils passent maintenant par deux petits scripts écrits en clair, que chacun peut lire dans le dossier `Nougat PDF Scripts`.
+- Rappel de la 1.0.80 : bouton **Scanner** sur Windows, **déplacer des lignes** dans toutes les directions et changer leur taille, sans chevauchement.
+
+Si votre antivirus bloque l'installation (fichier récent et non signé), ajoutez le dossier `%LOCALAPPDATA%\Nougat PDF` à ses exclusions, puis relancez l'installateur.
 
 Nougat PDF est un logiciel libre sous **licence MIT**, en partenariat avec ArtisanGo (À propos).
 
