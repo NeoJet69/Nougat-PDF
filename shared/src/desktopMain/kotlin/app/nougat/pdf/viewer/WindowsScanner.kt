@@ -12,7 +12,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle
 import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory
 import java.awt.Frame
 import java.io.File
-import java.util.Base64
+import app.nougat.pdf.engine.PowerShellScript
 import javax.imageio.ImageIO
 import javax.swing.JOptionPane
 
@@ -27,17 +27,15 @@ internal object WindowsScanner {
 
     /** Scanne une page dans [target] ; faux si l'utilisateur annule. Leve une exception sans scanner. */
     private fun scanPage(target: File): Boolean {
-        val path = target.absolutePath.replace("'", "''")
         val script = """
             ${'$'}ErrorActionPreference = 'Stop'
             ${'$'}dialog = New-Object -ComObject WIA.CommonDialog
             ${'$'}image = ${'$'}dialog.ShowAcquireImage(1, 0, 131072, '{B96B3CAE-0728-11D3-9D7B-0000F81EF32E}', ${'$'}false, ${'$'}true, ${'$'}false)
             if (${'$'}image -eq ${'$'}null) { exit 2 }
-            ${'$'}image.SaveFile('$path')
+            ${'$'}image.SaveFile(${'$'}args[0])
             exit 0
         """.trimIndent()
-        val encoded = Base64.getEncoder().encodeToString(script.toByteArray(Charsets.UTF_16LE))
-        val process = ProcessBuilder("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", encoded)
+        val process = PowerShellScript.process("scanner", script, target.absolutePath)
             .redirectErrorStream(true)
             .start()
         val output = process.inputStream.bufferedReader().readText()

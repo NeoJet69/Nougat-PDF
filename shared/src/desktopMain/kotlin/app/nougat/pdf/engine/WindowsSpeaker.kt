@@ -3,7 +3,6 @@ package app.nougat.pdf.engine
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.BufferedReader
 import java.io.BufferedWriter
-import java.util.Base64
 
 /**
  * Les voix de Windows (System.Speech, par PowerShell) : un seul processus qui lit une ligne
@@ -17,8 +16,7 @@ internal class WindowsSpeaker : Speaker {
 
     private fun ensure(): Boolean {
         if (process?.isAlive == true) return true
-        val encoded = Base64.getEncoder().encodeToString(SCRIPT.toByteArray(Charsets.UTF_16LE))
-        val p = ProcessBuilder("powershell.exe", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", encoded)
+        val p = PowerShellScript.process("voix", SCRIPT)
             .redirectErrorStream(true)
             .start()
         process = p
