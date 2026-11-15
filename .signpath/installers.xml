@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuration d'artefact SignPath (copie de reference, slug « installers ») : signe les deux
+  installateurs Windows faits par jpackage a partir du dossier deja signe.
+  Syntaxe a verifier dans la documentation de SignPath au moment de la configuration.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <msi-file path="Nougat PDF-1.0.*.msi" product-name="Nougat PDF" product-version="1.0.*">
+      <authenticode-sign />
+    </msi-file>
+    <pe-file path="Nougat PDF-1.0.*.exe" product-name="Nougat PDF" product-version="1.0.*">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

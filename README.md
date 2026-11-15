@@ -315,6 +315,22 @@ Commandes utiles :
 
 Sans SDK Android, ajouter `-Pnougat.desktopOnly=true` pour ne construire que la version ordinateur.
 
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://signpath.io), certificate by
+[SignPath Foundation](https://signpath.org).
+
+- Committers and reviewers: [NeoJet69](https://github.com/NeoJet69) (owner of the repository)
+- Approvers: [NeoJet69](https://github.com/NeoJet69)
+
+Only the Windows installers and the Nougat PDF launcher built by GitHub Actions from this repository
+are signed. Every release is approved by hand before signing.
+
+Privacy policy: this program will not transfer any information to other networked systems unless
+specifically requested by the user or the person installing or operating it (for example the Claude
+assistant or translation with the user's own Anthropic API key). Full policy:
+[privacy policy](https://artisango.ch/nougatpdf/privacy-policy).
+
 ## Licence
 
 Nougat PDF est un logiciel libre sous **licence MIT** (voir le fichier [LICENSE](LICENSE)) :

@@ -37,3 +37,5 @@ Nougat PDF est un logiciel libre sous **licence MIT**, en partenariat avec Artis
 - Assistant Claude intégré (facultatif : il faut sa propre clé API Anthropic, payante à l'usage ; tout le reste fonctionne sans)
 
 Par NeoJet, Nougat 🐱 et Caramel ✨
+
+[Code signing policy](https://github.com/NeoJet69/Nougat-PDF#code-signing-policy)

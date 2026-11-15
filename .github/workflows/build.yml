@@ -99,6 +99,10 @@ jobs:
   windows:
     name: Installateur Windows
     runs-on: windows-latest
+    env:
+      # Signature SignPath (certificat SignPath Foundation) : seulement pour une release, et
+      # seulement quand le secret existe. Sans lui, les installateurs restent non signes, comme avant.
+      SIGNING: ${{ github.event_name == 'workflow_dispatch' && inputs.release && secrets.SIGNPATH_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -116,15 +120,94 @@ jobs:
           mkdir -p "$RUNNER_TEMP/wix"
           unzip -q "$RUNNER_TEMP/wix.nupkg" 'tools/*' -d "$RUNNER_TEMP/wix"
           echo "WIX_PATH=$(cygpath -w "$RUNNER_TEMP/wix/tools")" >> "$GITHUB_ENV"
-      - name: Installateur .msi et .exe
+          # jpackage cherche aussi candle.exe et light.exe dans le PATH.
+          echo "$RUNNER_TEMP/wix/tools" >> "$GITHUB_PATH"
+
+      # 1. Le dossier de l'application (avec « Nougat PDF.exe »), sans installateur.
+      - name: Application (dossier)
         shell: bash
-        run: ./gradlew -Pnougat.desktopOnly=true :desktopApp:packageMsi :desktopApp:packageExe --console=plain
+        run: |
+          ./gradlew -Pnougat.desktopOnly=true :desktopApp:createDistributable --console=plain
+          mkdir -p app-unsigned
+          cp -r "desktopApp/build/compose/binaries/main/app/Nougat PDF" app-unsigned/
+
+      # 2. Signer le lanceur « Nougat PDF.exe » (release avec secret SignPath seulement).
+      - name: Envoyer le dossier a SignPath
+        if: env.SIGNING == 'true'
+        id: upload-app
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-unsigned
+          path: app-unsigned/
+      - name: Signer le lanceur (SignPath)
+        if: env.SIGNING == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: nougat-pdf
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: app-image
+          github-artifact-id: ${{ steps.upload-app.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: app-signed
+      - name: Dossier a empaqueter
+        shell: bash
+        run: |
+          if [ "$SIGNING" = "true" ]; then echo "APP_DIR=app-signed" >> "$GITHUB_ENV"; else echo "APP_DIR=app-unsigned" >> "$GITHUB_ENV"; fi
+
+      # 3. Les installateurs .msi et .exe, faits par jpackage a partir de ce dossier (deja signe en release).
+      - name: Installateurs .msi et .exe
+        shell: bash
+        run: |
+          VERSION="1.0.$(grep '^nougat.versionCode=' gradle.properties | cut -d= -f2)"
+          printf 'mime-type=application/pdf\nextension=pdf\ndescription=Document PDF\nicon=%s\n' "$(cygpath -w "$PWD/desktopApp/icons/nougat.ico")" > pdf.properties
+          mkdir -p installers
+          for TYPE in msi exe; do
+            "$JAVA_HOME/bin/jpackage" --type "$TYPE" --app-image "$APP_DIR/Nougat PDF" \
+              --name "Nougat PDF" --app-version "$VERSION" \
+              --vendor "NeoJet, Nougat et Caramel" --description "Lecteur et editeur de PDF, gratuit et sans pub" \
+              --win-menu --win-menu-group "Nougat PDF" --win-shortcut --win-per-user-install --win-dir-chooser \
+              --win-upgrade-uuid 5b8a3c1e-6f2d-4b7a-9e41-0c7d2a9f1b63 \
+              --file-associations pdf.properties --dest installers
+          done
+          ls -la installers
+
+      # 4. Signer les deux installateurs (release avec secret SignPath seulement).
+      - name: Envoyer les installateurs a SignPath
+        if: env.SIGNING == 'true'
+        id: upload-installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: installers-unsigned
+          path: installers/
+      - name: Signer les installateurs (SignPath)
+        if: env.SIGNING == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: nougat-pdf
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: installers
+          github-artifact-id: ${{ steps.upload-installers.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: installers-signed
+      - name: Installateurs finaux
+        shell: bash
+        run: |
+          mkdir -p final
+          if [ "$SIGNING" = "true" ]; then cp installers-signed/*.msi installers-signed/*.exe final/; else cp installers/*.msi installers/*.exe final/; fi
+          ls -la final
+
       - uses: actions/upload-artifact@v4
         with:
           name: nougat-pdf-windows
           path: |
-            desktopApp/build/compose/binaries/main/msi/*.msi
-            desktopApp/build/compose/binaries/main/exe/*.exe
+            final/*.msi
+            final/*.exe
 
   release:
     name: Release

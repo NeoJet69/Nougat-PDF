@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuration d'artefact SignPath (copie de reference : la configuration active se colle dans
+  SignPath, projet nougat-pdf, slug « app-image »). Signe le lanceur « Nougat PDF.exe » dans le
+  dossier de l'application construit par Gradle (createDistributable), avant de faire l'installateur.
+  Syntaxe a verifier dans la documentation de SignPath au moment de la configuration.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <directory path="Nougat PDF">
+      <pe-file path="Nougat PDF.exe" product-name="Nougat PDF" product-version="1.0.*">
+        <authenticode-sign />
+      </pe-file>
+    </directory>
+  </zip-file>
+</artifact-configuration>
