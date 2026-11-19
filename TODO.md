@@ -82,6 +82,25 @@
       sur PC et Android (glisser, flèches, A− / A+, « Placer ici »).
 - [ ] À essayer sur un vrai scanner Windows et sur Android (déplacement au doigt).
 
+## Demandé le 19 novembre
+
+- [ ] Scanner multipage (Windows) : scanner tout le chargeur de l'imprimante (bac ADF) en une fois,
+      pour une facture fournisseur de plusieurs pages (QR-facture souvent sur la dernière), sans
+      relancer page par page. Piste : WIA avec le chargeur (propriété « Document Handling Select »
+      = FEEDER) et boucle tant qu'il reste des feuilles ; repli page par page si pas de chargeur.
+- [ ] Assistant vocal de prise de notes : enregistrer une réunion ou un appel, transcrire, séparer
+      qui parle (plusieurs voix), puis créer un PDF à la fin de l'enregistrement. Pistes : micro
+      (permission RECORD_AUDIO sur Android, à déclarer et à mettre dans la page de confidentialité),
+      transcription sur l'appareil (Whisper) ou avec Claude, séparation des voix (diarisation).
+- [ ] Protéger le document par mot de passe : existe déjà (menu ⋮ « Protéger par mot de passe »).
+      À rendre plus visible (barre d'outils), et vérifier s'il faut des options (droits d'impression,
+      de copie). Ajouter l'insertion d'un filigrane : texte ou image (JPEG, PNG) ou page d'un PDF,
+      position, opacité, toutes les pages ou certaines.
+- [ ] Mode Annoter : clic droit de la souris (et appui long au doigt) avec un menu Copier, Coller,
+      Effacer, Dupliquer… sur une annotation.
+- [ ] OCR d'une zone choisie : tirer un cadre au clic gauche sur la page, reconnaître seulement ce
+      texte, puis le copier (ou l'ajouter au document).
+
 ## Installation Windows
 
 - [ ] Norton bloque l'installateur non signé (erreur « Error writing to file », puis code 2932) :
